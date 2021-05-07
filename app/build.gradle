@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.example.xunda"
+        applicationId "com.example.kouta"
         minSdkVersion 20
         targetSdkVersion 30
         versionCode 1
@@ -26,14 +26,30 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    'src/main/res/layouts/activites',
+                    'src/main/res/layouts/adapter',
+//                    'src/main/res/layouts/fragments',
+//                    'src/main/res/layouts/popupwindows',
+//                    'src/main/res/layouts/xrecycler',
+                    'src/main/res/layouts',
+                    'src/main/res'
+                    //src/main/res必须要配置写上XML分包
+            ]
+        }
+    }
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation 'org.xutils:xutils:3.9.0'
 }
