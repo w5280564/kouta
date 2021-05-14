@@ -4,6 +4,7 @@ package com.example.kouta.baseview;
 import android.app.Application;
 import android.content.Context;
 
+import org.xutils.x;
 
 
 public class MyApplication extends Application {
@@ -16,8 +17,8 @@ public class MyApplication extends Application {
 
 
 		//xUtils初始化
-//		x.Ext.init(this);
-//		x.Ext.setDebug(true); // 是否输出debug日志
+		x.Ext.init(this);
+		x.Ext.setDebug(true); // 是否输出debug日志
 //
 ////
 ////		//Jush初始化

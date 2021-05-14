@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/icon_Img"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_below="@id/title_Include"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="58dp"
+        android:layout_marginBottom="40dp"
+        android:background="@mipmap/zanicon_img" />
+
+
+    <RelativeLayout
+        android:id="@+id/phonerel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/icon_Img"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+
+
+        <ImageView
+            android:id="@+id/login_phone"
+            android:layout_width="8dp"
+            android:layout_height="12dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="7dp"
+            android:background="@mipmap/login_phone_img" />
+
+        <EditText
+            android:id="@+id/phone_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/login_phone"
+            android:background="@null"
+            android:hint="请输入手机号"
+            android:lines="1"
+            android:textColor="@color/greytwo"
+            android:textColorHint="@color/greytwo"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/fork_img"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@mipmap/login_fork_img" />
+
+        <View
+            android:id="@+id/lineone"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/login_phone"
+            android:layout_marginTop="7dp"
+            android:background="@color/greyline" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/code_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/phonerel"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="45dp"
+        android:text="使用Le ID登录"
+        android:textColor="@color/greytwo"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/num_Btn"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_below="@id/code_txt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/loginbtn_radius"
+        android:text="获取验证码"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>

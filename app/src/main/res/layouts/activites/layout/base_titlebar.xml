@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <Button
+        android:id="@+id/return_Btn"
+        android:layout_width="11dp"
+        android:layout_height="18dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_centerVertical="true"
+        android:background="@mipmap/return_img"/>
+
+
+    <TextView
+        android:id="@+id/cententtxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/blacktitle"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+
+    <Button
+        android:id="@+id/right_Btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@null"
+        android:visibility="gone"
+        android:textSize="15sp"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/blacktitlettwo"
+        android:textStyle="normal"/>
+
+
+</RelativeLayout>
