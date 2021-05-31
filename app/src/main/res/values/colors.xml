@@ -11,10 +11,15 @@
     <color name="yellowtwo">#FFfad129</color>
     <color name="yellowthree">#FFfad029</color>
     <color name="yellowfour">#FFFACF27</color>
+    <color name="yellowfive">#fff9d22e</color>
     <color name="grey">#d1d1d1</color>
-
-    <color name="blacktitle">#444444</color>
-    <color name="blacktitlettwo">#ff6f6f6f</color>
     <color name="greytwo">#ffa1a1a1</color>
+    <color name="greythree">#fff5f5f5</color>
+    <color name="greyfour">#ffe5e5e5</color>
+    <color name="greyfive">#ffefefef</color>
+
+    <color name="blacktitle">#ff444444</color>
+    <color name="blacktitlettwo">#ff6f6f6f</color>
     <color name="greyline">#ffdcdcdc</color>
+    <color name="vipred">#ffff0000</color>
 </resources>

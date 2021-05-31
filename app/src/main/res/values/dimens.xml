@@ -14,7 +14,7 @@
     <dimen name="default_ev_password_radius">3dp</dimen>
     <dimen name="default_input_text_view_size">48dp</dimen>
     <dimen name="default_input_text_view_padding">22dp</dimen>
-    <dimen name="default_input_text_size">20dp</dimen>
+    <dimen name="default_input_text_size">30dp</dimen>
     <integer name="default_ev_password_length">4</integer>
 
     <dimen name="custom_ev_border_width">10dp</dimen>
@@ -24,6 +24,15 @@
     <dimen name="captcha_cursor_height">30dp</dimen>
     <dimen name="captcha_cursor_width">1dp</dimen>
     <dimen name="mBorderRadius">4dp</dimen>
+
+
+
+    <dimen name="textSize">10sp</dimen>
+    <dimen name="hintTextSize">32sp</dimen>
+    <dimen name="chooseTextSize">12sp</dimen>
+    <dimen name="padding">20dp</dimen>
+    <dimen name="radius">20dp</dimen>
+    <dimen name="circleRadius">24dp</dimen>
 
 
 </resources>

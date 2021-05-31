@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
+
     <!-- Base application theme. -->
-<!--    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
-<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
-<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
-<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-<!--        <item name="colorAccent">@color/colorAccent</item>-->
-<!--    </style>-->
+    <!-- <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimaryDark">@color/white</item>
+        <item name="android:colorPrimary">@color/white</item>
+        <item name="android:colorAccent">@color/white</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
     <style name="CustomDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
@@ -45,6 +48,15 @@
 <!--        <item name="android:gravity">center</item>-->
 <!--        <item name="android:maxLength">1</item>-->
 <!--    </style>-->
+
+
+    <!--名字自定义-->
+    <style name="CheckBoxTheme">
+        <item name="colorAccent">@color/yellowfive</item><!--选中颜色-->
+        <item name="colorControlNormal">@color/greyfive</item><!--未选中颜色-->
+    </style>
+
+
 
 
 

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greythree"
+    tools:context=".main.MainLogin_QuestionFeedBack">
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/bi_txt"
+        android:layout_width="match_parent"
+        android:layout_height="36.5dp"
+        android:layout_below="@id/title_Include"
+        android:background="@color/greythree"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="手机号码(必填)"
+        android:textColor="@color/greytwo"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/phone_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bi_txt"
+        android:background="@color/white"
+        android:hint="请输入手机号码"
+        android:inputType="phone"
+        android:lines="1"
+        android:padding="15dp"
+        android:textColor="@color/greytwo"
+        android:textColorHint="@color/greytwo"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/email_txt"
+        android:layout_width="match_parent"
+        android:layout_height="36.5dp"
+        android:layout_below="@id/phone_edit"
+        android:background="@color/greythree"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="联系邮箱（必填）"
+        android:textColor="@color/greytwo"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/email_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/email_txt"
+        android:layout_marginBottom="10dp"
+        android:background="@color/white"
+        android:hint="请输入您的邮箱账号"
+        android:inputType="textEmailAddress"
+        android:lines="1"
+        android:padding="15dp"
+        android:textColor="@color/greytwo"
+        android:textColorHint="@color/greytwo"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/ti_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/email_edit"
+        android:background="@color/white"
+        android:padding="15dp"
+        android:text="问题描述（必填）"
+        android:textColor="@color/blacktitlettwo"
+        android:textSize="14sp" />
+
+
+    <EditText
+        android:id="@+id/content_edit"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@id/ti_txt"
+        android:background="@color/white"
+        android:gravity="start"
+        android:hint="请输入描述内容"
+        android:inputType="textMultiLine"
+        android:padding="15dp"
+        android:singleLine="false"
+        android:textColor="@color/greytwo"
+        android:textColorHint="@color/greytwo"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/zi_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/content_edit"
+        android:background="@color/white"
+        android:gravity="right"
+        android:paddingRight="15dp"
+        android:paddingBottom="15dp"
+        android:text="50字节以内"
+        android:textColor="#ffa1a1a1"
+        android:textSize="12sp" />
+
+    <View
+        android:id="@+id/line_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/zi_txt"
+        android:background="@color/greyfive" />
+
+    <TextView
+        android:id="@+id/tu_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/line_view"
+        android:background="@color/white"
+        android:padding="15dp"
+        android:text="提供图片（选填，最多三张）"
+        android:textColor="#ff6f6f6f"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:id="@+id/add_Rel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tu_txt"
+        android:background="@color/white">
+
+        <com.example.kouta.baseview.FlowLayout
+            android:id="@+id/photoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
+
+            <ImageButton
+                android:id="@+id/add_photo_Img"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/add_photo" />
+        </com.example.kouta.baseview.FlowLayout>
+
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/next_Btn"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_below="@id/add_Rel"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/loginbtn_radius"
+        android:text="提交"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+</RelativeLayout>

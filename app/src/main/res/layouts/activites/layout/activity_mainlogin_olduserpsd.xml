@@ -95,19 +95,22 @@
             android:layout_toRightOf="@id/psw_img"
             android:background="@null"
             android:hint="请输入密码"
-            android:inputType="textVisiblePassword"
+            android:inputType="textPassword"
             android:lines="1"
             android:textColor="@color/greytwo"
             android:textColorHint="@color/greytwo"
             android:textSize="14sp" />
 
-        <ImageView
-            android:id="@+id/display_img"
+
+        <CheckBox
+            android:id="@+id/display_choice"
             android:layout_width="12dp"
             android:layout_height="9dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@mipmap/login_see_img" />
+            android:button="@drawable/login_display_selector"
+            android:checked="false" />
+
 
         <View
             android:id="@+id/psw_line"

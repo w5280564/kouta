@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.MainLogin_ForgetPsw_ID">
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/forget_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12.5dp"
+        android:layout_marginTop="60dp"
+        android:text="请输入您的专属id"
+        android:textColor="@color/blacktitle"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/id_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/forget_txt"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:text="在验证之前，您需要提供您的id信息"
+        android:textColor="@color/blacktitle"
+        android:textSize="12sp" />
+
+    <RelativeLayout
+        android:id="@+id/moidrel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/id_txt"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="50dp">
+
+
+        <ImageView
+            android:id="@+id/login_phone"
+            android:layout_width="9dp"
+            android:layout_height="12dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="7dp"
+            android:background="@mipmap/login_user_img" />
+
+        <EditText
+            android:id="@+id/id_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/login_phone"
+            android:background="@null"
+            android:hint="请输入您的Mo id"
+            android:inputType="number"
+            android:lines="1"
+            android:textColor="@color/greytwo"
+            android:textColorHint="@color/greytwo"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/fork_img"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginRight="7dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@mipmap/login_fork_img" />
+
+        <View
+            android:id="@+id/lineone"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/login_phone"
+            android:layout_marginTop="7dp"
+            android:background="@color/greyline" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/next_Btn"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_below="@id/moidrel"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/loginbtn_radius"
+        android:text="下一步"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>

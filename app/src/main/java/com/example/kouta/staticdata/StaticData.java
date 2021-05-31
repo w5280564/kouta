@@ -1,5 +1,6 @@
 package com.example.kouta.staticdata;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipboardManager;
@@ -14,25 +15,25 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.telephony.PhoneNumberUtils;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-
-import com.example.kouta.R;
-import com.example.kouta.main.MainLogin;
+import androidx.core.app.ActivityCompat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,6 +41,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -1020,6 +1022,87 @@ public class StaticData {
         GradientDrawable da = (GradientDrawable) v.getBackground();
         da.setColor(color);
     }
+
+
+    /**
+     * 检测输入密码是否符合规范
+     * 8~16位数字和字母组成{8,16}
+     * 不能是纯数字或纯字母
+     * {8,}不少于8位
+     */
+    public static boolean isPasswordForm(String pwd) {
+        if (TextUtils.isEmpty(pwd)) return false;
+        String regex = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,}$";
+        return pwd.matches(regex);
+    }
+
+    @SuppressLint("MissingPermission")
+    public static String getIMEI(Context context) {
+        String deviceId = null;
+        try {
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                deviceId = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            } else {
+                // request old storage permission
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    return null;
+                }
+//                deviceId = tm.getDeviceId();
+                getDouIMEI(context);
+            }
+            if (deviceId == null || "".equals(deviceId)) {
+                return getLocalMacAddress(context);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (deviceId == null || "".equals(deviceId)) {
+                return getLocalMacAddress(context);
+            }
+        }
+
+        return deviceId;
+    }
+
+
+    /**
+     * @param context
+     * @return 双卡手机
+     */
+    @SuppressLint("MissingPermission")
+    public static String getDouIMEI(Context context) {
+        TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        try {
+            Method method = manager.getClass().getMethod("getImei", int.class);
+            String imei1 = (String) method.invoke(manager, 0);
+            String imei2 = (String) method.invoke(manager, 1);
+            if (TextUtils.isEmpty(imei2)) {
+                return imei1;
+            }
+            if (!TextUtils.isEmpty(imei1)) {
+                //因为手机卡插在不同位置，获取到的imei1和imei2值会交换，所以取它们的最小值,保证拿到的imei都是同一个
+                String imei = "";
+                if (imei1.compareTo(imei2) <= 0) {
+                    imei = imei1;
+                } else {
+                    imei = imei2;
+                }
+                return imei;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return manager.getDeviceId();
+        }
+        return "";
+    }
+
+    public static String getLocalMacAddress(Context context) {
+        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = wifi.getConnectionInfo();
+        return info.getMacAddress();
+
+    }
+
 
 
 }

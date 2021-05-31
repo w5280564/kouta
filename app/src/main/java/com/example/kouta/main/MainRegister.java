@@ -3,52 +3,42 @@ package com.example.kouta.main;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.style.BackgroundColorSpan;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kouta.R;
 import com.example.kouta.baseview.MyActivityManager;
+import com.example.kouta.network.saveFile;
 import com.example.kouta.staticdata.NoDoubleClickListener;
 import com.example.kouta.staticdata.StaticData;
 import com.example.kouta.staticdata.viewTouchDelegate;
 
-import org.xutils.x;
-
-import static org.xutils.common.util.DensityUtil.dip2px;
-
-public class MainLogin extends AppCompatActivity {
+public class MainRegister extends AppCompatActivity {
 
     private MyActivityManager mam;
     private Button right_Btn;
     private Button num_Btn;
     private EditText phone_edit;
     private Button oldusers;
+    private CheckBox agreement_choice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_login);
 
-        mam = MyActivityManager.getInstance();
-        mam.pushOneActivity(this);//把当前activity压入了栈中
-        x.view().inject(this);
+//        mam = MyActivityManager.getInstance();
+//        mam.pushOneActivity(this);//把当前activity压入了栈中
+
 
         initTitle();
         initView();
@@ -69,11 +59,9 @@ public class MainLogin extends AppCompatActivity {
         right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.VISIBLE);
         right_Btn.setText("问题反馈");
-//        StaticData.ViewScale(return_Btn, 100, 100);
-//        StaticData.ViewScale(title_Include, 0, 88);
 
         return_Btn.setOnClickListener(new return_Btn());
-//        right_Btn.setOnClickListener(new right_Btn());
+        right_Btn.setOnClickListener(new right_BtnOnClickLister());
     }
 
     private class return_Btn implements View.OnClickListener {
@@ -94,45 +82,40 @@ public class MainLogin extends AppCompatActivity {
 
 
     private void initView() {
-//        RelativeLayout edit_Rel = (RelativeLayout) findViewById(R.id.edit_Rel);
         phone_edit = findViewById(R.id.phone_edit);
         num_Btn = findViewById(R.id.num_Btn);
+        agreement_choice = findViewById(R.id.agreement_choice);
+//        num_Btn.setEnabled(false);
+        StaticData.changeShapColor(num_Btn, ContextCompat.getColor(MainRegister.this, R.color.grey));
         oldusers = findViewById(R.id.oldusers);
 
         TextView login_txt = findViewById(R.id.login_txt);
 
-//        if (!StaticData.isPhone(phone_edit.getText().toString())){
-//            Toast.makeText(this,"请输入正确手机号码",Toast.LENGTH_SHORT).show();
-//            return;
-//        }
 
         phone_edit.addTextChangedListener(new textchangerlister());
         num_Btn.setOnClickListener(new num_BtnOnClick());
         login_txt.setOnClickListener(new login_txtOnClick());
-        oldusers.setOnClickListener(new oldusers_BtnOnClick());
+//        oldusers.setOnClickListener(new oldusers_BtnOnClick());
     }
 
 
     private class textchangerlister implements TextWatcher {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-
         }
 
         @Override
         public void afterTextChanged(Editable s) {
             if (StaticData.isPhone(s.toString())) {
                 num_Btn.setEnabled(true);
-                StaticData.changeShapColor(num_Btn, ContextCompat.getColor(MainLogin.this, R.color.yellow));
+                StaticData.changeShapColor(num_Btn, ContextCompat.getColor(MainRegister.this, R.color.yellow));
             } else {
-                num_Btn.setEnabled(false);
-                StaticData.changeShapColor(num_Btn, ContextCompat.getColor(MainLogin.this, R.color.grey));
+//                num_Btn.setEnabled(false);
+                StaticData.changeShapColor(num_Btn, ContextCompat.getColor(MainRegister.this, R.color.grey));
             }
 
         }
@@ -142,7 +125,15 @@ public class MainLogin extends AppCompatActivity {
     private class num_BtnOnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            Intent intent = new Intent(MainLogin.this, MainLogin_Code.class);
+            if (!StaticData.isPhone(phone_edit.getText().toString())) {
+                Toast.makeText(MainRegister.this, "请输入正确手机号码", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (!agreement_choice.isChecked()) {
+                Toast.makeText(MainRegister.this, "请阅读并同意用户使用协议", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent(MainRegister.this, MainLogin_Code.class);
+            intent.putExtra("TitleName", "手机号注册");
             intent.putExtra("LoginPhoneNume", phone_edit.getText().toString());
             startActivity(intent);
 
@@ -152,7 +143,7 @@ public class MainLogin extends AppCompatActivity {
     private class login_txtOnClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            Intent Intent = new Intent(MainLogin.this, MainLogin_Agreement.class);
+            Intent Intent = new Intent(MainRegister.this, MainRegister_Agreement.class);
             startActivity(Intent);
         }
     }
@@ -160,9 +151,17 @@ public class MainLogin extends AppCompatActivity {
     private class oldusers_BtnOnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            Intent intent = new Intent(MainLogin.this, MainLogin_OldUsers.class);
+            Intent intent = new Intent(MainRegister.this, MainLogin_OldUsers.class);
             intent.putExtra("LoginPhoneNume", phone_edit.getText().toString());
 //            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            startActivity(intent);
+        }
+    }
+
+    private class right_BtnOnClickLister extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            Intent intent = new Intent(MainRegister.this, MainLogin_QuestionFeedBack.class);
             startActivity(intent);
         }
     }

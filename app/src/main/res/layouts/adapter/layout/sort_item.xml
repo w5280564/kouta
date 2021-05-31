@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tagtxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="A"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:id="@+id/userrel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tagtxt">
+
+
+        <CheckBox
+            android:id="@+id/choice_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:button="@null"
+            android:clickable="false"
+            android:focusable="false" />
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/head_simple"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/choice_check"
+            app:roundAsCircle="true" />
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/head_simple"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:lines="1"
+            android:text="测试"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

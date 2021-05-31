@@ -90,9 +90,12 @@
         android:gravity="center_vertical">
 
         <CheckBox
+            android:id="@+id/agreement_choice"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_marginRight="7dp"/>
+            android:layout_marginRight="7dp"
+            android:button="@drawable/choice_selector"
+            android:checked="false"/>
 
         <TextView
             android:id="@+id/login_txt"
@@ -109,6 +112,7 @@
         android:id="@+id/oldusers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="老用户"
         android:layout_below="@id/login_lin"
         android:layout_centerHorizontal="true"/>

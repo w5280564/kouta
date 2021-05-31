@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.MainLogin_ForgetPsw_SetPsw">
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/ps_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_Include"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="58dp"
+        android:layout_marginBottom="10dp"
+        android:text="请设置一个密码"
+        android:textColor="@color/blacktitle"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/bao_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ps_txt"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="44dp"
+        android:text="请牢记并保管好你的登录密码"
+        android:textColor="@color/blacktitle"
+        android:textSize="12sp" />
+
+    <RelativeLayout
+        android:id="@+id/psw_rel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bao_txt"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+
+
+        <EditText
+            android:id="@+id/psw_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="请输入你的登录密码"
+            android:inputType="textPassword"
+            android:lines="1"
+            android:textColor="@color/greytwo"
+            android:textColorHint="@color/greytwo"
+            android:textSize="14sp" />
+
+        <View
+            android:id="@+id/agin_lineone"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/psw_edit"
+            android:layout_marginTop="6dp"
+            android:background="@color/greyline" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/pswaginw_rel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/psw_rel"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="28.5dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp">
+
+
+        <EditText
+            android:id="@+id/pswagin_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="请再次输入你的登录密码"
+            android:inputType="textPassword"
+            android:lines="1"
+            android:textColor="@color/greytwo"
+            android:textColorHint="@color/greytwo"
+            android:textSize="14sp" />
+
+        <View
+            android:id="@+id/lineone"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/pswagin_edit"
+            android:layout_marginTop="6dp"
+            android:background="@color/greyline" />
+    </RelativeLayout>
+
+    <CheckBox
+        android:id="@+id/choice_check"
+        android:button="@drawable/choice_selector"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_below="@id/pswaginw_rel"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="10dp"
+        android:checked="false" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/choice_check"
+        android:layout_toRightOf="@id/choice_check"
+        android:text="显示密码"
+        android:textColor="@color/greytwo"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/num_Btn"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_below="@id/choice_check"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/loginbtn_radius"
+        android:text="提交"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/num_Btn"
+        android:layout_centerHorizontal="true"
+        android:text="密码必须包含字母和数字，长度至少8位"
+        android:textColor="@color/greytwo"
+        android:textSize="12sp" />
+
+
+</RelativeLayout>

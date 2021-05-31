@@ -19,7 +19,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -32,7 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class MainLogin_Agreement extends Activity {
+public class MainRegister_Agreement extends Activity {
     private WebView myWebView;
     private TextView cententtxt;
     String shareTitle = "";
@@ -94,7 +93,7 @@ public class MainLogin_Agreement extends Activity {
 
 
     private void initTitle(LinearLayout mycontentView) {
-        final View view = LayoutInflater.from(MainLogin_Agreement.this).inflate(R.layout.base_titlebar, null);
+        final View view = LayoutInflater.from(MainRegister_Agreement.this).inflate(R.layout.base_titlebar, null);
 //        view.setBackgroundColor(ContextCompat.getColor(this,R.color.colorFristWhite));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             view.setElevation(2f);//阴影

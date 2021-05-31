@@ -75,8 +75,22 @@
         android:layout_below="@id/four_txt"
         android:background="@null"
         android:layout_centerHorizontal="true"
+        android:inputType="number"
+        android:maxLength="4"
         android:textSize="18sp"
         android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:id="@+id/nonecode_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="45dp"
+        android:visibility="gone"
+        android:text="无法接收验证码？"
+        android:textColor="@color/yellowfour"
+        android:textSize="14sp" />
 
 
 </RelativeLayout>

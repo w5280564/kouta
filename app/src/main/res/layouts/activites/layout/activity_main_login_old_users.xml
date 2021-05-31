@@ -22,7 +22,7 @@
         android:layout_below="@id/icon_Img"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
-        android:text="+17755640406"
+        android:text="+86  "
         android:textColor="@color/greytwo"
         android:textSize="14sp" />
 

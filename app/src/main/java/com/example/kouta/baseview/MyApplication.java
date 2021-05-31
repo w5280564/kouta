@@ -4,6 +4,8 @@ package com.example.kouta.baseview;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import org.xutils.x;
 
 
@@ -26,8 +28,8 @@ public class MyApplication extends Application {
 //		JPushInterface.setDebugMode(true);
 //		JPushInterface.init(this);
 ////
-//		//Fresco初始化
-//		Fresco.initialize(this);
+		//Fresco初始化
+		Fresco.initialize(this);
 
 		mycontext = this;
 	 }
