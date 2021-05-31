@@ -132,7 +132,6 @@ public class Fragment_adress extends NewLazyFragment {
         return R.layout.fragment_adress;
     }
 
-    public static String[] b;
 
     //        public static String[] b = { "Q", "R", "S", "T", "U", "V",
 //            "W", "X", "Y", "Z", "#"};
@@ -456,7 +455,6 @@ public class Fragment_adress extends NewLazyFragment {
                 nameList.add(sortString.toUpperCase());//右边排序
             } else {
                 sortModel.setLetters("#");
-
                 nameList.add("#");
             }
 

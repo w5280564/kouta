@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_vertical"
     tools:context=".main.Fragment_adress">
 
 
@@ -85,20 +86,19 @@
         android:drawableLeft="@drawable/search_bar_icon_normal"
         android:hint="请输入关键字"
         android:maxLines="1"
-        android:paddingLeft="8dp"
-        android:textSize="15dp" />
+        android:paddingStart="8dp"
+        android:textSize="15sp" />
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 
     <com.example.kouta.pinyin.WaveSideBar
         android:id="@+id/sideBar"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="100dp"
@@ -108,7 +108,8 @@
         app:hintTextSize="22sp"
         app:radius="20dp"
         app:textColor="@color/greytwo"
-        app:textSize="10sp" />
+        app:textSize="10sp"
+        tools:ignore="SmallSp" />
 
 
 </RelativeLayout>

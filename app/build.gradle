@@ -34,7 +34,7 @@ android {
                     'src/main/res/layouts/adapter',
 //                    'src/main/res/layouts/fragments',
                     'src/main/res/layouts/popupwindows',
-//                    'src/main/res/layouts/xrecycler',
+                    'src/main/res/layouts/xrecycler',
                     'src/main/res/layouts',
                     'src/main/res'
                     //src/main/res必须要配置写上XML分包

@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.kouta.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -105,12 +106,12 @@ public class WaveSideBar extends View {
 
     public WaveSideBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context, attrs);
+        mLetters = new ArrayList<>();
+        init(context, attrs, mLetters);
     }
 
-    private void init(Context context, AttributeSet attrs) {
-        mLetters = Arrays.asList(context.getResources().getStringArray(R.array.waveSideBarLetters));
-
+    private void init(Context context, AttributeSet attrs, List<String> list) {
+//        mLetters = Arrays.asList(context.getResources().getStringArray(R.array.waveSideBarLetters));
         mTextColor = Color.parseColor("#969696");
         mWaveColor = Color.parseColor("#bef9b81b");
         mTextColorChoose = ContextCompat.getColor(context, android.R.color.white);
@@ -185,10 +186,22 @@ public class WaveSideBar extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        mHeight = MeasureSpec.getSize(heightMeasureSpec);
-        mWidth = getMeasuredWidth();
-//        mItemHeight = (mHeight - mPadding) / mLetters.size();
+//        mHeight = MeasureSpec.getSize(heightMeasureSpec);
         mItemHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics());// 获取每一个字母的高度
+        if (mLetters.size() == 0) {
+            mHeight = mItemHeight;
+        }else {
+            mHeight =  mItemHeight * mLetters.size();
+        }
+
+        mWidth = getMeasuredWidth();
+//        if (mLetters.size() == 0) {
+//            mItemHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics());// 获取每一个字母的高度
+//        } else {
+//            mItemHeight = (mHeight - mPadding) / mLetters.size();
+//        }
+//
+//        mItemHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics());// 获取每一个字母的高度
         mPointX = mWidth - 1.6f * mTextSize;
     }
 
@@ -216,11 +229,12 @@ public class WaveSideBar extends View {
      */
     private void drawLetters(Canvas canvas) {
 
-        RectF rectF = new RectF();
-        rectF.left = mPointX - mTextSize;
-        rectF.right = mPointX + mTextSize;
-        rectF.top = mTextSize / 2;
-        rectF.bottom = mHeight - mTextSize / 2;
+//        RectF rectF = new RectF();
+//        rectF.left = mPointX - mTextSize;
+//        rectF.right = mPointX + mTextSize;
+//        rectF.top = mTextSize / 2;
+//        rectF.bottom = mHeight - mTextSize / 2;
+        Rect targetRect = new Rect(0, 0, getMeasuredWidth(), getMeasuredHeight());  //文字在 targetRect 居中
 
 //        mLettersPaint.reset();
 //        mLettersPaint.setStyle(Paint.Style.FILL);
@@ -243,17 +257,21 @@ public class WaveSideBar extends View {
 
             Paint.FontMetrics fontMetrics = mLettersPaint.getFontMetrics();
             float baseline = Math.abs(-fontMetrics.bottom - fontMetrics.top);
+//            Paint.FontMetricsInt Metrics = mLettersPaint.getFontMetricsInt();
+//            float baseline = (targetRect.bottom + targetRect.top - Metrics.bottom - Metrics.top) / 2 + mItemHeight * i;
 
             float pointY = mItemHeight * i + baseline / 2 + mPadding;
 
+            mLettersPaint.setTextAlign(Paint.Align.CENTER);
             if (i == mChoosePosition) {
                 mPointY = pointY;
             } else {
 //                Rect targetRect = new Rect(0, 0, getMeasuredWidth(), getMeasuredHeight());  //文字在 targetRect 居中
-//                Paint.FontMetricsInt Metrics = mLettersPaint.getFontMetricsInt();
+                Paint.FontMetricsInt Metrics = mLettersPaint.getFontMetricsInt();
 //                float selectline = (targetRect.bottom + targetRect.top - Metrics.bottom - Metrics.top) / 2 + mItemHeight * i;
 //                canvas.drawText(mLetters.get(i), targetRect.centerX(), selectline, mLettersPaint);
 
+//               int index =  (targetRect.top+targetRect.bottom)/2-(Metrics.top + Metrics.bottom)/2;
                 canvas.drawText(mLetters.get(i), mPointX, pointY, mLettersPaint);
 
             }
