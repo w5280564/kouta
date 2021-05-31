@@ -131,7 +131,7 @@
         android:layout_below="@id/tu_txt"
         android:background="@color/white">
 
-        <com.example.kouta.baseview.FlowLayout
+        <com.xunda.mo.main.baseView.FlowLayout
             android:id="@+id/photoLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
                 android:layout_height="56dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/add_photo" />
-        </com.example.kouta.baseview.FlowLayout>
+        </com.xunda.mo.main.baseView.FlowLayout>
 
     </RelativeLayout>
 

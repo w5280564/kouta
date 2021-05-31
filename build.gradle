@@ -3,6 +3,8 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+
+        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.1'
@@ -14,9 +16,13 @@ buildscript {
 
 allprojects {
 
-
-
     repositories {
+
+
+        google()
+        mavenCentral()
+//        jcenter() // Warning: this repository is going to shut down soon
+
         maven {
             url 'https://mirrors.huaweicloud.com/repository/maven/huaweicloudsdk/'
         }
@@ -25,13 +31,10 @@ allprojects {
         }
 
         maven { url 'https://jitpack.io' }
-
-        google()
-        mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

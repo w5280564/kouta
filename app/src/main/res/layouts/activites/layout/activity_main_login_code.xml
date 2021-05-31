@@ -57,7 +57,7 @@
         android:textColor="@color/greytwo"
         android:textSize="14sp" />
 
-    <com.example.kouta.staticdata.TimerTextView
+    <com.xunda.mo.staticdata.TimerTextView
         android:id="@+id/timer_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
         android:layout_marginRight="15dp"
         android:layout_alignTop="@id/four_txt"/>
 
-    <com.example.kouta.staticdata.CaptchaInputView
+    <com.xunda.mo.staticdata.CaptchaInputView
         android:id="@+id/capt_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

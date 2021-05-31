@@ -22,4 +22,5 @@
     <color name="blacktitlettwo">#ff6f6f6f</color>
     <color name="greyline">#ffdcdcdc</color>
     <color name="vipred">#ffff0000</color>
+    <color name="lvRed">#fffead8d</color>
 </resources>
