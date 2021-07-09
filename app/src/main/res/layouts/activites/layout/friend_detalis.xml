@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greyfive">
+
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:id="@+id/details_rel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_Include"
+        android:background="@color/white">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/person_img"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="43dp"
+            app:roundedCornerRadius="15dp"/>
+
+        <LinearLayout
+            android:id="@+id/name_lin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/person_img"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/name_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="昵称：小默"
+                android:textColor="@color/greytwo"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="5dp"
+                android:src="@mipmap/zanicon_img" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/moid_lin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name_lin"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/moid_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mo ID:"
+                android:textColor="@color/greytwo"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="29dp"
+                android:layout_height="15dp"
+                android:layout_marginStart="10dp"
+                android:background="@color/yellow"
+                android:gravity="center"
+                android:text="VIP"
+                android:textColor="@color/vipred"
+                android:textSize="10sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lv_lin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/moid_lin"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="等级："
+                android:textColor="@color/greytwo"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/lv_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/lvRed"
+                android:gravity="center"
+                android:paddingStart="4.5dp"
+                android:paddingTop="3.5dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="3.5dp"
+                android:text="LV3"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/content_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lv_lin"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:text="个性签名：一款多端加密的即时安全聊天软件"
+            android:textColor="#ffa1a1a1"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/add_Btn"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_below="@id/details_rel"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="加为好友"
+        android:textColor="@color/yellowfive"
+        android:textSize="15sp" />
+
+
+</RelativeLayout>

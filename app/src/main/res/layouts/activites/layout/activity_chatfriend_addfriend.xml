@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingConstraints">
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/person_img"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="43dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundedCornerRadius="15dp" />
+
+    <TextView
+        android:id="@+id/nick_nameTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="昵称：Hy"
+        android:textColor="@color/greytwo"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/person_img" />
+
+    <TextView
+        android:id="@+id/leID_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:text="Le ID:"
+        android:textColor="@color/yellowfive"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nick_nameTxt" />
+
+    <TextView
+        android:id="@+id/vip_Txt"
+        android:layout_width="29dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="10dp"
+        android:background="@color/yellow"
+        android:gravity="center"
+        android:text="VIP"
+        android:textColor="@color/vipred"
+        android:textSize="10sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/leID_Txt"
+        app:layout_constraintLeft_toRightOf="@id/leID_Txt" />
+
+
+    <TextView
+        android:id="@+id/grade_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/grade_txt_bg"
+        android:gravity="center"
+        android:text="LV3"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/leID_Txt" />
+
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="等级："
+        android:textColor="@color/greytwo"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/grade_Txt"
+        app:layout_constraintRight_toLeftOf="@id/grade_Txt" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/grade_Txt"
+        app:layout_constraintLeft_toRightOf="@id/grade_Txt"
+        app:layout_constraintTop_toTopOf="@id/grade_Txt" />
+
+    <TextView
+        android:id="@+id/signature_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="个性签名："
+        android:textColor="@color/greytwo"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/grade_Txt" />
+
+    <TextView
+        android:id="@+id/yan_Txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:text="好友验证消息"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/signature_Txt" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0.5dp"
+        android:background="@color/greyline"
+        app:layout_constraintStart_toStartOf="@+id/yan_Txt"
+        app:layout_constraintTop_toBottomOf="@id/yan_Txt" />
+
+    <EditText
+        android:id="@+id/apply_Edit"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@null"
+        android:gravity="top"
+        android:hint="输入验证信息"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:textColor="@color/blacktitlettwo"
+        android:textColorHint="@color/greytwo"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/yan_Txt"
+        app:layout_constraintTop_toBottomOf="@id/yan_Txt" />
+
+
+    <View
+        android:id="@+id/bg_line"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/greyfive"
+        app:layout_constraintTop_toBottomOf="@+id/apply_Edit" />
+
+
+    <TextView
+        android:id="@+id/send_mess_Txt"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="申请"
+        android:textColor="@color/yellowfive"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/bg_line" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="122dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/round_rectangle"
+    android:orientation="vertical"
+    tools:ignore="MissingConstraints">
+
+
+    <LinearLayout
+        android:id="@+id/add_lin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="10dp"
+            android:src="@mipmap/adress_popup_add" />
+
+        <TextView
+            android:id="@+id/add_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:gravity="center"
+            android:text="加好友/群"
+            android:textColor="@color/blacktitlettwo"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="37dp"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="41dp"
+        android:background="@color/greyline" />
+
+    <LinearLayout
+        android:id="@+id/dele_lin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="13.5dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="10dp"
+            android:src="@mipmap/adress_popup_dele" />
+
+        <TextView
+            android:id="@+id/dele_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:gravity="center"
+            android:text="清理好友"
+            android:textColor="@color/blacktitlettwo"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

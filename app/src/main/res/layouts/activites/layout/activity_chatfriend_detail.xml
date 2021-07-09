@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingConstraints">
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/greyfour"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_Include">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/person_img"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="43dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:roundedCornerRadius="15dp" />
+
+            <TextView
+                android:id="@+id/nick_nameTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="昵称：Hy"
+                android:textColor="@color/greytwo"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/person_img" />
+
+            <TextView
+                android:id="@+id/leID_Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:text="Le ID:"
+                android:textColor="@color/yellowfive"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nick_nameTxt" />
+
+            <TextView
+                android:id="@+id/vip_Txt"
+                android:layout_width="29dp"
+                android:layout_height="15dp"
+                android:layout_marginStart="10dp"
+                android:background="@color/yellow"
+                android:gravity="center"
+                android:text="VIP"
+                android:textColor="@color/vipred"
+                android:textSize="10sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/leID_Txt"
+                app:layout_constraintLeft_toRightOf="@id/leID_Txt" />
+
+
+            <TextView
+                android:id="@+id/grade_Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/grade_txt_bg"
+                android:gravity="center"
+                android:text="LV3"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/leID_Txt" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:text="等级："
+                android:textColor="@color/greytwo"
+                android:textSize="12sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/grade_Txt"
+                app:layout_constraintRight_toLeftOf="@id/grade_Txt" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@id/grade_Txt"
+                app:layout_constraintLeft_toRightOf="@id/grade_Txt"
+                app:layout_constraintTop_toTopOf="@id/grade_Txt" />
+
+            <TextView
+                android:id="@+id/signature_Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="个性签名："
+                android:textColor="@color/greytwo"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/grade_Txt" />
+
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/friend_ArrowItemView"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                app:arrowItemContent=""
+                app:arrowItemContentColor="@color/greytwo"
+                app:arrowItemTitle="好友来源"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemTitleSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/signature_Txt" />
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/nick_ArrowItemView"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                app:arrowItemContent=""
+                app:arrowItemContentColor="@color/greytwo"
+                app:arrowItemTitle="备注昵称"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemTitleSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/friend_ArrowItemView" />
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/recommend_ArrowItemView"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                app:arrowItemContentColor="@color/greytwo"
+                app:arrowItemTitle="把Ta推荐给朋友"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemTitleSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nick_ArrowItemView" />
+
+            <com.xunda.mo.main.baseView.MySwitchItemView
+                android:id="@+id/black_Switch"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recommend_ArrowItemView"
+                app:switchItemShowDivider="true"
+                app:switchItemTitle="加入黑名单"
+                app:switchItemTitleColor="@color/blacktitlettwo"
+                app:switchItemTitleSize="15sp" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyfour"
+                app:layout_constraintTop_toBottomOf="@+id/black_Switch">
+
+
+                <TextView
+                    android:id="@+id/send_mess_Txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:text="发送消息"
+                    android:textColor="@color/yellowfive"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/remove_Txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:text="删除好友"
+                    android:textColor="@color/vipred"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/send_mess_Txt" />
+
+
+                <TextView
+                    android:id="@+id/add_Txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:text="添加好友"
+                    android:textColor="@color/yellowfive"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/move_Block_Txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:text="移出黑名单"
+                    android:textColor="@color/vipred"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/add_friend_Group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="friend_ArrowItemView,nick_ArrowItemView,recommend_ArrowItemView,black_Switch" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/site_progressbar"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:max="100"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/title_Include" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

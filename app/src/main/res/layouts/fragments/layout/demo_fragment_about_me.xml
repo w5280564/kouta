@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff9f9f9">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_user"
+        android:layout_width="0dp"
+        android:layout_height="90dp"
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.hyphenate.easeui.widget.EaseImageView
+            android:id="@+id/avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ease_default_avatar"
+            app:ease_shape_type="round"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginStart="11dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/ease_conversation_color_item_name"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toRightOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="ss" />
+
+        <TextView
+            android:id="@+id/tv_userId"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="11dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="50dp"
+            android:textColor="@color/ease_conversation_color_item_name"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toRightOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="ss" />
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="7dp"
+            android:textColor="@color/ease_conversation_color_item_message"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintLeft_toRightOf="@id/avatar"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="ssdd" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/em_margin_15"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_user">
+
+        <com.xunda.mo.hx.common.widget.ArrowItemView
+            android:id="@+id/item_common_set"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/em_common_item_height"
+            android:background="@color/white"
+            android:foreground="@drawable/demo_ripple_click_gray"
+            app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
+            app:arrowItemAvatarSrc="@drawable/d_set"
+            app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
+            app:arrowItemShowAvatar="true"
+            app:arrowItemTitle="@string/em_about_me_set"
+            app:arrowItemTitleSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.xunda.mo.hx.common.widget.ArrowItemView
+            android:id="@+id/item_feedback"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/em_common_item_height"
+            android:background="@color/white"
+            android:foreground="@drawable/demo_ripple_click_gray"
+            android:visibility="gone"
+            app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
+            app:arrowItemAvatarSrc="@drawable/d_feedback"
+            app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
+            app:arrowItemShowAvatar="true"
+            app:arrowItemTitle="@string/em_about_me_feedback"
+            app:arrowItemTitleSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_developer_set" />
+
+        <com.xunda.mo.hx.common.widget.ArrowItemView
+            android:id="@+id/item_about_hx"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/em_common_item_height"
+            android:background="@color/white"
+            android:foreground="@drawable/demo_ripple_click_gray"
+            app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
+            app:arrowItemAvatarSrc="@drawable/d_about_hx"
+            app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
+            app:arrowItemShowAvatar="true"
+            app:arrowItemTitle="@string/em_about_me_hx"
+            app:arrowItemTitleSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_common_set" />
+
+        <com.xunda.mo.hx.common.widget.ArrowItemView
+            android:id="@+id/item_developer_set"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/em_common_item_height"
+            android:background="@color/white"
+            android:foreground="@drawable/demo_ripple_click_gray"
+            app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
+            app:arrowItemAvatarSrc="@drawable/d_developer_set"
+            app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
+            app:arrowItemShowAvatar="true"
+            app:arrowItemTitle="@string/em_about_me_developer"
+            app:arrowItemTitleSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_about_hx" />
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/em_common_item_height"
+            android:layout_marginTop="@dimen/em_margin_30"
+            android:layout_marginBottom="20dp"
+            android:background="@color/white"
+            android:foreground="@drawable/demo_ripple_click_gray"
+            android:text="退出"
+            android:textColor="@color/em_color_warning"
+            android:textSize="@dimen/em_size_big"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_developer_set" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
