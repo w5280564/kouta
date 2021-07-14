@@ -22,6 +22,9 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.xunda.mo.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser> {
 
     private EaseContactSetStyle contactSetModel;
@@ -57,52 +60,52 @@ public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser>
             mUnreadMsgNumber = findViewById(R.id.unread_msg_number);
             clUser = findViewById(R.id.cl_user);
             EaseUserUtils.setUserAvatarStyle(mAvatar);
-            if(contactSetModel != null) {
+            if (contactSetModel != null) {
                 float headerTextSize = contactSetModel.getHeaderTextSize();
-                if(headerTextSize != 0) {
+                if (headerTextSize != 0) {
                     mHeader.setTextSize(TypedValue.COMPLEX_UNIT_PX, headerTextSize);
                 }
                 int headerTextColor = contactSetModel.getHeaderTextColor();
-                if(headerTextColor != 0) {
+                if (headerTextColor != 0) {
                     mHeader.setTextColor(headerTextColor);
                 }
                 Drawable headerBgDrawable = contactSetModel.getHeaderBgDrawable();
-                if(headerBgDrawable != null) {
+                if (headerBgDrawable != null) {
                     mHeader.setBackground(headerBgDrawable);
                 }
                 float titleTextSize = contactSetModel.getTitleTextSize();
-                if(titleTextSize != 0) {
+                if (titleTextSize != 0) {
                     mName.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleTextSize);
                 }
                 int titleTextColor = contactSetModel.getTitleTextColor();
-                if(titleTextColor != 0) {
+                if (titleTextColor != 0) {
                     mName.setTextColor(titleTextColor);
                 }
                 Drawable avatarDefaultSrc = contactSetModel.getAvatarDefaultSrc();
-                if(avatarDefaultSrc != null) {
+                if (avatarDefaultSrc != null) {
                     mAvatar.setImageDrawable(avatarDefaultSrc);
                 }
                 float avatarRadius = contactSetModel.getAvatarRadius();
-                if(avatarRadius != 0) {
+                if (avatarRadius != 0) {
                     mAvatar.setRadius((int) avatarRadius);
                 }
                 float borderWidth = contactSetModel.getBorderWidth();
-                if(borderWidth != 0) {
+                if (borderWidth != 0) {
                     mAvatar.setBorderWidth((int) borderWidth);
                 }
                 int borderColor = contactSetModel.getBorderColor();
-                if(borderColor != 0) {
+                if (borderColor != 0) {
                     mAvatar.setBorderColor(borderColor);
                 }
                 mAvatar.setShapeType(contactSetModel.getShapeType());
                 float avatarSize = contactSetModel.getAvatarSize();
-                if(avatarSize != 0) {
+                if (avatarSize != 0) {
                     ViewGroup.LayoutParams mAvatarLayoutParams = mAvatar.getLayoutParams();
                     mAvatarLayoutParams.height = (int) avatarSize;
                     mAvatarLayoutParams.width = (int) avatarSize;
                 }
                 float itemHeight = contactSetModel.getItemHeight();
-                if(itemHeight != 0) {
+                if (itemHeight != 0) {
                     ViewGroup.LayoutParams userLayoutParams = clUser.getLayoutParams();
                     userLayoutParams.height = (int) itemHeight;
                 }
@@ -114,24 +117,37 @@ public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser>
         @Override
         public void setData(EaseUser item, int position) {
             EaseUserProfileProvider provider = EaseIM.getInstance().getUserProvider();
-            if(provider != null) {
+            if (provider != null) {
                 EaseUser user = provider.getUser(item.getUsername());
-                if(user != null) {
+                if (user != null) {
                     item = user;
                 }
             }
             String header = item.getInitialLetter();
             mHeader.setVisibility(View.GONE);
-            if(position == 0 || (header != null && !header.equals(getItem(position -1).getInitialLetter()))) {
-                if(!TextUtils.isEmpty(header)) {
+            if (position == 0 || (header != null && !header.equals(getItem(position - 1).getInitialLetter()))) {
+                if (!TextUtils.isEmpty(header)) {
                     mHeader.setVisibility(View.VISIBLE);
-                    if(contactSetModel != null) {
+                    if (contactSetModel != null) {
                         mHeader.setVisibility(contactSetModel.isShowItemHeader() ? View.VISIBLE : View.GONE);
                     }
                     mHeader.setText(header);
                 }
             }
-            mName.setText(item.getNickname());
+
+            try {
+
+                String selectInfoExt = item.getExt();
+                JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                String name = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? item.getNickname() : JsonObject.getString("remarkName");
+                mName.setText(name);
+
+//                String name = TextUtils.isEmpty(JsonObject.getString(MyConstant.)) ? dataDTO.getNikeName() : dataDTO.getRemarkName();
+//                mName.setText(item.getNickname());
+            } catch (
+                    JSONException e) {
+                e.printStackTrace();
+            }
             Glide.with(mContext)
                     .load(item.getAvatar())
                     .error(contactSetModel.getAvatarDefaultSrc() != null ? contactSetModel.getAvatarDefaultSrc()

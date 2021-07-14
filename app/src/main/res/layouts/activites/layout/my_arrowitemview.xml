@@ -48,6 +48,19 @@
         tools:text="群文件" />
 
     <ImageView
+        android:id="@+id/tv_img"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@mipmap/person_qrcode"
+        app:layout_constraintRight_toLeftOf="@id/iv_arrow"
+        android:layout_marginRight="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseAppTint"
+        android:tint="@color/yellow"/>
+
+    <ImageView
         android:id="@+id/iv_arrow"
         android:layout_width="7dp"
         android:layout_height="12dp"

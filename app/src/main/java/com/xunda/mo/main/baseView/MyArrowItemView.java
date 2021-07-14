@@ -29,6 +29,7 @@ public class MyArrowItemView extends ConstraintLayout {
     private float titleSize;
     private float contentSize;
     private View root;
+    private ImageView tv_img;
 
     public MyArrowItemView(Context context) {
         this(context, null);
@@ -50,46 +51,47 @@ public class MyArrowItemView extends ConstraintLayout {
         tvContent = findViewById(R.id.tv_content);
         ivArrow = findViewById(R.id.iv_arrow);
         viewDivider = findViewById(R.id.view_divider);
+        tv_img = findViewById(R.id.tv_img);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ArrowItemView);
         int titleResourceId = a.getResourceId(R.styleable.ArrowItemView_arrowItemTitle, -1);
         title = a.getString(R.styleable.ArrowItemView_arrowItemTitle);
-        if(titleResourceId != -1) {
+        if (titleResourceId != -1) {
             title = getContext().getString(titleResourceId);
         }
         tvTitle.setText(title);
 
         int titleColorId = a.getResourceId(R.styleable.ArrowItemView_arrowItemTitleColor, -1);
         titleColor = a.getColor(R.styleable.ArrowItemView_arrowItemTitleColor, ContextCompat.getColor(getContext(), R.color.em_color_common_text_black));
-        if(titleColorId != -1) {
+        if (titleColorId != -1) {
             titleColor = ContextCompat.getColor(getContext(), titleColorId);
         }
         tvTitle.setTextColor(titleColor);
 
         int titleSizeId = a.getResourceId(R.styleable.ArrowItemView_arrowItemTitleSize, -1);
         titleSize = a.getDimension(R.styleable.ArrowItemView_arrowItemTitleSize, sp2px(getContext(), 14));
-        if(titleSizeId != -1) {
+        if (titleSizeId != -1) {
             titleSize = getResources().getDimension(titleSizeId);
         }
         tvTitle.getPaint().setTextSize(titleSize);
 
         int contentResourceId = a.getResourceId(R.styleable.ArrowItemView_arrowItemContent, -1);
         content = a.getString(R.styleable.ArrowItemView_arrowItemContent);
-        if(contentResourceId != -1) {
+        if (contentResourceId != -1) {
             content = getContext().getString(contentResourceId);
         }
         tvContent.setText(content);
 
         int contentColorId = a.getResourceId(R.styleable.ArrowItemView_arrowItemContentColor, -1);
         contentColor = a.getColor(R.styleable.ArrowItemView_arrowItemContentColor, ContextCompat.getColor(getContext(), R.color.em_color_common_text_gray));
-        if(contentColorId != -1) {
+        if (contentColorId != -1) {
             contentColor = ContextCompat.getColor(getContext(), contentColorId);
         }
         tvContent.setTextColor(contentColor);
 
         int contentSizeId = a.getResourceId(R.styleable.ArrowItemView_arrowItemContentSize, -1);
         contentSize = a.getDimension(R.styleable.ArrowItemView_arrowItemContentSize, 14);
-        if(contentSizeId != -1) {
+        if (contentSizeId != -1) {
             contentSize = getResources().getDimension(contentSizeId);
         }
         tvContent.setTextSize(contentSize);
@@ -100,31 +102,52 @@ public class MyArrowItemView extends ConstraintLayout {
         boolean showArrow = a.getBoolean(R.styleable.ArrowItemView_arrowItemShowArrow, true);
         ivArrow.setVisibility(showArrow ? VISIBLE : GONE);
 
+
+        boolean showTvImg = a.getBoolean(R.styleable.ArrowItemView_arrowItemShowtvImg, false);
+        tv_img.setVisibility(showTvImg ? VISIBLE : GONE);
+
+//        int tv_imgSrcResourceId = a.getResourceId(R.styleable.ArrowItemView_tvImgItemSrc, -1);
+//        if(tv_imgSrcResourceId != -1) {
+//            tv_img.setImageResource(tv_imgSrcResourceId);
+//        }
+
+//        int ArrowHeightId = a.getResourceId(R.styleable.ArrowItemView_arrowHeight, -1);
+//        float ArrowHeight = a.getDimension(R.styleable.ArrowItemView_arrowHeight, 0);
+//        if(ArrowHeightId != -1) {
+//            ArrowHeight = getResources().getDimension(ArrowHeightId);
+//        }
+//
+//        int ArrowWidthId = a.getResourceId(R.styleable.ArrowItemView_arrowWidth, -1);
+//        float ArrowWidth = a.getDimension(R.styleable.ArrowItemView_arrowWidth, 0);
+//        if(ArrowWidthId != -1) {
+//            ArrowWidth = getResources().getDimension(ArrowHeightId);
+//        }
+
         boolean showAvatar = a.getBoolean(R.styleable.ArrowItemView_arrowItemShowAvatar, false);
         avatar.setVisibility(showAvatar ? VISIBLE : GONE);
 
         int avatarSrcResourceId = a.getResourceId(R.styleable.ArrowItemView_arrowItemAvatarSrc, -1);
-        if(avatarSrcResourceId != -1) {
+        if (avatarSrcResourceId != -1) {
             avatar.setImageResource(avatarSrcResourceId);
         }
 
         int avatarHeightId = a.getResourceId(R.styleable.ArrowItemView_arrowItemAvatarHeight, -1);
         float height = a.getDimension(R.styleable.ArrowItemView_arrowItemAvatarHeight, 0);
-        if(avatarHeightId != -1) {
+        if (avatarHeightId != -1) {
             height = getResources().getDimension(avatarHeightId);
         }
 
         int avatarWidthId = a.getResourceId(R.styleable.ArrowItemView_arrowItemAvatarWidth, -1);
         float width = a.getDimension(R.styleable.ArrowItemView_arrowItemAvatarWidth, 0);
-        if(avatarWidthId != -1) {
+        if (avatarWidthId != -1) {
             width = getResources().getDimension(avatarWidthId);
         }
 
         a.recycle();
 
         ViewGroup.LayoutParams params = avatar.getLayoutParams();
-        params.height = height == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : (int)height;
-        params.width = width == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : (int)width;
+        params.height = height == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : (int) height;
+        params.width = width == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : (int) width;
     }
 
     public TextView getTvContent() {
@@ -135,10 +158,14 @@ public class MyArrowItemView extends ConstraintLayout {
         return tvTitle;
     }
 
-    public EaseImageView getAvatar() { return avatar; }
+    public EaseImageView getAvatar() {
+        return avatar;
+    }
+    public ImageView getIMG() { return tv_img; }
 
     /**
      * sp to px
+     *
      * @param context
      * @param value
      * @return

@@ -31,6 +31,7 @@ import java.lang.reflect.Field;
 
 public class DemoDialogFragment extends BaseDialogFragment implements View.OnClickListener {
     public TextView mTvDialogTitle;
+    public TextView tv_dialog_content;
     public Button mBtnDialogCancel;
     public Button mBtnDialogConfirm;
     public OnConfirmClickListener mOnConfirmClickListener;
@@ -41,6 +42,7 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
     private int confirmColor;
     private String confirm;
     private boolean showCancel;
+    private boolean showContent;
     private int titleColor;
     private String cancel;
     private float titleSize;
@@ -55,9 +57,9 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
     public void setChildView(View view) {
         super.setChildView(view);
         int layoutId = getMiddleLayoutId();
-        if(layoutId > 0) {
+        if (layoutId > 0) {
             RelativeLayout middleParent = view.findViewById(R.id.rl_dialog_middle);
-            if(middleParent != null) {
+            if (middleParent != null) {
                 LayoutInflater.from(mContext).inflate(layoutId, middleParent);
                 //同时使middleParent可见
                 view.findViewById(R.id.group_middle).setVisibility(View.VISIBLE);
@@ -77,9 +79,9 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
             dialogWindow.setAttributes(lp);
 
             View view = getView();
-            if(view != null) {
+            if (view != null) {
                 ViewGroup.LayoutParams params = view.getLayoutParams();
-                if(params instanceof FrameLayout.LayoutParams) {
+                if (params instanceof FrameLayout.LayoutParams) {
                     int margin = (int) EaseCommonUtils.dip2px(mContext, 30);
                     ((FrameLayout.LayoutParams) params).setMargins(margin, 0, margin, 0);
                 }
@@ -133,6 +135,7 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
 
     /**
      * 获取中间布局的id
+     *
      * @return
      */
     public int getMiddleLayoutId() {
@@ -144,26 +147,35 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
         mBtnDialogCancel = findViewById(R.id.btn_dialog_cancel);
         mBtnDialogConfirm = findViewById(R.id.btn_dialog_confirm);
         mGroupMiddle = findViewById(R.id.group_middle);
+        tv_dialog_content = findViewById(R.id.tv_dialog_content);
 
-        if(!TextUtils.isEmpty(title)) {
+        if (!TextUtils.isEmpty(title)) {
             mTvDialogTitle.setText(title);
         }
-        if(titleColor != 0) {
+        if (titleColor != 0) {
             mTvDialogTitle.setTextColor(titleColor);
         }
-        if(titleSize != 0) {
+        if (titleSize != 0) {
             mTvDialogTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSize);
         }
-        if(!TextUtils.isEmpty(confirm)) {
+
+        if (!TextUtils.isEmpty(content)){
+            tv_dialog_content.setText(content);
+        }
+        if (showContent){
+            tv_dialog_content.setVisibility(View.VISIBLE);
+        }
+
+        if (!TextUtils.isEmpty(confirm)) {
             mBtnDialogConfirm.setText(confirm);
         }
-        if(confirmColor != 0) {
+        if (confirmColor != 0) {
             mBtnDialogConfirm.setTextColor(confirmColor);
         }
-        if(!TextUtils.isEmpty(cancel)) {
+        if (!TextUtils.isEmpty(cancel)) {
             mBtnDialogCancel.setText(cancel);
         }
-        if(showCancel) {
+        if (showCancel) {
             mGroupMiddle.setVisibility(View.VISIBLE);
         }
     }
@@ -173,12 +185,13 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
         mBtnDialogConfirm.setOnClickListener(this);
     }
 
-    public void initData() {}
+    public void initData() {
+    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_dialog_cancel :
+            case R.id.btn_dialog_cancel:
                 onCancelClick(v);
                 break;
             case R.id.btn_dialog_confirm:
@@ -189,6 +202,7 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
 
     /**
      * 设置确定按钮的点击事件
+     *
      * @param listener
      */
     public void setOnConfirmClickListener(OnConfirmClickListener listener) {
@@ -197,6 +211,7 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
 
     /**
      * 设置取消事件
+     *
      * @param cancelClickListener
      */
     public void setOnCancelClickListener(onCancelClickListener cancelClickListener) {
@@ -205,22 +220,24 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
 
     /**
      * 点击了取消按钮
+     *
      * @param v
      */
     public void onCancelClick(View v) {
         dismiss();
-        if(mOnCancelClickListener != null) {
+        if (mOnCancelClickListener != null) {
             mOnCancelClickListener.onCancelClick(v);
         }
     }
 
     /**
      * 点击了确认按钮
+     *
      * @param v
      */
     public void onConfirmClick(View v) {
         dismiss();
-        if(mOnConfirmClickListener != null) {
+        if (mOnConfirmClickListener != null) {
             mOnConfirmClickListener.onConfirmClick(v);
         }
     }
@@ -245,6 +262,7 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
         private int titleColor;
         private float titleSize;
         private boolean showCancel;
+        private boolean showContent;
         private String confirmText;
         private OnConfirmClickListener listener;
         private onCancelClickListener cancelClickListener;
@@ -289,6 +307,10 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
 
         public Builder setContent(String content) {
             this.content = content;
+            return this;
+        }
+        public Builder showContent(boolean showContent) {
+            this.showContent = showContent;
             return this;
         }
 
@@ -353,6 +375,7 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
             fragment.setTitleSize(titleSize);
             fragment.setContent(content);
             fragment.showCancelButton(showCancel);
+            fragment.showContentButton(showContent);
             fragment.setConfirmText(confirmText);
             fragment.setOnConfirmClickListener(this.listener);
             fragment.setConfirmColor(confirmColor);
@@ -405,5 +428,8 @@ public class DemoDialogFragment extends BaseDialogFragment implements View.OnCli
 
     private void setContent(String content) {
         this.content = content;
+    }
+    private void showContentButton(boolean showContent) {
+        this.showContent = showContent;
     }
 }

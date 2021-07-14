@@ -58,6 +58,10 @@ public class saveFile {
     public static String Friend_SetBlack_Url = "friend/setBlack";
     public static String Friend_Silence_Url = "friend/silence";
     public static String User_GetUserInfo_Url = "user/getUserInfo";
+    public static String Common_AllDistricts_Url = "common/allDistricts";
+    public static String User_CheckUpdateUser_Url = "user/checkUpdateUser";
+    public static String User_Update_Url = "user/update";
+    public static String Friend_UpdateRemarkName_Url = "friend/updateRemarkName";
 
 
 

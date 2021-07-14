@@ -94,7 +94,7 @@ public class Fragment_Person extends NewLazyFragment {
         person_set_rel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               logout();
+//               logout();
             }
         });
 
@@ -136,7 +136,6 @@ public class Fragment_Person extends NewLazyFragment {
             @Override
             public void onError(int code, String message) {
                 runOnUiThread(new Runnable() {
-
                     @Override
                     public void run() {
                         pd.dismiss();

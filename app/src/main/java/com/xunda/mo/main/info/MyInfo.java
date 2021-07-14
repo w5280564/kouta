@@ -38,5 +38,13 @@ public class MyInfo {
         editor.commit();
     }
 
+    //修改存储的一条数据
+    public void setOneData(String keyStr,String valueStr){
+        SharedPreferences.Editor editor = share.edit();
+        editor.putString(keyStr,valueStr);
+        editor.commit();
+        getUserInfo().getHeadImg();
+    }
+
 
 }

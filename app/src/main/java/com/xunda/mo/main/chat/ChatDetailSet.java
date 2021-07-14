@@ -39,6 +39,7 @@ import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.chat.activicy.SelectUserCardActivity;
 import com.xunda.mo.hx.section.chat.viewmodel.ChatViewModel;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
+import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.search.SearchSingleChatActivity;
 import com.xunda.mo.main.MainLogin_Register;
@@ -75,6 +76,7 @@ public class ChatDetailSet extends BaseInitActivity {
     private EMConversation conversation;
     private MySwitchItemView top_Switch, disturb_Switch, vip_Switch;
     private ChatViewModel viewModel;
+    private MyArrowItemView nick_ArrowItemView;
 
     public static void actionStart(Context context, String toChatUsername) {
         Intent intent = new Intent(context, ChatDetailSet.class);
@@ -104,7 +106,8 @@ public class ChatDetailSet extends BaseInitActivity {
 
         MyArrowItemView friend_ArrowItemView = findViewById(R.id.friend_ArrowItemView);
         friend_tv_content = friend_ArrowItemView.findViewById(R.id.tv_content);
-        MyArrowItemView nick_ArrowItemView = findViewById(R.id.nick_ArrowItemView);
+         nick_ArrowItemView = findViewById(R.id.nick_ArrowItemView);
+        nick_ArrowItemView.setOnClickListener(new nick_ArrowItemViewClick());
         nick_tv_content = nick_ArrowItemView.findViewById(R.id.tv_content);
         top_Switch = findViewById(R.id.top_Switch);
         top_Switch.setOnCheckedChangeListener(new top_SwitchOnCheckLister());
@@ -201,6 +204,33 @@ public class ChatDetailSet extends BaseInitActivity {
 
         AddFriendMethod(ChatDetailSet.this, saveFile.BaseUrl + saveFile.Friend_info_Url + "?friendHxName=" + toChatUsername);
     }
+    //修改备注
+    private class nick_ArrowItemViewClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            changeNick();
+        }
+    }
+
+    //设置备注
+    private void changeNick() {
+        new EditTextDialogFragment.Builder(mContext)
+                .setContent(nick_ArrowItemView.getTvContent().getText().toString())
+                .setConfirmClickListener(new EditTextDialogFragment.ConfirmClickListener() {
+                    @Override
+                    public void onConfirmClick(View view, String content) {
+                        if (!TextUtils.isEmpty(content)) {
+//                            itemGroupName.getTvContent().setText(content);
+                            String changType = "2";
+                            ChangeUserMethod(ChatDetailSet.this, saveFile.BaseUrl + saveFile.Friend_UpdateRemarkName_Url, content);
+                        }
+                    }
+                })
+                .setTitle("备注昵称")
+                .show();
+    }
+
+
     //   背景图
     private class chatBg_ArrowViewClick extends NoDoubleClickListener {
         @Override
@@ -208,6 +238,7 @@ public class ChatDetailSet extends BaseInitActivity {
             selectPicFromLocal();
         }
     }
+
     private class leID_TxtOnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
@@ -668,6 +699,55 @@ public class ChatDetailSet extends BaseInitActivity {
                 switchView.setEnabled(true);
             }
 
+        });
+    }
+
+    /**
+     * 修改用户信息
+     */
+    public void ChangeUserMethod(Context context, String baseUrl, String remarkName) {
+        RequestParams params = new RequestParams(baseUrl);
+        params.addBodyParameter("friendUserId", model.getData().getUserId());
+        params.addBodyParameter("remarkName", remarkName);
+        if (saveFile.getShareData("JSESSIONID", context) != null) {
+            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
+        }
+        params.setAsJsonContent(true);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String resultString) {
+                if (resultString != null) {
+                    baseModel baseModel = new Gson().fromJson(resultString, baseModel.class);
+                    if (baseModel.getCode() == 200) {
+                        Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
+//                        String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNikeName() : dataDTO.getRemarkName();
+                        nick_nameTxt.setText("昵称：" + remarkName);
+                        cententTxt.setText(remarkName);
+                        nick_tv_content.setText(remarkName);
+
+                        JSONObject obj = new JSONObject();
+                        try {
+                            obj.put("remarkName", remarkName);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        //修改本地其他用户名
+                        String hxUserName = model.getData().getHxUserName();
+                        DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
+                    }
+                } else {
+                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+            }
+            @Override
+            public void onCancelled(CancelledException e) {
+            }
+            @Override
+            public void onFinished() {
+            }
         });
     }
 

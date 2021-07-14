@@ -37,9 +37,7 @@ import com.hyphenate.chat.EMUserInfo;
 import com.hyphenate.easecallkit.EaseCallKit;
 import com.hyphenate.easecallkit.base.EaseCallType;
 import com.hyphenate.easeui.constants.EaseConstant;
-import com.hyphenate.easeui.delegate.EaseMessageAdapterDelegate;
 import com.hyphenate.easeui.domain.EaseUser;
-import com.hyphenate.easeui.interfaces.MessageListItemClickListener;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.modules.chat.EaseChatInputMenu;
 import com.hyphenate.easeui.modules.chat.EaseChatMessageListLayout;
@@ -50,8 +48,6 @@ import com.hyphenate.easeui.modules.chat.interfaces.OnRecallMessageResultListene
 import com.hyphenate.easeui.modules.menu.EasePopupWindowHelper;
 import com.hyphenate.easeui.modules.menu.MenuItemBean;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
-import com.hyphenate.easeui.viewholder.EaseChatRowViewHolder;
-import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.UriUtils;
 import com.xunda.mo.R;
@@ -85,7 +81,6 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.util.List;
-import java.util.Map;
 
 import lombok.SneakyThrows;
 
@@ -393,7 +388,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
             if (event.isMessageChange()) {
 
-                if (messageListLayout.getCurrentConversation().getLastMessage().getStringAttribute("fireType", "").equals("fireType")) {
+                if (messageListLayout.getCurrentConversation().getLastMessage().getStringAttribute(MyConstant.FIRE_TYPE, "").equals("fireType")) {
                     chatLayout.deleteMessage(messageListLayout.getCurrentConversation().getLastMessage());
                 }
 
@@ -478,7 +473,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 user.setContact(3);
             }
 //            ContactDetailActivity.actionStart(mContext, user);
-
             String addType = "8";
             ChatFriend_Detail.actionStart(mContext, username, user, addType);
         } else {
@@ -756,35 +750,13 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                         context.startActivity(intent);
                     } else if (model.getCode() == 200) {
 
-//                        chatLayout
-
-
                         MyInfo myInfo = new MyInfo(requireActivity());
-//                        EaseIM.getInstance().setUserProvider(new EaseUserProfileProvider() {
-//                            @Override
-//                            public EaseUser getUser(String username) {
-//                                //根据username，从数据库中或者内存中取出之前保存的用户信息，如从数据库中取出的用户对象为DemoUserBean
-////                                DemoUserBean bean = getUserFromDbOrMemery(username);
-//
-//                                EaseUser user = DemoHelper.getInstance().getUserInfo(myInfo.getUserInfo().getHxUserName());
-//                                //设置用户昵称
-//                                user.setNickname(myInfo.getUserInfo().getNikeName());
-//                                //设置头像地址
-//                                user.setAvatar(myInfo.getUserInfo().getHeadImg());
-//                                //最后返回构建的EaseUser对象
-//                                return user;
-//                            }
-//                        });
-
-//                        intSelfDate();
-
                         String headUrl = myInfo.getUserInfo().getHeadImg();
                         String nick = myInfo.getUserInfo().getNikeName();
                         EMUserInfo userInfo = new EMUserInfo();
                         userInfo.setAvatarUrl(headUrl);
                         userInfo.setNickName(nick);
                         if (headUrl != null) {
-
                             EMClient.getInstance().userInfoManager().updateOwnInfo(userInfo, new EMValueCallBack<String>() {
                                 @Override
                                 public void onSuccess(String value) {
@@ -795,52 +767,13 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
                                 @Override
                                 public void onError(int error, String errorMsg) {
-
                                 }
                             });
-
-//                            EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, headUrl, new EMValueCallBack<String>() {
-//                                @Override
-//                                public void onSuccess(String value) {
-//                                    EMLog.d(TAG, "updateOwnInfoByAttribute :" + value);
-////                                    showToast(R.string.demo_head_image_update_success);
-//                                    PreferenceManager.getInstance().setCurrentUserAvatar(headUrl);
-//                                    EaseEvent event = EaseEvent.create(DemoConstant.AVATAR_CHANGE, EaseEvent.TYPE.CONTACT);
-//                                    //发送联系人更新事件
-//                                    event.message = headUrl;
-//                                    LiveDataBus.get().with(DemoConstant.AVATAR_CHANGE).postValue(event);
-//
-//                                    PreferenceManager.getInstance().setCurrentUserNick(nick);
-//                                    EaseEvent nickEvent = EaseEvent.create(DemoConstant.NICK_NAME_CHANGE, EaseEvent.TYPE.CONTACT);
-//                                    //发送联系人更新事件
-//                                    nickEvent.message = nick;
-//                                    LiveDataBus.get().with(DemoConstant.NICK_NAME_CHANGE).postValue(event);
-////                                    getIntent().putExtra("headImage", selectHeadUrl);
-////                                    setResult(RESULT_OK, getIntent());
-////                                    finish();
-//                                }
-//
-//                                @Override
-//                                public void onError(int error, String errorMsg) {
-//                                    EMLog.d(TAG, "updateOwnInfoByAttribute  error:" + error + " errorMsg:" + errorMsg);
-////                                    showToast(R.string.demo_head_image_update_failed);
-//                                }
-//                            });
                         }
-
-
-                        if (model.getData().getVipType() == 0) {
-
-                        } else {
-//                            moid_txt.setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
-                        }
-
 
                     } else {
                         Toast.makeText(context, model.getMsg(), Toast.LENGTH_SHORT).show();
                     }
-
-
                 } else {
                     Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
                 }
@@ -863,7 +796,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
     GruopInfo_Bean groupModel;
-
     public void GroupMethod(Context context, String baseUrl) {
         RequestParams params = new RequestParams(baseUrl);
         if (saveFile.getShareData("JSESSIONID", context) != null) {
@@ -907,62 +839,9 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         });
     }
 
-
-    class ChatTxtNewAdapterDelegate extends EaseMessageAdapterDelegate<EMMessage, EaseChatRowViewHolder> {
-
-        @Override
-        protected EaseChatRow getEaseChatRow(ViewGroup parent, boolean isSender) {
-            return null;
-        }
-
-        @Override
-        protected EaseChatRowViewHolder createViewHolder(View view, MessageListItemClickListener itemClickListener) {
-            return null;
-        }
-    }
-
     @Override
     public void setOnChatLayoutListener(OnChatLayoutListener listener) {
         super.setOnChatLayoutListener(listener);
-    }
-
-    private void intSelfDate() {
-        String[] userId = new String[1];
-        userId[0] = conversationId;
-        EMUserInfo.EMUserInfoType[] userInfoTypes = new EMUserInfo.EMUserInfoType[2];
-        userInfoTypes[0] = EMUserInfo.EMUserInfoType.NICKNAME;
-        userInfoTypes[1] = EMUserInfo.EMUserInfoType.AVATAR_URL;
-        EMClient.getInstance().userInfoManager().fetchUserInfoByAttribute(userId, userInfoTypes, new EMValueCallBack<Map<String, EMUserInfo>>() {
-            @Override
-            public void onSuccess(Map<String, EMUserInfo> userInfos) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-
-                        EMUserInfo userInfo = userInfos.get(model.getData().getHxUserName());
-
-                        //昵称
-//                        if(userInfo != null && userInfo.getNickName() != null &&  userInfo.getNickName().length() > 0){
-//                            nickName = userInfo.getNickName();
-//                            PreferenceManager.getInstance().setCurrentUserNick(nickName);
-//                        }
-//                        //头像
-//                        if(userInfo != null && userInfo.getAvatarUrl() != null && userInfo.getAvatarUrl().length() > 0){
-//                            headImageUrl = userInfo.getAvatarUrl();
-//                            Glide.with(mContext).load(headImageUrl).placeholder(R.drawable.em_login_logo).into(headImageView);
-//                            PreferenceManager.getInstance().setCurrentUserAvatar(headImageUrl);
-//                        }
-
-
-                    }
-                });
-            }
-
-            @Override
-            public void onError(int error, String errorMsg) {
-                EMLog.e(TAG, "fetchUserInfoByIds error:" + error + " errorMsg:" + errorMsg);
-            }
-        });
-
     }
 
 

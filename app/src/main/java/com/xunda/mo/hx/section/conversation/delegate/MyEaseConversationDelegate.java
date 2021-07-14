@@ -28,6 +28,9 @@ import com.hyphenate.easeui.utils.EaseSmileUtils;
 import com.xunda.mo.R;
 import com.xunda.mo.main.constant.MyConstant;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 
 public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate {
@@ -121,9 +124,19 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
             if (userProvider != null) {
                 EaseUser user = userProvider.getUser(username);
                 if (user != null) {
-                    if (!TextUtils.isEmpty(user.getNickname())) {
-                        holder.name.setText(user.getNickname());
+
+                    try {
+                        String selectInfoExt = user.getExt();
+                        JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                        String name = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
+                        if (!TextUtils.isEmpty(name)) {
+                            holder.name.setText(name);
+                        }
+                    } catch (
+                            JSONException e) {
+                        e.printStackTrace();
                     }
+
                     if (!TextUtils.isEmpty(user.getAvatar())) {
                         Drawable drawable = holder.avatar.getDrawable();
                         Glide.with(holder.mContext)

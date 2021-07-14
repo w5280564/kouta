@@ -9,11 +9,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.hyphenate.easeui.adapter.EaseBaseRecyclerViewAdapter;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.xunda.mo.R;
-import com.xunda.mo.hx.DemoHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,15 +77,17 @@ public class GroupPickContactsAdapter extends EaseBaseRecyclerViewAdapter<EaseUs
             checkbox = findViewById(R.id.checkbox);
             avatar = findViewById(R.id.avatar);
             name = findViewById(R.id.name);
-            avatar.setShapeType(DemoHelper.getInstance().getEaseAvatarOptions().getAvatarShape());
+//            avatar.setShapeType(DemoHelper.getInstance().getEaseAvatarOptions().getAvatarShape());
         }
 
         @Override
         public void setData(EaseUser item, int position) {
             String username = getRealUsername(item.getUsername());
             name.setText(item.getNickname());
-            //Glide.with(mContext).load(R.drawable.ease_default_avatar).into(avatar);
-            avatar.setImageResource(R.drawable.ease_default_avatar);
+
+            String avatarString = item.getAvatar();
+            Glide.with(mContext).load(avatarString).into(avatar);
+//            avatar.setImageResource(R.drawable.ease_default_avatar);
             String header = item.getInitialLetter();
 
             if (position == 0 || header != null && !header.equals(getItem(position - 1).getInitialLetter())) {

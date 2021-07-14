@@ -43,6 +43,7 @@ import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.hx.section.chat.activicy.SelectUserCardActivity;
 import com.xunda.mo.hx.section.chat.viewmodel.ChatViewModel;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
+import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.MainLogin_Register;
 import com.xunda.mo.main.baseView.BasePopupWindow;
@@ -75,6 +76,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private Group add_friend_Group;
     private String FriendApplyId;
     private ProgressBar site_progressbar;
+    private MyArrowItemView nick_ArrowItemView;
 //    private Switch switch_item;
 
     /**
@@ -125,7 +127,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-
         initTitle();
         person_img = findViewById(R.id.person_img);
         nick_nameTxt = findViewById(R.id.nick_nameTxt);
@@ -147,8 +148,9 @@ public class ChatFriend_Detail extends BaseInitActivity {
 
         MyArrowItemView friend_ArrowItemView = findViewById(R.id.friend_ArrowItemView);
         friend_tv_content = friend_ArrowItemView.findViewById(R.id.tv_content);
-        MyArrowItemView nick_ArrowItemView = findViewById(R.id.nick_ArrowItemView);
+        nick_ArrowItemView = findViewById(R.id.nick_ArrowItemView);
         nick_tv_content = nick_ArrowItemView.findViewById(R.id.tv_content);
+        nick_ArrowItemView.setOnClickListener(new nick_ArrowItemViewClick());
         MyArrowItemView recommend_ArrowItemView = findViewById(R.id.recommend_ArrowItemView);
         recommend_ArrowItemView.setOnClickListener(new recommend_ArrowItemOnClick());
         add_Txt.setOnClickListener(new add_TxtClick());
@@ -225,6 +227,32 @@ public class ChatFriend_Detail extends BaseInitActivity {
         }
     }
 
+    //修改备注
+    private class nick_ArrowItemViewClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            changeNick();
+        }
+    }
+
+    //设置备注
+    private void changeNick() {
+        new EditTextDialogFragment.Builder(mContext)
+                .setContent(nick_ArrowItemView.getTvContent().getText().toString())
+                .setConfirmClickListener(new EditTextDialogFragment.ConfirmClickListener() {
+                    @Override
+                    public void onConfirmClick(View view, String content) {
+                        if (!TextUtils.isEmpty(content)) {
+//                            itemGroupName.getTvContent().setText(content);
+                            String changType = "2";
+                            ChangeUserMethod(ChatFriend_Detail.this, saveFile.BaseUrl + saveFile.Friend_UpdateRemarkName_Url, content);
+                        }
+                    }
+                })
+                .setTitle("备注昵称")
+                .show();
+    }
+
     private class send_mess_TxtOnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
@@ -261,7 +289,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 .showCancelButton(true)
                 .show();
     }
-
 
 
     //加入黑名单
@@ -335,33 +362,21 @@ public class ChatFriend_Detail extends BaseInitActivity {
                         person_img.setImageURI(uri);
 
                         String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNikeName() : dataDTO.getRemarkName();
-                        nick_nameTxt.setText(name);
+                        nick_nameTxt.setText("昵称：" + name);
                         cententTxt.setText(name);
                         nick_tv_content.setText(name);
-                        leID_Txt.setText("Le ID:" + dataDTO.getUserNum().intValue());
+                        leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
                         signature_Txt.setText("个性签名：" + dataDTO.getSignature());
                         friend_tv_content.setText(dataDTO.getSource());
-                        grade_Txt.setText("LV" + dataDTO.getGrade().intValue());
+                        grade_Txt.setText("LV." + dataDTO.getGrade().intValue());
                         if (dataDTO.getVipType() == 0) {
                             vip_Txt.setVisibility(View.GONE);
                         } else {
                             vip_Txt.setVisibility(View.VISIBLE);
 //                            .setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
                         }
-//                        cententTxt.setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
-//                        cententTxt.setText(model.getData().getNikeName());
-//                        name_txt.setText(model.getData().getNikeName());
-//                        moid_txt.setText("Mo ID:" + model.getData().getUserNum().intValue());
-//                        lv_txt.setText("LV" + model.getData().getGrade().intValue());
-
-//                        if (TextUtils.equals(dataDTO.getFriendStatus(), "3")) {
-//                            black_Switch.getSwitch().setChecked(true);
-//                        } else {
-//                            black_Switch.getSwitch().setChecked(false);
-//                        }
 
                         isFriendSetView(dataDTO.getIsFriend(), dataDTO.getFriendStatus());
-
 
                     } else {
                         Toast.makeText(context, model.getMsg(), Toast.LENGTH_SHORT).show();
@@ -635,7 +650,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
         }
         params.setAsJsonContent(true);
         params.setBodyContent(obj.toString());
-
         x.http().post(params, new Callback.CommonCallback<String>() {
             @SneakyThrows
             @Override
@@ -685,6 +699,60 @@ public class ChatFriend_Detail extends BaseInitActivity {
         });
     }
 
+    /**
+     * 修改用户信息
+     */
+    public void ChangeUserMethod(Context context, String baseUrl, String remarkName) {
+        RequestParams params = new RequestParams(baseUrl);
+        params.addBodyParameter("friendUserId", model.getData().getUserId());
+        params.addBodyParameter("remarkName", remarkName);
+        if (saveFile.getShareData("JSESSIONID", context) != null) {
+            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
+        }
+        params.setAsJsonContent(true);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String resultString) {
+                if (resultString != null) {
+                    baseModel baseModel = new Gson().fromJson(resultString, baseModel.class);
+                    if (baseModel.getCode() == 200) {
+                        Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
+//                        String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNikeName() : dataDTO.getRemarkName();
+                        nick_nameTxt.setText("昵称：" + remarkName);
+                        cententTxt.setText(remarkName);
+                        nick_tv_content.setText(remarkName);
+
+                        JSONObject obj = new JSONObject();
+                        try {
+                            obj.put("remarkName", remarkName);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        //修改本地其他用户名
+                        String hxUserName = model.getData().getHxUserName();
+                        DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
+
+
+
+                    }
+                } else {
+                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        });
+    }
 
 
 }

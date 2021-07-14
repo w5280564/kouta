@@ -474,25 +474,23 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
         }
     }
 
-    private final PermissionUtils.PermissionGrant permissionGrant = new PermissionUtils.PermissionGrant() {
-        @Override
-        public void onPermissionGranted(int requestCode) {
-            switch (requestCode) {
-                case PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE:
-//                Toast.makeText(ImagePickerActivity.this, "读取存储权限已打开", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(Person_Set.this,Person_Set_Cache.class);
-//                    startActivity(intent);
-                    break;
-            }
-        }
-    };
 
     /*申请权限的回调*/
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionUtils.requestPermissionsResult(this, requestCode, permissions, grantResults, permissionGrant);
+        PermissionUtils.requestPermissionsResult(this, requestCode, permissions, grantResults, new PermissionUtils.PermissionGrant() {
+            @Override
+            public void onPermissionGranted(int requestCode) {
+                switch (requestCode) {
+                    case PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE:
+//                Toast.makeText(ImagePickerActivity.this, "读取存储权限已打开", Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(Person_Set.this,Person_Set_Cache.class);
+//                    startActivity(intent);
+                        break;
+                }
+            }
+        });
     }
 
     private void checkNeedPermissions() {
@@ -514,8 +512,8 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
     }
 
 
-    StringBuffer sbf = new StringBuffer();
 
+    StringBuffer sbf = new StringBuffer();
     class PostObjectTask extends AsyncTask<Void, Void, String> {
         @SneakyThrows
         @Override
@@ -572,7 +570,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
     }
 
 
-    public static void addAcl(ObsClient client,String bucketname,String objectname,String localfile) {
+    public static void addAcl(ObsClient client, String bucketname, String objectname, String localfile) {
         PutObjectRequest request = new PutObjectRequest();
         request.setBucketName(bucketname);
         request.setObjectKey(objectname);

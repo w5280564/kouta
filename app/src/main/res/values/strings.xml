@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">kouta</string>
 
+    <string name="refreshing">正在刷新...</string>
+    <string name="refresh_succeed">刷新成功</string>
+    <string name="refresh_fail">刷新失败</string>
+    <string name="listview_header_hint_normal">下拉刷新</string>
+    <string name="listview_header_hint_release">释放立即刷新</string>
+    <string name="listview_loading">正在加载...</string>
+
 
     <string name="attach_two_withdraw">双向撤回</string>
-
-
     <string name="demo_app_product_name">环信即时通讯产品</string>
 
     <string name="username">用户名</string>

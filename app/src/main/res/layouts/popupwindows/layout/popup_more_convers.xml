@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="122dp"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/round_rectangle"
+    tools:ignore="MissingConstraints">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/add_Constraint"
+        android:layout_width="122dp"
+        android:layout_height="44dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="16dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/adress_popup_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/add_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:text="加好友/群"
+            android:textColor="@color/blacktitlettwo"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/line_View"
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="41dp"
+            android:background="@color/greyline"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/setUp_Constraint"
+        android:layout_width="122dp"
+        android:layout_height="44dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/add_Constraint">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="16dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/adress_popup_dele"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/dele_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:text="发起群聊"
+            android:textColor="@color/blacktitlettwo"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="41dp"
+            android:background="@color/greyline"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/friend_Constraint"
+        android:layout_width="122dp"
+        android:layout_height="44dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/setUp_Constraint">
+
+        <ImageView
+            android:id="@+id/friend_Img"
+            android:layout_width="16dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/adress_popup_dele"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/friend_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:text="好友分组"
+            android:textColor="@color/blacktitlettwo"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/friend_Img"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="41dp"
+            android:background="@color/greyline"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/massDis_Constraint"
+        android:layout_width="122dp"
+        android:layout_height="44dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/friend_Constraint">
+
+        <ImageView
+            android:id="@+id/massDis_Img"
+            android:layout_width="16dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/adress_popup_dele"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/massDis_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:text="好友群发"
+            android:textColor="@color/blacktitlettwo"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/massDis_Img"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="41dp"
+            android:background="@color/greyline"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/QR_Constraint"
+        android:layout_width="122dp"
+        android:layout_height="44dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/massDis_Constraint">
+
+        <ImageView
+            android:id="@+id/QR_Img"
+            android:layout_width="16dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/adress_popup_dele"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/QR_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:text="扫一扫"
+            android:textColor="@color/blacktitlettwo"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/QR_Img"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="41dp"
+            android:background="@color/greyline"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

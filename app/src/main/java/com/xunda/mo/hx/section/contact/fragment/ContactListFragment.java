@@ -449,13 +449,13 @@ public class ContactListFragment extends EaseContactListFragment implements View
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     } else if (model.getCode() == 200) {
-
-                        List<EaseUser> data = new ArrayList<>();
+                         List<EaseUser> data = new ArrayList<>();
                         for (int i = 0; i < model.getData().size(); i++) {
                             adress_Model.DataDTO dataDTO = model.getData().get(i);
                             EaseUser user = new MyEaseUser();
 //                            user.setContact(dataDTO.);
                             user.setUsername(dataDTO.getHxUserName());
+
                             user.setNickname(dataDTO.getNikeName());
                             // 正则表达式，判断首字母是否是英文字母
                             String pinyin = PinyinUtils.getPingYin(dataDTO.getNikeName());
@@ -478,7 +478,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
 //                            user.setLightStatus(dataDTO.getLightStatus());
 //                            user.setVipType(dataDTO.getVipType());
 //                            user.setUserNum(dataDTO.getUserNum());
-
                             JSONObject obj = new JSONObject();
                             try {
                                 obj.put("lightStatus", dataDTO.getLightStatus());
@@ -490,26 +489,21 @@ public class ContactListFragment extends EaseContactListFragment implements View
                                 e.printStackTrace();
                             }
                             user.setExt(obj.toString());
-
                             data.add(user);
-
                             //通知callKit更新头像昵称
                             EaseCallUserInfo info = new EaseCallUserInfo(dataDTO.getNikeName(), dataDTO.getHeadImg());
                             info.setUserId(info.getUserId());
                             EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
                         }
-
                         sortList(data);
                         myContactList_adapter.setData(data);
                         contactLayout.getSwipeRefreshLayout().setRefreshing(false);
 //                        contactList.setData(data);
 //                        contactList.refreshList();
-
                         //更新本地数据库信息
                         DemoHelper.getInstance().updateUserList(data);
                         //更新本地联系人列表
                         DemoHelper.getInstance().updateContactList();
-
 
 //                        //通知UI刷新列表
 //                        EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_ADD, EaseEvent.TYPE.CONTACT);

@@ -190,8 +190,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void startLocation() {
-
-
         //监听授权
         List<String> permissionList = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.

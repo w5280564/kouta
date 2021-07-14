@@ -41,6 +41,20 @@
             android:ellipsize="end"
             tools:text="标题"/>
 
+
+        <TextView
+            android:id="@+id/tv_dialog_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_dialog_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:textColor="@color/blacktitlettwo"
+            android:visibility="gone"
+            android:text="内容"/>
+
         <RelativeLayout
             android:id="@+id/rl_dialog_middle"
             android:layout_width="0dp"

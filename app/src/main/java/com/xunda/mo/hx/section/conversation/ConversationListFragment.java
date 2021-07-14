@@ -8,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -40,6 +40,7 @@ import com.xunda.mo.hx.section.chat.viewmodel.MessageViewModel;
 import com.xunda.mo.hx.section.conversation.viewmodel.ConversationListViewModel;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
+import com.xunda.mo.hx.section.group.activity.GroupPrePickActivity;
 import com.xunda.mo.hx.section.message.SystemMsgsActivity;
 import com.xunda.mo.hx.section.search.SearchConversationActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
@@ -289,7 +290,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
 
     //更多
     private void showMore(final Context mContext, final View view, final int pos) {
-        View contentView = View.inflate(mContext, R.layout.popup_morefriend, null);
+        View contentView = View.inflate(mContext, R.layout.popup_more_convers, null);
         PopupWindow MorePopup = new BasePopupWindow(mContext);
 //        if (MorePopup.isShowing()){
 //            return;
@@ -300,9 +301,10 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         MorePopup.setContentView(contentView);
 //        MorePopup.showAtLocation(view, Gravity.TOP|Gravity.RIGHT, 20, 12);
         MorePopup.showAsDropDown(view, 20, 12);
-        LinearLayout add_lin = contentView.findViewById(R.id.add_lin);
-//        TextView newregistr_txt = contentView.findViewById(R.id.newregistr_txt);
-        add_lin.setOnClickListener(new View.OnClickListener() {
+        ConstraintLayout add_Constraint = contentView.findViewById(R.id.add_Constraint);
+        ConstraintLayout setUp_Constraint = contentView.findViewById(R.id.setUp_Constraint);
+
+        add_Constraint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, Friend_Add.class);
@@ -310,13 +312,15 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
                 MorePopup.dismiss();
             }
         });
+        //创建群聊
+        setUp_Constraint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GroupPrePickActivity.actionStart(mContext);
+            }
+        });
 
-//        contentView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                MorePopup.dismiss();
-//            }
-//        });
+
     }
 
 }

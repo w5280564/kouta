@@ -16,6 +16,10 @@
         <attr name="arrowItemContentSize" format="dimension|reference"/>
         <attr name="arrowItemShowDivider" format="boolean"/>
         <attr name="arrowItemShowArrow" format="boolean"/>
+        <attr name="arrowItemShowtvImg" format="boolean"/>
+<!--        <attr name="tvImgItemSrc" format="reference"/>-->
+<!--        <attr name="arrowHeight" format="dimension|reference"/>-->
+<!--        <attr name="arrowWidth" format="dimension|reference"/>-->
         <attr name="arrowItemShowAvatar" format="boolean"/>
         <attr name="arrowItemAvatarSrc" format="reference"/>
         <attr name="arrowItemAvatarHeight" format="dimension|reference"/>
