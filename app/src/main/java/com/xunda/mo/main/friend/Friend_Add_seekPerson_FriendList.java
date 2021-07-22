@@ -1,8 +1,5 @@
 package com.xunda.mo.main.friend;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,13 +12,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.google.gson.Gson;
 import com.xunda.mo.R;
 import com.xunda.mo.main.MainLogin_Register;
 import com.xunda.mo.main.myAdapter.Friend_Seek_FriendList_Adapter;
 import com.xunda.mo.model.AddFriend_FriendList_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.xrecycle.XRecyclerView;
-import com.google.gson.Gson;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -114,7 +114,7 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {//打开软键盘
+            if (imm != null) {//打开关闭软键盘
                 imm.hideSoftInputFromWindow(seek_edit.getWindowToken(), 0);
             }
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {

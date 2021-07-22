@@ -15,7 +15,7 @@
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/greyfour"
+        android:background="@color/greyfive"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -126,7 +126,6 @@
                 android:layout_width="0dp"
                 android:layout_height="45dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 app:arrowItemContent=""
                 app:arrowItemContentColor="@color/greytwo"
                 app:arrowItemTitle="好友来源"
@@ -141,7 +140,6 @@
                 android:layout_width="0dp"
                 android:layout_height="45dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 app:arrowItemContent=""
                 app:arrowItemContentColor="@color/greytwo"
                 app:arrowItemTitle="备注昵称"
@@ -156,7 +154,6 @@
                 android:layout_width="0dp"
                 android:layout_height="45dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 app:arrowItemContentColor="@color/greytwo"
                 app:arrowItemTitle="把Ta推荐给朋友"
                 app:arrowItemTitleColor="@color/blacktitlettwo"
@@ -170,7 +167,6 @@
                 android:layout_width="0dp"
                 android:layout_height="45dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recommend_ArrowItemView"
@@ -183,7 +179,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/greyfour"
+                android:background="@color/greyfive"
                 app:layout_constraintTop_toBottomOf="@+id/black_Switch">
 
 

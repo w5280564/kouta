@@ -313,82 +313,86 @@ public class ChatPresenter extends EaseChatPresenter {
 
     private class ChatGroupListener extends EaseGroupListener {
 
+        public void onChangeName(){
+
+        }
+
         @Override
         public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
             super.onInvitationReceived(groupId, groupName, inviter, reason);
             //移除相同的请求
-            List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
-            if(allMessages != null && !allMessages.isEmpty()) {
-                for (EMMessage message : allMessages) {
-                    Map<String, Object> ext = message.ext();
-                    if(ext != null && (ext.containsKey(DemoConstant.SYSTEM_MESSAGE_GROUP_ID) && TextUtils.equals(groupId, (String)ext.get(DemoConstant.SYSTEM_MESSAGE_GROUP_ID)))
-                            && (ext.containsKey(DemoConstant.SYSTEM_MESSAGE_INVITER) && TextUtils.equals(inviter, (String)ext.get(DemoConstant.SYSTEM_MESSAGE_INVITER)))) {
-                        EaseSystemMsgManager.getInstance().removeMessage(message);
-                    }
-                }
-            }
-            groupName = TextUtils.isEmpty(groupName) ? groupId : groupName;
-            Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
-            ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, groupId);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_GROUP_ID, groupId);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_REASON, reason);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_NAME, groupName);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_INVITER, inviter);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.GROUPINVITATION.name());
-            EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
-
-            notifyNewInviteMessage(message);
+//            List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
+//            if(allMessages != null && !allMessages.isEmpty()) {
+//                for (EMMessage message : allMessages) {
+//                    Map<String, Object> ext = message.ext();
+//                    if(ext != null && (ext.containsKey(DemoConstant.SYSTEM_MESSAGE_GROUP_ID) && TextUtils.equals(groupId, (String)ext.get(DemoConstant.SYSTEM_MESSAGE_GROUP_ID)))
+//                            && (ext.containsKey(DemoConstant.SYSTEM_MESSAGE_INVITER) && TextUtils.equals(inviter, (String)ext.get(DemoConstant.SYSTEM_MESSAGE_INVITER)))) {
+//                        EaseSystemMsgManager.getInstance().removeMessage(message);
+//                    }
+//                }
+//            }
+//            groupName = TextUtils.isEmpty(groupName) ? groupId : groupName;
+//            Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, groupId);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_GROUP_ID, groupId);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_REASON, reason);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_NAME, groupName);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_INVITER, inviter);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.GROUPINVITATION.name());
+//            EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
+//
+//            notifyNewInviteMessage(message);
             EaseEvent event = EaseEvent.create(DemoConstant.NOTIFY_GROUP_INVITE_RECEIVE, EaseEvent.TYPE.NOTIFY);
             messageChangeLiveData.with(DemoConstant.NOTIFY_CHANGE).postValue(event);
 
-            showToast(context.getString(InviteMessageStatus.GROUPINVITATION.getMsgContent(), inviter, groupName));
+//            showToast(context.getString(InviteMessageStatus.GROUPINVITATION.getMsgContent(), inviter, groupName));
             EMLog.i(TAG, context.getString(InviteMessageStatus.GROUPINVITATION.getMsgContent(), inviter, groupName));
         }
 
         @Override
         public void onInvitationAccepted(String groupId, String invitee, String reason) {
             super.onInvitationAccepted(groupId, invitee, reason);
-            //user accept your invitation
-            String groupName = GroupHelper.getGroupName(groupId);
-
-            Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
-            ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, groupId);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_GROUP_ID, groupId);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_REASON, reason);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_NAME, groupName);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_INVITER, invitee);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.GROUPINVITATION_ACCEPTED.name());
-            EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
-
-            notifyNewInviteMessage(message);
+            //user accept your invitation 用户接受您的邀请
+//            String groupName = GroupHelper.getGroupName(groupId);
+//
+//            Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, groupId);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_GROUP_ID, groupId);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_REASON, reason);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_NAME, groupName);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_INVITER, invitee);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.GROUPINVITATION_ACCEPTED.name());
+//            EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
+//
+//            notifyNewInviteMessage(message);
             EaseEvent event = EaseEvent.create(DemoConstant.NOTIFY_GROUP_INVITE_ACCEPTED, EaseEvent.TYPE.NOTIFY);
             messageChangeLiveData.with(DemoConstant.NOTIFY_CHANGE).postValue(event);
-
-            showToast(context.getString(InviteMessageStatus.GROUPINVITATION_ACCEPTED.getMsgContent(), invitee));
+//
+//            showToast(context.getString(InviteMessageStatus.GROUPINVITATION_ACCEPTED.getMsgContent(), invitee));
             EMLog.i(TAG, context.getString(InviteMessageStatus.GROUPINVITATION_ACCEPTED.getMsgContent(), invitee));
         }
 
         @Override
         public void onInvitationDeclined(String groupId, String invitee, String reason) {
             super.onInvitationDeclined(groupId, invitee, reason);
-            //user declined your invitation
+            //user declined your invitation 用户拒绝了您的邀请
             String groupName = GroupHelper.getGroupName(groupId);
 
-            Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
-            ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, groupId);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_GROUP_ID, groupId);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_REASON, reason);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_NAME, groupName);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_INVITER, invitee);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.GROUPINVITATION_DECLINED.name());
-            EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
-
-            notifyNewInviteMessage(message);
+//            Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, groupId);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_GROUP_ID, groupId);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_REASON, reason);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_NAME, groupName);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_INVITER, invitee);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.GROUPINVITATION_DECLINED.name());
+//            EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
+//
+//            notifyNewInviteMessage(message);
             EaseEvent event = EaseEvent.create(DemoConstant.NOTIFY_GROUP_INVITE_DECLINED, EaseEvent.TYPE.NOTIFY);
             messageChangeLiveData.with(DemoConstant.NOTIFY_CHANGE).postValue(event);
-
-            showToast(context.getString(InviteMessageStatus.GROUPINVITATION_DECLINED.getMsgContent(), invitee));
-            EMLog.i(TAG, context.getString(InviteMessageStatus.GROUPINVITATION_DECLINED.getMsgContent(), invitee));
+//
+//            showToast(context.getString(InviteMessageStatus.GROUPINVITATION_DECLINED.getMsgContent(), invitee));
+//            EMLog.i(TAG, context.getString(InviteMessageStatus.GROUPINVITATION_DECLINED.getMsgContent(), invitee));
         }
 
         @Override
@@ -396,9 +400,9 @@ public class ChatPresenter extends EaseChatPresenter {
             EaseEvent easeEvent = new EaseEvent(DemoConstant.GROUP_CHANGE, EaseEvent.TYPE.GROUP_LEAVE);
             easeEvent.message = groupId;
             messageChangeLiveData.with(DemoConstant.GROUP_CHANGE).postValue(easeEvent);
-
-            showToast(context.getString(R.string.demo_group_listener_onUserRemoved, groupName));
-            EMLog.i(TAG, context.getString(R.string.demo_group_listener_onUserRemoved, groupName));
+//
+//            showToast(context.getString(R.string.demo_group_listener_onUserRemoved, groupName));
+//            EMLog.i(TAG, context.getString(R.string.demo_group_listener_onUserRemoved, groupName));
         }
 
         @Override
@@ -406,39 +410,39 @@ public class ChatPresenter extends EaseChatPresenter {
             EaseEvent easeEvent = new EaseEvent(DemoConstant.GROUP_CHANGE, EaseEvent.TYPE.GROUP_LEAVE);
             easeEvent.message = groupId;
             messageChangeLiveData.with(DemoConstant.GROUP_CHANGE).postValue(easeEvent);
-
-            showToast(context.getString(R.string.demo_group_listener_onGroupDestroyed, groupName));
-            EMLog.i(TAG, context.getString(R.string.demo_group_listener_onGroupDestroyed, groupName));
+//
+//            showToast(context.getString(R.string.demo_group_listener_onGroupDestroyed, groupName));
+//            EMLog.i(TAG, context.getString(R.string.demo_group_listener_onGroupDestroyed, groupName));
         }
 
         @Override
         public void onRequestToJoinReceived(String groupId, String groupName, String applicant, String reason) {
             super.onRequestToJoinReceived(groupId, groupName, applicant, reason);
             //移除相同的请求
-            List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
-            if(allMessages != null && !allMessages.isEmpty()) {
-                for (EMMessage message : allMessages) {
-                    Map<String, Object> ext = message.ext();
-                    if(ext != null && (ext.containsKey(DemoConstant.SYSTEM_MESSAGE_GROUP_ID) && TextUtils.equals(groupId, (String)ext.get(DemoConstant.SYSTEM_MESSAGE_GROUP_ID)))
-                            && (ext.containsKey(DemoConstant.SYSTEM_MESSAGE_FROM) && TextUtils.equals(applicant, (String)ext.get(DemoConstant.SYSTEM_MESSAGE_FROM)))) {
-                        EaseSystemMsgManager.getInstance().removeMessage(message);
-                    }
-                }
-            }
-            // user apply to join group
-            Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
-            ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, applicant);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_GROUP_ID, groupId);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_REASON, reason);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_NAME, groupName);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.BEAPPLYED.name());
-            EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
-
-            notifyNewInviteMessage(message);
+//            List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
+//            if(allMessages != null && !allMessages.isEmpty()) {
+//                for (EMMessage message : allMessages) {
+//                    Map<String, Object> ext = message.ext();
+//                    if(ext != null && (ext.containsKey(DemoConstant.SYSTEM_MESSAGE_GROUP_ID) && TextUtils.equals(groupId, (String)ext.get(DemoConstant.SYSTEM_MESSAGE_GROUP_ID)))
+//                            && (ext.containsKey(DemoConstant.SYSTEM_MESSAGE_FROM) && TextUtils.equals(applicant, (String)ext.get(DemoConstant.SYSTEM_MESSAGE_FROM)))) {
+//                        EaseSystemMsgManager.getInstance().removeMessage(message);
+//                    }
+//                }
+//            }
+//            // user apply to join group
+//            Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, applicant);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_GROUP_ID, groupId);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_REASON, reason);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_NAME, groupName);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.BEAPPLYED.name());
+//            EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
+//
+//            notifyNewInviteMessage(message);
             EaseEvent event = EaseEvent.create(DemoConstant.NOTIFY_GROUP_JOIN_RECEIVE, EaseEvent.TYPE.NOTIFY);
             messageChangeLiveData.with(DemoConstant.NOTIFY_CHANGE).postValue(event);
 
-            showToast(context.getString(InviteMessageStatus.BEAPPLYED.getMsgContent(), applicant, groupName));
+//            showToast(context.getString(InviteMessageStatus.BEAPPLYED.getMsgContent(), applicant, groupName));
             EMLog.i(TAG, context.getString(InviteMessageStatus.BEAPPLYED.getMsgContent(), applicant, groupName));
         }
 
@@ -446,53 +450,54 @@ public class ChatPresenter extends EaseChatPresenter {
         public void onRequestToJoinAccepted(String groupId, String groupName, String accepter) {
             super.onRequestToJoinAccepted(groupId, groupName, accepter);
             // your application was accepted
-            EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-            msg.setChatType(EMMessage.ChatType.GroupChat);
-            msg.setFrom(accepter);
-            msg.setTo(groupId);
-            msg.setMsgId(UUID.randomUUID().toString());
-            msg.setAttribute(DemoConstant.EM_NOTIFICATION_TYPE, true);
-            msg.addBody(new EMTextMessageBody(context.getString(R.string.demo_group_listener_onRequestToJoinAccepted, accepter, groupName)));
-            msg.setStatus(EMMessage.Status.SUCCESS);
-            // save accept message
-            EMClient.getInstance().chatManager().saveMessage(msg);
-            // notify the accept message
-            getNotifier().vibrateAndPlayTone(msg);
-
+//            EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+//            msg.setChatType(EMMessage.ChatType.GroupChat);
+//            msg.setFrom(accepter);
+//            msg.setTo(groupId);
+//            msg.setMsgId(UUID.randomUUID().toString());
+//            msg.setAttribute(DemoConstant.EM_NOTIFICATION_TYPE, true);
+//            msg.addBody(new EMTextMessageBody(context.getString(R.string.demo_group_listener_onRequestToJoinAccepted, accepter, groupName)));
+//            msg.setStatus(EMMessage.Status.SUCCESS);
+//            // save accept message
+//            EMClient.getInstance().chatManager().saveMessage(msg);
+//            // notify the accept message
+//            getNotifier().vibrateAndPlayTone(msg);
+//
             EaseEvent event = EaseEvent.create(DemoConstant.MESSAGE_GROUP_JOIN_ACCEPTED, EaseEvent.TYPE.MESSAGE);
             messageChangeLiveData.with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(event);
-
-            showToast(context.getString(R.string.demo_group_listener_onRequestToJoinAccepted, accepter, groupName));
+//
+//            showToast(context.getString(R.string.demo_group_listener_onRequestToJoinAccepted, accepter, groupName));
             EMLog.i(TAG, context.getString(R.string.demo_group_listener_onRequestToJoinAccepted, accepter, groupName));
         }
 
         @Override
         public void onRequestToJoinDeclined(String groupId, String groupName, String decliner, String reason) {
             super.onRequestToJoinDeclined(groupId, groupName, decliner, reason);
-            showToast(context.getString(R.string.demo_group_listener_onRequestToJoinDeclined, decliner, groupName));
+//            showToast(context.getString(R.string.demo_group_listener_onRequestToJoinDeclined, decliner, groupName));
             EMLog.i(TAG, context.getString(R.string.demo_group_listener_onRequestToJoinDeclined, decliner, groupName));
         }
 
+        //发送的加入群消息屏蔽掉
         @Override
         public void onAutoAcceptInvitationFromGroup(String groupId, String inviter, String inviteMessage) {
             super.onAutoAcceptInvitationFromGroup(groupId, inviter, inviteMessage);
             String groupName = GroupHelper.getGroupName(groupId);
-            EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-            msg.setChatType(EMMessage.ChatType.GroupChat);
-            msg.setFrom(inviter);
-            msg.setTo(groupId);
-            msg.setMsgId(UUID.randomUUID().toString());
-            msg.setAttribute(DemoConstant.EM_NOTIFICATION_TYPE, true);
-            msg.addBody(new EMTextMessageBody(context.getString(R.string.demo_group_listener_onAutoAcceptInvitationFromGroup, groupName)));
-            msg.setStatus(EMMessage.Status.SUCCESS);
-            // save invitation as messages
-            EMClient.getInstance().chatManager().saveMessage(msg);
-            // notify invitation message
-            getNotifier().vibrateAndPlayTone(msg);
+//            EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+//            msg.setChatType(EMMessage.ChatType.GroupChat);
+//            msg.setFrom(inviter);
+//            msg.setTo(groupId);
+//            msg.setMsgId(UUID.randomUUID().toString());
+//            msg.setAttribute(DemoConstant.EM_NOTIFICATION_TYPE, true);
+//            msg.addBody(new EMTextMessageBody(context.getString(R.string.demo_group_listener_onAutoAcceptInvitationFromGroup, groupName)));
+//            msg.setStatus(EMMessage.Status.SUCCESS);
+//            // save invitation as messages
+//            EMClient.getInstance().chatManager().saveMessage(msg);
+//            // notify invitation message
+//            getNotifier().vibrateAndPlayTone(msg);
             EaseEvent event = EaseEvent.create(DemoConstant.MESSAGE_GROUP_AUTO_ACCEPT, EaseEvent.TYPE.MESSAGE);
             messageChangeLiveData.with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(event);
 
-            showToast(context.getString(R.string.demo_group_listener_onAutoAcceptInvitationFromGroup, groupName));
+//            showToast(context.getString(R.string.demo_group_listener_onAutoAcceptInvitationFromGroup, groupName));
             EMLog.i(TAG, context.getString(R.string.demo_group_listener_onAutoAcceptInvitationFromGroup, groupName));
         }
 
@@ -565,21 +570,21 @@ public class ChatPresenter extends EaseChatPresenter {
         @Override
         public void onOwnerChanged(String groupId, String newOwner, String oldOwner) {
             LiveDataBus.get().with(DemoConstant.GROUP_CHANGE).postValue(EaseEvent.create(DemoConstant.GROUP_OWNER_TRANSFER, EaseEvent.TYPE.GROUP));
-            showToast(context.getString(R.string.demo_group_listener_onOwnerChanged, oldOwner, newOwner));
+//            showToast(context.getString(R.string.demo_group_listener_onOwnerChanged, oldOwner, newOwner));
             EMLog.i(TAG, context.getString(R.string.demo_group_listener_onOwnerChanged, oldOwner, newOwner));
         }
 
         @Override
         public void onMemberJoined(String groupId, String member) {
             LiveDataBus.get().with(DemoConstant.GROUP_CHANGE).postValue(EaseEvent.create(DemoConstant.GROUP_CHANGE, EaseEvent.TYPE.GROUP));
-            showToast(context.getString(R.string.demo_group_listener_onMemberJoined, member));
+//            showToast(context.getString(R.string.demo_group_listener_onMemberJoined, member));
             EMLog.i(TAG, context.getString(R.string.demo_group_listener_onMemberJoined, member));
         }
 
         @Override
         public void onMemberExited(String groupId, String member) {
             LiveDataBus.get().with(DemoConstant.GROUP_CHANGE).postValue(EaseEvent.create(DemoConstant.GROUP_CHANGE, EaseEvent.TYPE.GROUP));
-            showToast(context.getString(R.string.demo_group_listener_onMemberExited, member));
+//            showToast(context.getString(R.string.demo_group_listener_onMemberExited, member));
             EMLog.i(TAG, context.getString(R.string.demo_group_listener_onMemberExited, member));
         }
 
@@ -592,14 +597,14 @@ public class ChatPresenter extends EaseChatPresenter {
         @Override
         public void onSharedFileAdded(String groupId, EMMucSharedFile sharedFile) {
             LiveDataBus.get().with(DemoConstant.GROUP_SHARE_FILE_CHANGE).postValue(EaseEvent.create(DemoConstant.GROUP_SHARE_FILE_CHANGE, EaseEvent.TYPE.GROUP));
-            showToast(context.getString(R.string.demo_group_listener_onSharedFileAdded, sharedFile.getFileName()));
+//            showToast(context.getString(R.string.demo_group_listener_onSharedFileAdded, sharedFile.getFileName()));
             EMLog.i(TAG, context.getString(R.string.demo_group_listener_onSharedFileAdded, sharedFile.getFileName()));
         }
 
         @Override
         public void onSharedFileDeleted(String groupId, String fileId) {
             LiveDataBus.get().with(DemoConstant.GROUP_SHARE_FILE_CHANGE).postValue(EaseEvent.create(DemoConstant.GROUP_SHARE_FILE_CHANGE, EaseEvent.TYPE.GROUP));
-            showToast(context.getString(R.string.demo_group_listener_onSharedFileDeleted, fileId));
+//            showToast(context.getString(R.string.demo_group_listener_onSharedFileDeleted, fileId));
             EMLog.i(TAG, context.getString(R.string.demo_group_listener_onSharedFileDeleted, fileId));
         }
     }

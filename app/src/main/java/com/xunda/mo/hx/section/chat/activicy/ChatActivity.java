@@ -29,9 +29,9 @@ import com.xunda.mo.hx.section.chat.viewmodel.ChatViewModel;
 import com.xunda.mo.hx.section.chat.viewmodel.MessageViewModel;
 import com.xunda.mo.hx.section.group.GroupHelper;
 import com.xunda.mo.hx.section.group.activity.ChatRoomDetailActivity;
-import com.xunda.mo.hx.section.group.activity.GroupDetailActivity;
-import com.xunda.mo.main.chat.ChatDetailSet;
+import com.xunda.mo.main.chat.activity.ChatDetailSet;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.group.activity.GroupDetailSet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -228,7 +228,10 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
         } else {
             // 跳转到群组设置
             if (chatType == DemoConstant.CHATTYPE_GROUP) {
-                GroupDetailActivity.actionStart(mContext, conversationId);
+//                GroupDetailActivity.actionStart(mContext, conversationId);
+                GroupDetailSet.actionStart(mContext, conversationId);
+
+
             } else if (chatType == DemoConstant.CHATTYPE_CHATROOM) {
                 ChatRoomDetailActivity.actionStart(mContext, conversationId);
             }
@@ -248,4 +251,30 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
             setDefaultTitle();
         }
     }
+
+
+    /**
+     * @param linearLayout 要转化为图片的布局
+     */
+//    private void generatBitmap(LinearLayout linearLayout) {
+//        linearLayout.setDrawingCacheEnabled(true);
+//        linearLayout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+//                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//        linearLayout.layout(0, 0, linearLayout.getMeasuredWidth(), linearLayout.getMeasuredHeight());
+//        linearLayout.buildDrawingCache();
+//        bitmap = Bitmap.createBitmap(linearLayout.getDrawingCache());
+//        linearLayout.setDrawingCacheEnabled(false);
+//        linearLayout.setGravity(Gravity.CENTER);  //因为刚刚重新测量布局一次，需要重新设置view居中
+////        MediaScannerConnection.scanFile(UIUtils.getContext(), new String[]{file.toString()}, null, null);
+//    }
+//    public static Bitmap captureView(View view) {
+//        view.setDrawingCacheEnabled(true);
+//        view.buildDrawingCache();
+//        Bitmap bmp = view.getDrawingCache();
+//        bmp = Bitmap.createBitmap(bmp);
+//        view.destroyDrawingCache();
+//        return bmp;
+//    }
+
+
 }

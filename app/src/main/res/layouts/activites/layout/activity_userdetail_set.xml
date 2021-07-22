@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/greyfive"
-    tools:context=".main.chat.UserDetail_Set">
+    tools:context=".main.chat.activity.UserDetail_Set">
 
     <include
         android:id="@+id/title_Include"
@@ -31,8 +31,7 @@
             android:textColor="#ff6f6f6f"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="10dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <com.facebook.drawee.view.SimpleDraweeView

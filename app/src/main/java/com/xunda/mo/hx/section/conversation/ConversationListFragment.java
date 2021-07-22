@@ -317,6 +317,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
             @Override
             public void onClick(View v) {
                 GroupPrePickActivity.actionStart(mContext);
+                MorePopup.dismiss();
             }
         });
 

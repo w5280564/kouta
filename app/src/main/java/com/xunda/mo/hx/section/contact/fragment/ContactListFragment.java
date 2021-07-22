@@ -57,7 +57,7 @@ import com.xunda.mo.hx.section.domain.MyEaseUser;
 import com.xunda.mo.hx.section.search.SearchFriendsActivity;
 import com.xunda.mo.main.MainLogin_Register;
 import com.xunda.mo.main.baseView.BasePopupWindow;
-import com.xunda.mo.main.chat.ChatFriend_Detail;
+import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.friend.Friend_Add;
 import com.xunda.mo.main.friend.Friend_NewFriends;
 import com.xunda.mo.main.friend.MyGroup;

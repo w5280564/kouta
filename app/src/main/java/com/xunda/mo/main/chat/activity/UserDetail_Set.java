@@ -1,4 +1,4 @@
-package com.xunda.mo.main.chat;
+package com.xunda.mo.main.chat.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -139,16 +139,6 @@ public class UserDetail_Set extends BaseInitActivity {
         WheelView sexWheel = findViewById(R.id.sexWheel);
         sexWheel.setCyclic(false);
 
-
-//        sexWheel.setAdapter(new ArrayWheelAdapter(mOptionsItems));
-//        sexWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(int index) {
-//                Toast.makeText(UserDetail_Set.this, "" + mOptionsItems.get(index), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-//        changeFileHead("https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/user%2FheadImg%2F845695345387954176%2FScreenshot_20210513-155927.png");
         initCity();
         initObsClient();
     }
@@ -628,7 +618,8 @@ public class UserDetail_Set extends BaseInitActivity {
                         if (TextUtils.equals(changType, "1")) {
                             //修改本地存储的自己头像
                             MyInfo info = new MyInfo(UserDetail_Set.this);
-                            DemoHelper.getInstance().getUserInfo(info.getUserInfo().getHxUserName()).setAvatar(baseModel.getData());
+                            String HxUserName = info.getUserInfo().getHxUserName();
+                            DemoHelper.getInstance().getUserInfo(HxUserName).setAvatar(baseModel.getData());
 
                             changeFileHead(baseModel.getData());
                         } else if (TextUtils.equals(changType, "2")) {

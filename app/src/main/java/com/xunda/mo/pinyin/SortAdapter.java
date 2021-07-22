@@ -60,8 +60,6 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
         }
         int nameLength = mData.get(position).getName().length();
         String name = mData.get(position).getName() + " (" + mData.get(position).getUserNum() + ")";
-
-
 //        String name = mData.get(position).getName();
         long strVip = mData.get(position).getVipType();
         if (strVip == 0) {

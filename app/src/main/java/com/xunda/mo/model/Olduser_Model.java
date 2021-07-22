@@ -2,8 +2,6 @@ package com.xunda.mo.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Objects;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +13,7 @@ public class Olduser_Model {
     @JsonProperty("msg")
     private String msg;
     @JsonProperty("code")
-    private Double code;
+    private Integer code;
     @JsonProperty("data")
     private DataDTO data;
 
@@ -23,47 +21,50 @@ public class Olduser_Model {
     @Data
     public static class DataDTO {
         @JsonProperty("age")
-        private Long age;
-        @JsonProperty("areaId")
-        private Long areaId;
+        private Integer age;
+        @JsonProperty("areaCode")
+        private String areaCode;
+        @JsonProperty("areaName")
+        private String areaName;
         @JsonProperty("birthday")
         private String birthday;
         @JsonProperty("createTime")
-        private Double createTime;
+        private Long createTime;
+        @JsonProperty("deletePassword")
+        private String deletePassword;
         @JsonProperty("deleteStatus")
-        private Long deleteStatus;
-        @JsonProperty("experience")
-        private Long experience;
+        private Integer deleteStatus;
         @JsonProperty("grade")
-        private Long grade;
+        private Integer grade;
         @JsonProperty("headImg")
         private String headImg;
         @JsonProperty("hxUserName")
         private String hxUserName;
+        @JsonProperty("inPassword")
+        private String inPassword;
+        @JsonProperty("isNeedUnlock")
+        private Integer isNeedUnlock;
         @JsonProperty("lightStatus")
-        private Double lightStatus;
+        private Integer lightStatus;
+        @JsonProperty("mailbox")
+        private String mailbox;
         @JsonProperty("nikeName")
         private String nikeName;
         @JsonProperty("phoneNum")
         private String phoneNum;
         @JsonProperty("sex")
-        private Long sex;
+        private Integer sex;
         @JsonProperty("signature")
         private String signature;
+        @JsonProperty("tag")
+        private String tag;
         @JsonProperty("token")
         private String token;
         @JsonProperty("userId")
         private String userId;
         @JsonProperty("userNum")
-        private Double userNum;
+        private Integer userNum;
         @JsonProperty("vipType")
-        private Long vipType;
-        @JsonProperty("areaName")
-        private String areaName;
-        @JsonProperty("mailbox")
-        private String mailbox;
-        @JsonProperty("tag")
-        private String tag;
+        private Integer vipType;
     }
-
 }

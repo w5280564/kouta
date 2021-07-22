@@ -14,10 +14,12 @@ public interface MyConstant extends DemoConstant {
     String TO_LH = "toLH";
     String TO_VIP = "toVIP";
     String FIRE_TYPE = "fireType";
+
     String MESSAGE_TYPE_GROUP = "group";
     String GROUP_NAME = "groupName";
     String GROUP_HEAD = "groupHead";
     String EXT = "ext";
+
     String MESSAGE_TYPE_USERCARD = "userCard";
     String UID = "uid";
     String USER_ID = "userId";
@@ -26,6 +28,14 @@ public interface MyConstant extends DemoConstant {
     String NICK_NAME = "nickname";
     String HX_NAME = "hxName";
     String ADMIN = "admin";
+
+    String USER_NAME = "userName";
+    String MESSAGE_TYPE_CREATE_GROUP = "createGroup";
+    String CREATE_GROUP_CONTENT = "创建";
+
+    String ADMIN_TYPE = "adminType";
+    String UPDATE_GROUP_NAME = "updateGroupName";
+    String NAME_STR = "nameStr";
 
 
 

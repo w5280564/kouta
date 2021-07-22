@@ -19,10 +19,12 @@ import com.xunda.mo.R;
 public class MyArrowItemView extends ConstraintLayout {
     private EaseImageView avatar;
     private TextView tvTitle;
+    private TextView tv_tip;
     private TextView tvContent;
     private ImageView ivArrow;
     private View viewDivider;
     private String title;
+    private String tipStr;
     private String content;
     private int titleColor;
     private int contentColor;
@@ -48,6 +50,7 @@ public class MyArrowItemView extends ConstraintLayout {
         root = LayoutInflater.from(context).inflate(R.layout.my_arrowitemview, this);
         avatar = findViewById(R.id.avatar);
         tvTitle = findViewById(R.id.tv_title);
+        tv_tip = findViewById(R.id.tv_tip);
         tvContent = findViewById(R.id.tv_content);
         ivArrow = findViewById(R.id.iv_arrow);
         viewDivider = findViewById(R.id.view_divider);
@@ -74,6 +77,18 @@ public class MyArrowItemView extends ConstraintLayout {
             titleSize = getResources().getDimension(titleSizeId);
         }
         tvTitle.getPaint().setTextSize(titleSize);
+
+
+        boolean showTip = a.getBoolean(R.styleable.ArrowItemView_arrowItemshowTip, false);
+        tv_tip.setVisibility(showTip ? VISIBLE : GONE);
+
+        int tipResourceId = a.getResourceId(R.styleable.ArrowItemView_arrowItemTip, -1);
+        tipStr = a.getString(R.styleable.ArrowItemView_arrowItemTip);
+        if (tipResourceId != -1) {
+            tipStr = getContext().getString(tipResourceId);
+        }
+        tv_tip.setText(tipStr);
+
 
         int contentResourceId = a.getResourceId(R.styleable.ArrowItemView_arrowItemContent, -1);
         content = a.getString(R.styleable.ArrowItemView_arrowItemContent);
@@ -162,6 +177,9 @@ public class MyArrowItemView extends ConstraintLayout {
         return avatar;
     }
     public ImageView getIMG() { return tv_img; }
+    public ImageView getArrow() { return ivArrow; }
+    public TextView getTip() {
+        return tv_tip; }
 
     /**
      * sp to px

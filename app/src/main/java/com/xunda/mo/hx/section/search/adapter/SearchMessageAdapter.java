@@ -18,6 +18,7 @@ import com.hyphenate.easeui.utils.EaseEditTextUtils;
 import com.hyphenate.easeui.utils.EaseSmileUtils;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.xunda.mo.R;
+import com.xunda.mo.main.constant.MyConstant;
 
 import java.util.Date;
 
@@ -64,6 +65,9 @@ public class SearchMessageAdapter extends EaseBaseRecyclerViewAdapter<EMMessage>
 //                name.setText(item.getFrom());
 //                name.setText(item.getStringAttribute("sendName", ""));
 //                Glide.with(mContext).load(item.getStringAttribute("sendHead", "")).placeholder(R.drawable.em_login_logo).into(avatar);
+
+                name.setText(item.getStringAttribute(MyConstant.SEND_NAME,""));
+                Glide.with(mContext).load(item.getStringAttribute(MyConstant.SEND_HEAD, "")).placeholder(R.drawable.em_login_logo).into(avatar);
             } else {
                 if (item.direct() == EMMessage.Direct.SEND) {
                     name.setText(item.getStringAttribute("sendName", ""));

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.hyphenate.EMCallBack;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.main.baseView.NewLazyFragment;
+import com.xunda.mo.main.chat.activity.UserDetail_Set;
 import com.xunda.mo.network.saveFile;
 
 import static com.luck.picture.lib.thread.PictureThreadUtils.runOnUiThread;
@@ -89,8 +91,15 @@ public class Fragment_Person extends NewLazyFragment {
     @Override
     protected void initView(View view) {
         super.initView(view);
-       RelativeLayout person_set_rel =  view.findViewById(R.id.person_set_rel);
+       ImageView person_img =  view.findViewById(R.id.person_img);
+        person_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserDetail_Set.actionStart(requireContext());
+            }
+        });
 
+       RelativeLayout person_set_rel =  view.findViewById(R.id.person_set_rel);
         person_set_rel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

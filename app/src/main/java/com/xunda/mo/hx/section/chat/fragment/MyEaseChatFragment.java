@@ -10,14 +10,16 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.manager.EaseDingMessageHelper;
 import com.hyphenate.easeui.modules.chat.EaseChatLayout;
@@ -34,6 +36,7 @@ import com.hyphenate.easeui.utils.EaseFileUtils;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
 import com.hyphenate.util.VersionUtils;
+import com.xunda.mo.R;
 import com.xunda.mo.hx.section.chat.activicy.MyEaseGaodeMapActivity;
 
 import java.io.File;
@@ -55,6 +58,9 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
     private OnChatLayoutListener listener;
 
     protected File cameraFile;
+    public ConstraintLayout top_Constraint;
+    public TextView top_Txt;
+    public Button cancel_Btn;
 
     @Nullable
     @Override
@@ -64,7 +70,7 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
     }
 
     private int getLayoutId() {
-        return R.layout.ease_fragment_chat_list;
+        return R.layout.myease_fragment_chat_list;
     }
 
     @Override
@@ -91,6 +97,9 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
     }
 
     public void initView() {
+        top_Constraint = findViewById(R.id.top_Constraint);
+        top_Txt = findViewById(R.id.top_Txt);
+        cancel_Btn = findViewById(R.id.cancel_Btn);
         chatLayout = findViewById(R.id.layout_chat);
         chatLayout.getChatMessageListLayout().setItemShowType(EaseChatMessageListLayout.ShowType.NORMAL);
         chatLayout.getChatMessageListLayout().setBackgroundColor(ContextCompat.getColor(mContext, R.color.gray));

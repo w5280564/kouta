@@ -1,7 +1,5 @@
 package com.xunda.mo.main;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -17,7 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.lifecycle.ViewModelProvider;
 
+import com.google.gson.Gson;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
@@ -28,7 +28,6 @@ import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
-import com.google.gson.Gson;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -83,7 +82,6 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
     }
 
 
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -94,7 +92,7 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
     }
 
     private void initViewModel() {
-          loginViewModels = new ViewModelProvider(this).get(LoginViewModel.class);
+        loginViewModels = new ViewModelProvider(this).get(LoginViewModel.class);
 
     }
 
@@ -200,21 +198,32 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
     }
 
     private void Data(Context context) {
-        String type = "2";
-        String  equipmentName = android.os.Build.BRAND +"  "+ android.os.Build.MODEL;
-        String meid = StaticData.getIMEI(this);
-        String vision = android.os.Build.VERSION.RELEASE;
-        String leId = phone_edit.getText().toString().trim();
-        String psw = psw_edit.getText().toString().trim();
-        LoginMethod(context, saveFile.BaseUrl + saveFile.User_Login_Url + "?equipmentName=" + equipmentName +
-                "&loginType=" + type + "&meid=" + meid + "&vision=" + vision + "&userNum=" + leId + "&password=" + psw+ "&osType=" + "2", type);
+
+//        LoginMethod(context, saveFile.BaseUrl + saveFile.User_Login_Url + "?equipmentName=" + equipmentName +
+//                "&loginType=" + type + "&meid=" + meid + "&vision=" + vision + "&userNum=" + leId + "&password=" + psw+ "&osType=" + "2", type);
+        LoginMethod(context, saveFile.BaseUrl + saveFile.User_Login_Url, "2");
 
     }
 
     //登录
     public void LoginMethod(Context context, String baseUrl, String type) {
+        String equipmentName = android.os.Build.BRAND + "  " + android.os.Build.MODEL;
+        String loginType = "2";
+        String meid = StaticData.getIMEI(this);
+        String vision = android.os.Build.VERSION.RELEASE;
+        String leId = phone_edit.getText().toString().trim();
+        String psw = psw_edit.getText().toString().trim();
         RequestParams params = new RequestParams(baseUrl);
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        params.addBodyParameter("equipmentName", equipmentName);
+        params.addBodyParameter("loginType", loginType);
+        params.addBodyParameter("meid", meid);
+        params.addBodyParameter("vision", vision);
+        params.addBodyParameter("userNum", leId);
+        params.addBodyParameter("password", psw);
+        params.addBodyParameter("osType", "2");
+        params.setAsJsonContent(true);
+
+        x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String resultString) {
                 if (resultString != null) {
@@ -222,14 +231,13 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
                     Olduser_Model baseModel = new Gson().fromJson(resultString, Olduser_Model.class);
                     if (baseModel.getCode() == 200) {
 //                        startTimer();
-
                         String name = baseModel.getData().getHxUserName();
-                        loginViewModels.login(name,name,false);
+                        loginViewModels.login(name, name, false);
                         DemoHelper.getInstance().setAutoLogin(true);
 
                         saveFile.saveShareData("JSESSIONID", baseModel.getData().getToken(), context);
-                        saveFile.saveShareData("phoneNum",baseModel.getData().getPhoneNum(),context);
-                        saveFile.saveShareData("userId",baseModel.getData().getUserId(),context);
+                        saveFile.saveShareData("phoneNum", baseModel.getData().getPhoneNum(), context);
+                        saveFile.saveShareData("userId", baseModel.getData().getUserId(), context);
 
                         MyInfo myInfo = new MyInfo(context);
                         myInfo.setUserInfo(baseModel.getData());

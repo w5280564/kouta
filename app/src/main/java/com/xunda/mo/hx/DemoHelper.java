@@ -73,6 +73,8 @@ import com.xunda.mo.hx.section.chat.delegates.MyEaseLocationAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.MyEaseTextAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.MyEaseVideoAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.MyEaseVoiceAdapterDelegate;
+import com.xunda.mo.hx.section.chat.delegates.MyGroupAddMesAdapterDelegate;
+import com.xunda.mo.hx.section.chat.delegates.MyGroupUpdateMesAdapterDelegate;
 import com.xunda.mo.hx.section.conference.ConferenceInviteActivity;
 import com.xunda.mo.main.baseView.MyApplication;
 
@@ -205,6 +207,8 @@ public class DemoHelper {
      */
     private void registerConversationType() {
         EaseMessageTypeSetManager.getInstance()
+                .addMessageType(MyGroupUpdateMesAdapterDelegate.class)     //群设置更新
+                .addMessageType(MyGroupAddMesAdapterDelegate.class)     //创建群消息
 //                .addMessageType(EaseCustomAdapterDelegate.class)           //自定义消息
                 .addMessageType(ChatUserCardAdapterDelegate.class)         //名片消息
                 .addMessageType(ChatNotificationAdapterDelegate.class)     //入群等通知消息

@@ -139,8 +139,6 @@ public class MainLogin_Code extends BaseInitActivity {
         super.initData();
         initReceiver();
         initViewModel();
-
-
     }
 
 
@@ -384,6 +382,7 @@ public class MainLogin_Code extends BaseInitActivity {
             obj.put("meid", meid);
             obj.put("phoneNum", LoginPhoneNume);
             obj.put("smsCode", capt_view.getText());
+            obj.put("osType", "2");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -471,39 +470,25 @@ public class MainLogin_Code extends BaseInitActivity {
     //登录
     public void LoginMethod(Context context, String baseUrl, String type) {
         RequestParams params = new RequestParams(baseUrl);
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        params.addBodyParameter("equipmentName",equipmentName);
+        params.addBodyParameter("loginType","1");
+        params.addBodyParameter("meid",meid);
+        params.addBodyParameter("vision",vision);
+        params.addBodyParameter("phoneNum",LoginPhoneNume);
+        params.addBodyParameter("smsCode",capt_view.getText().toString());
+        params.addBodyParameter("osType","2");
+        params.setAsJsonContent(true);
+        x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String resultString) {
                 if (resultString != null) {
                     Olduser_Model baseModel = new Gson().fromJson(resultString, Olduser_Model.class);
                     if (baseModel.getCode() == 200) {
-//                        startTimer();
 
-
-//                        DemoHelper.getInstance().init(DemoApplication.getInstance());
-//                        DemoHelper.getInstance().getModel().setCurrentUserName(userName);
-//                        DemoHelper.getInstance().getModel().setCurrentUserPwd(pwd);
                         String name = baseModel.getData().getHxUserName();
                         loginViewModels.login(name, name, false);
                         DemoHelper.getInstance().setAutoLogin(true);
-//                        EMClient.getInstance().login(name,name, new EMCallBack() {
-//                            @Override
-//                            public void onSuccess() {
-//                                EMClient.getInstance().groupManager().loadAllGroups();
-//                                EMClient.getInstance().chatManager().loadAllConversations();
-//                                Log.d("main", "登录聊天服务器成功！");
-//                            }
-//
-//                            @Override
-//                            public void onError(int code, String error) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onProgress(int progress, String status) {
-//
-//                            }
-//                        });
+
 
                         saveFile.saveShareData("JSESSIONID", baseModel.getData().getToken(), context);
                         saveFile.saveShareData("phoneNum", baseModel.getData().getPhoneNum(), context);
@@ -670,8 +655,9 @@ public class MainLogin_Code extends BaseInitActivity {
 //                    String psw = psw_edit.getText().toString().trim();
                     String phoneNum = LoginPhoneNume;
                     String smsCode = capt_view.getText().toString();
-                    LoginMethod(MainLogin_Code.this, saveFile.BaseUrl + saveFile.User_Login_Url + "?equipmentName=" + equipmentName +
-                            "&loginType=" + type + "&meid=" + meid + "&vision=" + vision + "&phoneNum=" + LoginPhoneNume + "&smsCode=" + smsCode + "&osType=" + "2", type);
+//                    LoginMethod(MainLogin_Code.this, saveFile.BaseUrl + saveFile.User_Login_Url + "?equipmentName=" + equipmentName +
+//                            "&loginType=" + type + "&meid=" + meid + "&vision=" + vision + "&phoneNum=" + LoginPhoneNume + "&smsCode=" + smsCode + "&osType=" + "2", type);
+                    LoginMethod(MainLogin_Code.this, saveFile.BaseUrl + saveFile.User_Login_Url,type);
                 } else if (TitleName.equals("忘记密码")) {
                     //忘记密码
                     type = "3";

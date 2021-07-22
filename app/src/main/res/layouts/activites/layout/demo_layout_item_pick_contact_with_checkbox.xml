@@ -32,6 +32,8 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/em_margin_20"
             android:scaleType="fitXY"
+            app:ease_radius="5dp"
+            app:ease_shape_type="rectangle"
             android:src="@drawable/ease_default_avatar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,8 +47,8 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text="小明"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/em_size_big_notify"
+            android:textColor="@color/blacktitlettwo"
+            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/avatar"
             app:layout_constraintTop_toTopOf="parent" />
@@ -57,12 +59,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:background="@drawable/demo_selector_bg_check"
+            android:layout_marginRight="15dp"
             android:button="@null"
             android:clickable="false"
             android:enabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

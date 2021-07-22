@@ -1,4 +1,4 @@
-package com.xunda.mo.main.chat;
+package com.xunda.mo.main.chat.activity;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;

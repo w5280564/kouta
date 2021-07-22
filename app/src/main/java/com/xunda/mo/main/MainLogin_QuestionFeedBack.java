@@ -9,8 +9,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -42,11 +40,7 @@ import com.obs.services.ObsConfiguration;
 import com.obs.services.exception.ObsException;
 import com.obs.services.model.AccessControlList;
 import com.obs.services.model.AuthTypeEnum;
-import com.obs.services.model.CompleteMultipartUploadResult;
-import com.obs.services.model.ProgressListener;
-import com.obs.services.model.ProgressStatus;
 import com.obs.services.model.PutObjectRequest;
-import com.obs.services.model.UploadFileRequest;
 import com.xunda.mo.R;
 import com.xunda.mo.model.Main_QuestionFeedBack_Model;
 import com.xunda.mo.network.saveFile;
@@ -64,7 +58,6 @@ import org.xutils.x;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -197,7 +190,6 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
     }
 
     String pictures;
-
     //问题反馈
     public void QuestionMethod(Context context, String baseUrl) {
         JSONObject obj = new JSONObject();
@@ -408,45 +400,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
 
-    Uri imgUri;
-    String path;
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == 255 && data != null) {
-////            projectModel = (List<ProjectModel>) data.getSerializableExtra("projectModel");
-////            projectModel = saveFile.getGosnClass(this, "moreModel", ProjectModel.class);
-////
-////            projectList(project_Lin, projectModel);
-//
-//        } else if (requestCode == REQUEST_IMAGE) {
-//            if (resultCode == RESULT_OK) {
-//                List<String> pathList = data.getStringArrayListExtra(EXTRA_DATA);
-//                if (pathList != null) {
-//                    imgFlow(photoLayout, pathList);
-//                }
-//            }
-//        } else if (resultCode == Activity.RESULT_OK) {//修改头像
-//            path = data.getStringExtra("path");
-//            imgUri = Uri.parse("file:///" + path);
-//
-//            Uri uri = data.getData();
-//            Log.e("TAG", uri.toString());
-//
-////            String filePath = getRealPathFromURI(uri);
-////            bitmap1 = getresizePhoto(filePath);
-////            imageView1.setImageBitmap(bitmap1);
-//
-////            paadd_Simple.setImageURI(imgUri);
-//
-////            if (!TextUtils.isEmpty(path)) {
-////                if (requestCode == REQUEST_CODE_IMAGE_PICK_PERSONHEAD) {
-////                    compressSingleListener(new File(path), Luban.FIRST_GEAR, REQUEST_CODE_IMAGE_PICK_PERSONHEAD);
-////                }
-////            }
-//        }
-//
-//    }
+
 
     //先定义
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -586,66 +540,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
     }
 
 
-    /**
-     * 断点续传
-     *
-     * @param obsClient
-     * @param localfile
-     */
-    private void uploadPoint(ObsClient obsClient, String localfile, String namePath) throws FileNotFoundException {
-        String objectName = "android/1000112/" + namePath;//对应上传之后的文件名称
 
-//        FileInputStream fis = new FileInputStream(new File(localfile));
-//        obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
-        int size = photoPaths.size();
-//        for (int i = 0; i < size; i++) {
-//            String objectName = "android/1000112/" + pathNameList.get(i);//对应上传之后的文件名称
-
-//            FileInputStream fis = new FileInputStream(new File(photoPaths.get(i)));
-//            obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
-
-//                uploadPoint(obsClient, photoPaths.get(i), pathNameList.get(i));
-
-//            request = new UploadFileRequest(bucketName, objectName);
-//            request.setUploadFile(photoPaths.get(i)); // localfile为上传的本地文件路径，需要指定到具体的文件名
-//        }
-
-        UploadFileRequest request = new UploadFileRequest(bucketName, objectName);
-        request.setUploadFile(localfile); // localfile为上传的本地文件路径，需要指定到具体的文件名
-        // 设置分段上传时的最大并发数
-        request.setTaskNum(5);
-        // 设置分段大小为10MB
-        request.setPartSize(10 * 1024 * 1024);
-        // 开启断点续传模式
-        request.setEnableCheckpoint(true);
-        request.setProgressListener(new ProgressListener() {
-            @Override
-            public void progressChanged(ProgressStatus status) {
-                // 获取上传平均速率
-                Log.i("PutObject", "AverageSpeed:" + status.getAverageSpeed());
-                // 获取上传进度百分比
-                Log.i("PutObject", "TransferPercentage:" + status.getTransferPercentage());
-            }
-        });
-        // 每上传1MB数据反馈上传进度
-        request.setProgressInterval(1024 * 1024L);
-        try {
-            // 进行断点续传上传
-            CompleteMultipartUploadResult result = obsClient.uploadFile(request);
-            Log.i("PutObject", " result.getStatusCode():" + result.getStatusCode());
-            if (result.getStatusCode() == 200) {
-                //解决在子线程中调用Toast的异常情况处理
-                Looper.prepare();
-                Toast.makeText(MainLogin_QuestionFeedBack.this, "上传成功", Toast.LENGTH_SHORT).show();
-                Looper.loop();
-
-            }
-
-        } catch (ObsException e) {
-            // 发生异常时可再次调用断点续传上传接口进行重新上传
-            Toast.makeText(MainLogin_QuestionFeedBack.this, e.getErrorCode(), Toast.LENGTH_SHORT).show();
-        }
-    }
 
 
 }

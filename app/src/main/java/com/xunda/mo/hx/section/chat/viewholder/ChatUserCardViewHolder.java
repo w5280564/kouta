@@ -15,7 +15,7 @@ import com.hyphenate.util.EMLog;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.section.chat.views.chatRowUserCard;
-import com.xunda.mo.main.chat.ChatFriend_Detail;
+import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.constant.MyConstant;
 
 import java.util.Map;

@@ -12,5 +12,6 @@ public class ChatNotificationViewHolder extends EaseChatRowViewHolder {
     public ChatNotificationViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
         super(itemView, itemClickListener);
     }
+
 }
 

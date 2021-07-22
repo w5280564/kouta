@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="13dp"
+    tools:ignore="MissingConstraints">
+
+    <TextView
+        android:id="@+id/timestamp"
+        style="@style/chat_text_date_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="2020-09-25 17:47" />
+
+    <RelativeLayout
+        android:id="@+id/bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timestamp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/chat_rowmes_bg">
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_chatcontent"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:layout_marginLeft="8dip"-->
+<!--            android:layout_marginRight="8dip"-->
+<!--            android:minHeight="40dp"-->
+<!--            android:padding="8dp"-->
+<!--            tools:text="你们已经成为好友，开始聊天吧"-->
+<!--            android:textColor="#ff999999"-->
+<!--            android:textSize="14sp"-->
+<!--            style="@style/chat_text_date_style"-->
+<!--            android:visibility="gone"/>-->
+
+
+
+<!--            android:background="@drawable/chat_rowmes_bg"-->
+        <TextView
+            android:id="@+id/content_Txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="2dp"
+            android:textColor="@color/blacktitlettwo"
+            android:background="@drawable/chat_rowmes_bg"
+            android:textSize="10sp"
+            tools:text="你们已经成为好友，开始聊天吧" />
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

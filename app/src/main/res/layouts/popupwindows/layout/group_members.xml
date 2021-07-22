@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    fresco:ignore="MissingConstraints">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/head_simple"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="15dp"
+        fresco:layout_constraintBottom_toBottomOf="parent"
+        fresco:layout_constraintStart_toStartOf="parent"
+        fresco:layout_constraintTop_toTopOf="parent"
+        app:roundedCornerRadius="9dp" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="小黑"
+        android:textColor="@color/greytwo"
+        android:textSize="10sp"
+        android:lines="2"
+        app:layout_constraintEnd_toEndOf="@+id/head_simple"
+        app:layout_constraintStart_toStartOf="@+id/head_simple"
+        app:layout_constraintTop_toBottomOf="@+id/head_simple" />
+
+
+    <ImageView
+        android:id="@+id/group_man"
+        android:layout_width="8dp"
+        android:layout_height="12dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@id/name"
+        app:layout_constraintTop_toBottomOf="@id/head_simple" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

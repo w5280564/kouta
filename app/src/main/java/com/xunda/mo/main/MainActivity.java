@@ -46,17 +46,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        List<EMGroup> mData = EMClient.getInstance().groupManager().getAllGroups();
-//        DemoHelper.getInstance().getEMClient().chatManager().loadAllConversations();
-//       DemoHelper.getInstance().getEMClient().groupManager().loadAllGroups();
-
-//        EMClient.getInstance().groupManager().getGroupFromServer()
-//        EMClient.getInstance().groupManager().changeGroupName(groupId,changedGroupName);//需异步处理
-
-//        Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
-//        EMChatManagerRepository chatRepository = new EMChatManagerRepository();
-//        List<Object> chatlist =  chatRepository.loadConversationListFromCache();
-//        chatRepository.loadConversationList();
         StatusBar(this);
         MIUISetStatusBarLightMode(this.getWindow(), true);
         FlymeSetStatusBarLightMode(this.getWindow(), true);
@@ -88,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
         tab_viewpager = findViewById(R.id.tab_viewpager);
         ac_tab_layout = findViewById(R.id.ac_tab_layout);
         ac_tab_layout.setSelectedTabIndicatorHeight(0);//去掉下导航条
-//        ac_tab_layout. setSelectedTabIndicator(0);//去掉下导航条
-//        ac_tab_layout.setHorizontalScrollBarEnabled(false);
         fragments = new ArrayList<>();
         EaseBaseFragment mConversationListFragment = new ConversationListFragment();
 //        EaseBaseFragment mConversationListFragment = new EaseConversationListFragment();
@@ -107,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 //        getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
 
 //        fragments.add(Fragment_chat.newInstance("首页", ""));
-        fragments.add(Fragment_adress.newInstance("联系人", ""));
+//        fragments.add(Fragment_adress.newInstance("联系人", ""));
         fragments.add(Fragment_Person.newInstance("我", ""));
         String[] tab_titles = new String[]{"聊天", "联系人", "我"};
         int[] tab_imgs = new int[]{R.drawable.tab_chat_selector, R.drawable.tab_adress_selector, R.drawable.tab_my_selector};

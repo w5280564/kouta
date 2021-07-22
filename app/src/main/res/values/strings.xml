@@ -575,5 +575,9 @@
     <string name="demo_contact_get_userInfo_failed">获取用户属性失败</string>
 
 
+    <string name="CREATE_GROUP_CONTENT">创建群聊</string>
+    <string name="GROUP_OWNER">群主</string>
+
+
 
 </resources>

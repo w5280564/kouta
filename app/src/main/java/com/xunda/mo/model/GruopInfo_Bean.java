@@ -2,12 +2,14 @@ package com.xunda.mo.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class GruopInfo_Bean {
+public class GruopInfo_Bean implements Serializable {
 
     @JsonProperty("msg")
     private String msg;
@@ -18,7 +20,7 @@ public class GruopInfo_Bean {
 
     @NoArgsConstructor
     @Data
-    public static class DataDTO {
+    public static class DataDTO implements Serializable{
         @JsonProperty("createTime")
         private Long createTime;
         @JsonProperty("findWay")
@@ -65,5 +67,7 @@ public class GruopInfo_Bean {
         private String myNikeName;
         @JsonProperty("tag")
         private String tag;
+        @JsonProperty("groupNotice")
+        private String groupNotice;
     }
 }

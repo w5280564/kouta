@@ -62,6 +62,10 @@ public class saveFile {
     public static String User_CheckUpdateUser_Url = "user/checkUpdateUser";
     public static String User_Update_Url = "user/update";
     public static String Friend_UpdateRemarkName_Url = "friend/updateRemarkName";
+    public static String Group_Create_Url = "group/create";
+    public static String Group_UserList_Url = "group/userList";
+    public static String Group_UpdateInfo_Url = "group/updateInfo";
+    public static String Group_UpdateNikeName_Url = "group/updateNikeName";
 
 
 

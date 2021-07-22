@@ -1,4 +1,4 @@
-package com.xunda.mo.main.chat;
+package com.xunda.mo.main.chat.activity;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
@@ -8,17 +8,20 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.Group;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -26,22 +29,22 @@ import com.google.gson.Gson;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.easeui.constants.EaseConstant;
+import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
-import com.hyphenate.easeui.utils.EaseCompat;
-import com.hyphenate.easeui.utils.EaseFileUtils;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
+import com.xunda.mo.hx.common.db.DemoDbHelper;
 import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.hx.section.chat.activicy.SelectUserCardActivity;
 import com.xunda.mo.hx.section.chat.viewmodel.ChatViewModel;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
-import com.xunda.mo.hx.section.search.SearchSingleChatActivity;
 import com.xunda.mo.main.MainLogin_Register;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.MyArrowItemView;
@@ -50,7 +53,6 @@ import com.xunda.mo.model.Friend_Detalis_Model;
 import com.xunda.mo.model.Main_QuestionFeedBack_Model;
 import com.xunda.mo.model.baseModel;
 import com.xunda.mo.network.saveFile;
-import com.xunda.mo.staticdata.BeanUtils1;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
@@ -61,38 +63,70 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
-import java.io.File;
+import java.util.List;
 
 import lombok.SneakyThrows;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-public class ChatDetailSet extends BaseInitActivity {
+public class ChatFriend_Detail extends BaseInitActivity {
+    private EaseUser mUser;
+    private boolean mIsFriend;
+    private String addType;
+    private Group add_friend_Group;
+    private String FriendApplyId;
+    private ProgressBar site_progressbar;
+    private MyArrowItemView nick_ArrowItemView;
+//    private Switch switch_item;
+
+    /**
+     * @param context
+     * @param FriendApplyId 服务器好友ID
+     * @param addType       1:墨号添加 2:昵称添加 3:手机号添加 4:邮箱添加 5:标签添加 6:通过群添加 7:二维码添加 8:通过名片添加  9:通过等级排行榜添加
+     */
+    public static void actionStart(Context context, String FriendApplyId, String addType) {
+        Intent intent = new Intent(context, ChatFriend_Detail.class);
+        intent.putExtra("FriendApplyId", FriendApplyId);
+        intent.putExtra("addType", addType);
+        context.startActivity(intent);
+    }
+
+    /**
+     * @param context
+     * @param toChatUsername 环信username  对应服务器HXusername
+     * @param addType        1:墨号添加 2:昵称添加 3:手机号添加 4:邮箱添加 5:标签添加 6:通过群添加 7:二维码添加 8:通过名片添加  9:通过等级排行榜添加
+     */
+    public static void actionStart(Context context, String toChatUsername, EaseUser user, String addType) {
+        Intent intent = new Intent(context, ChatFriend_Detail.class);
+        intent.putExtra("toChatUsername", toChatUsername);
+        intent.putExtra("user", (EaseUser) user);
+        if (user.getContact() == 0) {
+            intent.putExtra("isFriend", true);
+        } else {
+            intent.putExtra("isFriend", false);
+        }
+        intent.putExtra("addType", addType);
+        context.startActivity(intent);
+    }
+
     private String toChatUsername;
     private SimpleDraweeView person_img;
     private TextView nick_nameTxt, cententTxt, leID_Txt, vip_Txt, signature_Txt, grade_Txt;
     private Button right_Btn;
-    private TextView friend_tv_content, nick_tv_content, clear_Txt,remove_Txt;
+    private TextView friend_tv_content, nick_tv_content, send_mess_Txt, remove_Txt, add_Txt, move_Block_Txt;
     private EMConversation conversation;
-    private MySwitchItemView top_Switch, disturb_Switch, vip_Switch;
     private ChatViewModel viewModel;
-    private MyArrowItemView nick_ArrowItemView;
-
-    public static void actionStart(Context context, String toChatUsername) {
-        Intent intent = new Intent(context, ChatDetailSet.class);
-        intent.putExtra("toChatUsername", toChatUsername);
-        context.startActivity(intent);
-    }
+    private MySwitchItemView black_Switch;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_chatdetailset;
+        return R.layout.activity_chatfriend_detail;
     }
+
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-
         initTitle();
         person_img = findViewById(R.id.person_img);
         nick_nameTxt = findViewById(R.id.nick_nameTxt);
@@ -101,41 +135,53 @@ public class ChatDetailSet extends BaseInitActivity {
         vip_Txt = findViewById(R.id.vip_Txt);
         grade_Txt = findViewById(R.id.grade_Txt);
         signature_Txt = findViewById(R.id.signature_Txt);
-        clear_Txt = findViewById(R.id.clear_Txt);
-        clear_Txt.setOnClickListener(new clear_TxtOnClick());
+        send_mess_Txt = findViewById(R.id.send_mess_Txt);
+        remove_Txt = findViewById(R.id.remove_Txt);
+        remove_Txt.setOnClickListener(new remove_TxtClick());
+        add_Txt = findViewById(R.id.add_Txt);
+        move_Block_Txt = findViewById(R.id.move_Block_Txt);
+        move_Block_Txt.setOnClickListener(new move_Block_TxtClick());
+        add_friend_Group = findViewById(R.id.add_friend_Group);
+        send_mess_Txt.setOnClickListener(new send_mess_TxtOnClick());
+        site_progressbar = findViewById(R.id.site_progressbar);
+
 
         MyArrowItemView friend_ArrowItemView = findViewById(R.id.friend_ArrowItemView);
         friend_tv_content = friend_ArrowItemView.findViewById(R.id.tv_content);
-         nick_ArrowItemView = findViewById(R.id.nick_ArrowItemView);
-        nick_ArrowItemView.setOnClickListener(new nick_ArrowItemViewClick());
+        nick_ArrowItemView = findViewById(R.id.nick_ArrowItemView);
         nick_tv_content = nick_ArrowItemView.findViewById(R.id.tv_content);
-        top_Switch = findViewById(R.id.top_Switch);
-        top_Switch.setOnCheckedChangeListener(new top_SwitchOnCheckLister());
-        disturb_Switch = findViewById(R.id.disturb_Switch);
-//        disturb_Switch.setOnCheckedChangeListener(new disturb_SwitchOnCheckLister());
-        disturb_Switch.getSwitch().setOnClickListener(new disturb_SwitchClick());
-        vip_Switch = findViewById(R.id.vip_Switch);
-        vip_Switch.setOnCheckedChangeListener(new vip_SwitchOnCheckLister());
+        nick_ArrowItemView.setOnClickListener(new nick_ArrowItemViewClick());
         MyArrowItemView recommend_ArrowItemView = findViewById(R.id.recommend_ArrowItemView);
         recommend_ArrowItemView.setOnClickListener(new recommend_ArrowItemOnClick());
-        MyArrowItemView chatRecord_ArrowItemView = findViewById(R.id.chatRecord_ArrowItemView);
-        chatRecord_ArrowItemView.setOnClickListener(new chatRecoreClick());
-        MyArrowItemView chatBg_ArrowItemView = findViewById(R.id.chatBg_ArrowItemView);
-        chatBg_ArrowItemView.setOnClickListener(new chatBg_ArrowViewClick());
-
-        remove_Txt = findViewById(R.id.remove_Txt);
-        remove_Txt.setOnClickListener(new remove_TxtClick());
+        add_Txt.setOnClickListener(new add_TxtClick());
+        black_Switch = findViewById(R.id.black_Switch);
+//        switch_item = black_Switch.findViewById(R.id.switch_item);
+//        black_Switch.setOnCheckedChangeListener(new black_SwitchOnCheck());
+        black_Switch.getSwitch().setOnClickListener(new switch_itemClickClick());
     }
 
     @Override
     protected void initIntent(Intent intent) {
         super.initIntent(intent);
         toChatUsername = getIntent().getStringExtra("toChatUsername");
+//        FriendApplyId = getIntent().getStringExtra("FriendApplyId");
+        mUser = (EaseUser) getIntent().getSerializableExtra("user");
+        addType = getIntent().getStringExtra("addType");
+        mIsFriend = getIntent().getBooleanExtra("isFriend", true);
+        if (!mIsFriend) {
+            List<String> users = null;
+            if (DemoDbHelper.getInstance(mContext).getUserDao() != null) {
+                users = DemoDbHelper.getInstance(mContext).getUserDao().loadContactUsers();
+            }
+            mIsFriend = users != null && users.contains(mUser.getUsername());
+        }
+
     }
 
     private void initTitle() {
         View title_Include = findViewById(R.id.title_Include);
         title_Include.setElevation(2f);//阴影
+        title_Include.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
         Button return_Btn = (Button) title_Include.findViewById(R.id.return_Btn);
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         return_Btn.setVisibility(View.VISIBLE);
@@ -154,7 +200,6 @@ public class ChatDetailSet extends BaseInitActivity {
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         right_Btn.setLayoutParams(layoutParams);
 
-
         return_Btn.setOnClickListener(new return_Btn());
         right_Btn.setOnClickListener(new right_Btn());
     }
@@ -169,41 +214,19 @@ public class ChatDetailSet extends BaseInitActivity {
     private class right_Btn extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            showMore(ChatDetailSet.this, right_Btn, 0);
+            showMore(ChatFriend_Detail.this, right_Btn, 0);
         }
     }
 
-    @Override
-    protected void initData() {
-        super.initData();
-
-        viewModel = new ViewModelProvider(this).get(ChatViewModel.class);
-        viewModel.getDeleteObservable().observe(this, response -> {
-            parseResource(response, new OnResourceParseCallback<Boolean>() {
-                @Override
-                public void onSuccess(Boolean data) {
-                    LiveDataBus.get().with(DemoConstant.CONVERSATION_DELETE).postValue(new EaseEvent(DemoConstant.CONTACT_DECLINE, EaseEvent.TYPE.MESSAGE));
-//                    finish();
-                    Toast.makeText(ChatDetailSet.this, "聊天记录已清除", Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
-
-        conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername, EaseCommonUtils.getConversationType(EaseConstant.CHATTYPE_SINGLE), true);
-        top_Switch.getSwitch().setChecked(!TextUtils.isEmpty(conversation.getExtField()));
-//        if (saveFile.getShareData("topSwitchCheck", ChatDetailSet.this).equals("false")) {
-//            top_Switch.getSwitch().setChecked(false);
-//        } else {
-//            top_Switch.getSwitch().setChecked(true);
-//        }
-//        if (saveFile.getShareData("disturbSwitchCheck", ChatDetailSet.this).equals("false")) {
-//            disturb_Switch.getSwitch().setChecked(false);
-//        } else {
-//            disturb_Switch.getSwitch().setChecked(true);
-//        }
-
-        AddFriendMethod(ChatDetailSet.this, saveFile.BaseUrl + saveFile.Friend_info_Url + "?friendHxName=" + toChatUsername);
+    private class recommend_ArrowItemOnClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            Intent userCardIntent = new Intent(ChatFriend_Detail.this, SelectUserCardActivity.class).addFlags(FLAG_ACTIVITY_NEW_TASK);
+            userCardIntent.putExtra("toUser", conversation.conversationId());
+            startActivity(userCardIntent);
+        }
     }
+
     //修改备注
     private class nick_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
@@ -222,7 +245,7 @@ public class ChatDetailSet extends BaseInitActivity {
                         if (!TextUtils.isEmpty(content)) {
 //                            itemGroupName.getTvContent().setText(content);
                             String changType = "2";
-                            ChangeUserMethod(ChatDetailSet.this, saveFile.BaseUrl + saveFile.Friend_UpdateRemarkName_Url, content);
+                            ChangeUserMethod(ChatFriend_Detail.this, saveFile.BaseUrl + saveFile.Friend_UpdateRemarkName_Url, content);
                         }
                     }
                 })
@@ -230,100 +253,19 @@ public class ChatDetailSet extends BaseInitActivity {
                 .show();
     }
 
-
-    //   背景图
-    private class chatBg_ArrowViewClick extends NoDoubleClickListener {
+    private class send_mess_TxtOnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            selectPicFromLocal();
+            ChatActivity.actionStart(mContext, toChatUsername, EaseConstant.CHATTYPE_SINGLE);
         }
     }
 
-    private class leID_TxtOnClick extends NoDoubleClickListener {
+    private class add_TxtClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            ClipData clipData = ClipData.newPlainText("text", StaticData.getNumbers(leID_Txt.getText().toString()));
-            manager.setPrimaryClip(clipData);
-            Toast.makeText(ChatDetailSet.this, "已复制到剪切板", Toast.LENGTH_SHORT).show();
+//            ChatFriend_AddFriend.actionStart(ChatFriend_Detail.this,toChatUsername);
+            ChatFriend_AddFriend.actionStart(mContext, toChatUsername, mUser, addType);
         }
-    }
-
-
-    private class top_SwitchOnCheckLister implements MySwitchItemView.OnCheckedChangeListener {
-        @Override
-        public void onCheckedChanged(MySwitchItemView buttonView, boolean isChecked) {
-            conversation.setExtField(isChecked ? (System.currentTimeMillis() + "") : "");
-//            saveFile.saveShareData("topSwitchCheck", isChecked + "", ChatDetailSet.this);
-            LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
-        }
-    }
-
-//    private class disturb_SwitchOnCheckLister implements MySwitchItemView.OnCheckedChangeListener {
-//        @Override
-//        public void onCheckedChanged(MySwitchItemView buttonView, boolean isChecked) {
-//            saveFile.saveShareData("disturbSwitchCheck", isChecked + "", ChatDetailSet.this);
-//        }
-//    }
-
-    private class disturb_SwitchClick implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            v.setEnabled(false);
-            DisturbMethod(ChatDetailSet.this, saveFile.BaseUrl + saveFile.Friend_Silence_Url, disturb_Switch.getSwitch().isChecked(), disturb_Switch.getSwitch());
-        }
-    }
-
-    private class vip_SwitchOnCheckLister implements MySwitchItemView.OnCheckedChangeListener {
-        @Override
-        public void onCheckedChanged(MySwitchItemView buttonView, boolean isChecked) {
-            if (!BeanUtils1.isEmpty(model)) {
-                if (model.getData().getVipType() == 0) {
-                    Toast.makeText(ChatDetailSet.this, "请开通vip", Toast.LENGTH_SHORT).show();
-                } else {
-
-                }
-            }
-
-
-        }
-    }
-
-    private class recommend_ArrowItemOnClick extends NoDoubleClickListener {
-        @Override
-        protected void onNoDoubleClick(View v) {
-            Intent userCardIntent = new Intent(ChatDetailSet.this, SelectUserCardActivity.class).addFlags(FLAG_ACTIVITY_NEW_TASK);
-            userCardIntent.putExtra("toUser", conversation.conversationId());
-            startActivity(userCardIntent);
-        }
-    }
-
-    private class chatRecoreClick extends NoDoubleClickListener {
-        @Override
-        protected void onNoDoubleClick(View v) {
-            SearchSingleChatActivity.actionStart(mContext, toChatUsername);
-        }
-    }
-
-    private class clear_TxtOnClick extends NoDoubleClickListener {
-        @Override
-        protected void onNoDoubleClick(View v) {
-            clearHistory();
-        }
-    }
-
-    // 是否删除会话
-    private void clearHistory() {
-        new SimpleDialogFragment.Builder(mContext)
-                .setTitle(R.string.em_chat_delete_conversation)
-                .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view) {
-                        viewModel.deleteConversationById(conversation.conversationId());
-                    }
-                })
-                .showCancelButton(true)
-                .show();
     }
 
     //删除好友
@@ -333,6 +275,7 @@ public class ChatDetailSet extends BaseInitActivity {
             removeFriend();
         }
     }
+
     private void removeFriend() {
         // 是否删除好友
         new SimpleDialogFragment.Builder(mContext)
@@ -340,7 +283,7 @@ public class ChatDetailSet extends BaseInitActivity {
                 .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
                     @Override
                     public void onConfirmClick(View view) {
-                        RemoveMethod(ChatDetailSet.this, saveFile.BaseUrl + saveFile.Friend_Delete_Url);
+                        RemoveMethod(ChatFriend_Detail.this, saveFile.BaseUrl + saveFile.Friend_Delete_Url);
                     }
                 })
                 .showCancelButton(true)
@@ -348,10 +291,58 @@ public class ChatDetailSet extends BaseInitActivity {
     }
 
 
+    //加入黑名单
+    private class switch_itemClickClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            v.setEnabled(false);
+            BlackMethod(ChatFriend_Detail.this, saveFile.BaseUrl + saveFile.Friend_SetBlack_Url, black_Switch.getSwitch().isChecked(), black_Switch.getSwitch());
+        }
+    }
+
+    //移除黑名单
+    private class move_Block_TxtClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            BlackMethod(ChatFriend_Detail.this, saveFile.BaseUrl + saveFile.Friend_SetBlack_Url, false, black_Switch.getSwitch());
+        }
+    }
+
+
+    @Override
+    protected void initData() {
+        super.initData();
+
+        viewModel = new ViewModelProvider(this).get(ChatViewModel.class);
+        viewModel.getDeleteObservable().observe(this, response -> {
+            parseResource(response, new OnResourceParseCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean data) {
+                    LiveDataBus.get().with(DemoConstant.CONVERSATION_DELETE).postValue(new EaseEvent(DemoConstant.CONTACT_DECLINE, EaseEvent.TYPE.MESSAGE));
+//                    finish();
+                    Toast.makeText(ChatFriend_Detail.this, "聊天记录已清除", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername, EaseCommonUtils.getConversationType(EaseConstant.CHATTYPE_SINGLE), true);
+
+        String userName;
+        String userID;
+        if (TextUtils.isEmpty(FriendApplyId)) {
+            userName = "friendHxName";
+            userID = toChatUsername;
+        } else {
+            userName = "friendUserId";
+            userID = FriendApplyId;
+        }
+        FriendMethod(ChatFriend_Detail.this, saveFile.BaseUrl + saveFile.Friend_info_Url + "?" + userName + "=" + userID);
+    }
 
     Friend_Detalis_Model model;
+
     @SuppressLint("SetTextI18n")
-    public void AddFriendMethod(Context context, String baseUrl) {
+    public void FriendMethod(Context context, String baseUrl) {
         RequestParams params = new RequestParams(baseUrl);
         if (saveFile.getShareData("JSESSIONID", context) != null) {
             params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
@@ -366,33 +357,26 @@ public class ChatDetailSet extends BaseInitActivity {
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     } else if (model.getCode() == 200) {
-
                         Friend_Detalis_Model.DataDTO dataDTO = model.getData();
                         Uri uri = Uri.parse(model.getData().getHeadImg());
                         person_img.setImageURI(uri);
 
-
                         String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNikeName() : dataDTO.getRemarkName();
-                        nick_nameTxt.setText(name);
+                        nick_nameTxt.setText("昵称：" + name);
                         cententTxt.setText(name);
                         nick_tv_content.setText(name);
-                        leID_Txt.setText("Le ID:" + dataDTO.getUserNum().intValue());
+                        leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
                         signature_Txt.setText("个性签名：" + dataDTO.getSignature());
                         friend_tv_content.setText(dataDTO.getSource());
-                        grade_Txt.setText("LV" + dataDTO.getGrade().intValue());
+                        grade_Txt.setText("LV." + dataDTO.getGrade().intValue());
                         if (dataDTO.getVipType() == 0) {
                             vip_Txt.setVisibility(View.GONE);
                         } else {
                             vip_Txt.setVisibility(View.VISIBLE);
 //                            .setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
                         }
-//                        cententTxt.setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
-//                        cententTxt.setText(model.getData().getNikeName());
-//                        name_txt.setText(model.getData().getNikeName());
-//                        moid_txt.setText("Mo ID:" + model.getData().getUserNum().intValue());
-//                        lv_txt.setText("LV" + model.getData().getGrade().intValue());
 
-                        IsSilenceMethod(dataDTO.getIsSilence());
+                        isFriendSetView(dataDTO.getIsFriend(), dataDTO.getFriendStatus());
 
                     } else {
                         Toast.makeText(context, model.getMsg(), Toast.LENGTH_SHORT).show();
@@ -420,19 +404,64 @@ public class ChatDetailSet extends BaseInitActivity {
         });
     }
 
+
     /**
-     * 消息免打扰
-     * @param isSilence
+     * @param isFriend     0不是好友 1是好友
+     * @param friendStatus 1正常2已删除3黑名单
      */
-    private void  IsSilenceMethod(Long isSilence){
-        if (isSilence == 0){
-            disturb_Switch.getSwitch().setChecked(false);
-        }else{
-            disturb_Switch.getSwitch().setChecked(true);
+    private void isFriendSetView(Long isFriend, String friendStatus) {
+        if (isFriend == 0) {
+            add_Txt.setVisibility(View.VISIBLE);
+            move_Block_Txt.setVisibility(View.GONE);
+            send_mess_Txt.setVisibility(View.GONE);
+            remove_Txt.setVisibility(View.GONE);
+            add_friend_Group.setVisibility(View.GONE);//好友设置
+        } else {
+            if (TextUtils.equals(friendStatus, "3")) {
+                add_Txt.setVisibility(View.GONE);
+                move_Block_Txt.setVisibility(View.VISIBLE);
+                send_mess_Txt.setVisibility(View.GONE);
+                remove_Txt.setVisibility(View.GONE);
+                add_friend_Group.setVisibility(View.VISIBLE);//好友设置
+                black_Switch.getSwitch().setChecked(true);
+                Log.d("block", " 已拉黑");
+            } else if (TextUtils.equals(friendStatus, "2")) {
+                black_Switch.getSwitch().setChecked(false);
+
+            } else {
+                Log.d("block", " 取消拉黑");
+                add_Txt.setVisibility(View.GONE);
+                move_Block_Txt.setVisibility(View.GONE);
+                send_mess_Txt.setVisibility(View.VISIBLE);
+                remove_Txt.setVisibility(View.VISIBLE);
+                add_friend_Group.setVisibility(View.VISIBLE);//好友设置
+                black_Switch.getSwitch().setChecked(false);
+            }
+
         }
     }
 
- 
+    private class clear_TxtOnClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            clearHistory();
+        }
+    }
+
+    private void clearHistory() {
+        // 是否删除会话
+        new SimpleDialogFragment.Builder(mContext)
+                .setTitle(R.string.em_chat_delete_conversation)
+                .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
+                    @Override
+                    public void onConfirmClick(View view) {
+                        viewModel.deleteConversationById(conversation.conversationId());
+                    }
+                })
+                .showCancelButton(true)
+                .show();
+    }
+
     private void showMore(final Context mContext, final View view, final int pos) {
         View contentView = View.inflate(mContext, R.layout.chatdetailset_feedback, null);
         PopupWindow MorePopup = new BasePopupWindow(mContext);
@@ -473,6 +502,16 @@ public class ChatDetailSet extends BaseInitActivity {
     }
 
 
+    private class leID_TxtOnClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            ClipData clipData = ClipData.newPlainText("text", StaticData.getNumbers(leID_Txt.getText().toString()));
+            manager.setPrimaryClip(clipData);
+            Toast.makeText(ChatFriend_Detail.this, "已复制到剪切板", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     //举报用户头像
     public void QuestionMethod(Context context, String baseUrl) {
         JSONObject obj = new JSONObject();
@@ -484,9 +523,6 @@ public class ChatDetailSet extends BaseInitActivity {
             e.printStackTrace();
         }
         RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
         params.setAsJsonContent(true);
         params.setBodyContent(obj.toString());
         x.http().post(params, new Callback.CommonCallback<String>() {
@@ -495,26 +531,12 @@ public class ChatDetailSet extends BaseInitActivity {
                 if (resultString != null) {
                     Main_QuestionFeedBack_Model baseModel = new Gson().fromJson(resultString, Main_QuestionFeedBack_Model.class);
                     if (baseModel.getCode() == 200) {
-//                    Login_Model baseModel = new Gson().fromJson(resultString, Login_Model.class);
-//                    if (baseModel.isIsSuccess() && !baseModel.getData().equals("[]")) {
                         Toast.makeText(context, "反馈已上传", Toast.LENGTH_SHORT).show();
                         finish();
-//
-//                        saveFile.saveShareData("phoneNum", baseModel.getData().getPhoneNum(), MainLogin_Code.this);
-//                        Intent intent = new Intent(context, MainActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        startActivity(intent);
                     }
-
-//            }
-//                    } else {
-//                        Toast.makeText(MainLogin_Code.this, "数据获取失败", Toast.LENGTH_SHORT).show();
-//                    }
                 } else {
                     Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
                 }
-//                    JPushInterface.resumePush(Man_Login.this);//注册
-//                    JPushInterface.setAliasAndTags(Man_Login.this,JsonGet.getReturnValue(resultString, "userid"),null);
             }
 
             @Override
@@ -534,6 +556,7 @@ public class ChatDetailSet extends BaseInitActivity {
 
     /**
      * 删除好友
+     *
      * @param context
      * @param baseUrl
      */
@@ -563,8 +586,8 @@ public class ChatDetailSet extends BaseInitActivity {
                     } else if (baseBean.getCode() == 200) {
                         Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
 
-                        DemoHelper.getInstance().getContactManager().deleteContact(model.getData().getHxUserName(),false);
-                        DemoHelper.getInstance().getChatManager().deleteConversation(model.getData().getHxUserName(),true);
+                        DemoHelper.getInstance().getContactManager().deleteContact(model.getData().getHxUserName(), false);
+                        DemoHelper.getInstance().getChatManager().deleteConversation(model.getData().getHxUserName(), true);
                         finish();
 
                     } else {
@@ -593,54 +616,14 @@ public class ChatDetailSet extends BaseInitActivity {
         });
     }
 
-
-
-
-    protected static final int REQUEST_CODE_LOCAL = 3;
     /**
-     * select local image
-     */
-    protected void selectPicFromLocal() {
-        EaseCompat.openImage(this, REQUEST_CODE_LOCAL);
-    }
-    /**
-     * 选择本地图片处理结果
-     *
-     * @param data
-     */
-    protected void onActivityResultForLocalPhotos(@Nullable Intent data) {
-        if (data != null) {
-            Uri selectedImage = data.getData();
-            if (selectedImage != null) {
-                saveFile.saveShareData("chatBg" + toChatUsername, selectedImage.toString(), ChatDetailSet.this);
-                finish();
-                String filePath = EaseFileUtils.getFilePath(mContext, selectedImage);
-                if (!TextUtils.isEmpty(filePath) && new File(filePath).exists()) {
-//                    chatLayout.sendImageMessage(Uri.parse(filePath));
-                } else {
-//                    EaseFileUtils.saveUriPermission(mContext, selectedImage, data);
-//                    chatLayout.sendImageMessage(selectedImage);
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_LOCAL) { // send local image
-            onActivityResultForLocalPhotos(data);
-        }
-    }
-
-    /**
-     * 消息免打扰
+     * 拉人移除黑名单
      *
      * @param context
      * @param baseUrl
      */
-    public void DisturbMethod(Context context, String baseUrl, boolean isBlock, View switchView) {
-//        site_progressbar.setVisibility(View.VISIBLE);
+    public void BlackMethod(Context context, String baseUrl, boolean isBlock, View switchView) {
+        site_progressbar.setVisibility(View.VISIBLE);
         JSONObject obj = new JSONObject();
         try {
             obj.put("friendUserId", model.getData().getUserId());
@@ -653,7 +636,6 @@ public class ChatDetailSet extends BaseInitActivity {
         }
         params.setAsJsonContent(true);
         params.setBodyContent(obj.toString());
-
         x.http().post(params, new Callback.CommonCallback<String>() {
             @SneakyThrows
             @Override
@@ -666,21 +648,18 @@ public class ChatDetailSet extends BaseInitActivity {
                         context.startActivity(intent);
                     } else if (baseBean.getCode() == 200) {
                         if (isBlock) {
-                            model.getData().setIsSilence(1L);
+                            model.getData().setFriendStatus("3");
                         } else {
-                            model.getData().setIsSilence(0L);
+                            model.getData().setFriendStatus("1");
                         }
-                        IsSilenceMethod(model.getData().getIsSilence());
-
-
-//                        Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
+                        isFriendSetView(model.getData().getIsFriend(), model.getData().getFriendStatus());
                     } else {
                         Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
                 }
-//                site_progressbar.setVisibility(View.GONE);
+                site_progressbar.setVisibility(View.GONE);
                 switchView.setEnabled(true);
             }
 
@@ -734,17 +713,21 @@ public class ChatDetailSet extends BaseInitActivity {
                         //修改本地其他用户名
                         String hxUserName = model.getData().getHxUserName();
                         DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
+
                     }
                 } else {
                     Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onError(Throwable throwable, boolean b) {
             }
+
             @Override
             public void onCancelled(CancelledException e) {
             }
+
             @Override
             public void onFinished() {
             }
@@ -752,6 +735,5 @@ public class ChatDetailSet extends BaseInitActivity {
     }
 
 
-
-
 }
+

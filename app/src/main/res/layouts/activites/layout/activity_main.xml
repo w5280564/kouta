@@ -8,7 +8,6 @@
     tools:context=".main.MainActivity"
     android:background="@color/white">
 
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/ac_tab_layout"
         android:layout_width="match_parent"

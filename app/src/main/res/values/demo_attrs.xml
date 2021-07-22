@@ -24,6 +24,8 @@
         <attr name="arrowItemAvatarSrc" format="reference"/>
         <attr name="arrowItemAvatarHeight" format="dimension|reference"/>
         <attr name="arrowItemAvatarWidth" format="dimension|reference"/>
+        <attr name="arrowItemshowTip" format="boolean"/>
+        <attr name="arrowItemTip" format="string|reference"/>
     </declare-styleable>
 
     <declare-styleable name="SwitchItemView">

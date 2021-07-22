@@ -8,9 +8,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -68,13 +66,14 @@ import com.xunda.mo.hx.section.dialog.FullEditDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.group.GroupHelper;
 import com.xunda.mo.main.MainLogin_Register;
-import com.xunda.mo.main.chat.ChatFriend_Detail;
-import com.xunda.mo.main.chat.UserDetail_Set;
+import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
+import com.xunda.mo.main.chat.activity.UserDetail_Set;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.ChatUserBean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
+import com.xunda.mo.staticdata.NoDoubleClickListener;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -96,9 +95,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     private static final String[] calls = {"视频通话", "语音通话"};
     private OnFragmentInfoListener infoListener;
     private Dialog dialog;
-
     EaseChatMessageListLayout messageListLayout;
-
 
     @Override
     public void initView() {
@@ -108,7 +105,8 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         //获取到聊天列表控件
         messageListLayout = chatLayout.getChatMessageListLayout();
         //设置聊天列表背景
-        messageListLayout.setBackground(new ColorDrawable(Color.parseColor("#ffffff")));
+//        messageListLayout.setBackground(new ColorDrawable(Color.parseColor("#ffefefef")));
+        messageListLayout.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.greyfive));
         //设置默认头像
 //        messageListLayout.setAvatarDefaultSrc(ContextCompat.getDrawable(mContext, R.drawable.ease_default_avatar));
         //设置头像形状：0为默认，1为圆形，2为方形
@@ -125,8 +123,9 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         //messageListLayout.setTimeTextColor(ContextCompat.getColor(mContext, R.color.black));
         //设置聊天列表样式：两侧及均位于左侧
         //messageListLayout.setItemShowType(EaseChatMessageListLayout.ShowType.LEFT);
-        messageListLayout.setItemSenderBackground(ContextCompat.getDrawable(mContext, R.drawable.chat_send_bg));
-        messageListLayout.setItemReceiverBackground(ContextCompat.getDrawable(mContext, R.drawable.chat_receive_bg));
+
+//        messageListLayout.setItemSenderBackground(ContextCompat.getDrawable(mContext, R.drawable.chat_send_bg));
+//        messageListLayout.setItemReceiverBackground(ContextCompat.getDrawable(mContext, R.drawable.chat_receive_white_bg));
 
 
         if (!saveFile.getShareData("chatBg" + conversationId, requireActivity()).equals("false")) {
@@ -143,6 +142,8 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
                     });
         }
+
+        cancel_Btn.setOnClickListener(new cancel_BtnClick());
 
 
         //获取到菜单输入父控件
@@ -192,6 +193,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
                 } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
                     for (int i = 0; i < messages.size(); i++) {
+                        messages.get(i).getStringAttribute("messageType", "group");
                         messages.get(i).getStringAttribute("messageType", "group");
                         messages.get(i).getStringAttribute("sendName", "");
                         messages.get(i).getStringAttribute("sendHead", "");
@@ -290,6 +292,11 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
 
     private EMMessageListener msgListener;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void onDestroy() {
@@ -796,6 +803,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
     GruopInfo_Bean groupModel;
+
     public void GroupMethod(Context context, String baseUrl) {
         RequestParams params = new RequestParams(baseUrl);
         if (saveFile.getShareData("JSESSIONID", context) != null) {
@@ -806,15 +814,17 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             public void onSuccess(String resultString) {
                 if (resultString != null) {
                     groupModel = new Gson().fromJson(resultString, GruopInfo_Bean.class);
-                    if (model.getCode() == -1 || model.getCode() == 500) {
+                    if (groupModel.getCode() == -1 || groupModel.getCode() == 500) {
                         Intent intent = new Intent(context, MainLogin_Register.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
-                    } else if (model.getCode() == 200) {
-
+                    } else if (groupModel.getCode() == 200) {
+                        GruopInfo_Bean.DataDTO dataDTO = groupModel.getData();
+                        String topStr = dataDTO.getGroupNotice();
+                        setTopView(topStr);
 
                     } else {
-                        Toast.makeText(context, model.getMsg(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, groupModel.getMsg(), Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -845,4 +855,21 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
 
+    private class cancel_BtnClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            top_Constraint.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 是否有置顶消息
+     * @param topStr
+     */
+    private void setTopView(String topStr) {
+        if (!TextUtils.isEmpty(topStr)) {
+            top_Constraint.setVisibility(View.VISIBLE);
+            top_Txt.setText(topStr);
+        }
+    }
 }

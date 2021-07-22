@@ -9,9 +9,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.adapter.EaseBaseRecyclerViewAdapter;
-import com.hyphenate.easeui.constants.EaseConstant;
 import com.xunda.mo.R;
-import com.xunda.mo.hx.section.chat.activicy.ChatHistoryActivity;
 import com.xunda.mo.hx.section.search.adapter.SearchMessageAdapter;
 
 import java.util.List;
@@ -58,7 +56,7 @@ public class SearchGroupChatActivity extends SearchActivity {
 
     @Override
     protected void onChildItemClick(View view, int position) {
-        EMMessage item = ((SearchMessageAdapter) adapter).getItem(position);
-        ChatHistoryActivity.actionStart(mContext, toUsername, EaseConstant.CHATTYPE_GROUP, item.getMsgId());
+//        EMMessage item = ((SearchMessageAdapter) adapter).getItem(position);
+//        ChatHistoryActivity.actionStart(mContext, toUsername, EaseConstant.CHATTYPE_GROUP, item.getMsgId());
     }
 }

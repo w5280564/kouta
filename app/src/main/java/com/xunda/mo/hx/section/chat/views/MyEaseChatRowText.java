@@ -77,8 +77,6 @@ public class MyEaseChatRowText extends EaseChatRow {
                 //添加群聊其他用户的名字与头像
                 }else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
 
-
-
                     usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME));
                     String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD);
                     Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);

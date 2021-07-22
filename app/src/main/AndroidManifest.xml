@@ -2,18 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.xunda.mo">
-
     <!-- 调用PictureSelector 使用相机需要添加判断 如不加captureIntent.resolveActivity(context.getPackageManager())==null -->
     <queries>
         <intent>
-            <action android:name="android.media.action.IMAGE_CAPTURE"/>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
-
         <intent>
-            <action android:name="android.media.action.VIDEO_CAPTURE"/>
+            <action android:name="android.media.action.VIDEO_CAPTURE" />
         </intent>
     </queries>
-
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -61,12 +58,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".main.chat.UserDetail_Set"></activity>
+        <activity android:name=".main.group.activity.GroupDetail_Edit_Adress"></activity>
+        <activity android:name=".main.group.activity.GroupDetail_Edit" />
+        <activity android:name=".main.group.activity.GroupDetailSet" />
+        <activity android:name=".main.group.activity.newGroup" />
+        <activity android:name=".main.chat.activity.UserDetail_Set" />
         <activity android:name=".main.friend.Friend_NewFriends" />
-        <activity android:name=".main.chat.ChatFriend_AddFriend" />
-        <activity android:name=".main.chat.ChatFriend_Detail" />
+        <activity android:name=".main.chat.activity.ChatFriend_AddFriend" />
+        <activity android:name=".main.chat.activity.ChatFriend_Detail" />
         <activity android:name=".main.friend.MyGroup" />
-        <activity android:name=".main.chat.ChatDetailSet" /> <!-- 设置环信应用的AppKey -->
+        <activity android:name=".main.chat.activity.ChatDetailSet" /> <!-- 设置环信应用的AppKey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="1107210427030313#lexiaobei" /> <!-- 声明SDK所需的service SDK核心功能 -->
@@ -390,17 +391,14 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
-            tools:ignore="DuplicateActivity" />
-
-
-        <!-- 定位需要的服务 适配Android Q需要加上android:foregroundServiceType="location"-->
+            tools:ignore="DuplicateActivity" /> <!-- 定位需要的服务 适配Android Q需要加上android:foregroundServiceType="location" -->
         <service
             android:name="com.amap.api.location.APSService"
             android:foregroundServiceType="location" />
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="2489d29db8d833cfe33f2d83e9afc1f2" />
-
         <meta-data
             android:name="design_width_in_dp"
             android:value="375" />

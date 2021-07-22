@@ -63,7 +63,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         String showName = null;
         String HeadAvatar = "";
         String HeadName = "";
-        try {
+
 
 //            String ext = item.getLastMessage().getStringAttribute(MyConstant.EXT);
 //            JSONObject jsonObject = new JSONObject(ext);
@@ -78,8 +78,9 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                 showName = group != null ? group.getGroupName() : username;
 
                 if (item.getAllMsgCount() != 0) {
-                    HeadName = item.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME);
-                    HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.GROUP_HEAD);
+                    item.conversationId();
+                    HeadName = item.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME,"");
+                    HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.GROUP_HEAD,"");
                 }
 
             } else if (item.getType() == EMConversation.EMConversationType.ChatRoom) {
@@ -101,9 +102,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
 
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 //        holder.avatar.setImageResource(defaultAvatar);
 //        holder.name.setText(showName);
 
@@ -124,7 +123,6 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
             if (userProvider != null) {
                 EaseUser user = userProvider.getUser(username);
                 if (user != null) {
-
                     try {
                         String selectInfoExt = user.getExt();
                         JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
@@ -136,7 +134,6 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                             JSONException e) {
                         e.printStackTrace();
                     }
-
                     if (!TextUtils.isEmpty(user.getAvatar())) {
                         Drawable drawable = holder.avatar.getDrawable();
                         Glide.with(holder.mContext)

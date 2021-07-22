@@ -177,7 +177,6 @@ public class EMChatManagerRepository extends BaseEMRepository{
      */
     public LiveData<Resource<List<EaseConversationInfo>>> fetchConversationsFromServer() {
         return new NetworkOnlyResource<List<EaseConversationInfo>>() {
-
             @Override
             protected void createCall(@NonNull ResultCallBack<LiveData<List<EaseConversationInfo>>> callBack) {
                 EMClient.getInstance().chatManager().asyncFetchConversationsFromServer(new EMValueCallBack<Map<String, EMConversation>>() {

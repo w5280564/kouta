@@ -1,6 +1,12 @@
 package com.xunda.mo.hx.section.group.adapter;
 
+import android.graphics.Typeface;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,23 +21,29 @@ import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.xunda.mo.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GroupPickContactsAdapter extends EaseBaseRecyclerViewAdapter<EaseUser> {
     private List<String> existMembers;
     private List<String> selectedMembers;
+    private List<EaseUser> MyEaseUserList;
     private boolean isCreateGroup;
     private OnSelectListener listener;
 
     public GroupPickContactsAdapter() {
         this.isCreateGroup = false;
         selectedMembers = new ArrayList<>();
+        MyEaseUserList = new ArrayList<>();
     }
 
     public GroupPickContactsAdapter(boolean isCreateGroup) {
         this.isCreateGroup = isCreateGroup;
         selectedMembers = new ArrayList<>();
+        MyEaseUserList = new ArrayList<>();
     }
 
     @Override
@@ -41,6 +53,7 @@ public class GroupPickContactsAdapter extends EaseBaseRecyclerViewAdapter<EaseUs
 
     /**
      * 不设置条目点击事件
+     *
      * @return
      */
     @Override
@@ -50,7 +63,7 @@ public class GroupPickContactsAdapter extends EaseBaseRecyclerViewAdapter<EaseUs
 
     public void setExistMember(List<String> existMembers) {
         this.existMembers = existMembers;
-        if(isCreateGroup) {
+        if (isCreateGroup) {
             selectedMembers.clear();
             selectedMembers.addAll(existMembers);
         }
@@ -59,6 +72,10 @@ public class GroupPickContactsAdapter extends EaseBaseRecyclerViewAdapter<EaseUs
 
     public List<String> getSelectedMembers() {
         return selectedMembers;
+    }
+
+    public List<EaseUser> getUserList() {
+        return MyEaseUserList;
     }
 
     public class ContactViewHolder extends ViewHolder<EaseUser> {
@@ -82,8 +99,39 @@ public class GroupPickContactsAdapter extends EaseBaseRecyclerViewAdapter<EaseUs
 
         @Override
         public void setData(EaseUser item, int position) {
-            String username = getRealUsername(item.getUsername());
-            name.setText(item.getNickname());
+//            String username = getRealUsername(item.getUsername());
+//            name.setText(item.getNickname());
+            String username = "";
+            try {
+                String selectInfoExt = item.getExt();
+                JSONObject jsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                username = getRealUsername(jsonObject.getString("userId"));
+                String name = TextUtils.isEmpty(jsonObject.getString("remarkName")) ? item.getNickname() : jsonObject.getString("remarkName");
+                int nameLength = name.length();
+                String nameAndNum = name + " (" + jsonObject.getString("userNum") + ")";
+                setName(nameAndNum, nameLength, this.name);
+            } catch (
+                    JSONException e) {
+                e.printStackTrace();
+            }
+
+
+//        String name = mData.get(position).getName();
+//            long strVip = item.get(position).getVipType();
+//            if (strVip == 0) {
+//                holder.tvName.setText(name);
+//                holder.state_txt.setVisibility(View.VISIBLE);
+//                holder.state_txt.setText(String.valueOf(mData.get(position).getLightStatus()));
+//                holder.vipType_txt.setVisibility(View.VISIBLE);
+//
+//            } else if (strVip == 1) {
+//                holder.state_txt.setVisibility(View.INVISIBLE);
+//                holder.vipType_txt.setVisibility(View.INVISIBLE);
+//
+//
+//                holder.tvName.setText(spannableString);
+//            }
+
 
             String avatarString = item.getAvatar();
             Glide.with(mContext).load(avatarString).into(avatar);
@@ -100,37 +148,41 @@ public class GroupPickContactsAdapter extends EaseBaseRecyclerViewAdapter<EaseUs
             } else {
                 headerView.setVisibility(View.GONE);
             }
-            if(checkIfContains(username) || (!selectedMembers.isEmpty() && selectedMembers.contains(username))){
+            if (checkIfContains(username) || (!selectedMembers.isEmpty() && selectedMembers.contains(username))) {
                 checkbox.setChecked(true);
-                if(isCreateGroup) {
+                if (isCreateGroup) {
                     checkbox.setBackgroundResource(R.drawable.demo_selector_bg_check);
                     itemView.setEnabled(true);
-                }else {
+                } else {
                     checkbox.setBackgroundResource(R.drawable.demo_selector_bg_gray_check);
                     itemView.setEnabled(false);
                 }
-            }else{
+            } else {
                 checkbox.setBackgroundResource(R.drawable.demo_selector_bg_check);
                 checkbox.setChecked(false);
                 itemView.setEnabled(true);
             }
+
+            String finalUsername = username;
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     checkbox.setChecked(!checkbox.isChecked());
                     boolean checked = checkbox.isChecked();
-                    if(isCreateGroup || !checkIfContains(username)) {
-                        if(checked) {
-                            if(!selectedMembers.contains(username)) {
-                                selectedMembers.add(username);
+                    if (isCreateGroup || !checkIfContains(finalUsername)) {
+                        if (checked) {
+                            if (!selectedMembers.contains(finalUsername)) {
+                                selectedMembers.add(finalUsername);
+                                MyEaseUserList.add(item);
                             }
-                        }else {
-                            if(selectedMembers.contains(username)) {
-                                selectedMembers.remove(username);
+                        } else {
+                            if (selectedMembers.contains(finalUsername)) {
+                                selectedMembers.remove(finalUsername);
+                                MyEaseUserList.remove(item);
                             }
                         }
                     }
-                    if(listener != null) {
+                    if (listener != null) {
                         listener.onSelected(v, selectedMembers);
                     }
                 }
@@ -140,11 +192,12 @@ public class GroupPickContactsAdapter extends EaseBaseRecyclerViewAdapter<EaseUs
 
     /**
      * 检查是否已存在
+     *
      * @param username
      * @return
      */
     private boolean checkIfContains(String username) {
-        if(existMembers == null) {
+        if (existMembers == null) {
             return false;
         }
         return existMembers.contains(username);
@@ -152,11 +205,12 @@ public class GroupPickContactsAdapter extends EaseBaseRecyclerViewAdapter<EaseUs
 
     /**
      * 因为环信id只能由字母和数字组成，如果含有“/”就可以认为是多端登录用户
+     *
      * @param username
      * @return
      */
     private String getRealUsername(String username) {
-        if(!username.contains("/")) {
+        if (!username.contains("/")) {
             return username;
         }
         String[] multipleUser = username.split("/");
@@ -169,5 +223,21 @@ public class GroupPickContactsAdapter extends EaseBaseRecyclerViewAdapter<EaseUs
 
     public interface OnSelectListener {
         void onSelected(View v, List<String> selectedMembers);
+    }
+
+    /**
+     * @param name       要显示的数据
+     * @param nameLength 要放大改颜色的字体长度
+     * @param viewName
+     */
+    private void setName(String name, int nameLength, TextView viewName) {
+        SpannableString spannableString = new SpannableString(name);
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getColor(R.color.yellowfive));
+        StyleSpan styleSpan_B = new StyleSpan(Typeface.BOLD);//粗体
+        RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(1.1f);//字放大
+        spannableString.setSpan(styleSpan_B, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(foregroundColorSpan, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(relativeSizeSpan, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        viewName.setText(spannableString);
     }
 }

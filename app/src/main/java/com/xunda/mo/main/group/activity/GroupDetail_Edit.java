@@ -1,0 +1,409 @@
+package com.xunda.mo.main.group.activity;
+
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.Gson;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.obs.services.ObsClient;
+import com.obs.services.ObsConfiguration;
+import com.obs.services.exception.ObsException;
+import com.obs.services.model.AuthTypeEnum;
+import com.xunda.mo.R;
+import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.hx.section.group.fragment.GroupEditFragment;
+import com.xunda.mo.main.baseView.MyArrowItemView;
+import com.xunda.mo.main.info.MyInfo;
+import com.xunda.mo.model.GruopInfo_Bean;
+import com.xunda.mo.model.baseDataModel;
+import com.xunda.mo.network.saveFile;
+import com.xunda.mo.staticdata.GlideEnGine;
+import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.viewTouchDelegate;
+
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.SneakyThrows;
+
+import static com.xunda.mo.staticdata.AppConstant.ak;
+import static com.xunda.mo.staticdata.AppConstant.bucketName;
+import static com.xunda.mo.staticdata.AppConstant.endPoint;
+import static com.xunda.mo.staticdata.AppConstant.sk;
+
+public class GroupDetail_Edit extends BaseInitActivity {
+
+    protected static final int ADRESS_CODE = 1;
+    private ConstraintLayout head_Constraint;
+    private ObsClient obsClient;
+    private int Identity;
+    private GruopInfo_Bean groupModel;
+    private SimpleDraweeView person_img;
+    private MyArrowItemView adress_ArrowItemView, brief_ArrowItemView;
+
+    public static void actionStart(Context context, int Identity, GruopInfo_Bean groupModel) {
+        Intent intent = new Intent(context, GroupDetail_Edit.class);
+        intent.putExtra("Identity", Identity);
+        intent.putExtra("groupModel", (Serializable) groupModel);
+        context.startActivity(intent);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_groupdetail_edit;
+    }
+
+    @Override
+    protected void initIntent(Intent intent) {
+        super.initIntent(intent);
+        groupModel = (GruopInfo_Bean) intent.getSerializableExtra("groupModel");
+        Identity = intent.getIntExtra("Identity",5);
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        super.initView(savedInstanceState);
+
+        initTitle();
+        head_Constraint = findViewById(R.id.head_Constraint);
+        head_Constraint.setOnClickListener(new head_ConstraintClick());
+        person_img = findViewById(R.id.person_img);
+        adress_ArrowItemView = findViewById(R.id.adress_ArrowItemView);
+        adress_ArrowItemView.setOnClickListener(new adress_ArrowItemViewClick());
+        brief_ArrowItemView = findViewById(R.id.brief_ArrowItemView);
+        brief_ArrowItemView.setOnClickListener(new brief_ArrowItemViewClick());
+
+        initObsClient();
+    }
+
+    private void initTitle() {
+        View title_Include = findViewById(R.id.title_Include);
+        title_Include.setBackgroundColor(ContextCompat.getColor(GroupDetail_Edit.this, R.color.white));
+        title_Include.setElevation(2f);//阴影
+        Button return_Btn = (Button) title_Include.findViewById(R.id.return_Btn);
+        viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
+        return_Btn.setVisibility(View.VISIBLE);
+        TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
+        cententTxt.setText("编辑资料");
+        Button right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
+        right_Btn.setVisibility(View.GONE);
+        return_Btn.setOnClickListener(new return_Btn());
+    }
+
+    private class return_Btn extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            finish();
+        }
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        if (!TextUtils.isEmpty(groupModel.getMsg()) && groupModel.getCode() == 200) {
+            GruopInfo_Bean.DataDTO dataDTO = groupModel.getData();
+            Uri uri = Uri.parse(dataDTO.getGroupHeadImg());
+            person_img.setImageURI(uri);
+
+            String adressStr = dataDTO.getGroupAddr().isEmpty() ? "未设置" : dataDTO.getGroupAddr();
+            adress_ArrowItemView.getTvContent().setText(adressStr);
+            String content = dataDTO.getGroupIntroduction().isEmpty() ? "群主很懒，还没有群介绍哦~" : dataDTO.getGroupIntroduction();
+            brief_ArrowItemView.getTip().setText(content);
+
+            //3是普通成员不能修改
+            if (Identity == 3){
+                head_Constraint.setEnabled(false);
+                adress_ArrowItemView.setEnabled(false);
+                brief_ArrowItemView.setEnabled(false);
+            }
+
+        }
+    }
+
+    private void initObsClient() {
+        ObsConfiguration config = new ObsConfiguration();
+        config.setSocketTimeout(30000);
+        config.setConnectionTimeout(10000);
+        config.setEndPoint(endPoint);
+        config.setAuthType(AuthTypeEnum.OBS);
+        // 创建ObsClient实例
+        obsClient = new ObsClient(ak, sk, config);
+    }
+
+    private class head_ConstraintClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            startCamera();
+        }
+    }
+
+    private class adress_ArrowItemViewClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            double Latitude = 0;
+            double Longitude = 0;
+            if (!groupModel.getData().getLat().isEmpty()) {
+                Latitude = Double.parseDouble(groupModel.getData().getLat());
+                Longitude = Double.parseDouble(groupModel.getData().getLng());
+            }
+            String Address = groupModel.getData().getGroupAddr();
+
+            GroupDetail_Edit_Adress.actionStartForResult(GroupDetail_Edit.this, ADRESS_CODE);
+//            GroupDetail_Edit_Adress.actionStart(mContext, Latitude, Longitude, Address);
+        }
+    }
+
+    private class brief_ArrowItemViewClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            showBriefDialog();
+        }
+    }
+
+    private void showBriefDialog() {
+        String hint = groupModel.getData().getGroupIntroduction().isEmpty() ? "群主很懒，还没有群介绍哦~" : "";
+        GroupEditFragment.showDialog(mContext,
+                "群简介",
+                brief_ArrowItemView.getTip().getText().toString().trim(),
+                hint,
+                new GroupEditFragment.OnSaveClickListener() {
+                    @Override
+                    public void onSaveClick(View view, String content) {
+                        //群简介
+                        if (!TextUtils.isEmpty(content)) {
+//                            signature_ArrowItemView.getTvContent().setText(content);
+//                            String changType = "7";
+//                            ChangeUserMethod(GroupDetail_Edit.this, saveFile.BaseUrl + saveFile.User_Update_Url, changType, "signature", content, "", "");
+                            brief_ArrowItemView.getTip().setText(content);
+                            String changType = "3";
+                            String keyStr = "groupIntroduction";
+                            CreateGroupMethod(GroupDetail_Edit.this, saveFile.BaseUrl + saveFile.Group_UpdateInfo_Url, changType, keyStr, content, "", "");
+                        }
+                    }
+                });
+    }
+
+
+    public void startCamera() {
+        //监听授权
+        List<String> permissionList = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(GroupDetail_Edit.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.CAMERA);
+        }
+
+        if (!permissionList.isEmpty()) {
+            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(GroupDetail_Edit.this, permissions, 1);
+        } else {
+            //打开相机录制视频
+            Intent captureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            //判断相机是否正常。
+            if (captureIntent.resolveActivity(GroupDetail_Edit.this.getPackageManager()) != null) {
+                setPhotoMetod(GroupDetail_Edit.this);
+            }
+
+        }
+    }
+
+    private void setPhotoMetod(Context context) {
+        int choice = 1;
+        PictureSelector.create((Activity) context)
+                .openGallery(PictureConfig.TYPE_ALL)
+                .imageEngine(GlideEnGine.createGlideEngine()) //图片加载空白 加入Glide加载图片
+                .imageSpanCount(4)// 每行显示个数 int
+                .maxSelectNum(choice)
+                .selectionMode(PictureConfig.SINGLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
+                .isSingleDirectReturn(true)//PictureConfig.SINGLE模式下是否直接返回
+                .isAndroidQTransform(true)//Android Q版本下是否需要拷贝文件至应用沙盒内
+                .isPreviewImage(true)// 是否可预览图片 true or false
+                .isCamera(false)// 是否显示拍照按钮 true or false
+                .isEnableCrop(true)//开启裁剪
+                .cropImageWideHigh(200, 200)//裁剪尺寸
+                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
+                .freeStyleCropEnabled(true)//裁剪框是否可拖拽
+//                .imageFormat(PictureMimeType.PNG_Q)//拍照图片格式后缀,默认jpeg, PictureMimeType.PNG，Android Q使用PictureMimeType.PNG_Q
+                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+                .isCompress(true)// 是否压缩 true or false
+                .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
+    }
+
+    List<LocalMedia> selectList = new ArrayList<>();
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case PictureConfig.CHOOSE_REQUEST:
+                    // 结果回调
+                    selectList = PictureSelector.obtainMultipleResult(data);
+                    if (!selectList.isEmpty()) {
+                        AsyncTask<Void, Void, String> task = new PostObjectTask();
+                        task.execute();
+                    }
+                    if (!selectList.isEmpty()) {
+//                        Uri uri = Uri.parse("file:///" + selectList.get(0).getCutPath());
+//                        groupHead_Sim.setImageURI(uri);
+                    }
+                    break;
+                case ADRESS_CODE:
+                    onActivityResultForMapLocation(data);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 地图定位结果处理
+     *
+     * @param data
+     */
+    protected void onActivityResultForMapLocation(@Nullable Intent data) {
+        if (data != null) {
+            double latitude = data.getDoubleExtra("latitude", 0);
+            double longitude = data.getDoubleExtra("longitude", 0);
+            String locationAddress = data.getStringExtra("address");
+            if (TextUtils.isEmpty(locationAddress)) {
+
+            }
+            String changType = "2";
+            String keyStr = "groupAddr";
+            CreateGroupMethod(GroupDetail_Edit.this, saveFile.BaseUrl + saveFile.Group_UpdateInfo_Url, changType, keyStr, locationAddress, "", "");
+        }
+    }
+
+
+    String objectName = "";
+
+    public class PostObjectTask extends AsyncTask<Void, Void, String> {
+        @SneakyThrows
+        @Override
+        protected String doInBackground(Void... voids) {
+            StringBuffer sbf = new StringBuffer();
+            try {
+
+                MyInfo myInfo = new MyInfo(GroupDetail_Edit.this);
+                objectName = "group/headImg/" + myInfo.getUserInfo().getUserId() + "/" + selectList.get(0).getFileName();//对应上传之后的文件名称
+                FileInputStream fis = new FileInputStream(new File(selectList.get(0).getCutPath()));
+                obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
+                sbf.append(objectName);
+                return sbf.toString();
+            } catch (ObsException e) {
+                sbf.append("\n\n");
+                sbf.append("Response Code:" + e.getResponseCode())
+                        .append("\n\n").append("Error Message:" + e.getErrorMessage())
+                        .append("\n\n").append("Error Code:" + e.getErrorCode())
+                        .append("\n\n").append("Request ID:" + e.getErrorRequestId())
+                        .append("\n\n").append("Host ID:" + e.getErrorHostId());
+                return sbf.toString();
+            } catch (Exception e) {
+                sbf.append("\n\n");
+                sbf.append(e.getMessage());
+                return sbf.toString();
+            } finally {
+                if (obsClient != null) {
+                    try {
+                        //Close obs client
+                        obsClient.close();
+                    } catch (IOException e) {
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String pic) {
+            super.onPostExecute(pic);
+//            groupHead_Sim.setEnabled(false);
+//            pictures = pic;
+            String changType = "1";
+            String keyStr = "groupHeadImg";
+            CreateGroupMethod(GroupDetail_Edit.this, saveFile.BaseUrl + saveFile.Group_UpdateInfo_Url, changType, keyStr, pic, "", "");
+        }
+    }
+
+    /**
+     * 修改用户信息
+     *
+     * @param context
+     * @param baseUrl
+     * @param changType 修改类型（1.头像 2.地址 ）
+     * @param keyStr
+     * @param valueStr
+     */
+    public void CreateGroupMethod(Context context, String baseUrl, String changType, String keyStr, String valueStr, String keyCity, String valueCityStr) {
+        RequestParams params = new RequestParams(baseUrl);
+        params.addBodyParameter("groupId", groupModel.getData().getGroupId());
+        params.addBodyParameter(keyStr, valueStr);
+        if (saveFile.getShareData("JSESSIONID", context) != null) {
+            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
+        }
+        params.setAsJsonContent(true);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String resultString) {
+                if (resultString != null) {
+                    baseDataModel baseModel = new Gson().fromJson(resultString, baseDataModel.class);
+                    if (baseModel.getCode() == 200) {
+                        Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
+
+                        if (TextUtils.equals(changType, "1")) {
+                            Uri uri = Uri.parse(baseModel.getData());
+                            person_img.setImageURI(uri);
+                        } else if (TextUtils.equals(changType, "2")) {
+                            String adressStr = valueStr.isEmpty() ? "未设置" : valueStr;
+                            adress_ArrowItemView.getTvContent().setText(adressStr);
+                        }
+
+                    }
+                } else {
+                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+
+}

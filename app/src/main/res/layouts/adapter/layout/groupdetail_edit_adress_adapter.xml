@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:ignore="MissingConstraints">
+
+
+    <ImageView
+        android:id="@+id/map_Img"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@mipmap/map_location_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/adress_Txt"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/yellow" />
+
+    <TextView
+        android:id="@+id/adress_Txt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="合肥"
+        android:lines="1"
+        android:textColor="@color/blacktitle"
+        android:textSize="15sp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/send_Btn"
+        app:layout_constraintLeft_toRightOf="@id/map_Img"
+        app:layout_constraintStart_toEndOf="@+id/map_Img"
+        app:layout_constraintTop_toTopOf="@+id/map_Img" />
+
+    <TextView
+        android:id="@+id/content_txt"
+        android:layout_width="0dp"
+        android:layout_height="14dp"
+        android:gravity="center_vertical|left"
+        android:lines="2"
+        android:text="VIP"
+        android:textColor="@color/blacktitlettwo"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/map_Img"
+        app:layout_constraintEnd_toStartOf="@+id/send_Btn"
+        app:layout_constraintStart_toStartOf="@+id/adress_Txt"
+        app:layout_constraintTop_toBottomOf="@+id/adress_Txt" />
+
+    <Button
+        android:id="@+id/send_Btn"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/loginbtn_radius_yellow"
+        android:gravity="center"
+        android:text="发送"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.529" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/greyfive"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/map_Img" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
