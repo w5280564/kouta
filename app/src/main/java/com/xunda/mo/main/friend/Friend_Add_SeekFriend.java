@@ -1,5 +1,9 @@
 package com.xunda.mo.main.friend;
 
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,7 +16,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,25 +25,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.xunda.mo.R;
-import com.xunda.mo.main.MainLogin_Register;
+import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.model.AddFriend_UserList_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
-import static com.xunda.mo.network.saveFile.getShareData;
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Friend_Add_SeekFriend extends AppCompatActivity {
 
     private View cancel_txt;
     private EditText seek_edit;
     private LinearLayout friend_lin;
+    String searchStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +52,9 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
 
         initView();
     }
-
     private void initData(int type) {
-        String searchStr = seek_edit.getText().toString().trim();
-        AddFriendMethod(Friend_Add_SeekFriend.this, saveFile.BaseUrl + saveFile.User_SearchAll_Url + "?search=" + searchStr);
-//        AddFriendMethod(Friend_Add_SeekPerson.this, saveFile.BaseUrl + saveFile.User_SearchAll_Url + "?search=" + searchStr + "&type=" + type + "&pageNum=" + 1 + "&pageSize=" + 10);
+         searchStr = seek_edit.getText().toString().trim();
+        AddFriendMethod(Friend_Add_SeekFriend.this, saveFile.User_SearchAll_Url );
     }
 
     private void initView() {
@@ -77,50 +74,21 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
     }
 
     private AddFriend_UserList_Model model;
-
-    //
     public void AddFriendMethod(Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", getShareData("JSESSIONID", context));
-        }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("search",searchStr);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    model = new Gson().fromJson(resultString, AddFriend_UserList_Model.class);
-                    if (model.getCode() == -1 || model.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (model.getCode() == 200) {
-
-                        FriendList(Friend_Add_SeekFriend.this, friend_lin, 0);
-
-                    } else {
-                        Toast.makeText(context, model.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-
-
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
-
+            public void success(String result) {
+                model = new Gson().fromJson(result, AddFriend_UserList_Model.class);
+                FriendList(Friend_Add_SeekFriend.this, friend_lin, 0);
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
 
             }
         });
+
     }
 
     private class SeekOnEditorListener implements TextView.OnEditorActionListener {
@@ -151,7 +119,7 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
             TextView more_txt = myView.findViewById(R.id.more_txt);
             viewTouchDelegate.expandViewTouchDelegate(more_txt, 50, 50, 50, 50);
             String UserType = model.getData().get(i).getUserType();
-            if (UserType.equals("nikeNameUser")) {
+            if (UserType.equals("NickNameUser")) {
                 tag_txt.setText("联系人");
             } else if (UserType.equals("userNumUser")) {
                 tag_txt.setText("LeId");
@@ -165,36 +133,26 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
                 tag_txt.setText("含有该标签的群聊");
             }
             FriendListDetail(context, list_lin, myView, i, model.getData().get(i));
-//            questiontxt_List.add(questionTxt);
-//            questionlin_List.add(choice_lin);
-//            pk_img.setImageResource(badgeArr[i]);
-            RadioGroup.LayoutParams itemParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-//            pk_Lin.setLayoutParams(itemParams);
             list_lin.setTag(i);
             more_txt.setTag(i);
             myFlex.addView(myView);
-
-
-            more_txt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int tag = (Integer) v.getTag();
-                    String typeStr = model.getData().get(tag).getUserType().substring(model.getData().get(tag).getUserType().length() - 4);
-                    if (typeStr.equals("User")) {
-                        Intent intent = new Intent(context, Friend_Add_seekPerson_FriendList.class);
-                        intent.putExtra("type", model.getData().get(tag).getUserType());
-                        intent.putExtra("seekStr", seek_edit.getText().toString());
-                        startActivity(intent);
-                    }else {
-                        Intent intent = new Intent(context, Friend_Add_seekPerson_GruopList.class);
-                        intent.putExtra("type", model.getData().get(tag).getUserType());
-                        intent.putExtra("seekStr", seek_edit.getText().toString());
-                        startActivity(intent);
-
-                    }
-
+            more_txt.setOnClickListener(v -> {
+                int tag = (Integer) v.getTag();
+                String typeStr = model.getData().get(tag).getUserType().substring(model.getData().get(tag).getUserType().length() - 4);
+                if (typeStr.equals("User")) {
+                    Intent intent = new Intent(context, Friend_Add_seekPerson_FriendList.class);
+                    intent.putExtra("type", model.getData().get(tag).getUserType());
+                    intent.putExtra("seekStr", seek_edit.getText().toString());
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(context, Friend_Add_seekPerson_GruopList.class);
+                    intent.putExtra("type", model.getData().get(tag).getUserType());
+                    intent.putExtra("seekStr", seek_edit.getText().toString());
+                    startActivity(intent);
 
                 }
+
+
             });
         }
     }
@@ -223,7 +181,6 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
 //            int margisleft = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
 //            itemParams.setMargins(margisleft, 0, 0, 0);
             myView.setLayoutParams(itemParams);
-
             SimpleDraweeView head_simple = myView.findViewById(R.id.head_simple);
             TextView name = myView.findViewById(R.id.name);
             TextView vipType_txt = myView.findViewById(R.id.vipType_txt);
@@ -236,9 +193,8 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
                     head_simple.setImageURI(imgUri);
                 }
                 long strVip = userListDTO.getVipType();
-                name.setText(userListDTO.getNikeName());
-                contentid_txt.setText("Le ID: " + userListDTO.getUserNum());
-
+                name.setText(userListDTO.getNickName());
+                contentid_txt.setText("Mo ID: " + userListDTO.getUserNum());
                 if (strVip == 0) {
                     vipType_txt.setVisibility(View.GONE);
                     name.setTextColor(getColor(R.color.blacktitle));
@@ -248,8 +204,6 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
                     name.setTextColor(getColor(R.color.yellow));
                     contentid_txt.setTextColor(getColor(R.color.yellow));
                 }
-
-
             } else {
                 AddFriend_UserList_Model.DataDTO.GroupListDTO groupListDTO = model.getGroupList().get(i);
                 if (groupListDTO.getGroupHeadImg() != null) {
@@ -263,20 +217,15 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
             myView.setTag(i);
             myFlex.addView(myView);
 
-            myView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int tag = (Integer) v.getTag();
-                    if (typeStr.equals("User")) {
-//                        Toast.makeText(context, "用户Le ID "+model.getUserList().get(tag).getUserNum(),Toast.LENGTH_SHORT).show();
-                        String friendUserId = model.getUserList().get(tag).getUserId();
-                        Intent intent = new Intent(context,Friend_Detalis.class);
-                        intent.putExtra("friendUserId",friendUserId);
-                        startActivity(intent);
-                    }else{
-                        Toast.makeText(context, "群 ID "+model.getGroupList().get(tag).getGroupNum(),Toast.LENGTH_SHORT).show();
-                    }
+            myView.setOnClickListener(v -> {
+                int tag1 = (Integer) v.getTag();
+                if (typeStr.equals("User")) {
+                    String friendUserId = model.getUserList().get(tag1).getUserId();
+                    String addType = "2";
+                    ChatFriend_Detail.actionStart(context, friendUserId,  addType);
+                }else{
 
+                    Toast.makeText(context, "群 ID "+model.getGroupList().get(tag1).getGroupNum(),Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -1,5 +1,7 @@
 package com.xunda.mo.main.chat.activity;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -45,29 +47,25 @@ import com.xunda.mo.hx.section.chat.viewmodel.ChatViewModel;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
-import com.xunda.mo.main.MainLogin_Register;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.baseView.MySwitchItemView;
-import com.xunda.mo.model.Friend_Detalis_Model;
-import com.xunda.mo.model.Main_QuestionFeedBack_Model;
+import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.model.baseModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.SneakyThrows;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class ChatFriend_Detail extends BaseInitActivity {
     private EaseUser mUser;
@@ -163,11 +161,11 @@ public class ChatFriend_Detail extends BaseInitActivity {
     @Override
     protected void initIntent(Intent intent) {
         super.initIntent(intent);
-        toChatUsername = getIntent().getStringExtra("toChatUsername");
-//        FriendApplyId = getIntent().getStringExtra("FriendApplyId");
-        mUser = (EaseUser) getIntent().getSerializableExtra("user");
-        addType = getIntent().getStringExtra("addType");
-        mIsFriend = getIntent().getBooleanExtra("isFriend", true);
+        toChatUsername = intent.getStringExtra("toChatUsername");
+        FriendApplyId = intent.getStringExtra("FriendApplyId");
+        mUser = (EaseUser) intent.getSerializableExtra("user");
+        addType = intent.getStringExtra("addType");
+        mIsFriend = intent.getBooleanExtra("isFriend", true);
         if (!mIsFriend) {
             List<String> users = null;
             if (DemoDbHelper.getInstance(mContext).getUserDao() != null) {
@@ -245,7 +243,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                         if (!TextUtils.isEmpty(content)) {
 //                            itemGroupName.getTvContent().setText(content);
                             String changType = "2";
-                            ChangeUserMethod(ChatFriend_Detail.this, saveFile.BaseUrl + saveFile.Friend_UpdateRemarkName_Url, content);
+                            ChangeUserMethod(ChatFriend_Detail.this, saveFile.Friend_UpdateRemarkName_Url, content);
                         }
                     }
                 })
@@ -263,8 +261,9 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private class add_TxtClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-//            ChatFriend_AddFriend.actionStart(ChatFriend_Detail.this,toChatUsername);
-            ChatFriend_AddFriend.actionStart(mContext, toChatUsername, mUser, addType);
+                ChatFriend_AddFriend.actionStart(mContext, toChatUsername, addType);
+//                ChatFriend_AddFriend.actionStart(mContext, toChatUsername, mUser, addType);
+
         }
     }
 
@@ -283,7 +282,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
                     @Override
                     public void onConfirmClick(View view) {
-                        RemoveMethod(ChatFriend_Detail.this, saveFile.BaseUrl + saveFile.Friend_Delete_Url);
+                        RemoveMethod(ChatFriend_Detail.this, saveFile.Friend_Delete_Url);
                     }
                 })
                 .showCancelButton(true)
@@ -296,7 +295,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
         @Override
         public void onClick(View v) {
             v.setEnabled(false);
-            BlackMethod(ChatFriend_Detail.this, saveFile.BaseUrl + saveFile.Friend_SetBlack_Url, black_Switch.getSwitch().isChecked(), black_Switch.getSwitch());
+            BlackMethod(ChatFriend_Detail.this, saveFile.Friend_SetBlack_Url, black_Switch.getSwitch().isChecked(), black_Switch.getSwitch());
         }
     }
 
@@ -304,15 +303,15 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private class move_Block_TxtClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            BlackMethod(ChatFriend_Detail.this, saveFile.BaseUrl + saveFile.Friend_SetBlack_Url, false, black_Switch.getSwitch());
+            BlackMethod(ChatFriend_Detail.this,  saveFile.Friend_SetBlack_Url, false, black_Switch.getSwitch());
         }
     }
 
-
+    String userName;
+    String userID;
     @Override
     protected void initData() {
         super.initData();
-
         viewModel = new ViewModelProvider(this).get(ChatViewModel.class);
         viewModel.getDeleteObservable().observe(this, response -> {
             parseResource(response, new OnResourceParseCallback<Boolean>() {
@@ -327,8 +326,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
 
         conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername, EaseCommonUtils.getConversationType(EaseConstant.CHATTYPE_SINGLE), true);
 
-        String userName;
-        String userID;
+
         if (TextUtils.isEmpty(FriendApplyId)) {
             userName = "friendHxName";
             userID = toChatUsername;
@@ -336,69 +334,42 @@ public class ChatFriend_Detail extends BaseInitActivity {
             userName = "friendUserId";
             userID = FriendApplyId;
         }
-        FriendMethod(ChatFriend_Detail.this, saveFile.BaseUrl + saveFile.Friend_info_Url + "?" + userName + "=" + userID);
+        FriendMethod(ChatFriend_Detail.this,  saveFile.Friend_info_Url );
     }
 
-    Friend_Detalis_Model model;
+    Friend_Details_Bean model;
 
     @SuppressLint("SetTextI18n")
     public void FriendMethod(Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put(userName,userID);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    model = new Gson().fromJson(resultString, Friend_Detalis_Model.class);
-                    if (model.getCode() == -1 || model.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (model.getCode() == 200) {
-                        Friend_Detalis_Model.DataDTO dataDTO = model.getData();
-                        Uri uri = Uri.parse(model.getData().getHeadImg());
-                        person_img.setImageURI(uri);
+            public void success(String result) {
+                model = new Gson().fromJson(result, Friend_Details_Bean.class);
+                Friend_Details_Bean.DataDTO dataDTO = model.getData();
+                Uri uri = Uri.parse(model.getData().getHeadImg());
+                person_img.setImageURI(uri);
 
-                        String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNikeName() : dataDTO.getRemarkName();
-                        nick_nameTxt.setText("昵称：" + name);
-                        cententTxt.setText(name);
-                        nick_tv_content.setText(name);
-                        leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
-                        signature_Txt.setText("个性签名：" + dataDTO.getSignature());
-                        friend_tv_content.setText(dataDTO.getSource());
-                        grade_Txt.setText("LV." + dataDTO.getGrade().intValue());
-                        if (dataDTO.getVipType() == 0) {
-                            vip_Txt.setVisibility(View.GONE);
-                        } else {
-                            vip_Txt.setVisibility(View.VISIBLE);
-//                            .setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
-                        }
-
-                        isFriendSetView(dataDTO.getIsFriend(), dataDTO.getFriendStatus());
-
-                    } else {
-                        Toast.makeText(context, model.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-
-
+                String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
+                nick_nameTxt.setText("昵称：" + name);
+                cententTxt.setText(name);
+                nick_tv_content.setText(name);
+                leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
+                signature_Txt.setText("个性签名：" + dataDTO.getSignature());
+                friend_tv_content.setText(dataDTO.getSource());
+                grade_Txt.setText("LV." + dataDTO.getGrade().intValue());
+                if (dataDTO.getVipType() == 0) {
+                    vip_Txt.setVisibility(View.GONE);
                 } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                    vip_Txt.setVisibility(View.VISIBLE);
+//                            .setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
                 }
-
+                isFriendSetView(dataDTO.getIsFriend(), dataDTO.getFriendStatus());
+                toChatUsername = dataDTO.getHxUserName();
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
 
             }
         });
@@ -483,7 +454,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
         newregistr_txt.setOnClickListener(new NoDoubleClickListener() {
             @Override
             protected void onNoDoubleClick(View v) {
-                QuestionMethod(mContext, saveFile.BaseUrl + saveFile.User_PublicQuestionBack_Url);
+                QuestionMethod(mContext,  saveFile.User_PublicQuestionBack_Url);
                 MorePopup.dismiss();
             }
         });
@@ -514,42 +485,18 @@ public class ChatFriend_Detail extends BaseInitActivity {
 
     //举报用户头像
     public void QuestionMethod(Context context, String baseUrl) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("picture", model.getData().getHeadImg());
-            obj.put("toReportUserId", model.getData().getUserNum());
-            obj.put("type", "1");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestParams params = new RequestParams(baseUrl);
-        params.setAsJsonContent(true);
-        params.setBodyContent(obj.toString());
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("picture", model.getData().getHeadImg());
+        map.put("toReportUserId", model.getData().getUserNum());
+        map.put("type", "1");
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    Main_QuestionFeedBack_Model baseModel = new Gson().fromJson(resultString, Main_QuestionFeedBack_Model.class);
-                    if (baseModel.getCode() == 200) {
-                        Toast.makeText(context, "反馈已上传", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
+            public void success(String result) {
+                Toast.makeText(context, "反馈已上传", Toast.LENGTH_SHORT).show();
+                finish();
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
-
+            public void failed(String... args) {
             }
         });
     }
@@ -561,58 +508,23 @@ public class ChatFriend_Detail extends BaseInitActivity {
      * @param baseUrl
      */
     public void RemoveMethod(Context context, String baseUrl) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("friendUserId", model.getData().getUserId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        params.setAsJsonContent(true);
-        params.setBodyContent(obj.toString());
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("friendUserId", model.getData().getUserId());
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @SneakyThrows
             @Override
-            public void onSuccess(String resultString) {
-                if (!TextUtils.isEmpty(resultString)) {
-                    baseModel baseBean = new Gson().fromJson(resultString, baseModel.class);
-                    if (baseBean.getCode() == -1) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (baseBean.getCode() == 200) {
-                        Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
+            public void success(String result) {
+                baseModel baseBean = new Gson().fromJson(result, baseModel.class);
+                Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
 
-                        DemoHelper.getInstance().getContactManager().deleteContact(model.getData().getHxUserName(), false);
-                        DemoHelper.getInstance().getChatManager().deleteConversation(model.getData().getHxUserName(), true);
-                        finish();
+                DemoHelper.getInstance().getContactManager().deleteContact(model.getData().getHxUserName(), false);
+                DemoHelper.getInstance().getChatManager().deleteConversation(model.getData().getHxUserName(), true);
+                finish();
 
-                    } else {
-                        Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
             }
-
             @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-
+            public void failed(String... args) {
             }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-
         });
     }
 
@@ -624,60 +536,25 @@ public class ChatFriend_Detail extends BaseInitActivity {
      */
     public void BlackMethod(Context context, String baseUrl, boolean isBlock, View switchView) {
         site_progressbar.setVisibility(View.VISIBLE);
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("friendUserId", model.getData().getUserId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        params.setAsJsonContent(true);
-        params.setBodyContent(obj.toString());
-        x.http().post(params, new Callback.CommonCallback<String>() {
-            @SneakyThrows
+        Map<String,Object> map = new HashMap<>();
+        map.put("friendUserId", model.getData().getUserId());
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (!TextUtils.isEmpty(resultString)) {
-                    baseModel baseBean = new Gson().fromJson(resultString, baseModel.class);
-                    if (baseBean.getCode() == -1) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (baseBean.getCode() == 200) {
-                        if (isBlock) {
-                            model.getData().setFriendStatus("3");
-                        } else {
-                            model.getData().setFriendStatus("1");
-                        }
-                        isFriendSetView(model.getData().getIsFriend(), model.getData().getFriendStatus());
-                    } else {
-                        Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
+            public void success(String result) {
+                if (isBlock) {
+                    model.getData().setFriendStatus("3");
                 } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                    model.getData().setFriendStatus("1");
                 }
+                isFriendSetView(model.getData().getIsFriend(), model.getData().getFriendStatus());
                 site_progressbar.setVisibility(View.GONE);
                 switchView.setEnabled(true);
             }
-
             @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
+            public void failed(String... args) {
+                site_progressbar.setVisibility(View.GONE);
                 switchView.setEnabled(true);
             }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-                switchView.setEnabled(true);
-            }
-
-            @Override
-            public void onFinished() {
-                switchView.setEnabled(true);
-            }
-
         });
     }
 
@@ -685,53 +562,32 @@ public class ChatFriend_Detail extends BaseInitActivity {
      * 修改用户信息
      */
     public void ChangeUserMethod(Context context, String baseUrl, String remarkName) {
-        RequestParams params = new RequestParams(baseUrl);
-        params.addBodyParameter("friendUserId", model.getData().getUserId());
-        params.addBodyParameter("remarkName", remarkName);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        params.setAsJsonContent(true);
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("friendUserId", model.getData().getUserId());
+        map.put("remarkName", remarkName);
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    baseModel baseModel = new Gson().fromJson(resultString, baseModel.class);
-                    if (baseModel.getCode() == 200) {
-                        Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
-//                        String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNikeName() : dataDTO.getRemarkName();
-                        nick_nameTxt.setText("昵称：" + remarkName);
-                        cententTxt.setText(remarkName);
-                        nick_tv_content.setText(remarkName);
+            public void success(String result) {
+                //                        String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickName() : dataDTO.getRemarkName();
+                nick_nameTxt.setText("昵称：" + remarkName);
+                cententTxt.setText(remarkName);
+                nick_tv_content.setText(remarkName);
 
-                        JSONObject obj = new JSONObject();
-                        try {
-                            obj.put("remarkName", remarkName);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        //修改本地其他用户名
-                        String hxUserName = model.getData().getHxUserName();
-                        DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
-
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("remarkName", remarkName);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                //修改本地其他用户名
+                String hxUserName = model.getData().getHxUserName();
+                DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
             }
         });
+
     }
 
 

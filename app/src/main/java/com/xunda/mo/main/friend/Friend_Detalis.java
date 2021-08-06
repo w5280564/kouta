@@ -1,8 +1,5 @@
 package com.xunda.mo.main.friend;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,21 +10,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.xunda.mo.R;
-import com.xunda.mo.main.MainLogin_Register;
-import com.xunda.mo.model.Friend_Detalis_Model;
-import com.xunda.mo.network.saveFile;
-import com.xunda.mo.staticdata.NoDoubleClickListener;
-import com.xunda.mo.staticdata.viewTouchDelegate;
-import com.xunda.mo.staticdata.SetStatusBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+import com.xunda.mo.R;
+import com.xunda.mo.model.Friend_Details_Bean;
+import com.xunda.mo.network.saveFile;
+import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.SetStatusBar;
+import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Friend_Detalis extends AppCompatActivity {
 
@@ -104,63 +102,32 @@ public class Friend_Detalis extends AppCompatActivity {
     }
 
     private void initData() {
-        AddFriendMethod(Friend_Detalis.this, saveFile.BaseUrl + saveFile.Friend_info_Url + "?friendUserId=" + friendUserId);
-//        AddFriendMethod(Friend_Detalis.this, saveFile.BaseUrl + saveFile.User_SearchAll_Url + "?search=" + friendUserId + "&type=" + 2 + "&pageNum=" + 1 + "&pageSize=" + 1);
+        AddFriendMethod(Friend_Detalis.this, saveFile.Friend_info_Url);
     }
 
     //
     public void AddFriendMethod(Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("friendUserId", friendUserId);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    Friend_Detalis_Model model = new Gson().fromJson(resultString, Friend_Detalis_Model.class);
-                    if (model.getCode() == -1 || model.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (model.getCode() == 200) {
-
-                        Uri uri = Uri.parse(model.getData().getHeadImg());
-                        person_img.setImageURI(uri);
-                        cententTxt.setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
-                        cententTxt.setText(model.getData().getNikeName());
-                        name_txt.setText(model.getData().getNikeName());
-                        moid_txt.setText("Mo ID:" + model.getData().getUserNum().intValue());
-                        lv_txt.setText("LV" + model.getData().getGrade().intValue());
-
-                        if (model.getData().getVipType() == 0) {
-
-                        } else {
-                            moid_txt.setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
-                        }
-
-
-                    } else {
-                        Toast.makeText(context, model.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-
+            public void success(String result) {
+                Friend_Details_Bean model = new Gson().fromJson(result, Friend_Details_Bean.class);
+                Uri uri = Uri.parse(model.getData().getHeadImg());
+                person_img.setImageURI(uri);
+                cententTxt.setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
+                cententTxt.setText(model.getData().getNickname());
+                name_txt.setText(model.getData().getNickname());
+                moid_txt.setText("Mo ID:" + model.getData().getUserNum().intValue());
+                lv_txt.setText("LV" + model.getData().getGrade().intValue());
+                if (model.getData().getVipType() == 0) {
 
                 } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                    moid_txt.setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
                 }
-
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
 
             }
         });

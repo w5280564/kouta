@@ -12,9 +12,9 @@ import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.utils.EaseEditTextUtils;
 import com.hyphenate.easeui.utils.EaseFileUtils;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
-import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.TextFormater;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.network.saveFile;
 
 /**
  * file for row
@@ -28,7 +28,7 @@ public class MyEaseChatRowFile extends EaseChatRow {
     /**
      * file's size
      */
-	protected TextView fileSizeView;
+    protected TextView fileSizeView;
     /**
      * file state
      */
@@ -44,37 +44,37 @@ public class MyEaseChatRowFile extends EaseChatRow {
     }
 
     @Override
-	protected void onInflateView() {
-	    inflater.inflate(!showSenderType ? R.layout.ease_row_received_file
+    protected void onInflateView() {
+        inflater.inflate(!showSenderType ? R.layout.ease_row_received_file
                 : R.layout.ease_row_sent_file, this);
-	}
+    }
 
-	@Override
-	protected void onFindViewById() {
-	    fileNameView = (TextView) findViewById(R.id.tv_file_name);
+    @Override
+    protected void onFindViewById() {
+        fileNameView = (TextView) findViewById(R.id.tv_file_name);
         fileSizeView = (TextView) findViewById(R.id.tv_file_size);
         fileStateView = (TextView) findViewById(R.id.tv_file_state);
         percentageView = (TextView) findViewById(R.id.percentage);
-	}
+    }
 
-	@Override
-	protected void onSetUpView() {
-	    fileMessageBody = (EMNormalFileMessageBody) message.getBody();
+    @Override
+    protected void onSetUpView() {
+        fileMessageBody = (EMNormalFileMessageBody) message.getBody();
         Uri filePath = fileMessageBody.getLocalUri();
         fileNameView.setText(fileMessageBody.getFileName());
-        fileNameView.post(()-> {
+        fileNameView.post(() -> {
             String content = EaseEditTextUtils.ellipsizeMiddleString(fileNameView,
-                        fileMessageBody.getFileName(),
-                        fileNameView.getMaxLines(),
-                        fileNameView.getWidth() - fileNameView.getPaddingLeft() - fileNameView.getPaddingRight());
+                    fileMessageBody.getFileName(),
+                    fileNameView.getMaxLines(),
+                    fileNameView.getWidth() - fileNameView.getPaddingLeft() - fileNameView.getPaddingRight());
             fileNameView.setText(content);
         });
         fileSizeView.setText(TextFormater.getDataSize(fileMessageBody.getFileSize()));
-        if (message.direct() == EMMessage.Direct.SEND){
+        if (message.direct() == EMMessage.Direct.SEND) {
             if (EaseFileUtils.isFileExistByUri(context, filePath)
                     && message.status() == EMMessage.Status.SUCCESS) {
                 fileStateView.setText(R.string.have_uploaded);
-            }else {
+            } else {
                 fileStateView.setText("");
             }
         }
@@ -86,17 +86,18 @@ public class MyEaseChatRowFile extends EaseChatRow {
             }
         }
 
-        try {
-            //添加群聊其他用户的名字与头像
-            if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-                usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME));
-                String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD);
-                Glide.with(getContext()).load(headUrl).placeholder(com.xunda.mo.R.drawable.em_login_logo).error(com.xunda.mo.R.drawable.em_login_logo).into(userAvatarView);
+        //添加群聊其他用户的名字与头像
+        if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+            usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME,""));
+            String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD,"");
+            Glide.with(getContext()).load(headUrl).placeholder(com.xunda.mo.R.drawable.em_login_logo).error(com.xunda.mo.R.drawable.em_login_logo).into(userAvatarView);
+
+            //匿名聊天
+            if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
+                Glide.with(getContext()).load(com.xunda.mo.R.drawable.anonymous_chat_icon).placeholder(com.xunda.mo.R.drawable.em_login_logo).error(com.xunda.mo.R.drawable.em_login_logo).into(userAvatarView);
             }
-        } catch (HyphenateException e) {
-            e.printStackTrace();
         }
-	}
+    }
 
     @Override
     protected void onMessageCreate() {
@@ -117,7 +118,7 @@ public class MyEaseChatRowFile extends EaseChatRow {
         if (statusView != null)
             statusView.setVisibility(View.INVISIBLE);
         if (message.direct() == EMMessage.Direct.SEND)
-            if(fileStateView != null) {
+            if (fileStateView != null) {
                 fileStateView.setText(R.string.have_uploaded);
             }
     }
@@ -135,7 +136,7 @@ public class MyEaseChatRowFile extends EaseChatRow {
     @Override
     protected void onMessageInProgress() {
         super.onMessageInProgress();
-        if(progressBar.getVisibility() != VISIBLE) {
+        if (progressBar.getVisibility() != VISIBLE) {
             progressBar.setVisibility(View.VISIBLE);
         }
         if (percentageView != null) {

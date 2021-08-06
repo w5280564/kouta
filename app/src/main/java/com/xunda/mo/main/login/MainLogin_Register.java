@@ -1,19 +1,19 @@
-package com.xunda.mo.main;
+package com.xunda.mo.main.login;
 
-import androidx.appcompat.app.AppCompatActivity;
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.xunda.mo.R;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
-
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 public class MainLogin_Register extends AppCompatActivity {
 
@@ -54,7 +54,7 @@ public class MainLogin_Register extends AppCompatActivity {
     private class login_Btnlister extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            Intent intent = new Intent(MainLogin_Register.this,MainLogin_OldUser_Psd.class);
+            Intent intent = new Intent(MainLogin_Register.this, MainLogin_OldUser_Psd.class);
             startActivity(intent);
 
         }

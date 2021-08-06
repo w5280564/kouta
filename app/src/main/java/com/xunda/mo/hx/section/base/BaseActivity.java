@@ -43,7 +43,7 @@ import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.common.net.Resource;
 import com.xunda.mo.hx.common.utils.ToastUtils;
 import com.xunda.mo.hx.common.widget.EaseProgressDialog;
-import com.xunda.mo.main.MainLogin_OldUser_Psd;
+import com.xunda.mo.main.login.MainLogin_OldUser_Psd;
 import com.xunda.mo.main.baseView.MyApplication;
 
 import java.util.List;

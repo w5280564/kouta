@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我的Le ID:520520"
+            android:text="我的Mo ID:520520"
             android:textColor="@color/greytwo"
             android:textSize="12sp" />
 

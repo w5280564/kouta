@@ -37,12 +37,12 @@ public class MyInfo {
         myInfo.setDeleteStatus(share.getInt("deleteStatus", 0));
         myInfo.setGrade(share.getInt("grade", 0));
         myInfo.setHeadImg(share.getString("HeadImg", ""));
-        myInfo.setHxUserName(share.getString("HxUserName", "false"));
+        myInfo.setHxUserName(share.getString("HxUserName", ""));
         myInfo.setInPassword(share.getString("inPassword", ""));
         myInfo.setIsNeedUnlock(share.getInt("isNeedUnlock", 0));
         myInfo.setLightStatus(share.getInt("lightStatus", 0));
         myInfo.setMailbox(share.getString("mailbox", ""));
-        myInfo.setNikeName(share.getString("NikeName", "false"));
+        myInfo.setNickname(share.getString("nickname", ""));
         myInfo.setPhoneNum(share.getString("phoneNum", ""));
         myInfo.setSex(share.getInt("sex", 0));
         myInfo.setSignature(share.getString("signature", ""));
@@ -72,7 +72,7 @@ public class MyInfo {
         editor.putInt("isNeedUnlock", model.getIsNeedUnlock());
         editor.putInt("lightStatus", model.getLightStatus());
         editor.putString("mailbox", model.getMailbox());
-        editor.putString("NikeName", model.getNikeName());
+        editor.putString("nickname", model.getNickname());
         editor.putString("phoneNum", model.getPhoneNum());
         editor.putInt("sex", model.getSex());
         editor.putString("signature", model.getSignature());
@@ -81,7 +81,6 @@ public class MyInfo {
         editor.putString("userId", model.getUserId());
         editor.putInt("userNum", model.getUserNum());
         editor.putInt("VipType", model.getVipType());
-
         editor.commit();
     }
 
@@ -90,7 +89,6 @@ public class MyInfo {
         SharedPreferences.Editor editor = share.edit();
         editor.putString(keyStr, valueStr);
         editor.commit();
-        getUserInfo().getHeadImg();
     }
 
 

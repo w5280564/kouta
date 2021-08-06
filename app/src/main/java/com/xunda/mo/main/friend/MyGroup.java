@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -20,19 +19,15 @@ import com.baozi.treerecyclerview.factory.ItemHelperFactory;
 import com.baozi.treerecyclerview.item.TreeItem;
 import com.google.gson.Gson;
 import com.xunda.mo.R;
-import com.xunda.mo.main.MainLogin_Register;
 import com.xunda.mo.model.Friend_MyGroupBean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.SetStatusBar;
 import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
+import java.util.HashMap;
 import java.util.List;
-
-import static com.xunda.mo.network.saveFile.getShareData;
+import java.util.Map;
 
 public class MyGroup extends AppCompatActivity {
 
@@ -104,64 +99,28 @@ public class MyGroup extends AppCompatActivity {
 
 
     private void initData() {
-        groupData(MyGroup.this, saveFile.BaseUrl + saveFile.Group_MyGroupList_Url);
+        groupData(MyGroup.this,  saveFile.Group_MyGroupList_Url);
     }
 
     //
     Friend_MyGroupBean model;
     public void groupData(final Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", getShareData("JSESSIONID", context));
-        }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                //{"msg":"成功","code":200,"data":[{"count":0,"groupList":[],"listName":"ownGroupList"},{"count":1,"groupList":[{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F852966551628210176%2FheadImg.jpg","groupHxId":"151001522831361","groupId":"852966551628210176","groupName":"风风火火"}],"listName":"manageGroupList"},{"count":13,"groupList":[{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F852976212146315264%2FheadImg.jpg","groupHxId":"151003936653313","groupId":"852976212146315264","groupName":"福建"},{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F853196600964997120%2FheadImg.jpg","groupHxId":"151059034079235","groupId":"853196600964997120","groupName":"在线"},{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F853198508496707584%2FheadImg.jpg","groupHxId":"151059511181313","groupId":"853198508496707584","groupName":"福建"},{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F853199565364846592%2FheadImg.jpg","groupHxId":"151059775422466","groupId":"853199565364846592","groupName":"112233"},{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F853200057952296960%2FheadImg.jpg","groupHxId":"152173155516418","groupId":"853200057952296960","groupName":"22222"},{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F853203033580298240%2FheadImg.jpg","groupHxId":"151060642594817","groupId":"853203033580298240","groupName":"风风火火恍恍惚惚"},{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F853203392755326976%2FheadImg.jpg","groupHxId":"151060731723777","groupId":"853203392755326976","groupName":"福建福建"},{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F853203988468129792%2FheadImg.jpg","groupHxId":"151060880621569","groupId":"853203988468129792","groupName":"福建你们"},{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F857629855864791040%2FheadImg.jpg","groupHxId":"152167348502529","groupId":"857629855864791040","groupName":"测试2"},{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F857684043718139904%2FheadImg.jpg","groupHxId":"152180894007298","groupId":"857684043718139904","groupName":"今天下午吃饭"},{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F857691565002792960%2FheadImg.jpg","groupHxId":"152182737403905","groupId":"857691565002792960","groupName":"测试创"},{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F857693541836988416%2FheadImg.jpg","groupHxId":"152183269031938","groupId":"857693541836988416","groupName":"这首歌曲"},{"groupHeadImg":"https://ahxd-private.obs.cn-east-3.myhuaweicloud.com:443/group%2F853337514542817280%2F20210616201506.jpg","groupHxId":"151094263087105","groupId":"853337514542817280","groupName":"风景秀丽"}],"listName":"joinGroupList"}]}
-                if (resultString != null) {
-                     model = new Gson().fromJson(resultString, Friend_MyGroupBean.class);
-                    if (model.getCode() == -1 || model.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (model.getCode() == 200) {
-
-                        //创建item
-                        //新的
-                        List<TreeItem> items = ItemHelperFactory.createItems(model.getData());
-                        //添加到adapter
-                        treeRecyclerAdapter.getItemManager().replaceAllItem(items);
-
-                    } else {
-                        Toast.makeText(context, model.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
+            public void success(String result) {
+                model = new Gson().fromJson(result, Friend_MyGroupBean.class);
+                //创建item
+                //新的
+                List<TreeItem> items = ItemHelperFactory.createItems(model.getData());
+                //添加到adapter
+                treeRecyclerAdapter.getItemManager().replaceAllItem(items);
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-                String errStr = throwable.getMessage();
-                if (errStr.equals("Authorization")) {
-                    Intent intent = new Intent(context, MainLogin_Register.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                }
-            }
+            public void failed(String... args) {
 
-            @Override
-            public void onCancelled(Callback.CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
             }
         });
-
-
-
     }
 
 

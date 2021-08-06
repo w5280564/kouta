@@ -1,7 +1,8 @@
-package com.xunda.mo.main;
+package com.xunda.mo.main.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,21 +16,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import com.google.gson.Gson;
 import com.xunda.mo.R;
 import com.xunda.mo.model.Main_ForgetPsw_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
-import com.google.gson.Gson;
+import com.xunda.mo.staticdata.xUtils3Http;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainLogin_ForgetPsw extends AppCompatActivity {
 
@@ -100,7 +100,7 @@ public class MainLogin_ForgetPsw extends AppCompatActivity {
     }
 
     private void initData() {
-        baseMethod(MainLogin_ForgetPsw.this, saveFile.BaseUrl + saveFile.User_GetPhone_Url + "?userNum=" + LoginID, "0");
+        baseMethod(MainLogin_ForgetPsw.this,  saveFile.User_GetPhone_Url, "0");
     }
 
     private class num_BtnOnClick extends NoDoubleClickListener {
@@ -155,36 +155,20 @@ public class MainLogin_ForgetPsw extends AppCompatActivity {
     //
     Main_ForgetPsw_Model baseModel;
     public void baseMethod(Context context, String baseUrl, String type) {
-        RequestParams params = new RequestParams(baseUrl);
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("userNum",LoginID);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    // {"msg":"操作成功","code":200}
-                     baseModel = new Gson().fromJson(resultString, Main_ForgetPsw_Model.class);
-                    if (baseModel.getCode() == 200) {
-//                        startTimer();
-                        id_txt.setText("为保护您的账号安全，请您输入完整的手机号码：\n"+baseModel.getData());
-                    } else {
-                        Toast.makeText(context, baseModel.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
+            public void success(String result) {
+                baseModel = new Gson().fromJson(result, Main_ForgetPsw_Model.class);
+                id_txt.setText("为保护您的账号安全，请您输入完整的手机号码：\n"+baseModel.getData());
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
+            public void failed(String... args) {
 
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
             }
         });
+
     }
 
 

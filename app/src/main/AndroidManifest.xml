@@ -58,16 +58,75 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".main.group.activity.GroupDetail_Edit_Adress"></activity>
-        <activity android:name=".main.group.activity.GroupDetail_Edit" />
-        <activity android:name=".main.group.activity.GroupDetailSet" />
-        <activity android:name=".main.group.activity.newGroup" />
-        <activity android:name=".main.chat.activity.UserDetail_Set" />
-        <activity android:name=".main.friend.Friend_NewFriends" />
-        <activity android:name=".main.chat.activity.ChatFriend_AddFriend" />
-        <activity android:name=".main.chat.activity.ChatFriend_Detail" />
-        <activity android:name=".main.friend.MyGroup" />
-        <activity android:name=".main.chat.activity.ChatDetailSet" /> <!-- 设置环信应用的AppKey -->
+        <activity
+            android:name=".main.friend.Friend_Group_Detail"
+            android:exported="true" />
+        <activity
+            android:name=".main.group.activity.GroupFriend_Detail"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupAllMembers_Manage_ChangeGroupLeader"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupAllMembers_Manage_Apply"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupAllMembers_Manage_ForbiddenList"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupAllMembers_Manage_BlackList"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupAllMembers_Manage_SetManage_Add"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupAllMembers_Manage_SetupManage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupAllMembers_Manage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupAllMembers_Remove"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupAllMembers_Add"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupAllMembers_Search"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupAllMembers"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupDetail_Edit_Adress"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupDetail_Edit"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.GroupDetailSet"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.group.activity.newGroup"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.chat.activity.UserDetail_Set"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.friend.Friend_NewFriends"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.chat.activity.ChatFriend_AddFriend"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.chat.activity.ChatFriend_Detail"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.friend.MyGroup"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.chat.activity.ChatDetailSet"
+            android:screenOrientation="portrait" /> <!-- 设置环信应用的AppKey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="1107210427030313#lexiaobei" /> <!-- 声明SDK所需的service SDK核心功能 -->
@@ -333,49 +392,49 @@
             android:name=".main.friend.Friend_Add"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MainLogin_ForgetPsw_ID"
+            android:name=".main.login.MainLogin_ForgetPsw_ID"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MainLogin_Register"
+            android:name=".main.login.MainLogin_Register"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MainRegister"
+            android:name=".main.login.MainRegister"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MainLogin_QuestionFeedBack"
+            android:name=".main.login.MainLogin_QuestionFeedBack"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MainLogin_ForgetPsw_SetPsw"
+            android:name=".main.login.MainLogin_ForgetPsw_SetPsw"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MainLogin_ForgetPsw_question"
+            android:name=".main.login.MainLogin_ForgetPsw_question"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MainLogin_ForgetPsw"
+            android:name=".main.login.MainLogin_ForgetPsw"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MainLogin_OldUser_Phone"
+            android:name=".main.login.MainLogin_OldUser_Phone"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MainLogin_OldUser_Psd"
+            android:name=".main.login.MainLogin_OldUser_Psd"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MainLogin_OldUsers"
+            android:name=".main.login.MainLogin_OldUsers"
             android:screenOrientation="portrait" /> <!-- android:theme="@android:style/Theme.NoTitleBar" -->
         <activity
-            android:name=".main.MainLogin_Code"
+            android:name=".main.login.MainLogin_Code"
             android:screenOrientation="portrait" />
         <activity
             android:name=".main.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".main.MainRegister_Agreement"
+            android:name=".main.login.MainRegister_Agreement"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.Main_Launch"
+            android:name=".main.login.Main_Launch"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

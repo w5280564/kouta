@@ -1,6 +1,5 @@
 package com.xunda.mo.hx.section.chat.delegates;
 
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,7 +18,26 @@ public class MyGroupUpdateMesAdapterDelegate extends EaseMessageAdapterDelegate<
 //        return item.getType() == TXT && !item.getStringAttribute(MyConstant.MESSAGE_TYPE_CREATE_GROUP, "").isEmpty();
         if (item.getType() == EMMessage.Type.TXT) {
             String Group = item.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-            return TextUtils.equals(Group, MyConstant.UPDATE_GROUP_NAME) ? true : false;
+            switch (Group) {
+                case MyConstant.UPDATE_GROUP_NAME:
+                case MyConstant.MESSAGE_TYPE_DELETUSER:
+                case MyConstant.MESSAGE_TYPE_ADDUSER:
+                case MyConstant.MESSAGE_TYPE_ADDADMIN:
+                case MyConstant.MESSAGE_TYPE_DELETADMIN:
+                case MyConstant.MESSAGE_TYPE_ANONYMOUS_ON:
+                case MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF:
+                case MyConstant.MESSAGE_TYPE_MUTE_ON:
+                case MyConstant.MESSAGE_TYPE_MUTE_OFF:
+                case MyConstant.MESSAGE_TYPE_PROTECT_ON:
+                case MyConstant.MESSAGE_TYPE_PROTECT_OFF:
+                case MyConstant.MESSAGE_TYPE_UPDATE_MASTER:
+                case MyConstant.MESSAGE_TYPE_PUSH_ON:
+                case MyConstant.MESSAGE_TYPE_PUSH_OFF:
+                case MyConstant.MESSAGE_GROUP_LEAVE:
+                case MyConstant.GROUP_UPDATE_GROUPDES:
+                    return true;
+            }
+
         }
         return false;
     }

@@ -28,8 +28,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +36,6 @@ import androidx.core.app.ActivityCompat;
 import com.github.gzuliyujiang.oaid.DeviceID;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,32 +58,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+@SuppressLint("SimpleDateFormat")
 public class StaticData {
-//    public static void layoutParamsScale(LayoutParams itemParams, int w, int h) {
-//        float scale = Float.parseFloat(saveFile.getShareData("scale", MyApplication.mycontext));
-//        if (h != 0) {
-//            itemParams.height = (int) (h * scale);
-//        }
-//        if (w != 0) {
-//            itemParams.width = (int) (w * scale);
-//        }
-//    }
-
-
-//    public static void ViewScale(View v, int w, int h) {
-//        float scale = Float.parseFloat(saveFile.getShareData("scale", MyApplication.mycontext));
-//        LayoutParams lp = null;
-//        lp = v.getLayoutParams();
-//        if (h != 0) {
-//            lp.height = (int) (h * scale);
-//        }
-//        if (w != 0) {
-//            lp.width = (int) (w * scale);
-//        }
-//        v.setLayoutParams(lp);
-//    }
-
 
     /**
      * 验证邮箱格式
@@ -337,22 +310,6 @@ public class StaticData {
     }
 
     /**
-     * 加载本地图片 http://bbs.3gstdy.com
-     *
-     * @param url
-     * @return 返回Bitmap
-     */
-    public static Bitmap getLoacalBitmap(String url) {
-        try {
-            FileInputStream fis = new FileInputStream(url);
-            return BitmapFactory.decodeStream(fis);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
      * 截取图片宽不变高一半
      *
      * @param bit
@@ -445,18 +402,19 @@ public class StaticData {
 
     /**
      * 验证URL正则
+     *
      * @param httpstr
      * @return
      */
-//    public static boolean StringHttp(String httpstr){
-////		Pattern pattern=Pattern.compile("(http://|ftp://|https://|www){0,1}[^\u4e00-\u9fa5\\s]*?\\.(com|net|cn|me|tw|fr)[^\u4e00-\u9fa5\\s]*");
-//        Pattern pattern=Pattern.compile("^((http|https)://)?([\\w-]+\\.)+[\\w-]+(/[\\w-./?%&=]*)?$");
-//        Matcher matcher=pattern.matcher(httpstr);
-//        if(matcher.find())
-//            return true;//是网站
-//        else
-//            return false;
-//    }
+    public static boolean StringHttp(String httpstr) {
+//		Pattern pattern=Pattern.compile("(http://|ftp://|https://|www){0,1}[^\u4e00-\u9fa5\\s]*?\\.(com|net|cn|me|tw|fr)[^\u4e00-\u9fa5\\s]*");
+        Pattern pattern = Pattern.compile("^((http|https)://)?([\\w-]+\\.)+[\\w-]+(/[\\w-./?%&=]*)?$");
+        Matcher matcher = pattern.matcher(httpstr);
+        if (matcher.find())
+            return true;//是网站
+        else
+            return false;
+    }
 
 
     /**
@@ -473,7 +431,6 @@ public class StaticData {
                 return (arg1.get(comtxt).toString()).compareTo(arg0.get(comtxt).toString());
             }
         });
-
         return baseArr;
     }
 
@@ -544,12 +501,6 @@ public class StaticData {
         return datestring;
     }
 
-    //历史截取10位
-    public static String DateHis(String datestr) {
-        String datestring = datestr.substring(0, 10).replace("/", ".");
-        return datestring;
-    }
-
 
     //是否是空格 true是空
     public static boolean isSpace(String str) {
@@ -600,17 +551,6 @@ public class StaticData {
         return dateString;
     }
 
-    // 根据亮度值修改当前window亮度
-    public static void changeAppBrightness(Context context, int brightness) {
-        Window window = ((Activity) context).getWindow();
-        WindowManager.LayoutParams lp = window.getAttributes();
-        if (brightness == -1) {
-            lp.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
-        } else {
-            lp.screenBrightness = (brightness <= 0 ? 1 : brightness) / 255f;
-        }
-        window.setAttributes(lp);
-    }
 
     public static void textWidt(String text, int width, TextView view) {
         int textwidth;
@@ -671,53 +611,6 @@ public class StaticData {
     }
 
 
-    public static void Savetest(Context context, String imgurl) {
-//        String url = "http://pic.yesky.com/imagelist/09/01/11277904_7147.jpg";
-        Long time1 = System.currentTimeMillis();
-        Long time2 = 0L;
-
-        File appDir = new File(Environment.getExternalStorageDirectory(), "EnergyM");
-        if (!appDir.exists()) {
-            appDir.mkdir();
-        }
-        String fileName = System.currentTimeMillis() + ".jpg";
-        File file = new File(appDir, fileName);
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            InputStream is = new URL(imgurl).openStream();
-
-            time2 = System.currentTimeMillis();
-
-            int data = is.read();
-            while (data != -1) {
-                fos.write(data);
-                data = is.read();
-            }
-            is.close();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // 其次把文件插入到系统图库
-        if (imgurl != null) {
-            try {
-                MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), fileName, null);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            Toast.makeText(context, "保存成功", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "保存失败", Toast.LENGTH_SHORT).show();
-        }
-        // 最后通知图库更新
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.getAbsolutePath())));
-
-        Long time3 = System.currentTimeMillis();
-        System.out.println("网络读取流的时间：" + (time2 - time1) + " 把输入流保存成文件的时间：" + (time3 - time2));
-
-    }
-
     public static String parseDate(String date) {
         String[] s = date.split(" ");
         String[] d = s[0].split("-");
@@ -739,16 +632,6 @@ public class StaticData {
             return str;
         }
     }
-
-    //2061-09-01固定格式
-    public static String getTodaystyle() {
-        Date currentTime = new Date();
-//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        String dateString = formatter.format(currentTime);
-        return dateString;
-    }
-
 
     /**
      * 调起系统发短信功能
@@ -792,14 +675,6 @@ public class StaticData {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-//        dateString = sdf.format(sformat);
-//        try {
-//            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(sformat);//先转固定格式
-//            dateString = new SimpleDateFormat("yyyy-MM-dd").format(date);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
         return dateString;
     }
 
@@ -825,26 +700,6 @@ public class StaticData {
         return maxDay;
     }
 
-//    public static void lodingheadBg(SimpleDraweeView simPle) {
-//        Uri uri = Uri.parse("res:///" + R.drawable.loading_icon);
-//        simPle.setImageURI(uri);
-//    }
-//
-//    public static void PkBg(SimpleDraweeView simPle) {
-//        Uri uri = Uri.parse("res:///" + R.drawable.pk_bg);
-//        simPle.setImageURI(uri);
-//    }
-//
-//    public static void PersonBg(SimpleDraweeView simPle) {
-//        Uri uri = Uri.parse("res:///" + R.drawable.person_bg);
-//        simPle.setImageURI(uri);
-//    }
-//
-//    public static void changeXRecycleHeadGif(XRecyclerView myView, int iconId, int width, int height) {
-//        Uri uri = Uri.parse("res:// /" + iconId);
-//        myView.addGif(uri, width, height);
-//    }
-
     /**
      * 将时间戳转为代表"距现在多久之前"的字符串
      *
@@ -860,21 +715,8 @@ public class StaticData {
 
         long diff = new Date().getTime() - getTime(timeStr).getTime();
 
-        long r = 0;
-//        if (diff > year) {
-//            r = (diff / year);
-//            return r + "年前";
-//        }
-//        if (diff > month) {
-//            r = (diff / month);
-//            return r + "个月前";
-//        }
+        long r;
         if (diff > day) {
-            r = (diff / day);
-//            if (r == 1){
-//                return  "昨天";
-//            }
-//            return r + "天前";
             return Datatypetwo(timeStr);
         }
         if (diff > hour) {
@@ -888,6 +730,8 @@ public class StaticData {
         return "刚刚";
 
     }
+
+
 
     // 将字符串转为时间戳
     public static Date getTime(String user_time) {
@@ -917,9 +761,41 @@ public class StaticData {
         Date date = new Date(ssTime * 1000);
         String sd = sdf.format(date);
         return sd;
-
     }
 
+    public static String toDateMinute(long stamp) {
+        Long ssTime = Math.round(stamp * 1.0 / 1000);//毫秒转化秒
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");//这个是你要转成后的时间的格式
+        Date date = new Date(ssTime * 1000);
+        String sd = sdf.format(date);
+        return sd;
+    }
+
+    /**
+     * 将时间戳转为代表"距现在多久之前"的字符串
+     *
+     * @param timeStr 时间戳
+     * @return
+     */
+    public static String getForbiddenTimeDate(long timeStr) {
+        Long ssTime = Math.round(timeStr * 1.0 / 1000);//毫秒转化秒
+        Date forbiddenDate = new Date(ssTime * 1000);
+        long time = forbiddenDate.getTime() - new Date().getTime();
+        long mill = (long) Math.floor(time / 1000);//秒前
+        long minute = (long) Math.floor(time / 60 / 1000.0f);// 分钟前
+        long hour = (long) Math.floor(time / 60 / 60 / 1000.0f);// 小时
+        long day = (long) Math.floor(time / 24 / 60 / 60 / 1000.0f);// 天前
+        if (day - 1 > 0) {
+            return day + "天";
+        }
+        if (hour - 1 > 0) {
+            return hour + "小时";
+        }
+        if (minute - 1 > 0) {
+            return minute + "分钟";
+        }
+        return "未设置";
+    }
 
 //    public static void addPlace(SimpleDraweeView myDraw, Context context) {
 //        //获取GenericDraweeHierarchy对象

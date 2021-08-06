@@ -15,7 +15,7 @@ public class ChatUserBean {
     @JsonProperty("code")
     private Long code;
     @JsonProperty("data")
-    private Friend_Detalis_Model.DataDTO data;
+    private Friend_Details_Bean.DataDTO data;
 
     @NoArgsConstructor
     @Data
@@ -30,8 +30,8 @@ public class ChatUserBean {
         private String hxUserName;
         @JsonProperty("lightStatus")
         private Long lightStatus;
-        @JsonProperty("nikeName")
-        private String nikeName;
+        @JsonProperty("nickname")
+        private String nickname;
         @JsonProperty("remarkName")
         private String remarkName;
         @JsonProperty("signature")

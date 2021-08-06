@@ -87,6 +87,17 @@ public class MyEaseUser extends EaseUser implements Serializable {
 
     private Integer userNum;
 
+    private String UserId;
+
+    public String getUserId() {
+        return UserId;
+    }
+
+    public void setUserId(String userId) {
+        UserId = userId;
+    }
+
+
     public Integer getUserNum() {
         return userNum;
     }

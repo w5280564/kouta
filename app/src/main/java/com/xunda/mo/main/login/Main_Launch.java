@@ -1,6 +1,8 @@
-package com.xunda.mo.main;
+package com.xunda.mo.main.login;
 
-import androidx.lifecycle.ViewModelProvider;
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,18 +13,16 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
+import androidx.lifecycle.ViewModelProvider;
 
 import com.hyphenate.util.EMLog;
 import com.xunda.mo.R;
-import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
+import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.login.viewmodels.SplashViewModel;
+import com.xunda.mo.main.MainActivity;
 
 import org.xutils.x;
-
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 public class Main_Launch extends BaseInitActivity {
     private SplashViewModel model;
@@ -40,21 +40,11 @@ public class Main_Launch extends BaseInitActivity {
         getWindow().setFlags(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activitymain_launch);
         DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
-//        Float scale = (float) dm.widthPixels / 750;
-//        Float heghtSclae = (float) dm.heightPixels / 1334;
-//        saveShareData("scale", scale + "", this);
-//        saveShareData("heghtSclae", heghtSclae + "", this);
 
 //		JPushInterface.resumePush(getApplicationContext());//推送注册
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-
-//        SimpleDraweeView lunchimg = (SimpleDraweeView) findViewById(R.id.lunchimg);
-//        Uri imgurl = Uri.parse("res:// /" + R.drawable.launch_icon);
-//        lunchimg.setImageURI(imgurl);
-
         x.view().inject(this);
-
         model = new ViewModelProvider(this).get(SplashViewModel.class);
 
         new Handler().postDelayed(new Runnable() {
@@ -69,30 +59,7 @@ public class Main_Launch extends BaseInitActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    String name = "1000112";
-//                    EMClient.getInstance().login(name, name, new EMCallBack() {
-//                        @Override
-//                        public void onSuccess() {
-////                            EMClient.getInstance().groupManager().loadAllGroups();
-////                            EMClient.getInstance().chatManager().loadAllConversations();
-//                            Log.d("main", "登录聊天服务器成功！");
-//                        }
-//
-//                        @Override
-//                        public void onError(int code, String error) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onProgress(int progress, String status) {
-//
-//                        }
-//                    });
                     loginSDK();
-
-//                    Intent intent = new Intent(Main_Launch.this, MainActivity.class);
-//                    startActivity(intent);
-//                    finish();
 
                 }
             }
@@ -125,7 +92,6 @@ public class Main_Launch extends BaseInitActivity {
         super.initData();
         x.view().inject(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         model = new ViewModelProvider(this).get(SplashViewModel.class);
 
         new Handler().postDelayed(new Runnable() {
@@ -140,31 +106,7 @@ public class Main_Launch extends BaseInitActivity {
                     startActivity(intent);
                     finish();
                 } else {
-//                    String name = "1000112";
-//                    EMClient.getInstance().login(name, name, new EMCallBack() {
-//                        @Override
-//                        public void onSuccess() {
-////                            EMClient.getInstance().groupManager().loadAllGroups();
-////                            EMClient.getInstance().chatManager().loadAllConversations();
-//                            Log.d("main", "登录聊天服务器成功！");
-//                        }
-//
-//                        @Override
-//                        public void onError(int code, String error) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onProgress(int progress, String status) {
-//
-//                        }
-//                    });
                     loginSDK();
-
-//                    Intent intent = new Intent(Main_Launch.this, MainActivity.class);
-//                    startActivity(intent);
-//                    finish();
-
                 }
             }
 
@@ -199,16 +141,11 @@ public class Main_Launch extends BaseInitActivity {
                     Intent intent = new Intent(Main_Launch.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-
-//                    MainActivity.startAction(mContext);
-//                    finish();
                 }
-
                 @Override
                 public void onError(int code, String message) {
                     super.onError(code, message);
                     EMLog.i("TAG", "error message = " + response.getMessage());
-//                    LoginActivity.startAction(mContext);
                     Intent intent = new Intent(Main_Launch.this, MainLogin_Register.class);
                     startActivity(intent);
                     finish();

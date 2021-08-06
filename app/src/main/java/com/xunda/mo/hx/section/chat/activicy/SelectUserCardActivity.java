@@ -22,7 +22,6 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -51,25 +50,20 @@ import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.chat.model.KV;
 import com.xunda.mo.hx.section.chat.viewmodel.ConferenceInviteViewModel;
 import com.xunda.mo.hx.section.conference.ConferenceInviteActivity;
-import com.xunda.mo.main.MainLogin_Register;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.adress_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
+import com.xunda.mo.staticdata.xUtils3Http;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.xunda.mo.network.saveFile.getShareData;
 
 
 public class SelectUserCardActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener {
@@ -171,7 +165,7 @@ public class SelectUserCardActivity extends BaseInitActivity implements EaseTitl
         });
         viewModel.getConferenceMembers(groupId, exist_member);
 
-        adressData(SelectUserCardActivity.this, saveFile.BaseUrl + saveFile.User_Friendlist_Url, "0");
+        adressData(SelectUserCardActivity.this,  saveFile.User_Friendlist_Url, "0");
     }
 
     @Override
@@ -269,7 +263,7 @@ public class SelectUserCardActivity extends BaseInitActivity implements EaseTitl
         try {
 
 //            obj.put(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_USERCARD);
-//            obj.put(MyConstant.SEND_NAME, myInfo.getUserInfo().getNikeName());
+//            obj.put(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickName());
 //            obj.put(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
 //            obj.put(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
 //            obj.put(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
@@ -279,7 +273,7 @@ public class SelectUserCardActivity extends BaseInitActivity implements EaseTitl
 //            obj.put(MyConstant.TO_VIP, extJsonObject.get("vipType"));
 //            message.setAttribute(MyConstant.EXT, obj);
             message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_USERCARD);
-            message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNikeName());
+            message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
             message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
             message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
             message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
@@ -562,86 +556,50 @@ public class SelectUserCardActivity extends BaseInitActivity implements EaseTitl
 
     //联系人列表
     public void adressData(final Context context, String baseUrl, String projectId) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", getShareData("JSESSIONID", context));
-        }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-//                resultString = "{msg:dclO,code:200, data:[{ciphertext:sSE3,fireType:436905937989336.8,headImg:X%kU,hxUserName:5CQo,isCiphertext:-7165580097951464, lightStatus:6140465580380565,remarkName:JCC39l,userId:gSlQQ,userNum:5762441269959617,vipType:-3782876530108332.5}]}";
-                if (resultString != null) {
-                    adress_Model model = new Gson().fromJson(resultString, adress_Model.class);
-                    if (model.getCode() == -1 || model.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (model.getCode() == 200) {
-
-                        List<EaseUser> data = new ArrayList<>();
-                        for (int i = 0; i < model.getData().size(); i++) {
-                            adress_Model.DataDTO dataDTO = model.getData().get(i);
-                            EaseUser user = new EaseUser();
+            public void success(String result) {
+                adress_Model model = new Gson().fromJson(result, adress_Model.class);
+                List<EaseUser> data = new ArrayList<>();
+                for (int i = 0; i < model.getData().size(); i++) {
+                    adress_Model.DataDTO dataDTO = model.getData().get(i);
+                    EaseUser user = new EaseUser();
 //                            KV<String, Integer> user = new KV<>();
 //                            user.setContact(dataDTO.);
-                            user.setUsername(dataDTO.getHxUserName());
-                            user.setNickname(dataDTO.getNikeName());
-                            // 正则表达式，判断首字母是否是英文字母
-                            String pinyin = PinyinUtils.getPingYin(dataDTO.getNikeName());
-                            String sortString = pinyin.substring(0, 1).toUpperCase();
-                            if (sortString.matches("[A-Z]")) {
-                                user.setInitialLetter(PinyinUtils.getFirstSpell(sortString));
-                            } else {
-                                user.setInitialLetter("#");
-                            }
-                            user.setAvatar(dataDTO.getHeadImg());
-                            user.setBirth("");
-                            user.setContact(0);
-                            user.setEmail("");
-                            user.setGender(0);
-                            user.setBirth("");
-                            user.setSign("");
-                            user.setExt("");
-                            user.setPhone("");
-                            data.add(user);
-
-                            //通知callKit更新头像昵称
-                            EaseCallUserInfo info = new EaseCallUserInfo(dataDTO.getNikeName(), dataDTO.getHeadImg());
-                            info.setUserId(info.getUserId());
-                            EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
-                        }
-
-                        List<KV<String, Integer>> contacts = new ArrayList<>();
-
-//                        contactsAdapter.setData(data);
-
+                    user.setUsername(dataDTO.getHxUserName());
+                    user.setNickname(dataDTO.getNickname());
+                    // 正则表达式，判断首字母是否是英文字母
+                    String pinyin = PinyinUtils.getPingYin(dataDTO.getNickname());
+                    String sortString = pinyin.substring(0, 1).toUpperCase();
+                    if (sortString.matches("[A-Z]")) {
+                        user.setInitialLetter(PinyinUtils.getFirstSpell(sortString));
                     } else {
-                        Toast.makeText(context, model.getMsg(), Toast.LENGTH_SHORT).show();
+                        user.setInitialLetter("#");
                     }
+                    user.setAvatar(dataDTO.getHeadImg());
+                    user.setBirth("");
+                    user.setContact(0);
+                    user.setEmail("");
+                    user.setGender(0);
+                    user.setBirth("");
+                    user.setSign("");
+                    user.setExt("");
+                    user.setPhone("");
+                    data.add(user);
 
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                    //通知callKit更新头像昵称
+                    EaseCallUserInfo info = new EaseCallUserInfo(dataDTO.getNickname(), dataDTO.getHeadImg());
+                    info.setUserId(info.getUserId());
+                    EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
                 }
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-                String errStr = throwable.getMessage();
-                if (errStr.equals("Authorization")) {
-                    Intent intent = new Intent(context, MainLogin_Register.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                }
-            }
+            public void failed(String... args) {
 
-            @Override
-            public void onCancelled(Callback.CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
             }
         });
+
     }
 
 

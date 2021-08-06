@@ -85,7 +85,7 @@ public class InviteMsgDelegate extends EaseBaseDelegate<EMMessage, InviteMsgDele
                     statusParams = msg.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_STATUS);
                     InviteMessageStatus status = InviteMessageStatus.valueOf(statusParams);
                     if(status == InviteMessageStatus.BEINVITEED){
-                        reason = name.getContext().getString(InviteMessageStatus.BEINVITEED.getMsgContent(), msg.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_FROM));
+                      reason = name.getContext().getString(InviteMessageStatus.BEINVITEED.getMsgContent(), msg.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_FROM));
                     }else if (status == InviteMessageStatus.BEAPPLYED) { //application to join group
                         reason = name.getContext().getString(InviteMessageStatus.BEAPPLYED.getMsgContent()
                                 , msg.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_FROM), msg.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_NAME));

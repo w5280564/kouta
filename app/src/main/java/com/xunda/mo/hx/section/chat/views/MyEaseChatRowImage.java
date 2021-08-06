@@ -13,9 +13,9 @@ import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.utils.EaseImageUtils;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRowFile;
-import com.hyphenate.exceptions.HyphenateException;
 import com.xunda.mo.R;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.network.saveFile;
 
 /**
  * image for row
@@ -57,20 +57,23 @@ public class MyEaseChatRowImage extends EaseChatRowFile {
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
             layoutParams.width = params.width;
             layoutParams.height = params.height;
+             //添加群聊其他用户的名字与头像
+            if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+                usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME,""));
+                String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD,"");
+                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);
+
+                //匿名聊天
+                if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
+                    Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);
+                }
+            }
+
             return;
         }
         showImageView(message);
 
-        try {
-            //添加群聊其他用户的名字与头像
-            if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-                usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME));
-                String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD);
-                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);
-            }
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override

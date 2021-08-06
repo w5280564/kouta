@@ -1,7 +1,8 @@
-package com.xunda.mo.main;
+package com.xunda.mo.main.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 import android.content.Intent;
 import android.os.Build;
@@ -14,15 +15,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.xunda.mo.R;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
-
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 public class MainLogin_OldUser_Phone extends AppCompatActivity {
 

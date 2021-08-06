@@ -1,6 +1,8 @@
 
 package com.xunda.mo.hx.section.chat.fragment;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -41,7 +43,6 @@ import com.hyphenate.easeui.modules.chat.EaseChatInputMenu;
 import com.hyphenate.easeui.modules.chat.EaseChatMessageListLayout;
 import com.hyphenate.easeui.modules.chat.interfaces.IChatExtendMenu;
 import com.hyphenate.easeui.modules.chat.interfaces.IChatPrimaryMenu;
-import com.hyphenate.easeui.modules.chat.interfaces.OnChatLayoutListener;
 import com.hyphenate.easeui.modules.chat.interfaces.OnRecallMessageResultListener;
 import com.hyphenate.easeui.modules.menu.EasePopupWindowHelper;
 import com.hyphenate.easeui.modules.menu.MenuItemBean;
@@ -65,25 +66,23 @@ import com.xunda.mo.hx.section.dialog.DemoListDialogFragment;
 import com.xunda.mo.hx.section.dialog.FullEditDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.group.GroupHelper;
-import com.xunda.mo.main.MainLogin_Register;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.chat.activity.UserDetail_Set;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.group.activity.GroupFriend_Detail;
 import com.xunda.mo.main.info.MyInfo;
+import com.xunda.mo.main.info.NameResource;
 import com.xunda.mo.model.ChatUserBean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.xUtils3Http;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.SneakyThrows;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 
 public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageResultListener {
@@ -127,9 +126,16 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 //        messageListLayout.setItemSenderBackground(ContextCompat.getDrawable(mContext, R.drawable.chat_send_bg));
 //        messageListLayout.setItemReceiverBackground(ContextCompat.getDrawable(mContext, R.drawable.chat_receive_white_bg));
 
+        LiveDataBus.get().with(MyConstant.Chat_BG, String.class).observe(requireActivity(), filePath ->
+                Glide.with(requireActivity()).asBitmap().load(filePath).into(new SimpleTarget<Bitmap>() {
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        Drawable drawable = new BitmapDrawable(resource);
+                        messageListLayout.setBackground(drawable);
+                    }
+                }));
 
-        if (!saveFile.getShareData("chatBg" + conversationId, requireActivity()).equals("false")) {
-            String filePath = saveFile.getShareData("chatBg" + conversationId, requireActivity());
+        if (!saveFile.getShareData(MyConstant.Chat_BG + conversationId, requireActivity()).equals("false")) {
+            String filePath = saveFile.getShareData(MyConstant.Chat_BG + conversationId, requireActivity());
             Glide.with(requireActivity())
                     .asBitmap()
 //                .load("https://ahxd-private.obs.cn-east-3.myhuaweicloud.com/user%2F841997676445491200%2FheadImg%2Ffirst.jpg")
@@ -143,6 +149,16 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                     });
         }
 
+        LiveDataBus.get().with(MyConstant.GROUP_CHAT_ANONYMOUS, Boolean.class).observe(requireActivity(), aBoolean -> {
+            if (aBoolean) {
+                groupModel.getData().setIsAnonymous(1);
+                sendAnonymousName(1);
+            } else {
+                groupModel.getData().setIsAnonymous(0);
+                sendAnonymousName(0);
+            }
+        });
+
         cancel_Btn.setOnClickListener(new cancel_BtnClick());
 
 
@@ -154,89 +170,10 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         //设置菜单样式为不可用语音模式
         //    primaryMenu.setMenuShowType(EaseInputMenuStyle.ONLY_TEXT);
         //}
-//        primaryMenu.
-//        MyInfo myInfo = new MyInfo(requireActivity());
 
-
-        msgListener = new EMMessageListener() {
-            @SneakyThrows
-            @Override
-            public void onMessageReceived(List<EMMessage> messages) {
-                //接收消息的时候获取到扩展属性
-                //获取自定义的属性，第2个参数为没有此定义的属性时返回的默认值
-                MyInfo myInfo = new MyInfo(requireActivity());
-                if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-                    for (int i = 0; i < messages.size(); i++) {
-                        messages.get(i).getTo();
-                        messages.get(i).getStringAttribute("messageType", "chat");
-                        messages.get(i).getStringAttribute("sendName", "");
-                        messages.get(i).getStringAttribute("sendHead", "");
-                        messages.get(i).getStringAttribute("sendLH", "");
-                        messages.get(i).getStringAttribute("sendVIP", "");
-                        messages.get(i).getStringAttribute("toName", "");
-                        messages.get(i).getStringAttribute("toHead", "");
-                        messages.get(i).getStringAttribute("toLH", "");
-                        messages.get(i).getStringAttribute("toVIP", "");
-//                        messages.get(i).getStringAttribute("fireType", "");
-                        if (messages.get(i).getTo().equals(conversationId)) {
-
-                        } else {
-                            //                        MyInfo myInfo = new MyInfo(requireActivity());
-
-
-                        }
-
-
-                    }
-                    messageListLayout.setData(messages);
-
-
-                } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-                    for (int i = 0; i < messages.size(); i++) {
-                        messages.get(i).getStringAttribute("messageType", "group");
-                        messages.get(i).getStringAttribute("messageType", "group");
-                        messages.get(i).getStringAttribute("sendName", "");
-                        messages.get(i).getStringAttribute("sendHead", "");
-                        messages.get(i).getStringAttribute("sendLH", "");
-                        messages.get(i).getStringAttribute("sendVIP", "");
-                        messages.get(i).getStringAttribute("groupName", "");
-                        messages.get(i).getStringAttribute("groupHead", "");
-
-                    }
-                }
-                Log.i("messreceived", messages.toString());
-            }
-
-            @Override
-            public void onCmdMessageReceived(List<EMMessage> messages) {
-                //收到透传消息
-            }
-
-            @SneakyThrows
-            @Override
-            public void onMessageRead(List<EMMessage> messages) {
-                //收到已读回执
-                messages.get(0).getStringAttribute("sendName");
-            }
-
-            @Override
-            public void onMessageDelivered(List<EMMessage> message) {
-                //收到已送达回执
-            }
-
-            @Override
-            public void onMessageRecalled(List<EMMessage> messages) {
-                //消息被撤回
-            }
-
-            @Override
-            public void onMessageChanged(EMMessage message, Object change) {
-                //消息状态变动
-            }
-        };
-
+        //收到的消息
+        msgListener = new EMMessageMethod();
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
-
     }
 
 
@@ -245,49 +182,53 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     public void addMsgAttrsBeforeSend(EMMessage message) {
         super.addMsgAttrsBeforeSend(message);
         MyInfo myInfo = new MyInfo(requireActivity());
-//        JSONObject obj = new JSONObject();
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-//            obj.put(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_CHAT);
-//            obj.put(MyConstant.SEND_NAME, myInfo.getUserInfo().getNikeName());
-//            obj.put(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
-//            obj.put(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
-//            obj.put(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
-//            String toName = TextUtils.isEmpty(model.getData().getRemarkName()) ? model.getData().getNikeName() : model.getData().getRemarkName();
-//            obj.put(MyConstant.TO_NAME, toName);
-//            obj.put(MyConstant.TO_HEAD, model.getData().getHeadImg());
-//            obj.put(MyConstant.TO_LH, model.getData().getLightStatus());
-//            obj.put(MyConstant.TO_VIP, model.getData().getVipType());
-//            obj.put(MyConstant.FIRE_TYPE, model.getData().getFireType());
-
             message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_CHAT);
-            message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNikeName());
+            message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
             message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
             message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
             message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
-            String toName = TextUtils.isEmpty(model.getData().getRemarkName()) ? model.getData().getNikeName() : model.getData().getRemarkName();
+            String toName = TextUtils.isEmpty(model.getData().getRemarkName()) ? model.getData().getNickname() : model.getData().getRemarkName();
             message.setAttribute(MyConstant.TO_NAME, toName);
             message.setAttribute(MyConstant.TO_HEAD, model.getData().getHeadImg());
             message.setAttribute(MyConstant.TO_LH, model.getData().getLightStatus());
             message.setAttribute(MyConstant.TO_VIP, model.getData().getVipType());
 //            message.setAttribute(MyConstant.FIRE_TYPE, model.getData().getFireType());
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-//            obj.put(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP);
-//            obj.put(MyConstant.SEND_NAME, myInfo.getUserInfo().getNikeName());
-//            obj.put(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
-//            obj.put(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
-//            obj.put(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
-//            obj.put(MyConstant.GROUP_NAME, groupModel.getData().getGroupName());
-//            obj.put(MyConstant.GROUP_HEAD, groupModel.getData().getGroupHeadImg());
-
             message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP);
-            message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNikeName());
+            message.setAttribute(MyConstant.SEND_NAME, sendAnonymousName(groupModel.getData().getIsAnonymous()));
             message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
             message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
             message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
             message.setAttribute(MyConstant.GROUP_NAME, groupModel.getData().getGroupName());
             message.setAttribute(MyConstant.GROUP_HEAD, groupModel.getData().getGroupHeadImg());
         }
-//        message.setAttribute(MyConstant.EXT, obj);
+    }
+
+    private String sendAnonymousName(int IsAnonymous) {
+        MyInfo myInfo = new MyInfo(requireActivity());
+        String nameStr;
+        if (IsAnonymous == 1) {
+            if (saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + conversationId, requireActivity()).equals("false")) {
+                nameStr = NameResource.randomName();
+                saveFile.saveShareData(MyConstant.GROUP_CHAT_ANONYMOUS + conversationId, nameStr, requireActivity());
+            } else {
+                nameStr = saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + conversationId, requireActivity());
+            }
+        } else {
+            nameStr = myInfo.getUserInfo().getNickname();
+            saveFile.clearShareData(MyConstant.GROUP_CHAT_ANONYMOUS + conversationId, requireActivity());
+
+        }
+        return nameStr;
+    }
+
+    private String sendAnonymousType(int IsAnonymous) {
+        String type = MyConstant.MESSAGE_TYPE_GROUP;
+        if (IsAnonymous == 1) {
+            type = MyConstant.MESSAGE_TYPE_ANONYMOUS_ON;
+        }
+        return type;
     }
 
 
@@ -423,10 +364,9 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         });
 
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-            AddFriendMethod(getActivity(), saveFile.BaseUrl + saveFile.Friend_info_Url + "?friendHxName=" + conversationId);
+            AddFriendMethod(getActivity(),  saveFile.Friend_info_Url);
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-            GroupMethod(getActivity(), saveFile.BaseUrl + saveFile.Group_MyGroupInfo_Url
-                    + "?groupHxId=" + conversationId);
+            GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url);
         }
     }
 
@@ -468,24 +408,38 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     @Override
     public void onUserAvatarClick(String username) {
-        if (!TextUtils.equals(username, DemoHelper.getInstance().getCurrentUser())) {
-            EaseUser user = DemoHelper.getInstance().getUserInfo(username);
-            if (user == null) {
-                user = new EaseUser(username);
-            }
-            boolean isFriend = DemoHelper.getInstance().getModel().isContact(username);
-            if (isFriend) {
-                user.setContact(0);
-            } else {
-                user.setContact(3);
-            }
+        if (chatType == EaseConstant.CHATTYPE_SINGLE) {
+            if (!TextUtils.equals(username, DemoHelper.getInstance().getCurrentUser())) {
+                EaseUser user = DemoHelper.getInstance().getUserInfo(username);
+                if (user == null) {
+                    user = new EaseUser(username);
+                }
+                boolean isFriend = DemoHelper.getInstance().getModel().isContact(username);
+                if (isFriend) {
+                    user.setContact(0);
+                } else {
+                    user.setContact(3);
+                }
 //            ContactDetailActivity.actionStart(mContext, user);
-            String addType = "8";
-            ChatFriend_Detail.actionStart(mContext, username, user, addType);
-        } else {
+                String addType = "8";
+                ChatFriend_Detail.actionStart(mContext, username, user, addType);
+            } else {
 //            UserDetailActivity.actionStart(mContext, null, null);
-            UserDetail_Set.actionStart(mContext);
+                UserDetail_Set.actionStart(mContext);
+            }
+        } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
+            int isAnonymous = groupModel.getData().getIsAnonymous();
+            int issProtect = groupModel.getData().getIsProtect();
+            if (isAnonymous == 1 || issProtect == 1) {
+                return;
+            }
+            int myIdentity = groupModel.getData().getIdentity();
+            String myGroupId = groupModel.getData().getGroupId();
+            String userID = "";
+            String hxUserName = username;
+            GroupFriend_Detail.actionStart(mContext, userID, hxUserName,groupModel);
         }
+
     }
 
     @Override
@@ -742,116 +696,59 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     ChatUserBean model;
 
     public void AddFriendMethod(Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("friendHxName",conversationId);
+        xUtils3Http.get(context,baseUrl,map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    model = new Gson().fromJson(resultString, ChatUserBean.class);
-                    if (model.getCode() == -1 || model.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (model.getCode() == 200) {
-
-                        MyInfo myInfo = new MyInfo(requireActivity());
-                        String headUrl = myInfo.getUserInfo().getHeadImg();
-                        String nick = myInfo.getUserInfo().getNikeName();
-                        EMUserInfo userInfo = new EMUserInfo();
-                        userInfo.setAvatarUrl(headUrl);
-                        userInfo.setNickName(nick);
-                        if (headUrl != null) {
-                            EMClient.getInstance().userInfoManager().updateOwnInfo(userInfo, new EMValueCallBack<String>() {
-                                @Override
-                                public void onSuccess(String value) {
-                                    EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
-                                    event.message = myInfo.getUserInfo().getHxUserName();
-                                    LiveDataBus.get().with(DemoConstant.AVATAR_CHANGE).postValue(event);
-                                }
-
-                                @Override
-                                public void onError(int error, String errorMsg) {
-                                }
-                            });
+            public void success(String result) {
+                model = new Gson().fromJson(result, ChatUserBean.class);
+                MyInfo myInfo = new MyInfo(requireActivity());
+                String headUrl = myInfo.getUserInfo().getHeadImg();
+                String nick = myInfo.getUserInfo().getNickname();
+                EMUserInfo userInfo = new EMUserInfo();
+                userInfo.setAvatarUrl(headUrl);
+                userInfo.setNickName(nick);
+                if (headUrl != null) {
+                    EMClient.getInstance().userInfoManager().updateOwnInfo(userInfo, new EMValueCallBack<String>() {
+                        @Override
+                        public void onSuccess(String value) {
+                            EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
+                            event.message = myInfo.getUserInfo().getHxUserName();
+                            LiveDataBus.get().with(DemoConstant.AVATAR_CHANGE).postValue(event);
                         }
-
-                    } else {
-                        Toast.makeText(context, model.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                        @Override
+                        public void onError(int error, String errorMsg) {
+                        }
+                    });
                 }
-
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
 
             }
         });
     }
 
     GruopInfo_Bean groupModel;
-
     public void GroupMethod(Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("groupHxId",conversationId);
+        xUtils3Http.get(context,baseUrl,map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    groupModel = new Gson().fromJson(resultString, GruopInfo_Bean.class);
-                    if (groupModel.getCode() == -1 || groupModel.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (groupModel.getCode() == 200) {
-                        GruopInfo_Bean.DataDTO dataDTO = groupModel.getData();
-                        String topStr = dataDTO.getGroupNotice();
-                        setTopView(topStr);
+            public void success(String result) {
+                groupModel = new Gson().fromJson(result, GruopInfo_Bean.class);
+                GruopInfo_Bean.DataDTO dataDTO = groupModel.getData();
+                String topStr = dataDTO.getGroupNotice();
+                setTopView(topStr);
 
-                    } else {
-                        Toast.makeText(context, groupModel.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-
-
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
-
+                sendAnonymousName(groupModel.getData().getIsAnonymous());
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
 
             }
         });
-    }
 
-    @Override
-    public void setOnChatLayoutListener(OnChatLayoutListener listener) {
-        super.setOnChatLayoutListener(listener);
     }
 
 
@@ -864,12 +761,64 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     /**
      * 是否有置顶消息
+     *
      * @param topStr
      */
     private void setTopView(String topStr) {
         if (!TextUtils.isEmpty(topStr)) {
             top_Constraint.setVisibility(View.VISIBLE);
             top_Txt.setText(topStr);
+        }
+    }
+
+    private class EMMessageMethod implements EMMessageListener {
+        @SneakyThrows
+        @Override
+        public void onMessageReceived(List<EMMessage> messages) {
+            //接收消息的时候获取到扩展属性
+            //获取自定义的属性，第2个参数为没有此定义的属性时返回的默认值
+            if (chatType == EaseConstant.CHATTYPE_SINGLE) {
+//                messageListLayout.setData(messages);
+            } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
+                if (!messages.isEmpty()) {
+                    String isAnonymousOn = messages.get(0).getStringAttribute("messageType", "");
+                    if (TextUtils.equals(isAnonymousOn, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
+                        groupModel.getData().setIsAnonymous(1);
+                        sendAnonymousName(1);
+                    } else if (TextUtils.equals(isAnonymousOn, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
+                        groupModel.getData().setIsAnonymous(0);
+                        sendAnonymousName(0);
+                    }
+
+                }
+
+            }
+            Log.i("messreceived", messages.toString());
+        }
+
+        @Override
+        public void onCmdMessageReceived(List<EMMessage> messages) {
+            //收到透传消息
+        }
+
+        @Override
+        public void onMessageRead(List<EMMessage> messages) {
+            //收到已读回执
+        }
+
+        @Override
+        public void onMessageDelivered(List<EMMessage> message) {
+            //收到已送达回执
+        }
+
+        @Override
+        public void onMessageRecalled(List<EMMessage> messages) {
+            //消息被撤回
+        }
+
+        @Override
+        public void onMessageChanged(EMMessage message, Object change) {
+            //消息状态变动
         }
     }
 }

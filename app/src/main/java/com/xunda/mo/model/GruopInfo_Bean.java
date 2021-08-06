@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class GruopInfo_Bean implements Serializable {
 
+
     @JsonProperty("msg")
     private String msg;
     @JsonProperty("code")
-    private Double code;
+    private Integer code;
     @JsonProperty("data")
     private DataDTO data;
 
@@ -24,11 +25,11 @@ public class GruopInfo_Bean implements Serializable {
         @JsonProperty("createTime")
         private Long createTime;
         @JsonProperty("findWay")
-        private Double findWay;
+        private Integer findWay;
         @JsonProperty("groupAddr")
         private String groupAddr;
         @JsonProperty("groupAreaCode")
-        private Long groupAreaCode;
+        private Integer groupAreaCode;
         @JsonProperty("groupHeadImg")
         private String groupHeadImg;
         @JsonProperty("groupHxId")
@@ -39,35 +40,39 @@ public class GruopInfo_Bean implements Serializable {
         private String groupIntroduction;
         @JsonProperty("groupName")
         private String groupName;
+        @JsonProperty("groupNotice")
+        private String groupNotice;
         @JsonProperty("groupNum")
-        private Long groupNum;
+        private Integer groupNum;
         @JsonProperty("identity")
-        private Double identity;
+        private Integer identity;
         @JsonProperty("isAllMute")
-        private Long isAllMute;
+        private Integer isAllMute;
         @JsonProperty("isAnonymous")
-        private Long isAnonymous;
-        @JsonProperty("isDissolve")
-        private Double isDissolve;
+        private Integer isAnonymous;
+        @JsonProperty("isDisturb")
+        private Integer isDisturb;
         @JsonProperty("isMute")
-        private Double isMute;
+        private Integer isMute;
         @JsonProperty("isProtect")
-        private Long isProtect;
+        private Integer isProtect;
+        @JsonProperty("isPush")
+        private Integer isPush;
         @JsonProperty("isSave")
-        private Double isSave;
+        private Integer isSave;
         @JsonProperty("joinWay")
-        private Double joinWay;
+        private Integer joinWay;
         @JsonProperty("lat")
         private String lat;
         @JsonProperty("lng")
         private String lng;
+        @JsonProperty("maxManagerCount")
+        private Integer maxManagerCount;
         @JsonProperty("maxUserCount")
-        private Double maxUserCount;
-        @JsonProperty("myNikeName")
-        private String myNikeName;
+        private Integer maxUserCount;
+        @JsonProperty("myNickname")
+        private String myNickname;
         @JsonProperty("tag")
         private String tag;
-        @JsonProperty("groupNotice")
-        private String groupNotice;
     }
 }

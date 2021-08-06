@@ -28,7 +28,7 @@ import com.xunda.mo.hx.section.me.activity.DeveloperSetActivity;
 import com.xunda.mo.hx.section.me.activity.FeedbackActivity;
 import com.xunda.mo.hx.section.me.activity.SetIndexActivity;
 import com.xunda.mo.hx.section.me.activity.UserDetailActivity;
-import com.xunda.mo.main.MainLogin_OldUser_Psd;
+import com.xunda.mo.main.login.MainLogin_OldUser_Psd;
 
 public class AboutMeFragment extends BaseInitFragment implements View.OnClickListener {
     static private String TAG =  "AboutMeFragment";

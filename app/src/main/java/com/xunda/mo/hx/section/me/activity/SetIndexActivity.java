@@ -14,8 +14,7 @@ import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.widget.ArrowItemView;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
-import com.xunda.mo.main.MainLogin_Register;
-import com.xunda.mo.main.Main_Launch;
+import com.xunda.mo.main.login.MainLogin_Register;
 
 public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener, View.OnClickListener {
     private EaseTitleBar titleBar;

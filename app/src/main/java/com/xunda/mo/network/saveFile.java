@@ -24,10 +24,6 @@ import java.util.Locale;
 
 @SuppressLint({"WorldReadableFiles", "WorldWriteableFiles"})
 public class saveFile {
-    //        public static String BaseUrl = "http://www.ec.dev.com/";
-//    public static String BaseUrl = "http://172.16.0.222/";
-//    public static String BaseUrl = "http://www.myjy.biz/";//域名
-
 //        public static String BaseUrl = "http://123.60.0.152:8088/";
         public static String BaseUrl = "http://119.3.23.16:8088/";
     public static String User_SmsCode_Url = "user/smsCode";
@@ -65,7 +61,24 @@ public class saveFile {
     public static String Group_Create_Url = "group/create";
     public static String Group_UserList_Url = "group/userList";
     public static String Group_UpdateInfo_Url = "group/updateInfo";
-    public static String Group_UpdateNikeName_Url = "group/updateNikeName";
+    public static String Group_UpdateNickName_Url = "group/updateNickName";
+    public static String Group_Out_Url = "group/out";
+    public static String Friend_InviteToGroup_Url = "friend/inviteToGroup";
+    public static String group_MangerUser_Url = "group/mangerUser";
+    public static String group_AddBatchManger_Url = "group/addBatchManger";
+    public static String group_MangerSet_Url = "group/mangerSet";
+    public static String Group_BlackUsers_Url = "group/blackUsers";
+    public static String Group_SetBlack_Url = "group/setBlack";
+    public static String Group_MuteUsers_Url = "group/muteUsers";
+    public static String Group_UserMute_Url = "group/userMute";
+    public static String Group_GroupApplyList_Url = "group/groupApplyList";
+    public static String Group_AgreeApply_Url = "group/agreeApply";
+    public static String Group_UpdateApplyListByIds_Url = "group/updateApplyListByIds";
+    public static String Group_DeleteApplyListByIds_Url = "group/deleteApplyListByIds";
+    public static String Group_AnonymousOrMute_Url = "group/anonymousOrMute";
+    public static String Group_Way_Url = "group/way";
+    public static String Group_TransferMaster_Url = "group/transferMaster";
+    public static String Group_UserInfo_Url = "group/userInfo";
 
 
 

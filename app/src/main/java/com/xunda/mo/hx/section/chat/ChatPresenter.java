@@ -313,10 +313,6 @@ public class ChatPresenter extends EaseChatPresenter {
 
     private class ChatGroupListener extends EaseGroupListener {
 
-        public void onChangeName(){
-
-        }
-
         @Override
         public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
             super.onInvitationReceived(groupId, groupName, inviter, reason);

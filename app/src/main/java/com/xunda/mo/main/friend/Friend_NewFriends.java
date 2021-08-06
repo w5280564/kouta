@@ -22,7 +22,6 @@ import com.xunda.mo.R;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
-import com.xunda.mo.main.MainLogin_Register;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.myAdapter.Friend_NewFriendList_Adapter;
 import com.xunda.mo.model.NewFriend_Bean;
@@ -30,18 +29,13 @@ import com.xunda.mo.model.baseModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 import com.xunda.mo.xrecycle.XRecyclerView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import static com.xunda.mo.network.saveFile.getShareData;
+import java.util.Map;
 
 public class Friend_NewFriends extends BaseInitActivity {
 
@@ -73,7 +67,7 @@ public class Friend_NewFriends extends BaseInitActivity {
         super.initData();
         PageIndex = 1;
         pageSize = 10;
-        NewFriendMethod(Friend_NewFriends.this, saveFile.BaseUrl + saveFile.Friend_ApplyList_Url + "?pageNum=" + PageIndex + "&pageSize=" + pageSize);
+        NewFriendMethod(Friend_NewFriends.this, saveFile.Friend_ApplyList_Url);
     }
 
     private void initTitle() {
@@ -128,7 +122,7 @@ public class Friend_NewFriends extends BaseInitActivity {
         public void onLoadMore() {
             PageIndex = PageIndex + 1;
             pageSize = 10;
-            NewFriendMethod(Friend_NewFriends.this, saveFile.BaseUrl + saveFile.Friend_ApplyList_Url + "?pageNum=" + PageIndex + "&pageSize=" + pageSize);
+            NewFriendMethod(Friend_NewFriends.this,  saveFile.Friend_ApplyList_Url );
         }
     }
 
@@ -148,10 +142,8 @@ public class Friend_NewFriends extends BaseInitActivity {
 //                String friendUserId = baseModel.get(position).
 //                ChatFriend_Detail.actionStart(mContext, friendUserId, addType);
             }
-
             @Override
             public void onItemLongClick(View view, int position) {
-
             }
 
         });
@@ -161,7 +153,7 @@ public class Friend_NewFriends extends BaseInitActivity {
             public void onItemAddClick(View view, int position) {
                 String agreeType = "1";
                 String friendApplyId = baseModel.get(position).getFriendApplyId();
-                AddRemoveMethod(Friend_NewFriends.this, saveFile.BaseUrl + saveFile.Friend_Agree_Url, agreeType, friendApplyId);
+                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId);
                 try {
 //                    String name = baseModel.get(position).getUserNum().toString();
 //                    DemoHelper.getInstance().getContactManager().acceptInvitation(name);
@@ -173,7 +165,7 @@ public class Friend_NewFriends extends BaseInitActivity {
             public void onItemRemoveClick(View view, int position) {
                 String agreeType = "2";
                 String friendApplyId = baseModel.get(position).getFriendApplyId();
-                AddRemoveMethod(Friend_NewFriends.this, saveFile.BaseUrl + saveFile.Friend_Agree_Url, agreeType, friendApplyId);
+                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId);
             }
         });
     }
@@ -196,7 +188,7 @@ public class Friend_NewFriends extends BaseInitActivity {
             @Override
             protected void onNoDoubleClick(View v) {
                 MorePopup.dismiss();
-                rejectAll_AndClearMethod(Friend_NewFriends.this, saveFile.BaseUrl + saveFile.Friend_RejectAll_Url);
+                rejectAll_AndClearMethod(Friend_NewFriends.this, saveFile.Friend_RejectAll_Url);
             }
         });
         newregistr_txt.setOnClickListener(new NoDoubleClickListener() {
@@ -221,7 +213,7 @@ public class Friend_NewFriends extends BaseInitActivity {
                 .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
                     @Override
                     public void onConfirmClick(View view) {
-                        rejectAll_AndClearMethod(Friend_NewFriends.this, saveFile.BaseUrl + saveFile.Friend_ClearApplyList_Url);
+                        rejectAll_AndClearMethod(Friend_NewFriends.this,  saveFile.Friend_ClearApplyList_Url);
                     }
                 })
                 .showCancelButton(true)
@@ -233,66 +225,43 @@ public class Friend_NewFriends extends BaseInitActivity {
     private NewFriend_Bean Model;
 
     public void NewFriendMethod(Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", getShareData("JSESSIONID", context));
-        }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("pageNum",PageIndex);
+        map.put("pageSize",pageSize);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    Model = new Gson().fromJson(resultString, NewFriend_Bean.class);
-                    if (Model.getCode() == -1 || Model.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (Model.getCode() == 200) {
+            public void success(String result) {
+                Model = new Gson().fromJson(result, NewFriend_Bean.class);
+                if (PageIndex == 1) {
+                    if (baseModel != null) {
+                        baseModel.clear();
+                    }
+                    baseModel = new ArrayList<>();
+                }
 
-                        if (PageIndex == 1) {
-                            if (baseModel != null) {
-                                baseModel.clear();
-                            }
-                            baseModel = new ArrayList<>();
-                        }
-
-                        if (Model.getData() != null) {
-                            baseModel.addAll(Model.getData().getList());
-                            if (PageIndex == 1) {
-                                list_xrecycler.refreshComplete();
-                                initlist(context);
-                            } else {
-                                list_xrecycler.loadMoreComplete();
-                                mAdapter.addMoreData(baseModel);
-                            }
-
-                        } else {
-                            list_xrecycler.removeAllViews();
-                            list_xrecycler.refreshComplete();
-                            Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
-                        }
-
-
+                if (Model.getData() != null) {
+                    baseModel.addAll(Model.getData().getList());
+                    if (PageIndex == 1) {
+                        list_xrecycler.refreshComplete();
+                        initlist(context);
                     } else {
-                        Toast.makeText(context, Model.getMsg(), Toast.LENGTH_SHORT).show();
+                        list_xrecycler.loadMoreComplete();
+                        mAdapter.addMoreData(baseModel);
                     }
 
                 } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                    list_xrecycler.removeAllViews();
+                    list_xrecycler.refreshComplete();
+                    Toast.makeText(context, "没有搜到", Toast.LENGTH_SHORT).show();
                 }
-            }
 
-            @Override
-            public void onError(Throwable throwable, boolean b) {
             }
-
             @Override
-            public void onCancelled(CancelledException e) {
-            }
+            public void failed(String... args) {
 
-            @Override
-            public void onFinished() {
             }
         });
+
     }
 
 
@@ -305,54 +274,20 @@ public class Friend_NewFriends extends BaseInitActivity {
      * @param friendApplyId 好友申请ID
      */
     public void AddRemoveMethod(Context context, String baseUrl, String agreeType, String friendApplyId) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("agreeType", agreeType);
-            obj.put("friendApplyId", friendApplyId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        params.setAsJsonContent(true);
-        params.setBodyContent(obj.toString());
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("agreeType", agreeType);
+        map.put("friendApplyId", friendApplyId);
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (!TextUtils.isEmpty(resultString)) {
-                    baseModel baseBean = new Gson().fromJson(resultString, baseModel.class);
-                    if (baseBean.getCode() == -1) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (baseBean.getCode() == 200) {
-                        if (TextUtils.equals(agreeType, "1")) {
-//                        Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
-                            Toast.makeText(mContext, "已通过", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(mContext, "已拒绝", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
+            public void success(String result) {
+                if (TextUtils.equals(agreeType, "1")) {
+                    Toast.makeText(mContext, "已通过", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "已拒绝", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
-
+            public void failed(String... args) {
             }
         });
     }
@@ -364,46 +299,17 @@ public class Friend_NewFriends extends BaseInitActivity {
      * @param baseUrl
      */
     public void rejectAll_AndClearMethod(Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        params.setAsJsonContent(true);
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (!TextUtils.isEmpty(resultString)) {
-                    baseModel baseBean = new Gson().fromJson(resultString, baseModel.class);
-                    if (baseBean.getCode() == -1) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (baseBean.getCode() == 200) {
-                        list_xrecycler.refreshComplete();
-                        Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
+            public void success(String result) {
+                baseModel baseBean = new Gson().fromJson(result, baseModel.class);
+                list_xrecycler.refreshComplete();
+                Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
             }
-
             @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-
+            public void failed(String... args) {
             }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-
         });
     }
 

@@ -1,4 +1,8 @@
-package com.xunda.mo.main;
+package com.xunda.mo.main.login;
+
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,7 +25,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import androidx.core.content.ContextCompat;
 
 import com.xunda.mo.R;
@@ -29,10 +32,6 @@ import com.xunda.mo.staticdata.viewTouchDelegate;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 
 public class MainRegister_Agreement extends Activity {

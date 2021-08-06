@@ -1,5 +1,7 @@
 package com.xunda.mo.main;
 
+import static com.xunda.mo.network.saveFile.getShareData;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.NewLazyFragment;
 import com.xunda.mo.main.friend.Friend_Add;
+import com.xunda.mo.main.login.MainLogin_Register;
 import com.xunda.mo.model.adress_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.ClearEditText;
@@ -45,8 +48,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
-
-import static com.xunda.mo.network.saveFile.getShareData;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -222,7 +223,7 @@ public class Fragment_adress extends NewLazyFragment {
 //                            EaseUser user = new EaseUser();
 //                            adress_Model.DataDTO dataDTO = model.getData().get(i);
 //                            user.setUsername(dataDTO.getHxUserName());
-//                            user.setNickname(dataDTO.getNikeName());
+//                            user.setNickname(dataDTO.getNickName());
 //                            user.setAvatar(dataDTO.getHeadImg());
 //                            user.setEmail("");
 //                            user.setGender(1);
@@ -529,7 +530,7 @@ public class Fragment_adress extends NewLazyFragment {
             adress_Model.DataDTO indexda = data.getData().get(i);
             SortModel sortModel = new SortModel();
 //            String name = nameArr[i];
-            String name = indexda.getNikeName();
+            String name = indexda.getNickname();
             sortModel.setName(name);
             sortModel.setHeadImg(indexda.getHeadImg());
             sortModel.setUserNum(indexda.getUserNum());

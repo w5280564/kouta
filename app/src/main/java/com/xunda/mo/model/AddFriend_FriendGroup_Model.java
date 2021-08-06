@@ -16,7 +16,7 @@ public class AddFriend_FriendGroup_Model {
     @JsonProperty("msg")
     private String msg;
     @JsonProperty("code")
-    private Long code;
+    private Integer code;
     @JsonProperty("data")
     private DataDTO data;
 
@@ -24,7 +24,7 @@ public class AddFriend_FriendGroup_Model {
     @Data
     public static class DataDTO {
         @JsonProperty("endRow")
-        private Long endRow;
+        private Integer endRow;
         @JsonProperty("hasNextPage")
         private Boolean hasNextPage;
         @JsonProperty("hasPreviousPage")
@@ -36,37 +36,37 @@ public class AddFriend_FriendGroup_Model {
         @JsonProperty("list")
         private List<ListDTO> list;
         @JsonProperty("navigateFirstPage")
-        private Double navigateFirstPage;
+        private Integer navigateFirstPage;
         @JsonProperty("navigateLastPage")
-        private Double navigateLastPage;
+        private Integer navigateLastPage;
         @JsonProperty("navigatePages")
-        private Double navigatePages;
+        private Integer navigatePages;
         @JsonProperty("navigatepageNums")
-        private List<Long> navigatepageNums;
+        private List<Integer> navigatepageNums;
         @JsonProperty("nextPage")
-        private Long nextPage;
+        private Integer nextPage;
         @JsonProperty("pageNum")
-        private Long pageNum;
+        private Integer pageNum;
         @JsonProperty("pageSize")
-        private Long pageSize;
+        private Integer pageSize;
         @JsonProperty("pages")
-        private Double pages;
+        private Integer pages;
         @JsonProperty("prePage")
-        private Long prePage;
+        private Integer prePage;
         @JsonProperty("size")
-        private Long size;
+        private Integer size;
         @JsonProperty("startRow")
-        private Long startRow;
+        private Integer startRow;
         @JsonProperty("total")
-        private Double total;
+        private Integer total;
 
         @NoArgsConstructor
         @Data
         public static class ListDTO {
             @JsonProperty("count")
-            private Double count;
+            private Integer count;
             @JsonProperty("createTime")
-            private Double createTime;
+            private Long createTime;
             @JsonProperty("groupHeadImg")
             private String groupHeadImg;
             @JsonProperty("groupId")
@@ -76,9 +76,9 @@ public class AddFriend_FriendGroup_Model {
             @JsonProperty("groupName")
             private String groupName;
             @JsonProperty("groupNum")
-            private Long groupNum;
+            private Integer groupNum;
             @JsonProperty("joinWay")
-            private Double joinWay;
+            private Integer joinWay;
             @JsonProperty("tag")
             private String tag;
         }

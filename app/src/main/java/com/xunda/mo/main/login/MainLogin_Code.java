@@ -1,4 +1,8 @@
-package com.xunda.mo.main;
+package com.xunda.mo.main.login;
+
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 import android.Manifest;
 import android.content.Context;
@@ -34,33 +38,24 @@ import com.xunda.mo.Receiver.SmsBroadcastReceiver;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.main.MainActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.viewmodels.LoginViewModel;
 import com.xunda.mo.model.Main_Register_Model;
 import com.xunda.mo.model.Olduser_Model;
-import com.xunda.mo.model.baseModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.CaptchaInputView;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.TimerTextView;
 import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.http.cookie.DbCookieStore;
-import org.xutils.x;
-
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 public class MainLogin_Code extends BaseInitActivity {
 
@@ -75,7 +70,7 @@ public class MainLogin_Code extends BaseInitActivity {
     private TextView phone_txt, nonecode_txt;
     String type = "";
     private String equipmentName;
-    private String vision;
+    private String version;
     private String meid;
     private LoginViewModel loginViewModels;
 
@@ -89,7 +84,7 @@ public class MainLogin_Code extends BaseInitActivity {
         FlymeSetStatusBarLightMode(this.getWindow(), true);
 
         equipmentName = android.os.Build.BRAND + "  " + android.os.Build.MODEL;
-        vision = android.os.Build.VERSION.RELEASE;
+        version = android.os.Build.VERSION.RELEASE;
         meid = StaticData.getIMEI(this);
         String smsCode;
 
@@ -118,7 +113,7 @@ public class MainLogin_Code extends BaseInitActivity {
     protected void initIntent(Intent intent) {
         super.initIntent(intent);
         equipmentName = android.os.Build.BRAND + "  " + android.os.Build.MODEL;
-        vision = android.os.Build.VERSION.RELEASE;
+        version = android.os.Build.VERSION.RELEASE;
         meid = StaticData.getIMEI(this);
         String smsCode;
 
@@ -172,11 +167,9 @@ public class MainLogin_Code extends BaseInitActivity {
         mSMSBroadcastReceiver = new SmsBroadcastReceiver();
         //注册广播接收
         registerReceiver(mSMSBroadcastReceiver, filter);
-        mSMSBroadcastReceiver.setOnReceivedMessageListener(new SmsBroadcastReceiver.MessageListener() {
-            public void OnReceived(String message) {
-                Log.e("tag", "1=" + message);
-                capt_view.setText(getDynamicPwd(message));//截取4位验证码
-            }
+        mSMSBroadcastReceiver.setOnReceivedMessageListener(message -> {
+            Log.i("tag", "1=" + message);
+            capt_view.setText(getDynamicPwd(message));//截取4位验证码
         });
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
@@ -256,16 +249,16 @@ public class MainLogin_Code extends BaseInitActivity {
     private void Data() {
         if (TitleName.equals("手机号注册")) {
             type = "1";
-            codeMethod(saveFile.BaseUrl + saveFile.User_SmsCode_Url + "?phoneNum=" + LoginPhoneNume + "&type=" + type, type);
+            codeMethod(saveFile.User_SmsCode_Url, "type", type, type);
         } else if (TitleName.equals("验证码登录")) {
             //登录验证码
             type = "2";
-            codeMethod(saveFile.BaseUrl + saveFile.User_SmsCode_Url + "?phoneNum=" + LoginPhoneNume + "&type=" + type, type);
+            codeMethod(saveFile.User_SmsCode_Url, "type", type, type);
         } else if (TitleName.equals("忘记密码")) {
             //忘记密码
             nonecode_txt.setVisibility(View.VISIBLE);
             type = "3";
-            codeMethod(saveFile.BaseUrl + saveFile.User_checkPhone_Url + "?phoneNum=" + LoginPhoneNume + "&userNum=" + userNum, type);
+            codeMethod(saveFile.User_checkPhone_Url, "userNum", userNum, type);
         }
 
     }
@@ -305,287 +298,108 @@ public class MainLogin_Code extends BaseInitActivity {
     }
 
     //发送验证码
-    public void codeMethod(String baseUrl, String type) {
-        RequestParams params = new RequestParams(baseUrl);
-        x.http().get(params, new Callback.CommonCallback<String>() {
+    public void codeMethod(String baseUrl, String keyStr, String valueStr, String type) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("phoneNum", LoginPhoneNume);
+        map.put(keyStr, valueStr);
+        xUtils3Http.get(MainLogin_Code.this, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    // {"msg":"操作成功","code":200}
-                    baseModel baseModel = new Gson().fromJson(resultString, baseModel.class);
-                    if (baseModel.getCode() == 200) {
-                        startTimer();
-                    } else {
-                        Toast.makeText(MainLogin_Code.this, baseModel.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(MainLogin_Code.this, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
+            public void success(String result) {
+                startTimer();
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
             }
         });
     }
 
     //忘记密码校验
-    public void ForgetcodeMethod(String baseUrl, String type) {
-        RequestParams params = new RequestParams(baseUrl);
-        x.http().get(params, new Callback.CommonCallback<String>() {
+    public void ForgetCodeMethod(String baseUrl, String Code, String type) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("phoneNum", LoginPhoneNume);
+        map.put("code", Code);
+        xUtils3Http.get(MainLogin_Code.this, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    // {"msg":"操作成功","code":200}
-                    baseModel baseModel = new Gson().fromJson(resultString, baseModel.class);
-                    if (baseModel.getCode() == 200) {
-                        Intent intent = new Intent(MainLogin_Code.this, MainLogin_ForgetPsw_question.class);
-                        intent.putExtra("phoneNum", LoginPhoneNume);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(MainLogin_Code.this, baseModel.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(MainLogin_Code.this, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
+            public void success(String result) {
+                Intent intent = new Intent(MainLogin_Code.this, MainLogin_ForgetPsw_question.class);
+                intent.putExtra("phoneNum", LoginPhoneNume);
+                startActivity(intent);
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
             }
         });
+
     }
 
 
     //手机号注册
     public void RegisterMethod(final String baseUrl, String loginType) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("equipmentName", equipmentName);
-            obj.put("vision", vision);
-            obj.put("meid", meid);
-            obj.put("phoneNum", LoginPhoneNume);
-            obj.put("smsCode", capt_view.getText());
-            obj.put("osType", "2");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestParams params = new RequestParams(baseUrl);
-        params.setAsJsonContent(true);
-        params.setBodyContent(obj.toString());
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("equipmentName", equipmentName);
+        map.put("version", version);
+        map.put("meid", meid);
+        map.put("phoneNum", LoginPhoneNume);
+        map.put("smsCode", capt_view.getText());
+        map.put("osType", "2");
+        xUtils3Http.post(MainLogin_Code.this, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    Main_Register_Model baseModel = new Gson().fromJson(resultString, Main_Register_Model.class);
-                    if (baseModel.getCode() == 200) {
-//                    Log.e("第三方数据",resultString);
-//                    Login_Model baseModel = new Gson().fromJson(resultString, Login_Model.class);
-//                    if (baseModel.isIsSuccess() && !baseModel.getData().equals("[]")) {
-//
-////                        String userId = baseModel.getData().getUserID()+"";
-////                        saveFile.saveShareData("islogin", "true", LoginRegister.this);
-////                        saveFile.saveShareData("role", baseModel.getData().getRole() + "", MainLogin_Code.this);//管理员
-////                        saveFile.saveShareData("userId",   userId, LoginRegister.this);
-////                        saveFile.saveShareData("InviteCode",baseModel.getData().getInviteCode(),MainLogin_Code.this);
-////                        saveFile.saveShareData("NickName",baseModel.getData().getNickName(),MainLogin_Code.this);
+            public void success(String result) {
+                Main_Register_Model baseModel = new Gson().fromJson(result, Main_Register_Model.class);
+                String name = baseModel.getData().getHxUserName();
+                loginViewModels.login(name, name, false);
+                DemoHelper.getInstance().setAutoLogin(true);
 
-
-                        String name = baseModel.getData().getHxUserName();
-                        loginViewModels.login(name, name, false);
-                        DemoHelper.getInstance().setAutoLogin(true);
-//                        EMClient.getInstance().login(name, name, new EMCallBack() {
-//                            @Override
-//                            public void onSuccess() {
-//                                EMClient.getInstance().groupManager().loadAllGroups();
-//                                EMClient.getInstance().chatManager().loadAllConversations();
-//                                Log.d("main", "登录聊天服务器成功！");
-//                            }
-//
-//                            @Override
-//                            public void onError(int code, String error) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onProgress(int progress, String status) {
-//
-//                            }
-//                        });
-
-                        saveFile.saveShareData("phoneNum", baseModel.getData().getPhoneNum(), MainLogin_Code.this);
-                        Intent intent = new Intent(MainLogin_Code.this, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
-
-//            }
-//                    } else {
-//                        Toast.makeText(MainLogin_Code.this, "数据获取失败", Toast.LENGTH_SHORT).show();
-//                    }
-                } else {
-                    Toast.makeText(MainLogin_Code.this, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
-//                    JPushInterface.resumePush(Man_Login.this);//注册
-//                    JPushInterface.setAliasAndTags(Man_Login.this,JsonGet.getReturnValue(resultString, "userid"),null);
+                saveFile.saveShareData("phoneNum", baseModel.getData().getPhoneNum(), MainLogin_Code.this);
+                Intent intent = new Intent(MainLogin_Code.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
-                DbCookieStore dbCookie = DbCookieStore.INSTANCE;
-                List cookies = dbCookie.getCookies();
-                if (cookies.size() != 0) {
-                    saveFile.saveShareData("JSESSIONID", cookies.get(cookies.size() - 1).toString(), MainLogin_Code.this);
-                    saveFile.saveShareData("cookieDomain", dbCookie.getCookies().get(cookies.size() - 1).getDomain(), MainLogin_Code.this);
-                }
+            public void failed(String... args) {
             }
         });
+
+
     }
 
 
     //登录
     public void LoginMethod(Context context, String baseUrl, String type) {
-        RequestParams params = new RequestParams(baseUrl);
-        params.addBodyParameter("equipmentName",equipmentName);
-        params.addBodyParameter("loginType","1");
-        params.addBodyParameter("meid",meid);
-        params.addBodyParameter("vision",vision);
-        params.addBodyParameter("phoneNum",LoginPhoneNume);
-        params.addBodyParameter("smsCode",capt_view.getText().toString());
-        params.addBodyParameter("osType","2");
-        params.setAsJsonContent(true);
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("equipmentName", equipmentName);
+        map.put("loginType", "1");
+        map.put("meid", meid);
+        map.put("version", version);
+        map.put("phoneNum", LoginPhoneNume);
+        map.put("smsCode", capt_view.getText().toString());
+        map.put("osType", "2");
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    Olduser_Model baseModel = new Gson().fromJson(resultString, Olduser_Model.class);
-                    if (baseModel.getCode() == 200) {
+            public void success(String result) {
+                Olduser_Model baseModel = new Gson().fromJson(result, Olduser_Model.class);
+                String name = baseModel.getData().getHxUserName();
+                loginViewModels.login(name, name, false);
+                DemoHelper.getInstance().setAutoLogin(true);
 
-                        String name = baseModel.getData().getHxUserName();
-                        loginViewModels.login(name, name, false);
-                        DemoHelper.getInstance().setAutoLogin(true);
+                saveFile.saveShareData("JSESSIONID", baseModel.getData().getToken(), context);
+                saveFile.saveShareData("phoneNum", baseModel.getData().getPhoneNum(), context);
+                saveFile.saveShareData("userId", baseModel.getData().getUserId(), context);
 
-
-                        saveFile.saveShareData("JSESSIONID", baseModel.getData().getToken(), context);
-                        saveFile.saveShareData("phoneNum", baseModel.getData().getPhoneNum(), context);
-                        saveFile.saveShareData("userId", baseModel.getData().getUserId(), context);
-
-                        MyInfo myInfo = new MyInfo(context);
-                        myInfo.setUserInfo(baseModel.getData());
-
-                        Intent intent = new Intent(context, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(context, baseModel.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
+                MyInfo myInfo = new MyInfo(context);
+                myInfo.setUserInfo(baseModel.getData());
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
+            public void failed(String... args) {
 
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
-                DbCookieStore dbCookie = DbCookieStore.INSTANCE;
-                List cookies = dbCookie.getCookies();
-                if (cookies.size() != 0) {
-                    saveFile.saveShareData("JSESSIONID", cookies.get(cookies.size() - 1).toString(), MainLogin_Code.this);
-                    saveFile.saveShareData("cookieDomain", dbCookie.getCookies().get(cookies.size() - 1).getDomain(), MainLogin_Code.this);
-                }
             }
         });
     }
-
-
-//    public void LoginMethod(final String baseUrl, String loginType) {
-//        RequestParams params = new RequestParams(baseUrl);
-//        x.http().post(params, new Callback.CommonCallback<String>() {
-//            @Override
-//            public void onSuccess(String resultString) {
-//                if (resultString != null) {
-////                    Log.e("第三方数据",resultString);
-////                    Login_Model baseModel = new Gson().fromJson(resultString, Login_Model.class);
-////                    if (baseModel.isIsSuccess() && !baseModel.getData().equals("[]")) {
-//////                        initlist(Leran_Goal.this);
-//////                        setResult(RESULT_OK);
-////
-//////                        String userId = baseModel.getData().getUserID()+"";
-//////                        saveFile.saveShareData("islogin", "true", LoginRegister.this);
-//////                        saveFile.saveShareData("role", baseModel.getData().getRole() + "", MainLogin_Code.this);//管理员
-//////                        saveFile.saveShareData("userId",   userId, LoginRegister.this);
-//////                        saveFile.saveShareData("InviteCode",baseModel.getData().getInviteCode(),MainLogin_Code.this);
-//////                        saveFile.saveShareData("NickName",baseModel.getData().getNickName(),MainLogin_Code.this);
-////
-////                        Intent intent = new Intent(MainLogin_Code.this,MainActivity.class);
-////                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-////                        startActivity(intent);
-////
-//////                        saveFile.saveShareData("ispush", "true", MainLogin_Code.this);
-//////                        JPushInterface.resumePush(MainLogin_Code.this);
-//////                        JPushInterface.setAlias(MainLogin_Code.this,"ET_" + userId,null);
-////
-////                    } else {
-////                        Toast.makeText(MainLogin_Code.this, "数据获取失败", Toast.LENGTH_SHORT).show();
-////                    }
-//
-//                } else {
-//                    Toast.makeText(MainLogin_Code.this, "数据获取失败", Toast.LENGTH_SHORT).show();
-//                }
-////                    JPushInterface.resumePush(Man_Login.this);//注册
-////                    JPushInterface.setAliasAndTags(Man_Login.this,JsonGet.getReturnValue(resultString, "userid"),null);
-//            }
-//
-//            @Override
-//            public void onError(Throwable throwable, boolean b) {
-//            }
-//
-//            @Override
-//            public void onCancelled(CancelledException e) {
-//            }
-//
-//            @Override
-//            public void onFinished() {
-//                DbCookieStore dbCookie = DbCookieStore.INSTANCE;
-//                List cookies = dbCookie.getCookies();
-//                if (cookies.size() != 0) {
-//                    saveFile.saveShareData("JSESSIONID", cookies.get(cookies.size() - 1).toString(), MainLogin_Code.this);
-//                    saveFile.saveShareData("cookieDomain", dbCookie.getCookies().get(cookies.size() - 1).getDomain(), MainLogin_Code.this);
-//                }
-//            }
-//        });
-//    }
 
 
     /**
@@ -645,24 +459,17 @@ public class MainLogin_Code extends BaseInitActivity {
             if (text.toString().length() >= 4) {
                 if (TitleName.equals("手机号注册")) {
                     type = "1";
-                    RegisterMethod(saveFile.BaseUrl + saveFile.User_Register_Url, type);
+                    RegisterMethod(saveFile.User_Register_Url, type);
                 } else if (TitleName.equals("验证码登录")) {
                     String type = "1";
-//                    String  equipmentName = android.os.Build.BRAND +"  "+ android.os.Build.MODEL;
-//                    String meid = StaticData.getIMEI(MainLogin_Code.this);
-//                    String vision = android.os.Build.VERSION.RELEASE;
-//                    String leId = phone_edit.getText().toString().trim();
-//                    String psw = psw_edit.getText().toString().trim();
                     String phoneNum = LoginPhoneNume;
                     String smsCode = capt_view.getText().toString();
-//                    LoginMethod(MainLogin_Code.this, saveFile.BaseUrl + saveFile.User_Login_Url + "?equipmentName=" + equipmentName +
-//                            "&loginType=" + type + "&meid=" + meid + "&vision=" + vision + "&phoneNum=" + LoginPhoneNume + "&smsCode=" + smsCode + "&osType=" + "2", type);
-                    LoginMethod(MainLogin_Code.this, saveFile.BaseUrl + saveFile.User_Login_Url,type);
+                    LoginMethod(MainLogin_Code.this, saveFile.User_Login_Url, type);
                 } else if (TitleName.equals("忘记密码")) {
                     //忘记密码
                     type = "3";
                     String Code = capt_view.getText().toString();
-                    ForgetcodeMethod(saveFile.BaseUrl + saveFile.User_checkPhone_Url + "?phoneNum=" + LoginPhoneNume + "&code=" + Code, type);
+                    ForgetCodeMethod(saveFile.User_checkPhone_Url, Code, type);
                 }
 
             }
@@ -681,18 +488,14 @@ public class MainLogin_Code extends BaseInitActivity {
         MorePopup.setOutsideTouchable(false);
         MorePopup.setContentView(contentView);
         MorePopup.showAtLocation(view, Gravity.CENTER, 0, 0);
-
         SwipeCaptchaView mSwipeCaptchaView = contentView.findViewById(R.id.swipeCaptchaView);
         SeekBar mSeekBar = contentView.findViewById(R.id.dragBar);
         View test_btn = contentView.findViewById(R.id.test_btn);
 
-        test_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSwipeCaptchaView.createCaptcha();
-                mSeekBar.setEnabled(true);
-                mSeekBar.setProgress(0);
-            }
+        test_btn.setOnClickListener(v -> {
+            mSwipeCaptchaView.createCaptcha();
+            mSeekBar.setEnabled(true);
+            mSeekBar.setProgress(0);
         });
         mSwipeCaptchaView.setOnCaptchaMatchCallback(new SwipeCaptchaView.OnCaptchaMatchCallback() {
             @Override

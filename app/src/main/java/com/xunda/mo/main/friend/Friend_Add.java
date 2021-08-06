@@ -1,19 +1,32 @@
 package com.xunda.mo.main.friend;
 
-import androidx.appcompat.app.AppCompatActivity;
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.gson.Gson;
 import com.xunda.mo.R;
+import com.xunda.mo.main.myAdapter.Friend_Seek_GroupList_Adapter;
+import com.xunda.mo.model.AddFriend_FriendGroup_Model;
+import com.xunda.mo.network.saveFile;
+import com.xunda.mo.staticdata.xUtils3Http;
+import com.xunda.mo.xrecycle.XRecyclerView;
 
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Friend_Add extends AppCompatActivity {
 
@@ -21,6 +34,7 @@ public class Friend_Add extends AppCompatActivity {
     private TextView seek_txt;
     private View seekPerson_InClue, seekGroup_InClue;
     private int tag;
+    private XRecyclerView group_Xrecycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +46,10 @@ public class Friend_Add extends AppCompatActivity {
         FlymeSetStatusBarLightMode(this.getWindow(), true);
 
         initView();
+        initData();
     }
 
     private void initView() {
-
-
         Button return_Btn = findViewById(R.id.return_Btn);
         add_left = findViewById(R.id.add_left);
         add_right = findViewById(R.id.add_right);
@@ -44,6 +57,9 @@ public class Friend_Add extends AppCompatActivity {
         seekPerson_InClue = findViewById(R.id.seekperson_inclue);
         seekGroup_InClue = findViewById(R.id.seekgroup_inclue);
         View seek_lin = findViewById(R.id.seek_lin);
+        group_Xrecycler = seekGroup_InClue.findViewById(R.id.group_Xrecycler);
+        group_Xrecycler.setPullRefreshEnabled(false);
+        group_Xrecycler.setLoadingMoreEnabled(false);
 
         tag = 0;
         changeView(0);
@@ -71,6 +87,16 @@ public class Friend_Add extends AppCompatActivity {
         }
     }
 
+
+    private int PageIndex;
+    private int pageSize;
+    private void initData() {
+        PageIndex = 1;
+        pageSize = 10;
+        AddFriendMethod(Friend_Add.this, saveFile.Group_SearchGroup_Url);
+//        AddFriendMethod(Friend_Add_SeekPerson.this, saveFile.BaseUrl + saveFile.User_SearchAll_Url + "?search=" + searchStr + "&type=" + type + "&pageNum=" + 1 + "&pageSize=" + 10);
+    }
+
     private class seek_linClickLister implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -92,7 +118,7 @@ public class Friend_Add extends AppCompatActivity {
             add_left.setTextColor(getResources().getColor(R.color.white, null));
             add_right.setBackground(null);
             add_right.setTextColor(getResources().getColor(R.color.yellow, null));
-            seek_txt.setText("LeID/昵称/手机号/标签/群");
+            seek_txt.setText("MoID/昵称/手机号/标签/群");
             seekPerson_InClue.setVisibility(View.VISIBLE);
             seekGroup_InClue.setVisibility(View.GONE);
         } else if (i == 1) {
@@ -106,6 +132,71 @@ public class Friend_Add extends AppCompatActivity {
             seekGroup_InClue.setVisibility(View.VISIBLE);
         }
     }
+
+    Friend_Seek_GroupList_Adapter mAdapter;
+    public void initlist(final Context context) {
+        LinearLayoutManager mMangaer = new LinearLayoutManager(context);
+        group_Xrecycler.setLayoutManager(mMangaer);
+        //如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
+        group_Xrecycler.setHasFixedSize(true);
+        mAdapter = new Friend_Seek_GroupList_Adapter(context, baseModel, Model);
+        group_Xrecycler.setAdapter(mAdapter);
+        mAdapter.setOnItemClickLitener(new Friend_Seek_GroupList_Adapter.OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int position) {
+//                Intent intent = new Intent(context, Person_ShopDetails.class);
+//                intent.putExtra("ProductID", baseModel.get(position).getProductID() + "");
+//                intent.putExtra("Integral", Integral);
+//                startActivity(intent);
+
+
+            }
+            @Override
+            public void onItemLongClick(View view, int position) {
+            }
+        });
+    }
+
+
+    private List<AddFriend_FriendGroup_Model.DataDTO.ListDTO> baseModel;
+    private AddFriend_FriendGroup_Model Model;
+    public void AddFriendMethod(Context context, String baseUrl) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("type","0");
+        map.put("pageNum",PageIndex);
+        map.put("pageSize",pageSize);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                Model = new Gson().fromJson(result, AddFriend_FriendGroup_Model.class);
+                if (PageIndex == 1) {
+                    if (baseModel != null) {
+                        baseModel.clear();
+                    }
+                    baseModel = new ArrayList<>();
+                }
+                if (Model.getData() != null) {
+                    baseModel.addAll(Model.getData().getList());
+                    if (PageIndex == 1) {
+//                        list_xrecycler.refreshComplete();
+                        initlist(context);
+                    } else {
+//                        list_xrecycler.loadMoreComplete();
+//                        mAdapter.addMoreData(baseModel);
+                    }
+                } else {
+//                    list_xrecycler.removeAllViews();
+//                    list_xrecycler.refreshComplete();
+                    Toast.makeText(context, "没有搜到", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void failed(String... args) {
+            }
+        });
+
+    }
+
 
 
 }

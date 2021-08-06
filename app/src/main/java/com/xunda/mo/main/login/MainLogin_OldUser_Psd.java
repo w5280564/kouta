@@ -1,4 +1,8 @@
-package com.xunda.mo.main;
+package com.xunda.mo.main.login;
+
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +25,7 @@ import com.google.gson.Gson;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.main.MainActivity;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.viewmodels.LoginViewModel;
 import com.xunda.mo.model.Olduser_Model;
@@ -32,10 +37,6 @@ import com.xunda.mo.staticdata.viewTouchDelegate;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
-
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 public class MainLogin_OldUser_Psd extends BaseInitActivity {
 
@@ -200,7 +201,7 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
     private void Data(Context context) {
 
 //        LoginMethod(context, saveFile.BaseUrl + saveFile.User_Login_Url + "?equipmentName=" + equipmentName +
-//                "&loginType=" + type + "&meid=" + meid + "&vision=" + vision + "&userNum=" + leId + "&password=" + psw+ "&osType=" + "2", type);
+//                "&loginType=" + type + "&meid=" + meid + "&version=" + version + "&userNum=" + leId + "&password=" + psw+ "&osType=" + "2", type);
         LoginMethod(context, saveFile.BaseUrl + saveFile.User_Login_Url, "2");
 
     }
@@ -210,14 +211,14 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
         String equipmentName = android.os.Build.BRAND + "  " + android.os.Build.MODEL;
         String loginType = "2";
         String meid = StaticData.getIMEI(this);
-        String vision = android.os.Build.VERSION.RELEASE;
+        String version = android.os.Build.VERSION.RELEASE;
         String leId = phone_edit.getText().toString().trim();
         String psw = psw_edit.getText().toString().trim();
         RequestParams params = new RequestParams(baseUrl);
         params.addBodyParameter("equipmentName", equipmentName);
         params.addBodyParameter("loginType", loginType);
         params.addBodyParameter("meid", meid);
-        params.addBodyParameter("vision", vision);
+        params.addBodyParameter("version", version);
         params.addBodyParameter("userNum", leId);
         params.addBodyParameter("password", psw);
         params.addBodyParameter("osType", "2");

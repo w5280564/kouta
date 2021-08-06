@@ -142,8 +142,8 @@ public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser>
                 String name = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? item.getNickname() : JsonObject.getString("remarkName");
                 mName.setText(name);
 
-//                String name = TextUtils.isEmpty(JsonObject.getString(MyConstant.)) ? dataDTO.getNikeName() : dataDTO.getRemarkName();
-//                mName.setText(item.getNickname());
+//                String name = TextUtils.isEmpty(JsonObject.getString(MyConstant.)) ? dataDTO.getnickname() : dataDTO.getRemarkName();
+//                mName.setText(item.getnickname());
             } catch (
                     JSONException e) {
                 e.printStackTrace();

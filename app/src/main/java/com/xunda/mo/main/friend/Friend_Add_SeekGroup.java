@@ -1,5 +1,9 @@
 package com.xunda.mo.main.friend;
 
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,30 +23,23 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.Gson;
 import com.xunda.mo.R;
-import com.xunda.mo.main.MainLogin_Register;
 import com.xunda.mo.model.AddFriend_UserList_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.viewTouchDelegate;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.gson.Gson;
+import com.xunda.mo.staticdata.xUtils3Http;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
-import static com.xunda.mo.network.saveFile.getShareData;
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Friend_Add_SeekGroup extends AppCompatActivity {
 
     private View cancel_txt;
     private EditText seek_edit;
     private LinearLayout friend_lin;
-
+    String searchStr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +53,8 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
     }
 
     private void initData(int type) {
-        String searchStr = seek_edit.getText().toString().trim();
-        AddFriendMethod(Friend_Add_SeekGroup.this, saveFile.BaseUrl + saveFile.User_SearchAll_Url + "?search=" + searchStr);
+         searchStr = seek_edit.getText().toString().trim();
+        AddFriendMethod(Friend_Add_SeekGroup.this,  saveFile.User_SearchAll_Url );
 
 //        AddFriendMethod(Friend_Add_SeekGroup.this, saveFile.BaseUrl + saveFile.Group_SearchGroup_Url
 //                + "?search=" + searchStr + "&type=" + type + "&pageNum=" + 1 + "&pageSize=" + 10);
@@ -83,47 +80,20 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
 
     //
     public void AddFriendMethod(Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", getShareData("JSESSIONID", context));
-        }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("search",searchStr);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    model = new Gson().fromJson(resultString, AddFriend_UserList_Model.class);
-                    if (model.getCode() == -1 || model.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (model.getCode() == 200) {
-
-                        FriendList(Friend_Add_SeekGroup.this, friend_lin);
-
-                    } else {
-                        Toast.makeText(context, model.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-
-
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
-
+            public void success(String result) {
+                model = new Gson().fromJson(result, AddFriend_UserList_Model.class);
+                FriendList(Friend_Add_SeekGroup.this, friend_lin);
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
 
             }
         });
+
     }
 
     private class SeekOnEditorListener implements TextView.OnEditorActionListener {
@@ -154,7 +124,7 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
             TextView more_txt = myView.findViewById(R.id.more_txt);
             viewTouchDelegate.expandViewTouchDelegate(more_txt, 50, 50, 50, 50);
             String UserType = model.getData().get(i).getUserType();
-            if (UserType.equals("nikeNameUser")) {
+            if (UserType.equals("NickNameUser")) {
                 tag_txt.setText("联系人");
             } else if (UserType.equals("userNumUser")) {
                 tag_txt.setText("LeId");
@@ -176,7 +146,6 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
             list_lin.setTag(i);
             more_txt.setTag(i);
             myFlex.addView(myView);
-
 
             more_txt.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -240,7 +209,7 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
                     head_simple.setImageURI(imgUri);
                 }
                 long strVip = userListDTO.getVipType();
-                name.setText(userListDTO.getNikeName());
+                name.setText(userListDTO.getNickName());
                 contentid_txt.setText("Le ID: " + userListDTO.getUserNum());
 
                 if (strVip == 0) {

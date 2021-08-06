@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greyfive"
+    tools:context=".main.group.activity.GroupAllMembers_Manage">
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:id="@+id/my_Scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_Include">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/All_Constraint"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/greyfive"
+
+            tools:ignore="MissingConstraints">
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/groupManage_data_ArrowItemView"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:paddingStart="15dp"
+                app:arrowItemContent=""
+                app:arrowItemContentColor="@color/greytwo"
+                app:arrowItemTitle="编辑资料"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemTitleSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/groupManage_set_ArrowItemView"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:paddingStart="15dp"
+                app:arrowItemContentColor="@color/greytwo"
+                app:arrowItemTitle="设置管理员"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemTitleSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groupManage_data_ArrowItemView" />
+
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/groupManage_person_ArrowItemView"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:paddingStart="15dp"
+                app:arrowItemContentColor="@color/greytwo"
+                app:arrowItemTitle="提升群人数"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemTitleSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groupManage_set_ArrowItemView" />
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/groupManage_blacklist_ArrowItemView"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:paddingStart="15dp"
+                app:arrowItemContentColor="@color/greytwo"
+                app:arrowItemTitle="群黑名单"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemTitleSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groupManage_person_ArrowItemView" />
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/groupManage_apply_ArrowItemView"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:paddingStart="15dp"
+                app:arrowItemContentColor="@color/greytwo"
+                app:arrowItemTitle="申请列表"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemTitleSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groupManage_blacklist_ArrowItemView" />
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/groupManage_Forbidden_ArrowItemView"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:paddingStart="15dp"
+                app:arrowItemContentColor="@color/greytwo"
+                app:arrowItemTitle="禁言列表"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemTitleSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groupManage_apply_ArrowItemView" />
+
+            <com.xunda.mo.main.baseView.MySwitchItemView
+                android:id="@+id/groupManage_chat_Switch"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:paddingStart="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groupManage_Forbidden_ArrowItemView"
+                app:switchItemShowDivider="true"
+                app:switchItemTitle="匿名聊天"
+                app:switchItemTitleColor="@color/blacktitlettwo"
+                app:switchItemTitleSize="15sp" />
+
+            <com.xunda.mo.main.baseView.MySwitchItemView
+                android:id="@+id/groupManage_Forbidden_Switch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:paddingStart="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groupManage_chat_Switch"
+                app:switchItemHint="开启后，仅群主、管理员可发言。（群成员名片，可单个禁言）"
+                app:switchItemShowDivider="true"
+                app:switchItemTitle="群员禁言"
+                app:switchItemTitleColor="@color/blacktitlettwo"
+                app:switchItemTitleSize="15sp" />
+
+            <com.xunda.mo.main.baseView.MySwitchItemView
+                android:id="@+id/groupManage_Protect_Switch"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:background="@color/white"
+                android:paddingStart="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groupManage_Forbidden_Switch"
+                app:switchItemHint="开启后，群成员无法互相添加好友"
+                app:switchItemShowDivider="true"
+                app:switchItemTitle="成员保护模式"
+                app:switchItemTitleColor="@color/blacktitlettwo"
+                app:switchItemTitleSize="15sp" />
+
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/groupManage_AddGroup_ArrowItemView"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:paddingStart="15dp"
+                app:arrowItemContentColor="@color/greytwo"
+                app:arrowItemTitle="加群方式"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemTitleSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groupManage_Protect_Switch" />
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/groupManage_Seek_ArrowItemView"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:paddingStart="15dp"
+                app:arrowItemContentColor="@color/greytwo"
+                app:arrowItemTitle="查找方式"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemTitleSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groupManage_AddGroup_ArrowItemView" />
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/groupManage_Transfer_ArrowItemView"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:paddingStart="15dp"
+                app:arrowItemContentColor="@color/greytwo"
+                app:arrowItemTitle="群转让"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemTitleSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groupManage_Seek_ArrowItemView" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/OwenOrManage_Group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="groupManage_data_ArrowItemView,groupManage_set_ArrowItemView,
+groupManage_person_ArrowItemView,groupManage_chat_Switch,groupManage_Forbidden_Switch,groupManage_Protect_Switch
+,groupManage_AddGroup_ArrowItemView,groupManage_Seek_ArrowItemView,groupManage_Transfer_ArrowItemView" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

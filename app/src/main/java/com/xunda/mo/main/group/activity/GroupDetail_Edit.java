@@ -1,5 +1,10 @@
 package com.xunda.mo.main.group.activity;
 
+import static com.xunda.mo.staticdata.AppConstant.ak;
+import static com.xunda.mo.staticdata.AppConstant.bucketName;
+import static com.xunda.mo.staticdata.AppConstant.endPoint;
+import static com.xunda.mo.staticdata.AppConstant.sk;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -22,6 +27,8 @@ import androidx.core.content.ContextCompat;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -30,9 +37,11 @@ import com.obs.services.ObsConfiguration;
 import com.obs.services.exception.ObsException;
 import com.obs.services.model.AuthTypeEnum;
 import com.xunda.mo.R;
+import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.group.fragment.GroupEditFragment;
 import com.xunda.mo.main.baseView.MyArrowItemView;
+import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.model.baseDataModel;
@@ -40,24 +49,18 @@ import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.GlideEnGine;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
-
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
+import com.xunda.mo.staticdata.xUtils3Http;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.SneakyThrows;
-
-import static com.xunda.mo.staticdata.AppConstant.ak;
-import static com.xunda.mo.staticdata.AppConstant.bucketName;
-import static com.xunda.mo.staticdata.AppConstant.endPoint;
-import static com.xunda.mo.staticdata.AppConstant.sk;
 
 public class GroupDetail_Edit extends BaseInitActivity {
 
@@ -194,19 +197,13 @@ public class GroupDetail_Edit extends BaseInitActivity {
                 "群简介",
                 brief_ArrowItemView.getTip().getText().toString().trim(),
                 hint,
-                new GroupEditFragment.OnSaveClickListener() {
-                    @Override
-                    public void onSaveClick(View view, String content) {
-                        //群简介
-                        if (!TextUtils.isEmpty(content)) {
-//                            signature_ArrowItemView.getTvContent().setText(content);
-//                            String changType = "7";
-//                            ChangeUserMethod(GroupDetail_Edit.this, saveFile.BaseUrl + saveFile.User_Update_Url, changType, "signature", content, "", "");
-                            brief_ArrowItemView.getTip().setText(content);
-                            String changType = "3";
-                            String keyStr = "groupIntroduction";
-                            CreateGroupMethod(GroupDetail_Edit.this, saveFile.BaseUrl + saveFile.Group_UpdateInfo_Url, changType, keyStr, content, "", "");
-                        }
+                (view, content) -> {
+                    //群简介
+                    if (!TextUtils.isEmpty(content)) {
+                        brief_ArrowItemView.getTip().setText(content);
+                        String changType = "3";
+                        String keyStr = "groupIntroduction";
+                        CreateGroupMethod(GroupDetail_Edit.this,  saveFile.Group_UpdateInfo_Url, changType, keyStr, content, "", "");
                     }
                 });
     }
@@ -296,7 +293,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
             }
             String changType = "2";
             String keyStr = "groupAddr";
-            CreateGroupMethod(GroupDetail_Edit.this, saveFile.BaseUrl + saveFile.Group_UpdateInfo_Url, changType, keyStr, locationAddress, "", "");
+            CreateGroupMethod(GroupDetail_Edit.this,  saveFile.Group_UpdateInfo_Url, changType, keyStr, locationAddress, "", "");
         }
     }
 
@@ -346,7 +343,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
 //            pictures = pic;
             String changType = "1";
             String keyStr = "groupHeadImg";
-            CreateGroupMethod(GroupDetail_Edit.this, saveFile.BaseUrl + saveFile.Group_UpdateInfo_Url, changType, keyStr, pic, "", "");
+            CreateGroupMethod(GroupDetail_Edit.this,  saveFile.Group_UpdateInfo_Url, changType, keyStr, pic, "", "");
         }
     }
 
@@ -360,50 +357,50 @@ public class GroupDetail_Edit extends BaseInitActivity {
      * @param valueStr
      */
     public void CreateGroupMethod(Context context, String baseUrl, String changType, String keyStr, String valueStr, String keyCity, String valueCityStr) {
-        RequestParams params = new RequestParams(baseUrl);
-        params.addBodyParameter("groupId", groupModel.getData().getGroupId());
-        params.addBodyParameter(keyStr, valueStr);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        params.setAsJsonContent(true);
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("groupId",groupModel.getData().getGroupId());
+        xUtils3Http.post(mContext, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    baseDataModel baseModel = new Gson().fromJson(resultString, baseDataModel.class);
-                    if (baseModel.getCode() == 200) {
-                        Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
-
-                        if (TextUtils.equals(changType, "1")) {
-                            Uri uri = Uri.parse(baseModel.getData());
-                            person_img.setImageURI(uri);
-                        } else if (TextUtils.equals(changType, "2")) {
-                            String adressStr = valueStr.isEmpty() ? "未设置" : valueStr;
-                            adress_ArrowItemView.getTvContent().setText(adressStr);
-                        }
-
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+            public void success(String result) {
+                baseDataModel baseModel = new Gson().fromJson(result, baseDataModel.class);
+                Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
+                if (TextUtils.equals(changType, "1")) {
+                    Uri uri = Uri.parse(baseModel.getData());
+                    person_img.setImageURI(uri);
+                } else if (TextUtils.equals(changType, "2")) {
+                    String adressStr = valueStr.isEmpty() ? "未设置" : valueStr;
+                    adress_ArrowItemView.getTvContent().setText(adressStr);
+                }else if (TextUtils.equals(changType, "3")){
+                    sendMes(groupModel);
                 }
-
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
-
+            public void failed(String... args) {
             }
         });
     }
+
+    //发送消息
+    private void sendMes(GruopInfo_Bean Model) {
+        MyInfo myInfo = new MyInfo(mContext);
+        String conversationId = Model.getData().getGroupHxId();
+//        EMMessage message = EMMessage.createTxtSendMessage(mContext.getString(R.string.CREATE_GROUP_CONTENT), conversationId);
+        EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+        EMTextMessageBody txtBody = new EMTextMessageBody("");
+        message.addBody(txtBody);
+        message.setTo(conversationId);
+        message.setChatType(EMMessage.ChatType.GroupChat);
+        message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.GROUP_UPDATE_GROUPDES);
+//        message.setAttribute(MyConstant.USER_NAME, UserName);
+        message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
+        message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
+        message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
+        message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
+        message.setAttribute(MyConstant.GROUP_NAME, Model.getData().getGroupName());
+        message.setAttribute(MyConstant.GROUP_HEAD, Model.getData().getGroupHeadImg());
+        DemoHelper.getInstance().getChatManager().sendMessage(message);
+    }
+
 
 
 }

@@ -1,5 +1,9 @@
 package com.xunda.mo.main;
 
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -25,13 +29,10 @@ import com.xunda.mo.R;
 import com.xunda.mo.hx.section.contact.fragment.ContactListFragment;
 import com.xunda.mo.hx.section.contact.viewmodels.ContactsViewModel;
 import com.xunda.mo.hx.section.conversation.ConversationListFragment;
+import com.xunda.mo.staticdata.RsaEncodeMethod;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 //            finish();
 //        }
 
+        RsaEncodeMethod.rsaEncode("测试");
 
         initView();
 //        initData();

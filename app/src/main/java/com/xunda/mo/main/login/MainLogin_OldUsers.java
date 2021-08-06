@@ -1,4 +1,8 @@
-package com.xunda.mo.main;
+package com.xunda.mo.main.login;
+
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,10 +23,6 @@ import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
-
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 public class MainLogin_OldUsers extends AppCompatActivity {
 
@@ -108,7 +108,7 @@ public class MainLogin_OldUsers extends AppCompatActivity {
         change_txt.setOnClickListener(new NoDoubleClickListener() {
             @Override
             protected void onNoDoubleClick(View v) {
-                Intent intent = new Intent(MainLogin_OldUsers.this,MainLogin_OldUser_Phone.class);
+                Intent intent = new Intent(MainLogin_OldUsers.this, MainLogin_OldUser_Phone.class);
                 startActivity(intent);
                 MorePopup.dismiss();
             }

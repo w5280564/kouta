@@ -1,5 +1,9 @@
 package com.xunda.mo.main.friend;
 
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,23 +21,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.xunda.mo.R;
-import com.xunda.mo.main.MainLogin_Register;
+import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.myAdapter.Friend_Seek_FriendList_Adapter;
 import com.xunda.mo.model.AddFriend_FriendList_Model;
 import com.xunda.mo.network.saveFile;
+import com.xunda.mo.staticdata.xUtils3Http;
 import com.xunda.mo.xrecycle.XRecyclerView;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import static com.xunda.mo.network.saveFile.getShareData;
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
+import java.util.Map;
 
 public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implements XRecyclerView.LoadingListener {
     private View cancel_txt;
@@ -60,7 +58,7 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
         seek_edit.setText(seekStr);
         seek_edit.setSelection(seekStr.length());
 
-        if (type.equals("nikeNameUser")) {
+        if (type.equals("NickNameUser")) {
             seek_edit.setHint("搜索用户昵称");
             type = "1";
         } else if (type.equals("userNumUser")) {
@@ -99,8 +97,7 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
     public void onLoadMore() {
         PageIndex = PageIndex + 1;
         pageSize = 10;
-        AddFriendMethod(Friend_Add_seekPerson_FriendList.this, saveFile.BaseUrl + saveFile.User_SearchByType_Url
-                + "?search=" + seekStr + "&type=" + type + "&pageNum=" + PageIndex + "&pageSize=" + pageSize);
+        AddFriendMethod(Friend_Add_seekPerson_FriendList.this,  saveFile.User_SearchByType_Url);
     }
 
     private class cancel_txtOnclickLister implements View.OnClickListener {
@@ -132,9 +129,7 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
     private void initData(String type, String seekStr) {
         PageIndex = 1;
         pageSize = 10;
-        AddFriendMethod(Friend_Add_seekPerson_FriendList.this, saveFile.BaseUrl + saveFile.User_SearchByType_Url
-                + "?search=" + seekStr + "&type=" + type + "&pageNum=" + PageIndex + "&pageSize=" + pageSize);
-//        AddFriendMethod(Friend_Add_SeekPerson.this, saveFile.BaseUrl + saveFile.User_SearchAll_Url + "?search=" + searchStr + "&type=" + type + "&pageNum=" + 1 + "&pageSize=" + 10);
+        AddFriendMethod(Friend_Add_seekPerson_FriendList.this,  saveFile.User_SearchByType_Url);
     }
 
 
@@ -151,9 +146,8 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
             @Override
             public void onItemClick(View view, int position) {
                 String friendUserId = baseModel.get(position).getUserId();
-                Intent intent = new Intent(context,Friend_Detalis.class);
-                intent.putExtra("friendUserId",friendUserId);
-                startActivity(intent);
+                String addType = "2";
+                ChatFriend_Detail.actionStart(context, friendUserId,  addType);
             }
 
             @Override
@@ -165,71 +159,46 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
 
     private List<AddFriend_FriendList_Model.DataDTO.ListDTO> baseModel;
     private AddFriend_FriendList_Model Model;
-
     public void AddFriendMethod(Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", getShareData("JSESSIONID", context));
-        }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("search",seekStr);
+        map.put("type",type);
+        map.put("pageNum",PageIndex);
+        map.put("pageSize",pageSize);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    Model = new Gson().fromJson(resultString, AddFriend_FriendList_Model.class);
-                    if (Model.getCode() == -1 || Model.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (Model.getCode() == 200) {
+            public void success(String result) {
+                Model = new Gson().fromJson(result, AddFriend_FriendList_Model.class);
+                if (PageIndex == 1) {
+                    if (baseModel != null) {
+                        baseModel.clear();
+                    }
+                    baseModel = new ArrayList<>();
+                }
 
-                        if (PageIndex == 1) {
-                            if (baseModel != null) {
-                                baseModel.clear();
-                            }
-                            baseModel = new ArrayList<>();
-                        }
-
-                        if (Model.getData() != null) {
-                            baseModel.addAll(Model.getData().getList());
-                            if (PageIndex == 1) {
-                                list_xrecycler.refreshComplete();
-                                initlist(context);
-                            } else {
-                                list_xrecycler.loadMoreComplete();
-                                mAdapter.addMoreData(baseModel);
-                            }
-
-                        } else {
-                            list_xrecycler.removeAllViews();
-                            list_xrecycler.refreshComplete();
-                            Toast.makeText(context, "没有搜到", Toast.LENGTH_SHORT).show();
-                        }
-
-
+                if (Model.getData() != null) {
+                    baseModel.addAll(Model.getData().getList());
+                    if (PageIndex == 1) {
+                        list_xrecycler.refreshComplete();
+                        initlist(context);
                     } else {
-                        Toast.makeText(context, Model.getMsg(), Toast.LENGTH_SHORT).show();
+                        list_xrecycler.loadMoreComplete();
+                        mAdapter.addMoreData(baseModel);
                     }
 
-
                 } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                    list_xrecycler.removeAllViews();
+                    list_xrecycler.refreshComplete();
+                    Toast.makeText(context, "没有搜到", Toast.LENGTH_SHORT).show();
                 }
 
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
 
             }
         });
+
     }
 
 

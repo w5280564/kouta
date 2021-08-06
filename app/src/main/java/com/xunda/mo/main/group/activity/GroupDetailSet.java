@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
@@ -29,18 +31,19 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.EaseCompat;
+import com.hyphenate.easeui.utils.EaseFileUtils;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
-import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
 import com.xunda.mo.hx.section.dialog.GroupTopDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.group.viewmodels.GroupDetailViewModel;
 import com.xunda.mo.hx.section.search.SearchGroupChatActivity;
-import com.xunda.mo.main.MainLogin_Register;
+import com.xunda.mo.main.MainActivity;
 import com.xunda.mo.main.baseView.FlowLayout;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.baseView.MySwitchItemView;
@@ -48,39 +51,41 @@ import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.GroupMember_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
-import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 
 import org.jetbrains.annotations.NotNull;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 
 public class GroupDetailSet extends BaseInitActivity {
 
-    private String groupId;
+    private String HXgroupId;
     private SimpleDraweeView person_img;
     private TextView group_Name, group_content, clearHistory_Txt, remove_Txt;
     private MyArrowItemView group_Name_ArrowItemView, group_Code_ArrowItemView, group_Nick_ArrowItemView, group_member_ArrowItemView,
-            clear_ArrowItemView, group_Top_ArrowItemView;
-    private MySwitchItemView member_quit_Switch,group_chatTop_Switch,disturb_Switch;
+            clear_ArrowItemView, group_Top_ArrowItemView, chatBg_ArrowItemView, group_Management_ArrowItemView;
+    private MySwitchItemView member_quit_Switch, group_chatTop_Switch, disturb_Switch;
     private Group Muggle_Group;
     private FlowLayout group_Flow;
     private ImageView groupmember_add, groupmember_remove;
     private GroupDetailViewModel viewModel;
     private EMConversation conversation;
+    private String myGroupId;
+    private List<String> members = new ArrayList<>();
 
-    public static void actionStart(Context context, String groupId) {
+    public static void actionStart(Context context, String HXgroupId) {
         Intent intent = new Intent(context, GroupDetailSet.class);
-        intent.putExtra("groupId", groupId);
+        intent.putExtra("HXgroupId", HXgroupId);
         context.startActivity(intent);
     }
 
@@ -109,9 +114,13 @@ public class GroupDetailSet extends BaseInitActivity {
         group_Code_ArrowItemView = findViewById(R.id.group_Code_ArrowItemView);
         group_Nick_ArrowItemView = findViewById(R.id.group_Nick_ArrowItemView);
         group_Nick_ArrowItemView.setOnClickListener(new group_Nick_ArrowItemViewClick());
+        group_Nick_ArrowItemView.setOnClickListener(new group_Nick_ArrowItemViewClick());
         group_Top_ArrowItemView = findViewById(R.id.group_Top_ArrowItemView);
         group_Top_ArrowItemView.setOnClickListener(new group_Top_ArrowItemViewClick());
+        group_Management_ArrowItemView = findViewById(R.id.group_Management_ArrowItemView);
+        group_Management_ArrowItemView.setOnClickListener(new group_Management_ArrowItemViewClick());
         group_member_ArrowItemView = findViewById(R.id.group_member_ArrowItemView);
+        group_member_ArrowItemView.setOnClickListener(new group_member_ArrowItemViewClick());
         group_chatTop_Switch = findViewById(R.id.group_chatTop_Switch);
         group_chatTop_Switch.setOnCheckedChangeListener(new group_chatTop_SwitchClick());
         disturb_Switch = findViewById(R.id.disturb_Switch);
@@ -119,12 +128,18 @@ public class GroupDetailSet extends BaseInitActivity {
 //        groupmember_add = findViewById(R.id.groupmember_add);
 //        groupmember_remove = findViewById(R.id.groupmember_remove);
         clearHistory_Txt = findViewById(R.id.clear_Txt);
+        clearHistory_Txt.setOnClickListener(new clearHistory_TxtClick());
+        chatBg_ArrowItemView = findViewById(R.id.chatBg_ArrowItemView);
+        chatBg_ArrowItemView.setOnClickListener(new chatBg_ArrowItemViewClick());
         remove_Txt = findViewById(R.id.remove_Txt);
+        remove_Txt.setOnClickListener(new remove_TxtClick());
 
         member_quit_Switch = findViewById(R.id.member_quit_Switch);
+        member_quit_Switch.getSwitch().setOnClickListener(new member_quit_SwitchClick());
         Muggle_Group = findViewById(R.id.Muggle_Group);
         initGroupView();
     }
+
     private void initTitle() {
         View title_Include = findViewById(R.id.title_Include);
         title_Include.setBackgroundColor(ContextCompat.getColor(GroupDetailSet.this, R.color.white));
@@ -152,12 +167,12 @@ public class GroupDetailSet extends BaseInitActivity {
     }
 
     private void initGroupView() {
-        conversation = DemoHelper.getInstance().getConversation(groupId, EMConversation.EMConversationType.GroupChat, true);
+        conversation = DemoHelper.getInstance().getConversation(HXgroupId, EMConversation.EMConversationType.GroupChat, true);
         String extField = conversation.getExtField();
         group_chatTop_Switch.getSwitch().setChecked(!TextUtils.isEmpty(extField) && EaseCommonUtils.isTimestamp(extField));
 
         List<String> disabledIds = DemoHelper.getInstance().getPushManager().getNoPushGroups();
-        disturb_Switch.getSwitch().setChecked(disabledIds != null && disabledIds.contains(groupId));
+        disturb_Switch.getSwitch().setChecked(disabledIds != null && disabledIds.contains(HXgroupId));
     }
 
     private class return_Btn extends NoDoubleClickListener {
@@ -177,7 +192,7 @@ public class GroupDetailSet extends BaseInitActivity {
     @Override
     protected void initIntent(Intent intent) {
         super.initIntent(intent);
-        groupId = intent.getStringExtra("groupId");
+        HXgroupId = intent.getStringExtra("HXgroupId");
     }
 
     @Override
@@ -190,13 +205,13 @@ public class GroupDetailSet extends BaseInitActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        GroupMethod(GroupDetailSet.this, saveFile.BaseUrl + saveFile.Group_MyGroupInfo_Url + "?groupHxId=" + groupId);
+        GroupMethod(GroupDetailSet.this, saveFile.Group_MyGroupInfo_Url);
     }
 
     private class head_ConstraintClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            GroupDetail_Edit.actionStart(mContext, groupModel.getData().getIdentity().intValue(), groupModel);
+            GroupDetail_Edit.actionStart(mContext, Identity, groupModel);
         }
     }
 
@@ -204,7 +219,7 @@ public class GroupDetailSet extends BaseInitActivity {
     private class clear_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            SearchGroupChatActivity.actionStart(mContext, groupId);
+            SearchGroupChatActivity.actionStart(mContext, HXgroupId);
         }
     }
 
@@ -220,15 +235,12 @@ public class GroupDetailSet extends BaseInitActivity {
     private void changeGroupName() {
         new EditTextDialogFragment.Builder(mContext)
                 .setContent(group_Name_ArrowItemView.getTvContent().getText().toString())
-                .setConfirmClickListener(new EditTextDialogFragment.ConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view, String content) {
-                        if (!TextUtils.isEmpty(content)) {
+                .setConfirmClickListener((view, content) -> {
+                    if (!TextUtils.isEmpty(content)) {
 //                            itemGroupName.getTvContent().setText(content);
-                            String changType = "4";
-                            String keyStr = "groupName";
-                            CreateGroupMethod(GroupDetailSet.this, saveFile.BaseUrl + saveFile.Group_UpdateInfo_Url, changType, keyStr, content, "", "");
-                        }
+                        String changType = "4";
+                        String keyStr = "groupName";
+                        CreateGroupMethod(GroupDetailSet.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, content, "", "");
                     }
                 })
                 .setTitle("设置群名称")
@@ -246,14 +258,11 @@ public class GroupDetailSet extends BaseInitActivity {
     private void changeNick() {
         new EditTextDialogFragment.Builder(mContext)
                 .setContent(group_Nick_ArrowItemView.getTvContent().getText().toString())
-                .setConfirmClickListener(new EditTextDialogFragment.ConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view, String content) {
-                        if (!TextUtils.isEmpty(content)) {
+                .setConfirmClickListener((view, content) -> {
+                    if (!TextUtils.isEmpty(content)) {
 //                            itemGroupName.getTvContent().setText(content);
-                            String changType = "3";
-                            changeGroupNameMethod(GroupDetailSet.this, saveFile.BaseUrl + saveFile.Group_UpdateNikeName_Url, content);
-                        }
+                        String changType = "3";
+                        changeGroupNameMethod(GroupDetailSet.this,  saveFile.Group_UpdateNickName_Url, content);
                     }
                 })
                 .setTitle("设置群昵称")
@@ -269,13 +278,21 @@ public class GroupDetailSet extends BaseInitActivity {
         }
     }
 
+    //管理群
+    private class group_Management_ArrowItemViewClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            GroupAllMembers_Manage.actionStart(mContext, HXgroupId, Identity, members);
+        }
+    }
+
     //消息置顶
     private class group_chatTop_SwitchClick implements MySwitchItemView.OnCheckedChangeListener {
         @Override
         public void onCheckedChanged(MySwitchItemView buttonView, boolean isChecked) {
-            if(isChecked) {
-                conversation.setExtField(System.currentTimeMillis()+"");
-            }else {
+            if (isChecked) {
+                conversation.setExtField(System.currentTimeMillis() + "");
+            } else {
                 conversation.setExtField("");
             }
             LiveDataBus.get().with(DemoConstant.GROUP_CHANGE).postValue(EaseEvent.create(DemoConstant.GROUP_CHANGE, EaseEvent.TYPE.GROUP));
@@ -285,26 +302,26 @@ public class GroupDetailSet extends BaseInitActivity {
     //置顶消息弹窗
     private void showTopDialog() {
         String content = TextUtils.equals(group_Top_ArrowItemView.getTvContent().getText().toString().trim(), "未设置")
-                ? "" :group_Top_ArrowItemView.getTvContent().getText().toString().trim();
-          GroupTopDialogFragment.showDialog(mContext,
-                  "群置顶消息",
-                  content,
-                  "请输入",
-                  (view, content1) -> {
-                      //群置顶消息
-                      if (!TextUtils.isEmpty(content1)) {
+                ? "" : group_Top_ArrowItemView.getTvContent().getText().toString().trim();
+        GroupTopDialogFragment.showDialog(mContext,
+                "群置顶消息",
+                content,
+                "请输入",
+                (view, content1) -> {
+                    //群置顶消息
+                    if (!TextUtils.isEmpty(content1)) {
 //                            signature_ArrowItemView.getTvContent().setText(content);
-                          String changType = "4";
-                          String keyStr = "groupNotice";
-                          CreateGroupMethod(GroupDetailSet.this, saveFile.BaseUrl + saveFile.Group_UpdateInfo_Url, changType, keyStr, content1, "", "");
-                      }
-                  }, new GroupTopDialogFragment.OnEmptyClickLister() {
-                      @Override
-                      public void onEmptyClcik(View view, Dialog fragment) {
-                          isChangeTop(fragment);
-                      }
-                  }
-          );
+                        String changType = "4";
+                        String keyStr = "groupNotice";
+                        CreateGroupMethod(GroupDetailSet.this,  saveFile.Group_UpdateInfo_Url, changType, keyStr, content1, "", "");
+                    }
+                }, new GroupTopDialogFragment.OnEmptyClickLister() {
+                    @Override
+                    public void onEmptyClcik(View view, Dialog fragment) {
+                        isChangeTop(fragment);
+                    }
+                }
+        );
 
     }
 
@@ -314,15 +331,12 @@ public class GroupDetailSet extends BaseInitActivity {
                 .setTitle("提示")
                 .showContent(true)
                 .setContent("是否删除该置顶消息")
-                .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view) {
-                        fragment.dismiss();
-                        String changType = "4";
-                        String keyStr = "groupNotice";
-                        String empty = "";
-                        CreateGroupMethod(GroupDetailSet.this, saveFile.BaseUrl + saveFile.Group_UpdateInfo_Url, changType, keyStr, empty, "", "");
-                    }
+                .setOnConfirmClickListener(view -> {
+                    fragment.dismiss();
+                    String changType = "4";
+                    String keyStr = "groupNotice";
+                    String empty = "";
+                    CreateGroupMethod(GroupDetailSet.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, empty, "", "");
                 })
                 .showCancelButton(true)
                 .show();
@@ -336,65 +350,109 @@ public class GroupDetailSet extends BaseInitActivity {
         }
     }
 
-    GruopInfo_Bean groupModel;
-    public void GroupMethod(Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
+    //修改背景图
+    private class chatBg_ArrowItemViewClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            selectPicFromLocal();
         }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+    }
+
+    //清空聊天记录
+    private class clearHistory_TxtClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            showClearConfirmDialog();
+        }
+    }
+
+    private void showClearConfirmDialog() {
+        new SimpleDialogFragment.Builder(mContext)
+                .setTitle(R.string.em_chat_group_detail_clear_history_warning)
+                .setOnConfirmClickListener(view -> viewModel.clearHistory(HXgroupId))
+                .showCancelButton(true)
+                .show();
+    }
+
+
+    //退出 或解散群
+    private class remove_TxtClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            isRemove();
+        }
+    }
+
+    private class member_quit_SwitchClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            v.setEnabled(false);
+            String baseUrl = saveFile.Group_AnonymousOrMute_Url;
+            String Type = "4";
+            groupManageMethod(mContext, baseUrl, Type, member_quit_Switch.getSwitch().isChecked(), member_quit_Switch.getSwitch());
+        }
+    }
+
+
+    //退出 或解散群
+    private void isRemove() {
+        int Identity = groupModel.getData().getIdentity();
+        String content = "";
+        if (Identity == 1) {
+            content = "解散群后您将失去和群友的联系，确定要解散嘛？";
+        } else {
+            content = "您将退出群聊,同时删除该群的聊天记录？";
+        }
+        new SimpleDialogFragment.Builder(mContext)
+                .setTitle("提示")
+                .showContent(true)
+                .setContent(content)
+                .setOnConfirmClickListener(view -> {
+//                        String changType = "4";
+                    dissmissGroupMethod(GroupDetailSet.this, saveFile.Group_Out_Url);
+                })
+                .showCancelButton(true)
+                .show();
+    }
+
+
+    GruopInfo_Bean groupModel;
+    int Identity;
+
+    public void GroupMethod(Context context, String baseUrl) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupHxId", HXgroupId);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    groupModel = new Gson().fromJson(resultString, GruopInfo_Bean.class);
-                    if (groupModel.getCode() == -1 || groupModel.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (groupModel.getCode() == 200) {
-                        GruopInfo_Bean.DataDTO dataDTO = groupModel.getData();
-                        Uri uri = Uri.parse(dataDTO.getGroupHeadImg());
-                        person_img.setImageURI(uri);
-                        group_Name.setText(dataDTO.getGroupName());
-                        String content = dataDTO.getGroupIntroduction().isEmpty() ? "群主很懒，还没有群介绍哦~" : dataDTO.getGroupIntroduction();
-                        group_content.setText(content);
-                        group_Name_ArrowItemView.getTvContent().setText(dataDTO.getGroupName());
-                        group_Code_ArrowItemView.getTvContent().setText(dataDTO.getGroupNum().toString());
-                        group_Nick_ArrowItemView.getTvContent().setText(dataDTO.getMyNikeName());
-
-
-                        String topStr = TextUtils.isEmpty(dataDTO.getGroupNotice()) ? "未设置" : dataDTO.getGroupNotice();
-                        group_Top_ArrowItemView.getTvContent().setText(topStr);
-
-                        String groupId = dataDTO.getGroupId();
-                        Double Identity = dataDTO.getIdentity();
-
-                        GroupMemberListMethod(GroupDetailSet.this, saveFile.BaseUrl + saveFile.Group_UserList_Url + "?groupId=" + groupId, Identity);
-                        setGroupManagement(Identity);
-                    } else {
-                        Toast.makeText(context, groupModel.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-
-
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+            public void success(String result) {
+                groupModel = new Gson().fromJson(result, GruopInfo_Bean.class);
+                GruopInfo_Bean.DataDTO dataDTO = groupModel.getData();
+                Uri uri = Uri.parse(dataDTO.getGroupHeadImg());
+                person_img.setImageURI(uri);
+                group_Name.setText(dataDTO.getGroupName());
+                String content = dataDTO.getGroupIntroduction().isEmpty() ? "群主很懒，还没有群介绍哦~" : dataDTO.getGroupIntroduction();
+                group_content.setText(content);
+                group_Name_ArrowItemView.getTvContent().setText(dataDTO.getGroupName());
+                group_Code_ArrowItemView.getTvContent().setText(dataDTO.getGroupNum().toString());
+                group_Nick_ArrowItemView.getTvContent().setText(dataDTO.getMyNickname());
+                String topStr = TextUtils.isEmpty(dataDTO.getGroupNotice()) ? "未设置" : dataDTO.getGroupNotice();
+                group_Top_ArrowItemView.getTvContent().setText(topStr);
+                if (groupModel.getData().getIsPush() == 1) {
+                    member_quit_Switch.getSwitch().setChecked(true);
                 }
+                myGroupId = dataDTO.getGroupId();
+                Identity = dataDTO.getIdentity();
 
+                GroupMemberListMethod(GroupDetailSet.this, saveFile.Group_UserList_Url, Identity);
+                setGroupManagement(Identity);
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
 
             }
         });
+
     }
 
     /**
@@ -402,31 +460,35 @@ public class GroupDetailSet extends BaseInitActivity {
      *
      * @param Identity 1群主2管理员3普通成员
      */
-    private void setGroupManagement(Double Identity) {
+    private void setGroupManagement(int Identity) {
         if (Identity == 3) {
             Muggle_Group.setVisibility(View.GONE);
             group_Name_ArrowItemView.setEnabled(false);
             group_Name_ArrowItemView.getArrow().setVisibility(View.GONE);
-            remove_Txt.setText("删除并退出");
             groupmember_remove.setVisibility(View.GONE);
-        } else {
+            remove_Txt.setText("删除并退出");
+        } else if (Identity == 2) {
             Muggle_Group.setVisibility(View.VISIBLE);
-            remove_Txt.setText("解散本群");
             groupmember_remove.setVisibility(View.VISIBLE);
+            remove_Txt.setText("删除并退出");
+        } else if (Identity == 1) {
+            Muggle_Group.setVisibility(View.VISIBLE);
+            groupmember_remove.setVisibility(View.VISIBLE);
+            remove_Txt.setText("解散本群");
         }
     }
 
     //群成员列表
-    public void imgFlow(FlowLayout myFlow, @NotNull List<GroupMember_Bean.DataDTO> imgList, Double Identity) {
+    public void imgFlow(FlowLayout myFlow, @NotNull List<GroupMember_Bean.DataDTO> imgList, int Identity) {
         if (myFlow != null) {
             myFlow.removeAllViews();
         }
         int size = imgList.size();
         //群主、管理员只展示2行10人 最后两个是添加与删除
         if (size > 8) {
-            size = 8;
+            size = 7;
             if (Identity == 3) {
-                size = 9;
+                size = 8;
             }
         }
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 45, getResources().getDisplayMetrics());
@@ -443,36 +505,36 @@ public class GroupDetailSet extends BaseInitActivity {
             SimpleDraweeView mySimple = myView.findViewById(R.id.head_simple);
 //            mySimple.setLayoutParams(itemParams);
             TextView name = myView.findViewById(R.id.name);
+            name.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
+
             ImageView group_man = myView.findViewById(R.id.group_man);
 
             group_man.setVisibility(View.GONE);
-            if (imgList.get(i).getIdentity().intValue() == 1) {
+            if (imgList.get(i).getIdentity() == 1) {
                 group_man.setVisibility(View.VISIBLE);
                 group_man.setImageResource(R.mipmap.group_man);
-            } else if (imgList.get(i).getIdentity().intValue() == 2) {
+            } else if (imgList.get(i).getIdentity() == 2) {
                 group_man.setVisibility(View.VISIBLE);
                 group_man.setImageResource(R.mipmap.group_owen);
             }
-            name.setText(imgList.get(i).getNikeName());
+            name.setText(imgList.get(i).getNickname());
             Uri headUri = Uri.parse(imgList.get(i).getHeadImg());
             mySimple.setImageURI(headUri);
             myView.setTag(i);
 //            int position = myFlow.getChildCount() ;//下标
             myFlow.addView(myView);
-//            mySimple.setOnClickListener(v -> {
-//                mySimple.setFocusable(false);
-//                int tag = (Integer) v.getTag();
-//                List<GroupMember_Bean.DataDTO> myArr = new ArrayList<>();
-//                for (int i1 = 0; i1 < imgList.size(); i1++) {
-//                    myArr.add(imgList.get(i1));
-//                }
-////                    Intent i = new Intent(this, ImagePagerActivity.class);
-//////                    i.putExtra("imgArr", (Parcelable) myBean);
-////                    i.putExtra("imgArr", (Serializable) myArr);
-////                    i.putExtra("tag", tag);
-////                    startActivity(i);
-////                    mySimple.setFocusable(true);
-//            });
+
+            myView.setOnClickListener(v -> {
+                int isAnonymous = groupModel.getData().getIsAnonymous();
+                int issProtect = groupModel.getData().getIsProtect();
+                if (isAnonymous == 1 || issProtect == 1) {
+                    return;
+                }
+                int tag = (int) v.getTag();
+                String userID = imgList.get(tag).getUserId();
+                String hxUserName = imgList.get(tag).getHxUserName();
+                GroupFriend_Detail.actionStart(mContext, userID, hxUserName, groupModel);
+            });
         }
 
         groupmember_add = new ImageView(this);
@@ -482,59 +544,52 @@ public class GroupDetailSet extends BaseInitActivity {
         groupmember_remove.setBackgroundResource(R.mipmap.groupmember_remove);
         groupmember_remove.setLayoutParams(itemParams);
         myFlow.addView(groupmember_add);
-
         if (Identity == 3) {
             groupmember_remove.setVisibility(View.GONE);
         } else {
             myFlow.addView(groupmember_remove);
         }
 
+        groupmember_add.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            protected void onNoDoubleClick(View v) {
+                GroupAllMembers_Add.actionStart(GroupDetailSet.this, myGroupId);
+            }
+        });
+
+        groupmember_remove.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            protected void onNoDoubleClick(View v) {
+                GroupAllMembers_Remove.actionStart(GroupDetailSet.this, myGroupId);
+            }
+        });
+
+    }
+
+    //查看全部群成员
+    private class group_member_ArrowItemViewClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            GroupAllMembers.actionStart(GroupDetailSet.this, groupListModel.getData(), myGroupId, Identity);
+        }
     }
 
 
-    public void GroupMemberListMethod(Context context, String baseUrl, Double Identity) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-//        MyInfo myInfo = new MyInfo(context);
-//        params.addHeader("Authorization", myInfo.getUserInfo().getToken());
-        x.http().get(params, new Callback.CommonCallback<String>() {
+    GroupMember_Bean groupListModel;
+    public void GroupMemberListMethod(Context context, String baseUrl, int Identity) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", myGroupId);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    GroupMember_Bean groupListModel = new Gson().fromJson(resultString, GroupMember_Bean.class);
-                    if (groupListModel.getCode() == -1 || groupListModel.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (groupListModel.getCode() == 200) {
-//                        GroupMember_Bean.DataDTO dataDTO = (GroupMember_Bean.DataDTO) groupListModel.getData();
-                        String memberCount = String.format("查看%s名群成员", groupListModel.getData().size());
-                        group_member_ArrowItemView.getTvContent().setText(memberCount);
-                        imgFlow(group_Flow, groupListModel.getData(), Identity);
-
-                    } else {
-                        Toast.makeText(context, groupListModel.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-
-
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
-
+            public void success(String result) {
+                groupListModel = new Gson().fromJson(result, GroupMember_Bean.class);
+                String memberCount = String.format("查看%s名群成员", groupListModel.getData().size());
+                group_member_ArrowItemView.getTvContent().setText(memberCount);
+                imgFlow(group_Flow, groupListModel.getData(), Identity);
+                addMembers(groupListModel.getData());
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
 
             }
         });
@@ -561,52 +616,31 @@ public class GroupDetailSet extends BaseInitActivity {
      * @param valueStr
      */
     public void CreateGroupMethod(Context context, String baseUrl, String changType, String keyStr, String valueStr, String keyCity, String valueCityStr) {
-        RequestParams params = new RequestParams(baseUrl);
-        params.addBodyParameter("groupId", groupModel.getData().getGroupId());
-        params.addBodyParameter(keyStr, valueStr);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        params.setAsJsonContent(true);
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", myGroupId);
+        map.put(keyStr, valueStr);
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    baseDataModel baseModel = new Gson().fromJson(resultString, baseDataModel.class);
-                    if (baseModel.getCode() == 200) {
-                        Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
-                        if (TextUtils.equals(changType, "3")) {
-//                            String adressStr = valueStr.isEmpty() ? "未设置" : valueStr;
-                            group_Name_ArrowItemView.getTvContent().setText(valueStr);
-                            group_Name.setText(valueStr);
-                            sendMes(groupModel, valueStr);
-                        }else if (TextUtils.equals(changType, "4")){
-                            group_Top_ArrowItemView.getTvContent().setText(valueStr);
-                        }
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+            public void success(String result) {
+                Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
+                if (TextUtils.equals(changType, "3")) {
+//                    String adressStr = valueStr.isEmpty() ? "未设置" : valueStr;
+                    group_Name_ArrowItemView.getTvContent().setText(valueStr);
+                    group_Name.setText(valueStr);
+                    sendMes(groupModel, valueStr);
+                } else if (TextUtils.equals(changType, "4")) {
+                    group_Top_ArrowItemView.getTvContent().setText(valueStr);
                 }
-
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
             }
         });
     }
 
     //发送消息 创建群聊发送一条邀请人信息
     private void sendMes(GruopInfo_Bean Model, String NameStr) {
-//        try {
         MyInfo myInfo = new MyInfo(mContext);
         String conversationId = Model.getData().getGroupHxId();
 //        EMMessage message = EMMessage.createTxtSendMessage(mContext.getString(R.string.CREATE_GROUP_CONTENT), conversationId);
@@ -616,84 +650,147 @@ public class GroupDetailSet extends BaseInitActivity {
         message.setTo(conversationId);
         message.setChatType(EMMessage.ChatType.GroupChat);
 
-//            JSONObject obj = new JSONObject();
-//            obj.put(MyConstant.ADMIN_TYPE, mContext.getString(R.string.GROUP_OWNER));
-//            obj.put(MyConstant.MESSAGE_TYPE, MyConstant.UPDATE_GROUP_NAME);
-//            obj.put(MyConstant.NAME_STR, NameStr);
-//            obj.put(MyConstant.SEND_NAME, myInfo.getUserInfo().getNikeName());
-//            obj.put(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
-//            obj.put(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
-//            obj.put(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
-//            obj.put(MyConstant.GROUP_NAME, NameStr);
-//            obj.put(MyConstant.GROUP_HEAD, Model.getData().getGroupHeadImg());
-
         message.setAttribute(MyConstant.ADMIN_TYPE, mContext.getString(R.string.GROUP_OWNER));
         message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.UPDATE_GROUP_NAME);
         message.setAttribute(MyConstant.NAME_STR, NameStr);
-        message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNikeName());
+        message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
         message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
         message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
         message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
         message.setAttribute(MyConstant.GROUP_NAME, NameStr);
         message.setAttribute(MyConstant.GROUP_HEAD, Model.getData().getGroupHeadImg());
-
-//            message.setAttribute(MyConstant.EXT, obj);
-//            message.setMsgId(UUID.randomUUID().toString());
-//            message.setStatus(EMMessage.Status.SUCCESS);
-//            EMClient.getInstance().chatManager().saveMessage(message);
         DemoHelper.getInstance().getChatManager().sendMessage(message);
-
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
     }
 
+    //发送消息 退出群聊
+    private void sendMes(GruopInfo_Bean Model) {
+        MyInfo myInfo = new MyInfo(mContext);
+        String conversationId = Model.getData().getGroupHxId();
+        EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+        EMTextMessageBody txtBody = new EMTextMessageBody("");
+        message.addBody(txtBody);
+        message.setTo(conversationId);
+        message.setChatType(EMMessage.ChatType.GroupChat);
+        message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_GROUP_LEAVE);
+//        message.setAttribute(MyConstant.USER_NAME, UserName);
+        message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
+        message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
+        message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
+        message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
+        message.setAttribute(MyConstant.GROUP_NAME, Model.getData().getGroupName());
+        message.setAttribute(MyConstant.GROUP_HEAD, Model.getData().getGroupHeadImg());
+        DemoHelper.getInstance().getChatManager().sendMessage(message);
+    }
 
     public void changeGroupNameMethod(Context context, String baseUrl, String changeNick) {
-        RequestParams params = new RequestParams(baseUrl);
-        params.addBodyParameter("groupId", groupModel.getData().getGroupId());
-        params.addBodyParameter("nikeName", changeNick);
         MyInfo myInfo = new MyInfo(context);
-        params.addBodyParameter("userId", myInfo.getUserInfo().getUserId());
-
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        params.setAsJsonContent(true);
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", myGroupId);
+        map.put("NickName", changeNick);
+        map.put("userId", myInfo.getUserInfo().getUserId());
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    baseDataModel baseModel = new Gson().fromJson(resultString, baseDataModel.class);
-                    if (baseModel.getCode() == 200) {
-                        Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
-                        group_Nick_ArrowItemView.getTvContent().setText(changeNick);
-//                        if (TextUtils.equals(changType, "3")) {
-//                            String adressStr = valueStr.isEmpty() ? "未设置" : valueStr;
-//                            group_Name_ArrowItemView.getTvContent().setText(valueStr);
-//                            group_Name.setText(valueStr);
-//                            sendMes(groupModel, valueStr);
-//                        }
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
-
+            public void success(String result) {
+                Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
+                group_Nick_ArrowItemView.getTvContent().setText(changeNick);
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
             }
         });
     }
 
+    public void dissmissGroupMethod(Context context, String baseUrl) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", myGroupId);
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                //1是群主
+                if (groupModel.getData().getIdentity() == 1) {
+                    Toast.makeText(context, "已解散", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "已退出", Toast.LENGTH_SHORT).show();
+                    sendMes(groupModel);
+                }
+                DemoHelper.getInstance().getChatManager().deleteConversation(groupModel.getData().getGroupHxId(), true);
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+            @Override
+            public void failed(String... args) {
+            }
+        });
+    }
+
+    /**
+     * @param context
+     * @param baseUrl
+     * @param agreeType 1禁言2匿名3群成员保护4群通知
+     * @param
+     */
+    public void groupManageMethod(Context context, String baseUrl, String agreeType, boolean isBlock, View switchView) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", myGroupId);
+        map.put("type", agreeType);
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                switchView.setEnabled(true);
+            }
+            @Override
+            public void failed(String... args) {
+                switchView.setEnabled(true);
+            }
+        });
+    }
+
+
+
+    protected static final int REQUEST_CODE_LOCAL = 3;
+
+    /**
+     * select local image
+     */
+    protected void selectPicFromLocal() {
+        EaseCompat.openImage(this, REQUEST_CODE_LOCAL);
+    }
+
+    /**
+     * 选择本地图片处理结果
+     *
+     * @param data
+     */
+    protected void onActivityResultForLocalPhotos(@Nullable Intent data) {
+        if (data != null) {
+            Uri selectedImage = data.getData();
+            if (selectedImage != null) {
+                saveFile.saveShareData(MyConstant.Chat_BG + HXgroupId, selectedImage.toString(), GroupDetailSet.this);
+                finish();
+                String filePath = EaseFileUtils.getFilePath(mContext, selectedImage);
+
+                LiveDataBus.get().with(MyConstant.Chat_BG).setValue(selectedImage.toString());
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_LOCAL) { // send local image
+            onActivityResultForLocalPhotos(data);
+        }
+    }
+
+    //群成员ID
+    private void addMembers(List<GroupMember_Bean.DataDTO> data) {
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).getIdentity() == 3) {
+                members.add(data.get(i).getHxUserName());
+            }
+        }
+    }
 
 }

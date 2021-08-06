@@ -1,5 +1,6 @@
 package com.xunda.mo.main.myAdapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.xunda.mo.R;
 import com.xunda.mo.model.NewFriend_Bean;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
-import com.xunda.mo.staticdata.StaticData;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +120,7 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
             holder.name_Txt.setTextColor(context.getColor(R.color.yellow));
         }
 
-        holder.name_Txt.setText(oneData.getNikeName());
+        holder.name_Txt.setText(oneData.getNickname());
         holder.friend_Txt.setText(oneData.getRemark());
         holder.apply_Txt.setText(oneData.getSource());
 
@@ -128,7 +128,7 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
         holder.refuse_Btn.setVisibility(View.INVISIBLE);
         holder.add_Btn.setVisibility(View.INVISIBLE);
         holder.time_Txt.setVisibility(View.VISIBLE);
-        holder.time_Txt.setText(StaticData.stampToDate(oneData.getUpdateTime()));
+//        holder.time_Txt.setText(StaticData.stampToDate(oneData.getUpdateTime()));
         //1申请中2已通过3被拒绝4已过期
         if (oneData.getApplyStatus() == 1) {
             holder.refuse_Btn.setVisibility(View.VISIBLE);

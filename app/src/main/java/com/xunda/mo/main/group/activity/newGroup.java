@@ -1,5 +1,10 @@
 package com.xunda.mo.main.group.activity;
 
+import static com.xunda.mo.staticdata.AppConstant.ak;
+import static com.xunda.mo.staticdata.AppConstant.bucketName;
+import static com.xunda.mo.staticdata.AppConstant.endPoint;
+import static com.xunda.mo.staticdata.AppConstant.sk;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -51,24 +56,18 @@ import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.GlideEnGine;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
-
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
+import com.xunda.mo.staticdata.xUtils3Http;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.SneakyThrows;
-
-import static com.xunda.mo.staticdata.AppConstant.ak;
-import static com.xunda.mo.staticdata.AppConstant.bucketName;
-import static com.xunda.mo.staticdata.AppConstant.endPoint;
-import static com.xunda.mo.staticdata.AppConstant.sk;
 
 public class newGroup extends BaseInitActivity {
 
@@ -161,7 +160,7 @@ public class newGroup extends BaseInitActivity {
             }
             right_Btn.setEnabled(false);
             if (selectList.isEmpty()) {
-                CreateGroupMethod(newGroup.this, saveFile.BaseUrl + saveFile.Group_Create_Url);
+                CreateGroupMethod(newGroup.this,  saveFile.Group_Create_Url);
             } else {
                 AsyncTask<Void, Void, String> task = new PostObjectTask();
                 task.execute();
@@ -375,7 +374,7 @@ public class newGroup extends BaseInitActivity {
             super.onPostExecute(pic);
 //            groupHead_Sim.setEnabled(false);
             pictures = pic;
-            CreateGroupMethod(newGroup.this, saveFile.BaseUrl + saveFile.Group_Create_Url);
+            CreateGroupMethod(newGroup.this, saveFile.Group_Create_Url);
         }
     }
 
@@ -390,48 +389,27 @@ public class newGroup extends BaseInitActivity {
     String pictures = "";
     String joinWay = "3";
     String userIds;
-
     public void CreateGroupMethod(Context context, String baseUrl) {
         site_progressbar.setVisibility(View.VISIBLE);
-        RequestParams params = new RequestParams(baseUrl);
-        params.addBodyParameter("groupName", group_edit.getText().toString());
-        params.addBodyParameter("isAnonymous", mySwitchItemView.getSwitch().isChecked() ? 1 : 0);
-        params.addBodyParameter("joinWay", joinWay);
-        params.addBodyParameter("userIds", userIds);
-        params.addBodyParameter("groupHeadImg", pictures);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        params.setAsJsonContent(true);
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("groupName", group_edit.getText().toString());
+        map.put("isAnonymous", mySwitchItemView.getSwitch().isChecked() ? 1 : 0);
+        map.put("joinWay", joinWay);
+        map.put("userIds", userIds);
+        map.put("groupHeadImg", pictures);
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    createGroup_Bean baseModel = new Gson().fromJson(resultString, createGroup_Bean.class);
-                    if (baseModel.getCode() == 200) {
-                        Toast.makeText(context, "群已创建", Toast.LENGTH_SHORT).show();
-                        sendMes(baseModel);
-                        finish();
-                    }
-                    site_progressbar.setVisibility(View.GONE);
-                    right_Btn.setEnabled(true);
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onError(Throwable throwable, boolean b) {
+            public void success(String result) {
+                createGroup_Bean baseModel = new Gson().fromJson(result, createGroup_Bean.class);
+                    Toast.makeText(context, "群已创建", Toast.LENGTH_SHORT).show();
+                    sendMes(baseModel);
+                    finish();
+                site_progressbar.setVisibility(View.GONE);
                 right_Btn.setEnabled(true);
             }
-
             @Override
-            public void onCancelled(CancelledException e) {
-                right_Btn.setEnabled(true);
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
+                site_progressbar.setVisibility(View.GONE);
                 right_Btn.setEnabled(true);
             }
         });
@@ -450,7 +428,7 @@ public class newGroup extends BaseInitActivity {
         message.setChatType(EMMessage.ChatType.GroupChat);
         message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_CREATE_GROUP);
         message.setAttribute(MyConstant.USER_NAME, userName);
-        message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNikeName());
+        message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
         message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
         message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
         message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());

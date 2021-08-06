@@ -1,5 +1,10 @@
 package com.xunda.mo.main.chat.activity;
 
+import static com.xunda.mo.staticdata.AppConstant.ak;
+import static com.xunda.mo.staticdata.AppConstant.bucketName;
+import static com.xunda.mo.staticdata.AppConstant.endPoint;
+import static com.xunda.mo.staticdata.AppConstant.sk;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -59,9 +64,9 @@ import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.group.fragment.GroupEditFragment;
-import com.xunda.mo.main.MainLogin_Register;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.info.MyInfo;
+import com.xunda.mo.main.login.MainLogin_Register;
 import com.xunda.mo.model.UserDetail_Bean;
 import com.xunda.mo.model.UserDetail_Check_Bean;
 import com.xunda.mo.model.baseDataModel;
@@ -70,12 +75,7 @@ import com.xunda.mo.staticdata.GlideEnGine;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
+import com.xunda.mo.staticdata.xUtils3Http;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -83,14 +83,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.SneakyThrows;
-
-import static com.xunda.mo.staticdata.AppConstant.ak;
-import static com.xunda.mo.staticdata.AppConstant.bucketName;
-import static com.xunda.mo.staticdata.AppConstant.endPoint;
-import static com.xunda.mo.staticdata.AppConstant.sk;
 
 public class UserDetail_Set extends BaseInitActivity {
 
@@ -177,7 +174,7 @@ public class UserDetail_Set extends BaseInitActivity {
             String areaCodeValue = district.getId();
             String keyCity = "areaName";
             String changType = "5";
-            ChangeUserMethod(UserDetail_Set.this, saveFile.BaseUrl + saveFile.User_Update_Url, changType, "areaCode", areaCodeValue, keyCity, cityStr);
+            ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "areaCode", areaCodeValue, keyCity, cityStr);
         }
 
         @Override
@@ -210,8 +207,8 @@ public class UserDetail_Set extends BaseInitActivity {
     @Override
     protected void initData() {
         super.initData();
-        UserMethod(UserDetail_Set.this, saveFile.BaseUrl + saveFile.User_GetUserInfo_Url);
-        CheckUpdateMethod(UserDetail_Set.this, saveFile.BaseUrl + saveFile.User_CheckUpdateUser_Url);
+        UserMethod(UserDetail_Set.this,  saveFile.User_GetUserInfo_Url);
+        CheckUpdateMethod(UserDetail_Set.this,   saveFile.User_CheckUpdateUser_Url);
 //        AllDistrictsMethod(UserDetail_Set.this, saveFile.BaseUrl + saveFile.Common_AllDistricts_Url);
     }
 
@@ -255,7 +252,7 @@ public class UserDetail_Set extends BaseInitActivity {
                     sexValue = "1";
                 }
                 String changType = "3";
-                ChangeUserMethod(UserDetail_Set.this, saveFile.BaseUrl + saveFile.User_Update_Url, changType, "sex", sexValue, "", "");
+                ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "sex", sexValue, "", "");
             }
         }).build();
         pvOptions.setPicker(mOptionsItems);
@@ -279,7 +276,7 @@ public class UserDetail_Set extends BaseInitActivity {
                 String dateString = sdf.format(date);
 //                birthday_ArrowItemView.getTvContent().setText(dateString);
                 String changType = "4";
-                ChangeUserMethod(UserDetail_Set.this, saveFile.BaseUrl + saveFile.User_Update_Url, changType, "birthday", dateString, "", "");
+                ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "birthday", dateString, "", "");
             }
         }).build();
         pvTime.show();
@@ -311,57 +308,29 @@ public class UserDetail_Set extends BaseInitActivity {
 
     @SuppressLint("SetTextI18n")
     public void UserMethod(Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    userModel = new Gson().fromJson(resultString, UserDetail_Bean.class);
-                    if (userModel.getCode() == -1 || userModel.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (userModel.getCode() == 200) {
-                        UserDetail_Bean.DataDTO dataDTO = userModel.getData();
-                        Uri uri = Uri.parse(userModel.getData().getHeadImg());
-                        person_img.setImageURI(uri);
+            public void success(String result) {
+                userModel = new Gson().fromJson(result, UserDetail_Bean.class);
+                UserDetail_Bean.DataDTO dataDTO = userModel.getData();
+                Uri uri = Uri.parse(userModel.getData().getHeadImg());
+                person_img.setImageURI(uri);
 
-                        friend_ArrowItemView.getTvContent().setText(dataDTO.getNikeName());
-                        if (dataDTO.getSex() == 0) {
-                            sex_ArrowItemView.getTvContent().setText("男");
-                        } else {
-                            sex_ArrowItemView.getTvContent().setText("女");
-                        }
-                        birthday_ArrowItemView.getTvContent().setText(dataDTO.getBirthday());
-                        adress_ArrowItemView.getTvContent().setText(dataDTO.getAreaName());
-                        signature_ArrowItemView.getTvContent().setText(dataDTO.getSignature());
-                        ID_ArrowItemView.getTvContent().setText(dataDTO.getUserNum().intValue() + "");
-
-
-                    } else {
-                        Toast.makeText(context, userModel.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-
-
+                friend_ArrowItemView.getTvContent().setText(dataDTO.getNickname());
+                if (dataDTO.getSex() == 0) {
+                    sex_ArrowItemView.getTvContent().setText("男");
                 } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                    sex_ArrowItemView.getTvContent().setText("女");
                 }
+                birthday_ArrowItemView.getTvContent().setText(dataDTO.getBirthday());
+                adress_ArrowItemView.getTvContent().setText(dataDTO.getAreaName());
+                signature_ArrowItemView.getTvContent().setText(dataDTO.getSignature());
+                ID_ArrowItemView.getTvContent().setText(dataDTO.getUserNum().intValue() + "");
 
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
 
             }
         });
@@ -370,48 +339,23 @@ public class UserDetail_Set extends BaseInitActivity {
     //检验头像昵称 性别是否能修改
     @SuppressLint("SetTextI18n")
     public void CheckUpdateMethod(Context context, String baseUrl) {
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    UserDetail_Check_Bean model = new Gson().fromJson(resultString, UserDetail_Check_Bean.class);
-                    if (model.getCode() == -1 || model.getCode() == 500) {
-                        Intent intent = new Intent(context, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else if (model.getCode() == 200) {
-                        if (model.getData().getIsUpdateHead() == 0) {
-                            person_img.setEnabled(false);
-                        }
-                        if (model.getData().getIsUpdateNickName() == 0) {
-                            friend_ArrowItemView.setEnabled(false);
-                        }
-                        if (model.getData().getIsUpdateSex() == 0) {
-                            sex_ArrowItemView.setEnabled(false);
-                        }
-                    } else {
-                        Toast.makeText(context, model.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+            public void success(String result) {
+                UserDetail_Check_Bean model = new Gson().fromJson(result, UserDetail_Check_Bean.class);
+                if (model.getData().getIsUpdateHead() == 0) {
+                    person_img.setEnabled(false);
                 }
-
+                if (model.getData().getIsUpdateNickName() == 0) {
+                    friend_ArrowItemView.setEnabled(false);
+                }
+                if (model.getData().getIsUpdateSex() == 0) {
+                    sex_ArrowItemView.setEnabled(false);
+                }
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
 
             }
         });
@@ -524,7 +468,6 @@ public class UserDetail_Set extends BaseInitActivity {
     }
 
     List<LocalMedia> selectList;
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -537,7 +480,6 @@ public class UserDetail_Set extends BaseInitActivity {
                         AsyncTask<Void, Void, String> task = new PostObjectTask();
                         task.execute();
                     }
-
                     break;
             }
         }
@@ -554,7 +496,7 @@ public class UserDetail_Set extends BaseInitActivity {
                         if (!TextUtils.isEmpty(content)) {
 //                            itemGroupName.getTvContent().setText(content);
                             String changType = "2";
-                            ChangeUserMethod(UserDetail_Set.this, saveFile.BaseUrl + saveFile.User_Update_Url, changType, "nikeName", content, "", "");
+                            ChangeUserMethod(UserDetail_Set.this,  saveFile.User_Update_Url, changType, "NickName", content, "", "");
                         }
                     }
                 })
@@ -575,7 +517,7 @@ public class UserDetail_Set extends BaseInitActivity {
                         if (!TextUtils.isEmpty(content)) {
 //                            signature_ArrowItemView.getTvContent().setText(content);
                             String changType = "7";
-                            ChangeUserMethod(UserDetail_Set.this, saveFile.BaseUrl + saveFile.User_Update_Url, changType, "signature", content, "", "");
+                            ChangeUserMethod(UserDetail_Set.this,  saveFile.User_Update_Url, changType, "signature", content, "", "");
                         }
                     }
                 });
@@ -588,70 +530,42 @@ public class UserDetail_Set extends BaseInitActivity {
      * @param context
      * @param baseUrl
      * @param changType 修改类型（1.头像 2.昵称 3.性别 4.生日 5.地区 6.个人标签 7.个性签名）
-     * @param keyStr    headImg nikeName sex
+     * @param keyStr    headImg NickName sex
      * @param valueStr
      */
     public void ChangeUserMethod(Context context, String baseUrl, String changType, String keyStr, String valueStr, String keyCity, String valueCityStr) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("changType", changType);
-            obj.put(keyStr, valueStr);
-            if (TextUtils.equals(changType, "5")) {
-                obj.put(keyCity, valueCityStr);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        Map<String,Object> map = new HashMap<>();
+        map.put("changType", changType);
+        map.put(keyStr, valueStr);
+        if (TextUtils.equals(changType, "5")) {
+            map.put(keyCity, valueCityStr);
         }
-        RequestParams params = new RequestParams(baseUrl);
-        if (saveFile.getShareData("JSESSIONID", context) != null) {
-            params.setHeader("Authorization", saveFile.getShareData("JSESSIONID", context));
-        }
-        params.setAsJsonContent(true);
-        params.setBodyContent(obj.toString());
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    baseDataModel baseModel = new Gson().fromJson(resultString, baseDataModel.class);
-                    if (baseModel.getCode() == 200) {
-                        Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
-                        if (TextUtils.equals(changType, "1")) {
-                            //修改本地存储的自己头像
-                            MyInfo info = new MyInfo(UserDetail_Set.this);
-                            String HxUserName = info.getUserInfo().getHxUserName();
-                            DemoHelper.getInstance().getUserInfo(HxUserName).setAvatar(baseModel.getData());
+            public void success(String result) {
+                baseDataModel baseModel = new Gson().fromJson(result, baseDataModel.class);
+                Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
+                if (TextUtils.equals(changType, "1")) {
+                    //修改本地存储的自己头像
+                    MyInfo info = new MyInfo(UserDetail_Set.this);
+                    String HxUserName = info.getUserInfo().getHxUserName();
+                    DemoHelper.getInstance().getUserInfo(HxUserName).setAvatar(baseModel.getData());
 
-                            changeFileHead(baseModel.getData());
-                        } else if (TextUtils.equals(changType, "2")) {
-                            friend_ArrowItemView.getTvContent().setText(valueStr);
-                        } else if (TextUtils.equals(changType, "3")) {
+                    changeFileHead(baseModel.getData());
+                } else if (TextUtils.equals(changType, "2")) {
+                    friend_ArrowItemView.getTvContent().setText(valueStr);
+                } else if (TextUtils.equals(changType, "3")) {
 //                            sex_ArrowItemView.getTvContent().setText(valueStr);
-                        } else if (TextUtils.equals(changType, "4")) {
-                            birthday_ArrowItemView.getTvContent().setText(valueStr);
-                        } else if (TextUtils.equals(changType, "5")) {
-                            adress_ArrowItemView.getTvContent().setText(valueCityStr);
-                        } else if (TextUtils.equals(changType, "7")) {
-                            signature_ArrowItemView.getTvContent().setText(valueStr);
-                        }
-
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.equals(changType, "4")) {
+                    birthday_ArrowItemView.getTvContent().setText(valueStr);
+                } else if (TextUtils.equals(changType, "5")) {
+                    adress_ArrowItemView.getTvContent().setText(valueCityStr);
+                } else if (TextUtils.equals(changType, "7")) {
+                    signature_ArrowItemView.getTvContent().setText(valueStr);
                 }
-
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
-
+            public void failed(String... args) {
             }
         });
     }
@@ -664,7 +578,7 @@ public class UserDetail_Set extends BaseInitActivity {
         protected String doInBackground(Void... voids) {
             StringBuffer sbf = new StringBuffer();
             try {
-                objectName = "user/headImg/" + userModel.getData().getUserId() + "/" + selectList.get(0).getFileName();//对应上传之后的文件名称
+                objectName = "user/" + userModel.getData().getUserId() + "/headImg/" + selectList.get(0).getFileName();//对应上传之后的文件名称
                 FileInputStream fis = new FileInputStream(new File(selectList.get(0).getAndroidQToPath()));
                 obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
                 sbf.append(objectName);
@@ -700,7 +614,7 @@ public class UserDetail_Set extends BaseInitActivity {
             Uri uri = Uri.parse("file:///" + selectList.get(0).getAndroidQToPath());
             person_img.setImageURI(uri);
             String changType = "1";
-            ChangeUserMethod(UserDetail_Set.this, saveFile.BaseUrl + saveFile.User_Update_Url, changType, "headImg", pictures, "", "");
+            ChangeUserMethod(UserDetail_Set.this,  saveFile.User_Update_Url, changType, "headImg", pictures, "", "");
         }
     }
 
@@ -708,7 +622,7 @@ public class UserDetail_Set extends BaseInitActivity {
         MyInfo myInfo = new MyInfo(UserDetail_Set.this);
 //        String headUrl = myInfo.getUserInfo().getHeadImg();
         myInfo.setOneData("HeadImg", HeadUrl);
-        String nick = myInfo.getUserInfo().getNikeName();
+        String nick = myInfo.getUserInfo().getNickname();
         EMUserInfo userInfo = new EMUserInfo();
         userInfo.setAvatarUrl(HeadUrl);
         userInfo.setNickName(nick);

@@ -9,7 +9,7 @@ import com.hyphenate.easeui.interfaces.MessageListItemClickListener;
 import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.viewholder.EaseChatRowViewHolder;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
-import com.hyphenate.easeui.widget.chatrow.EaseChatRowLocation;
+import com.xunda.mo.hx.section.chat.views.MyEaseChatRowLocation;
 import com.xunda.mo.hx.section.contact.viewmodels.MyEaseLocationViewHolder;
 
 /**
@@ -31,7 +31,7 @@ public class MyEaseLocationAdapterDelegate extends EaseMessageAdapterDelegate<EM
 
     @Override
     protected EaseChatRow getEaseChatRow(ViewGroup parent, boolean isSender) {
-        return new EaseChatRowLocation(parent.getContext(), isSender);
+        return new MyEaseChatRowLocation(parent.getContext(), isSender);
     }
 
     @Override

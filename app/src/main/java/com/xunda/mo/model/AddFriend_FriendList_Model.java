@@ -71,8 +71,8 @@ public class AddFriend_FriendList_Model {
             private String headImg;
             @JsonProperty("lightStatus")
             private Long lightStatus;
-            @JsonProperty("nikeName")
-            private String nikeName;
+            @JsonProperty("nickname")
+            private String nickname;
             @JsonProperty("sex")
             private Long sex;
             @JsonProperty("signature")

@@ -37,7 +37,25 @@ public interface MyConstant extends DemoConstant {
     String UPDATE_GROUP_NAME = "updateGroupName";
     String NAME_STR = "nameStr";
 
+    String Chat_BG = "chatBg";
 
 
+    String MESSAGE_TYPE_ADDUSER = "addUser";
+    String MESSAGE_TYPE_DELETUSER = "deletUser";
+    String MESSAGE_TYPE_ADDADMIN = "addAdmin";
+    String MESSAGE_TYPE_DELETADMIN = "deletAdmin";
+    String MESSAGE_TYPE_ANONYMOUS_ON = "anonymousOn";
+    String MESSAGE_TYPE_ANONYMOUS_OFF = "anonymousOff";
+    String MESSAGE_TYPE_MUTE_ON = "muteOn";
+    String MESSAGE_TYPE_MUTE_OFF = "muteOff";
+    String MESSAGE_TYPE_PROTECT_ON = "protectOn";
+    String MESSAGE_TYPE_PROTECT_OFF = "protectOff";
+    String MESSAGE_TYPE_UPDATE_MASTER = "updateMaster";
+    String MESSAGE_TYPE_PUSH_ON = "pushOn";
+    String MESSAGE_TYPE_PUSH_OFF = "pushOff";
+    String MESSAGE_GROUP_LEAVE = "groupLeave";
+
+    String GROUP_CHAT_ANONYMOUS = "anonymousChat";
+    String GROUP_UPDATE_GROUPDES = "updateGroupDes";
 
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.MainLogin_ForgetPsw_SetPsw">
+    tools:context=".main.login.MainLogin_ForgetPsw_SetPsw">
 
     <include
         android:id="@+id/title_Include"

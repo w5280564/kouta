@@ -45,7 +45,7 @@ public class Main_Register_Model {
         private String inPassword;
         private int isNeedUnlock;
         private int lightStatus;
-        private String nikeName;
+        private String nickname;
         private String phoneNum;
         private int sex;
         private String signature;
@@ -157,12 +157,12 @@ public class Main_Register_Model {
             this.lightStatus = lightStatus;
         }
 
-        public String getNikeName() {
-            return nikeName;
+        public String getNickName() {
+            return nickname;
         }
 
-        public void setNikeName(String nikeName) {
-            this.nikeName = nikeName;
+        public void setNickName(String NickName) {
+            this.nickname = NickName;
         }
 
         public String getPhoneNum() {

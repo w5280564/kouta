@@ -38,8 +38,8 @@ public class adress_Model {
         private Integer isOnline;
         @JsonProperty("lightStatus")
         private Integer lightStatus;
-        @JsonProperty("nikeName")
-        private String nikeName;
+        @JsonProperty("nickname")
+        private String nickname;
         @JsonProperty("onLineTime")
         private Long onLineTime;
         @JsonProperty("onlineStatus")

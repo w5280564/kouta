@@ -109,7 +109,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
                     conversationListLayout.cancelConversationTop(position, info);
                     return true;
                 case R.id.action_con_delete:
-                    showDeleteDialog(position, info);
+//                    showDeleteDialog(position, info);
                     return true;
             }
         }

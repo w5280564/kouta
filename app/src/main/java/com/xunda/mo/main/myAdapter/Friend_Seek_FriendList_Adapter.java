@@ -1,5 +1,6 @@
 package com.xunda.mo.main.myAdapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -9,9 +10,9 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.xunda.mo.R;
 import com.xunda.mo.model.AddFriend_FriendList_Model;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -42,7 +43,8 @@ public class Friend_Seek_FriendList_Adapter extends RecyclerView.Adapter<Friend_
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    @SuppressLint("RecyclerView")
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +72,7 @@ public class Friend_Seek_FriendList_Adapter extends RecyclerView.Adapter<Friend_
         }else {
 //            StaticData.lodingheadBg(holder.head_simple);
         }
-        holder.name.setText(oneData.getNikeName());
+        holder.name.setText(oneData.getNickname());
         holder.contentid_txt.setText("Le ID: " + oneData.getUserNum());
 
         if (oneData.getVipType() == 0) {

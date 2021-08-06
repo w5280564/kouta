@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class Friend_Detalis_Model {
+public class Friend_Details_Bean {
 
     @JsonProperty("msg")
     private String msg;
@@ -22,7 +22,7 @@ public class Friend_Detalis_Model {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Friend_Detalis_Model that = (Friend_Detalis_Model) o;
+        Friend_Details_Bean that = (Friend_Details_Bean) o;
         return Objects.equals(msg, that.msg) &&
                 Objects.equals(code, that.code) &&
                 Objects.equals(data, that.data);
@@ -46,8 +46,8 @@ public class Friend_Detalis_Model {
         private String hxUserName;
         @JsonProperty("lightStatus")
         private Long lightStatus;
-        @JsonProperty("nikeName")
-        private String nikeName;
+        @JsonProperty("nickname")
+        private String nickname;
         @JsonProperty("remarkName")
         private String remarkName;
         @JsonProperty("signature")

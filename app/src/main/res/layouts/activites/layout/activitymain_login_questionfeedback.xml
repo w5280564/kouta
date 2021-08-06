@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/greythree"
-    tools:context=".main.MainLogin_QuestionFeedBack">
+    tools:context=".main.login.MainLogin_QuestionFeedBack">
 
     <include
         android:id="@+id/title_Include"

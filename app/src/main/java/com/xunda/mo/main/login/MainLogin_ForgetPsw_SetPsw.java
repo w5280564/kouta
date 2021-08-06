@@ -1,7 +1,8 @@
-package com.xunda.mo.main;
+package com.xunda.mo.main.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,22 +18,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import com.google.gson.Gson;
 import com.xunda.mo.R;
 import com.xunda.mo.model.Main_Register_Model;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
-
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 public class MainLogin_ForgetPsw_SetPsw extends AppCompatActivity {
 
@@ -113,7 +113,6 @@ public class MainLogin_ForgetPsw_SetPsw extends AppCompatActivity {
         protected void onNoDoubleClick(View v) {
             String psw = psw_edit.getText().toString().trim();
             String pswAgin = pswagin_edit.getText().toString().trim();
-
             if (StaticData.isPasswordForm(psw) && StaticData.isPasswordForm(pswAgin) && pswAgin.equals(psw)) {
 
 
@@ -121,9 +120,6 @@ public class MainLogin_ForgetPsw_SetPsw extends AppCompatActivity {
                 Toast.makeText(MainLogin_ForgetPsw_SetPsw.this, "密码必须包含字母和数字，长度至少8位", Toast.LENGTH_SHORT).show();
                 return;
             }
-//         if (!pswAgin.equals(psw)){
-//                Toast.makeText(getApplication(),"密码不一致，请重新输入",Toast.LENGTH_SHORT).show();
-//            }
 
         }
     }

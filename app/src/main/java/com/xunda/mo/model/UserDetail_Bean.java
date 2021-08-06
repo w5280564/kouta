@@ -43,8 +43,8 @@ public class UserDetail_Bean {
         private Long lightStatus;
         @JsonProperty("mailbox")
         private String mailbox;
-        @JsonProperty("nikeName")
-        private String nikeName;
+        @JsonProperty("nickname")
+        private String nickname;
         @JsonProperty("phoneNum")
         private String phoneNum;
         @JsonProperty("sex")

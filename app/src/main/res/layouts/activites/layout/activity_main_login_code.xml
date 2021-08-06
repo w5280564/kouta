@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    tools:context=".main.MainLogin_Code"
+    tools:context=".main.login.MainLogin_Code"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
@@ -73,12 +73,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/four_txt"
-        android:background="@null"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@null"
         android:inputType="number"
         android:maxLength="4"
-        android:textSize="18sp"
-        android:layout_marginTop="30dp"/>
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/nonecode_txt"

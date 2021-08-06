@@ -55,7 +55,7 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
     public String historyMsgId;
     public boolean isRoam;
     public boolean isMessageInit;
-    private OnChatLayoutListener listener;
+    public OnChatLayoutListener listener;
 
     protected File cameraFile;
     public ConstraintLayout top_Constraint;
@@ -160,6 +160,10 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
             listener.onUserAvatarClick(username);
         }
     }
+
+    public void getListener(){
+    }
+
 
     @Override
     public void onUserAvatarLongClick(String username) {

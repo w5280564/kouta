@@ -48,8 +48,8 @@ public class Olduser_Model {
         private Integer lightStatus;
         @JsonProperty("mailbox")
         private String mailbox;
-        @JsonProperty("nikeName")
-        private String nikeName;
+        @JsonProperty("nickname")
+        private String nickname;
         @JsonProperty("phoneNum")
         private String phoneNum;
         @JsonProperty("sex")

@@ -1,4 +1,12 @@
-package com.xunda.mo.main;
+package com.xunda.mo.main.login;
+
+import static com.xunda.mo.staticdata.AppConstant.ak;
+import static com.xunda.mo.staticdata.AppConstant.bucketName;
+import static com.xunda.mo.staticdata.AppConstant.endPoint;
+import static com.xunda.mo.staticdata.AppConstant.sk;
+import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
+import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 import android.Manifest;
 import android.app.Activity;
@@ -30,7 +38,6 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.android.material.internal.FlowLayout;
-import com.google.gson.Gson;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -42,35 +49,23 @@ import com.obs.services.model.AccessControlList;
 import com.obs.services.model.AuthTypeEnum;
 import com.obs.services.model.PutObjectRequest;
 import com.xunda.mo.R;
-import com.xunda.mo.model.Main_QuestionFeedBack_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.GlideEnGine;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 import com.xunda.mo.utils.PermissionUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.SneakyThrows;
-
-import static com.xunda.mo.staticdata.AppConstant.ak;
-import static com.xunda.mo.staticdata.AppConstant.bucketName;
-import static com.xunda.mo.staticdata.AppConstant.endPoint;
-import static com.xunda.mo.staticdata.AppConstant.sk;
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
 public class MainLogin_QuestionFeedBack extends AppCompatActivity {
 
@@ -152,101 +147,42 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
             String phonetxt = phone_edit.getText().toString().trim();
             String email = email_edit.getText().toString().trim();
             String contenttxt = content_edit.getText().toString().trim();
-
             if (!StaticData.isPhone(phonetxt) || email.isEmpty() || contenttxt.isEmpty()) {
                 Toast.makeText(MainLogin_QuestionFeedBack.this, "不能为空", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (photoPaths.isEmpty()) {
-                QuestionMethod(MainLogin_QuestionFeedBack.this, saveFile.BaseUrl + saveFile.User_PublicQuestionBack_Url);
+                QuestionMethod(MainLogin_QuestionFeedBack.this,  saveFile.User_PublicQuestionBack_Url);
 
             } else {
                 AsyncTask<Void, Void, String> task = new PostObjectTask();
                 task.execute();
             }
-
-
-//            new Thread() {
-//                @SneakyThrows
-//                @RequiresApi(api = Build.VERSION_CODES.O)
-//                @Override
-//                public void run() {
-//                    super.run();
-//                    // upload(obsClient, localfile);
-////                    String localfile2 = photoPaths.get(0);
-//                    File filename = new File(photoPaths.get(0));
-//                    String local = "file://" + filename.toPath();
-//                    String localfile2 = filename.toURI().toString();
-//                    int size = photoPaths.size();
-////                    for (int i = 0; i < size; i++) {
-//                    uploadPoint(obsClient, photoPaths.get(0), pathNameList.get(0));
-////                    }
-//                }
-//            }.start();
-
         }
-
-
     }
 
     String pictures;
+
     //问题反馈
     public void QuestionMethod(Context context, String baseUrl) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("phoneNum", phone_edit.getText().toString());
-            obj.put("email", email_edit.getText().toString());
-            obj.put("remark", content_edit.getText().toString());
-            obj.put("picObsUrl", pictures);
-            obj.put("loginStatus", "0");
-            obj.put("equipmentVersion", "1");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestParams params = new RequestParams(baseUrl);
-        params.setAsJsonContent(true);
-        params.setBodyContent(obj.toString());
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("phoneNum", phone_edit.getText().toString());
+        map.put("email", email_edit.getText().toString());
+        map.put("remark", content_edit.getText().toString());
+        map.put("picObsUrl", pictures);
+        map.put("loginStatus", "0");
+        map.put("equipmentVersion", "1");
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    Main_QuestionFeedBack_Model baseModel = new Gson().fromJson(resultString, Main_QuestionFeedBack_Model.class);
-                    if (baseModel.getCode() == 200) {
-//                    Login_Model baseModel = new Gson().fromJson(resultString, Login_Model.class);
-//                    if (baseModel.isIsSuccess() && !baseModel.getData().equals("[]")) {
-                        Toast.makeText(context, "反馈已上传", Toast.LENGTH_SHORT).show();
-                        finish();
-//
-//                        saveFile.saveShareData("phoneNum", baseModel.getData().getPhoneNum(), MainLogin_Code.this);
-//                        Intent intent = new Intent(context, MainActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        startActivity(intent);
-                    }
-
-//            }
-//                    } else {
-//                        Toast.makeText(MainLogin_Code.this, "数据获取失败", Toast.LENGTH_SHORT).show();
-//                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
-//                    JPushInterface.resumePush(Man_Login.this);//注册
-//                    JPushInterface.setAliasAndTags(Man_Login.this,JsonGet.getReturnValue(resultString, "userid"),null);
+            public void success(String result) {
+                Toast.makeText(context, "反馈已上传", Toast.LENGTH_SHORT).show();
+                finish();
             }
-
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
-
+            public void failed(String... args) {
             }
         });
+
     }
 
     //图片选择器
@@ -401,7 +337,6 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
     }
 
 
-
     //先定义
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
@@ -466,12 +401,11 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
     }
 
 
-
-    StringBuffer sbf = new StringBuffer();
     class PostObjectTask extends AsyncTask<Void, Void, String> {
         @SneakyThrows
         @Override
         protected String doInBackground(Void... voids) {
+            StringBuffer sbf = new StringBuffer();
             try {
                 int size = photoPaths.size();
                 String objectName = "";
@@ -519,7 +453,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
             super.onPostExecute(s);
 //            Log.i("abc", " result.getStatusCode():" + s);
             pictures = s;
-            QuestionMethod(MainLogin_QuestionFeedBack.this, saveFile.BaseUrl + saveFile.User_PublicQuestionBack_Url);
+            QuestionMethod(MainLogin_QuestionFeedBack.this,  saveFile.User_PublicQuestionBack_Url);
         }
     }
 
@@ -538,9 +472,6 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
-
-
-
 
 
 }
