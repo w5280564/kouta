@@ -18,12 +18,17 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputFilter;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -65,8 +70,11 @@ import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.group.fragment.GroupEditFragment;
 import com.xunda.mo.main.baseView.MyArrowItemView;
+import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.login.MainLogin_Register;
+import com.xunda.mo.main.me.activity.MeAndGroup_QRCode;
+import com.xunda.mo.main.me.activity.MeDetail_Edit_Label;
 import com.xunda.mo.model.UserDetail_Bean;
 import com.xunda.mo.model.UserDetail_Check_Bean;
 import com.xunda.mo.model.baseDataModel;
@@ -93,12 +101,16 @@ public class UserDetail_Set extends BaseInitActivity {
 
     private TextView cententTxt;
     private SimpleDraweeView person_img;
-    private MyArrowItemView friend_ArrowItemView, sex_ArrowItemView, birthday_ArrowItemView, adress_ArrowItemView, signature_ArrowItemView, ID_ArrowItemView;
+    private MyArrowItemView friend_ArrowItemView, sex_ArrowItemView, birthday_ArrowItemView, adress_ArrowItemView, signature_ArrowItemView,
+            ID_ArrowItemView, QRcode_ArrowItemView;
     private View quit_Btn;
     private static String CHANGE_HEAD = "1";
     private static String CHANGE_NICK = "2";
     private static String CHANGE_SEX = "3";
     private ObsClient obsClient;
+    private LinearLayout label_Lin;
+    private ConstraintLayout label_Constraint;
+    private String tagString;
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, UserDetail_Set.class);
@@ -130,6 +142,11 @@ public class UserDetail_Set extends BaseInitActivity {
         signature_ArrowItemView.setOnClickListener(new signature_ArrowItemViewClick());
         ID_ArrowItemView = findViewById(R.id.ID_ArrowItemView);
         ID_ArrowItemView.setOnClickListener(new ID_ArrowItemViewItemViewClick());
+        QRcode_ArrowItemView = findViewById(R.id.QRcode_ArrowItemView);
+        QRcode_ArrowItemView.setOnClickListener(new QRcode_ArrowItemViewClick());
+        label_Constraint = findViewById(R.id.label_Constraint);
+        label_Constraint.setOnClickListener(new label_ConstraintClick());
+        label_Lin = findViewById(R.id.label_Lin);
 
         quit_Btn = findViewById(R.id.quit_Btn);
         quit_Btn.setOnClickListener(new quit_BtnClick());
@@ -138,6 +155,10 @@ public class UserDetail_Set extends BaseInitActivity {
 
         initCity();
         initObsClient();
+        LiveDataBus.get().with(MyConstant.MY_LABEL, String.class).observe(this, s -> {
+            tagString = s;
+            tagList(label_Lin, UserDetail_Set.this, s);
+        });
     }
 
     private void initObsClient() {
@@ -207,10 +228,19 @@ public class UserDetail_Set extends BaseInitActivity {
     @Override
     protected void initData() {
         super.initData();
-        UserMethod(UserDetail_Set.this,  saveFile.User_GetUserInfo_Url);
-        CheckUpdateMethod(UserDetail_Set.this,   saveFile.User_CheckUpdateUser_Url);
+        UserMethod(UserDetail_Set.this, saveFile.User_GetUserInfo_Url);
+        CheckUpdateMethod(UserDetail_Set.this, saveFile.User_CheckUpdateUser_Url);
 //        AllDistrictsMethod(UserDetail_Set.this, saveFile.BaseUrl + saveFile.Common_AllDistricts_Url);
     }
+
+
+    private class label_ConstraintClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            MeDetail_Edit_Label.actionStart(mContext, tagString);
+        }
+    }
+
 
     //修改头像
     private class person_imgClick extends NoDoubleClickListener {
@@ -304,11 +334,37 @@ public class UserDetail_Set extends BaseInitActivity {
         }
     }
 
+
+    public void tagList(LinearLayout label_Lin, Context mContext, String tag) {
+        if (label_Lin != null) {
+            label_Lin.removeAllViews();
+        }
+        if (TextUtils.isEmpty(tag)) {
+            return;
+        }
+        String[] tagS = tag.split(",");
+        for (int i = 0; i < tagS.length; i++) {
+            TextView textView = new TextView(mContext);
+            textView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+            textView.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+            textView.setBackgroundResource(R.drawable.group_label_radius);
+            textView.setText(tagS[i]);
+            LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            int margins = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, mContext.getResources().getDisplayMetrics());
+            itemParams.setMargins(0, 0, margins, 0);
+            textView.setLayoutParams(itemParams);
+            textView.setTag(i);
+            label_Lin.addView(textView);
+            textView.setOnClickListener(v -> {
+            });
+        }
+    }
+
     UserDetail_Bean userModel;
 
     @SuppressLint("SetTextI18n")
     public void UserMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
@@ -327,8 +383,12 @@ public class UserDetail_Set extends BaseInitActivity {
                 adress_ArrowItemView.getTvContent().setText(dataDTO.getAreaName());
                 signature_ArrowItemView.getTvContent().setText(dataDTO.getSignature());
                 ID_ArrowItemView.getTvContent().setText(dataDTO.getUserNum().intValue() + "");
+                String tag = userModel.getData().getTag();
+                tagString = tag;
+                tagList(label_Lin, context, tag);
 
             }
+
             @Override
             public void failed(String... args) {
 
@@ -339,7 +399,7 @@ public class UserDetail_Set extends BaseInitActivity {
     //检验头像昵称 性别是否能修改
     @SuppressLint("SetTextI18n")
     public void CheckUpdateMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
@@ -354,6 +414,7 @@ public class UserDetail_Set extends BaseInitActivity {
                     sex_ArrowItemView.setEnabled(false);
                 }
             }
+
             @Override
             public void failed(String... args) {
 
@@ -468,6 +529,7 @@ public class UserDetail_Set extends BaseInitActivity {
     }
 
     List<LocalMedia> selectList;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -496,7 +558,7 @@ public class UserDetail_Set extends BaseInitActivity {
                         if (!TextUtils.isEmpty(content)) {
 //                            itemGroupName.getTvContent().setText(content);
                             String changType = "2";
-                            ChangeUserMethod(UserDetail_Set.this,  saveFile.User_Update_Url, changType, "NickName", content, "", "");
+                            ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "NickName", content, "", "");
                         }
                     }
                 })
@@ -517,7 +579,7 @@ public class UserDetail_Set extends BaseInitActivity {
                         if (!TextUtils.isEmpty(content)) {
 //                            signature_ArrowItemView.getTvContent().setText(content);
                             String changType = "7";
-                            ChangeUserMethod(UserDetail_Set.this,  saveFile.User_Update_Url, changType, "signature", content, "", "");
+                            ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "signature", content, "", "");
                         }
                     }
                 });
@@ -534,7 +596,7 @@ public class UserDetail_Set extends BaseInitActivity {
      * @param valueStr
      */
     public void ChangeUserMethod(Context context, String baseUrl, String changType, String keyStr, String valueStr, String keyCity, String valueCityStr) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("changType", changType);
         map.put(keyStr, valueStr);
         if (TextUtils.equals(changType, "5")) {
@@ -564,6 +626,7 @@ public class UserDetail_Set extends BaseInitActivity {
                     signature_ArrowItemView.getTvContent().setText(valueStr);
                 }
             }
+
             @Override
             public void failed(String... args) {
             }
@@ -614,7 +677,7 @@ public class UserDetail_Set extends BaseInitActivity {
             Uri uri = Uri.parse("file:///" + selectList.get(0).getAndroidQToPath());
             person_img.setImageURI(uri);
             String changType = "1";
-            ChangeUserMethod(UserDetail_Set.this,  saveFile.User_Update_Url, changType, "headImg", pictures, "", "");
+            ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "headImg", pictures, "", "");
         }
     }
 
@@ -651,6 +714,13 @@ public class UserDetail_Set extends BaseInitActivity {
             ClipData clipData = ClipData.newPlainText("text", number);
             manager.setPrimaryClip(clipData);
             Toast.makeText(UserDetail_Set.this, "已复制到剪切板", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class QRcode_ArrowItemViewClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            MeAndGroup_QRCode.actionUserStart(UserDetail_Set.this);
         }
     }
 

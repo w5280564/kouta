@@ -83,13 +83,19 @@ public class xUtils3Http {
                 e.printStackTrace();
             }
         }
+//        String aesKey = AESEncrypt.getAesKey();
+//        String contentStr = AESEncrypt.encrypt(obj.toString(), aesKey);
+//        String rsaKey = RsaEncodeMethod.rsaEncode(aesKey);
+
         String rsaCode = RsaEncodeMethod.rsaEncode(obj.toString());
         MyInfo myInfo = new MyInfo(mContext);
         if (!TextUtils.isEmpty(myInfo.getUserInfo().getToken())) {
             params.setHeader("Authorization", myInfo.getUserInfo().getToken());
         }
-        params.setAsJsonContent(true);
         params.setBodyContent(rsaCode);
+//        params.addBodyParameter("key", rsaKey);
+//        params.addBodyParameter("content", contentStr);
+        params.setAsJsonContent(true);
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {

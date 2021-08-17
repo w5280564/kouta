@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.xunda.mo.R;
+import com.xunda.mo.main.discover.activity.Discover_QRCode;
+import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.myAdapter.Friend_Seek_GroupList_Adapter;
 import com.xunda.mo.model.AddFriend_FriendGroup_Model;
 import com.xunda.mo.network.saveFile;
@@ -31,10 +34,11 @@ import java.util.Map;
 public class Friend_Add extends AppCompatActivity {
 
     private TextView add_left, add_right;
-    private TextView seek_txt;
+    private TextView seek_txt, MoID_Txt;
     private View seekPerson_InClue, seekGroup_InClue;
     private int tag;
     private XRecyclerView group_Xrecycler;
+    private RelativeLayout person_qr_rel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,9 @@ public class Friend_Add extends AppCompatActivity {
         add_right = findViewById(R.id.add_right);
         seek_txt = findViewById(R.id.seek_txt);
         seekPerson_InClue = findViewById(R.id.seekperson_inclue);
+        MoID_Txt = seekPerson_InClue.findViewById(R.id.MoID_Txt);
+        person_qr_rel = seekPerson_InClue.findViewById(R.id.person_qr_rel);
+        person_qr_rel.setOnClickListener(new person_qr_relClick());
         seekGroup_InClue = findViewById(R.id.seekgroup_inclue);
         View seek_lin = findViewById(R.id.seek_lin);
         group_Xrecycler = seekGroup_InClue.findViewById(R.id.group_Xrecycler);
@@ -90,7 +97,11 @@ public class Friend_Add extends AppCompatActivity {
 
     private int PageIndex;
     private int pageSize;
+
     private void initData() {
+        MyInfo myInfo = new MyInfo(Friend_Add.this);
+        MoID_Txt.setText("我的Mo ID：" + myInfo.getUserInfo().getUserNum());
+
         PageIndex = 1;
         pageSize = 10;
         AddFriendMethod(Friend_Add.this, saveFile.Group_SearchGroup_Url);
@@ -134,6 +145,7 @@ public class Friend_Add extends AppCompatActivity {
     }
 
     Friend_Seek_GroupList_Adapter mAdapter;
+
     public void initlist(final Context context) {
         LinearLayoutManager mMangaer = new LinearLayoutManager(context);
         group_Xrecycler.setLayoutManager(mMangaer);
@@ -144,13 +156,11 @@ public class Friend_Add extends AppCompatActivity {
         mAdapter.setOnItemClickLitener(new Friend_Seek_GroupList_Adapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-//                Intent intent = new Intent(context, Person_ShopDetails.class);
-//                intent.putExtra("ProductID", baseModel.get(position).getProductID() + "");
-//                intent.putExtra("Integral", Integral);
-//                startActivity(intent);
-
+                String GroupId = baseModel.get(position).getGroupId();
+                Friend_Group_Detail.actionStart(Friend_Add.this, GroupId);
 
             }
+
             @Override
             public void onItemLongClick(View view, int position) {
             }
@@ -160,11 +170,12 @@ public class Friend_Add extends AppCompatActivity {
 
     private List<AddFriend_FriendGroup_Model.DataDTO.ListDTO> baseModel;
     private AddFriend_FriendGroup_Model Model;
+
     public void AddFriendMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("type","0");
-        map.put("pageNum",PageIndex);
-        map.put("pageSize",pageSize);
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", "0");
+        map.put("pageNum", PageIndex);
+        map.put("pageSize", pageSize);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
@@ -190,6 +201,7 @@ public class Friend_Add extends AppCompatActivity {
                     Toast.makeText(context, "没有搜到", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void failed(String... args) {
             }
@@ -198,5 +210,10 @@ public class Friend_Add extends AppCompatActivity {
     }
 
 
-
+    private class person_qr_relClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            Discover_QRCode.actionStart(Friend_Add.this);
+        }
+    }
 }

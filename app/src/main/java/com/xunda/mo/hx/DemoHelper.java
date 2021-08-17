@@ -1,5 +1,7 @@
 package com.xunda.mo.hx;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -88,8 +90,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * 作为hyphenate-sdk的入口控制类，获取sdk下的基础类均通过此类
@@ -423,7 +423,8 @@ public class DemoHelper {
         // 设置是否需要接受方送达确认,默认false
         options.setRequireDeliveryAck(false);
 
-        options.setUseRtcConfig(true);
+        //开启代理
+//        options.setUseRtcConfig(true);
 
         // 设置是否使用 fcm，有些华为设备本身带有 google 服务，
         options.setUseFCM(demoModel.isUseFCM());

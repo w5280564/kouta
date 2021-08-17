@@ -10,6 +10,7 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.adapter.EaseBaseRecyclerViewAdapter;
 import com.xunda.mo.R;
+import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.section.search.adapter.SearchMessageAdapter;
 
 import java.util.List;
@@ -49,6 +50,8 @@ public class SearchGroupChatActivity extends SearchActivity {
 
     @Override
     public void searchMessages(String search) {
+        conversation =  DemoHelper.getInstance().getConversation(toUsername, EMConversation.EMConversationType.GroupChat,true);
+
         List<EMMessage> mData = conversation.searchMsgFromDB(search, System.currentTimeMillis(), 100, null, EMConversation.EMSearchDirection.UP);
         ((SearchMessageAdapter)adapter).setKeyword(search);
         adapter.setData(mData);

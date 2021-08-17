@@ -80,7 +80,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="45dp"
-        android:text="使用Le ID登录"
+        android:text="使用Mo ID登录"
         android:textColor="@color/greytwo"
         android:textSize="12sp" />
 

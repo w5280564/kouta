@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -44,11 +47,13 @@ import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.group.viewmodels.GroupDetailViewModel;
 import com.xunda.mo.hx.section.search.SearchGroupChatActivity;
 import com.xunda.mo.main.MainActivity;
+import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.FlowLayout;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.baseView.MySwitchItemView;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
+import com.xunda.mo.main.me.activity.MeAndGroup_QRCode;
 import com.xunda.mo.model.GroupMember_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
@@ -81,6 +86,7 @@ public class GroupDetailSet extends BaseInitActivity {
     private GroupDetailViewModel viewModel;
     private EMConversation conversation;
     private String myGroupId;
+    private Button right_Btn;
     private List<String> members = new ArrayList<>();
 
     public static void actionStart(Context context, String HXgroupId) {
@@ -112,6 +118,7 @@ public class GroupDetailSet extends BaseInitActivity {
         clear_ArrowItemView.setOnClickListener(new clear_ArrowItemViewClick());
         group_Flow = findViewById(R.id.group_Flow);
         group_Code_ArrowItemView = findViewById(R.id.group_Code_ArrowItemView);
+        group_Code_ArrowItemView.setOnClickListener(new group_Code_ArrowItemViewClick());
         group_Nick_ArrowItemView = findViewById(R.id.group_Nick_ArrowItemView);
         group_Nick_ArrowItemView.setOnClickListener(new group_Nick_ArrowItemViewClick());
         group_Nick_ArrowItemView.setOnClickListener(new group_Nick_ArrowItemViewClick());
@@ -149,7 +156,7 @@ public class GroupDetailSet extends BaseInitActivity {
         return_Btn.setVisibility(View.VISIBLE);
         TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
         cententTxt.setText("群聊详情");
-        Button right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
+         right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.VISIBLE);
         right_Btn.setBackgroundResource(R.mipmap.adress_head_more);
         viewTouchDelegate.expandViewTouchDelegate(right_Btn, 50, 50, 50, 50);
@@ -185,9 +192,35 @@ public class GroupDetailSet extends BaseInitActivity {
     private class right_Btn extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-//            showMore(ChatDetailSet.this, right_Btn, 0);
+            showMore(GroupDetailSet.this, right_Btn, 0);
         }
     }
+    private void showMore(final Context mContext, final View view, final int pos) {
+        View contentView = View.inflate(mContext, R.layout.chatdetailset_feedback, null);
+        PopupWindow MorePopup = new BasePopupWindow(mContext);
+        MorePopup.setWidth(RadioGroup.LayoutParams.MATCH_PARENT);
+        MorePopup.setHeight(RadioGroup.LayoutParams.WRAP_CONTENT);
+        MorePopup.setTouchable(true);
+        MorePopup.setContentView(contentView);
+        MorePopup.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+        TextView change_txt = contentView.findViewById(R.id.change_txt);
+        change_txt.setText("分享群聊");
+        TextView newregistr_txt = contentView.findViewById(R.id.newregistr_txt);
+        newregistr_txt.setText("举报");
+        TextView cancel_txt = contentView.findViewById(R.id.cancel_txt);
+        change_txt.setOnClickListener(v -> {
+            MeAndGroup_QRCode.actionGroupStart(mContext, groupModel);
+            MorePopup.dismiss();
+        });
+        newregistr_txt.setOnClickListener(v -> {
+            GroupDetail_Report.actionStart(mContext,myGroupId);
+            MorePopup.dismiss();
+        });
+        cancel_txt.setOnClickListener(v -> {
+            MorePopup.dismiss();
+        });
+    }
+
 
     @Override
     protected void initIntent(Intent intent) {
@@ -247,6 +280,13 @@ public class GroupDetailSet extends BaseInitActivity {
                 .show();
     }
 
+    //群二维码
+    private class group_Code_ArrowItemViewClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            MeAndGroup_QRCode.actionGroupStart(GroupDetailSet.this,groupModel);
+        }
+    }
     //群昵称
     private class group_Nick_ArrowItemViewClick extends NoDoubleClickListener {
         @Override

@@ -4,12 +4,176 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.friend.Friend_Group_Detail">
+    android:background="@color/white"
+    app:layout_constraintHorizontal_chainStyle="spread"
+    tools:context=".main.friend.Friend_Group_Detail"
+    tools:ignore="MissingConstraints">
 
     <include
         android:id="@+id/title_Include"
         layout="@layout/base_titlebar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/group_Head_Image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/picture_image_placeholder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_Include" />
+
+    <TextView
+        android:id="@+id/group_Nick_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="Audrey Hepburn"
+        android:textColor="@color/blacktitle"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/group_Head_Image"
+        app:layout_constraintTop_toTopOf="@+id/group_Head_Image" />
+
+
+    <TextView
+        android:id="@+id/group_MoId_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="群ID: 520520"
+        android:textColor="@color/blacktitlettwo"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/group_Nick_Txt"
+        app:layout_constraintTop_toBottomOf="@+id/group_Nick_Txt" />
+
+    <TextView
+        android:id="@+id/group_Brief_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="简介"
+        android:textColor="@color/blacktitlettwo"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/group_Nick_Txt"
+        app:layout_constraintTop_toBottomOf="@+id/group_MoId_Txt" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tag_Constraint"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/group_Brief_Txt"
+        tools:ignore="MissingConstraints">
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/greyfive"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/greyfive"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+        <TextView
+            android:id="@+id/group_Tag_Txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="群标签"
+            android:textColor="@color/blacktitle"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_arrow"
+            android:layout_width="7dp"
+            android:layout_height="12dp"
+            android:layout_marginEnd="15dp"
+            android:src="@mipmap/person_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UseAppTint" />
+
+
+        <LinearLayout
+            android:id="@+id/label_Lin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_arrow"
+            app:layout_constraintStart_toEndOf="@+id/group_Tag_Txt"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/send_mess_Txt"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/group_btn_radius"
+        android:gravity="center"
+        android:text="发送消息"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/share_group_Txt"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/share_group_Txt"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"
+        android:background="@drawable/group_btn_radius"
+        android:gravity="center"
+        android:text="分享本群"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/send_mess_Txt" />
+
+
+    <TextView
+        android:id="@+id/apply_group_Txt"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/group_btn_radius"
+        android:gravity="center"
+        android:text="申请加群"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -195,7 +195,6 @@ public class GroupAllMembers extends BaseInitActivity {
             }
             @Override
             public void failed(String... args) {
-
             }
         });
     }

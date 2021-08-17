@@ -44,6 +44,8 @@ import com.xunda.mo.hx.section.group.activity.GroupPrePickActivity;
 import com.xunda.mo.hx.section.message.SystemMsgsActivity;
 import com.xunda.mo.hx.section.search.SearchConversationActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
+import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.discover.activity.Discover_QRCode;
 import com.xunda.mo.main.friend.Friend_Add;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
@@ -109,7 +111,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
                     conversationListLayout.cancelConversationTop(position, info);
                     return true;
                 case R.id.action_con_delete:
-//                    showDeleteDialog(position, info);
+                    showDeleteDialog(position, info);
                     return true;
             }
         }
@@ -122,8 +124,8 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
                 .setOnConfirmClickListener(R.string.delete, new DemoDialogFragment.OnConfirmClickListener() {
                     @Override
                     public void onConfirmClick(View view) {
-//                        conversationListLayout.deleteConversation(position, info);
-//                        LiveDataBus.get().with(DemoConstant.CONVERSATION_DELETE).postValue(new EaseEvent(DemoConstant.CONVERSATION_DELETE, EaseEvent.TYPE.MESSAGE));
+                        conversationListLayout.deleteConversation(position, info);
+                        LiveDataBus.get().with(DemoConstant.CONVERSATION_DELETE).postValue(new EaseEvent(DemoConstant.CONVERSATION_DELETE, EaseEvent.TYPE.MESSAGE));
                     }
                 })
                 .showCancelButton(true)
@@ -257,7 +259,8 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         super.onItemClick(view, position);
         Object item = conversationListLayout.getItem(position).getInfo();
         if (item instanceof EMConversation) {
-            if (TextUtils.equals(((EMConversation) item).getLastMessage().getFrom(), "admin")) {
+
+            if (TextUtils.equals(((EMConversation) item).getLastMessage().getFrom(), MyConstant.ADMIN)) {
                 ToastUtils.showToast("群组消息");
             } else if (EaseSystemMsgManager.getInstance().isSystemConversation((EMConversation) item)) {
                 SystemMsgsActivity.actionStart(mContext);
@@ -303,24 +306,20 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         MorePopup.showAsDropDown(view, 20, 12);
         ConstraintLayout add_Constraint = contentView.findViewById(R.id.add_Constraint);
         ConstraintLayout setUp_Constraint = contentView.findViewById(R.id.setUp_Constraint);
+        ConstraintLayout QR_Constraint = contentView.findViewById(R.id.QR_Constraint);
 
-        add_Constraint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, Friend_Add.class);
-                startActivity(intent);
-                MorePopup.dismiss();
-            }
+        add_Constraint.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, Friend_Add.class);
+            startActivity(intent);
+            MorePopup.dismiss();
         });
         //创建群聊
-        setUp_Constraint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GroupPrePickActivity.actionStart(mContext);
-                MorePopup.dismiss();
-            }
+        setUp_Constraint.setOnClickListener(v -> {
+            GroupPrePickActivity.actionStart(mContext);
+            MorePopup.dismiss();
         });
 
+        QR_Constraint.setOnClickListener(v -> Discover_QRCode.actionStart(requireActivity()));
 
     }
 

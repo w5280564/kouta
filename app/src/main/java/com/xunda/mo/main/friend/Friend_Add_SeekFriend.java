@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -193,7 +192,7 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
                     head_simple.setImageURI(imgUri);
                 }
                 long strVip = userListDTO.getVipType();
-                name.setText(userListDTO.getNickName());
+                name.setText(userListDTO.getNickname());
                 contentid_txt.setText("Mo ID: " + userListDTO.getUserNum());
                 if (strVip == 0) {
                     vipType_txt.setVisibility(View.GONE);
@@ -224,8 +223,8 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
                     String addType = "2";
                     ChatFriend_Detail.actionStart(context, friendUserId,  addType);
                 }else{
-
-                    Toast.makeText(context, "群 ID "+model.getGroupList().get(tag1).getGroupNum(),Toast.LENGTH_SHORT).show();
+                    String GroupId =  model.getGroupList().get(tag1).getGroupId();
+                    Friend_Group_Detail.actionStart(Friend_Add_SeekFriend.this, GroupId);
                 }
             });
         }

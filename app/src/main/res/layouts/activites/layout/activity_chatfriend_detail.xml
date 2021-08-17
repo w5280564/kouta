@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Le ID:"
+                android:text="Mo ID:"
                 android:textColor="@color/yellowfive"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -102,10 +102,12 @@
                 app:layout_constraintRight_toLeftOf="@id/grade_Txt" />
 
             <LinearLayout
+                android:id="@+id/grade_Lin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
                 app:layout_constraintBottom_toBottomOf="@id/grade_Txt"
                 app:layout_constraintLeft_toRightOf="@id/grade_Txt"
                 app:layout_constraintTop_toTopOf="@id/grade_Txt" />
@@ -115,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="个性签名："
+                android:text=""
                 android:textColor="@color/greytwo"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -123,11 +125,19 @@
                 app:layout_constraintTop_toBottomOf="@id/grade_Txt" />
 
 
+            <LinearLayout
+                android:id="@+id/label_Lin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/signature_Txt" />
+
+
             <com.xunda.mo.main.baseView.MyArrowItemView
                 android:id="@+id/friend_ArrowItemView"
                 android:layout_width="0dp"
                 android:layout_height="45dp"
-                android:layout_marginLeft="15dp"
                 app:arrowItemContent=""
                 app:arrowItemContentColor="@color/greytwo"
                 app:arrowItemTitle="好友来源"
@@ -135,13 +145,12 @@
                 app:arrowItemTitleSize="15sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/signature_Txt" />
+                app:layout_constraintTop_toBottomOf="@id/label_Lin" />
 
             <com.xunda.mo.main.baseView.MyArrowItemView
                 android:id="@+id/nick_ArrowItemView"
                 android:layout_width="0dp"
                 android:layout_height="45dp"
-                android:layout_marginLeft="15dp"
                 app:arrowItemContent=""
                 app:arrowItemContentColor="@color/greytwo"
                 app:arrowItemTitle="备注昵称"
@@ -155,7 +164,6 @@
                 android:id="@+id/recommend_ArrowItemView"
                 android:layout_width="0dp"
                 android:layout_height="45dp"
-                android:layout_marginLeft="15dp"
                 app:arrowItemContentColor="@color/greytwo"
                 app:arrowItemTitle="把Ta推荐给朋友"
                 app:arrowItemTitleColor="@color/blacktitlettwo"

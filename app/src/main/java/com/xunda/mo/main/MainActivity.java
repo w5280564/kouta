@@ -1,182 +1,400 @@
 package com.xunda.mo.main;
 
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.tabs.TabLayout;
-import com.hyphenate.chat.EMGroup;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMUserInfo;
+import com.hyphenate.easecallkit.base.EaseCallType;
+import com.hyphenate.easecallkit.ui.EaseMultipleVideoActivity;
+import com.hyphenate.easecallkit.ui.EaseVideoCallActivity;
 import com.hyphenate.easeui.EaseIM;
 import com.hyphenate.easeui.domain.EaseAvatarOptions;
+import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.ui.base.EaseBaseFragment;
+import com.hyphenate.util.EMLog;
 import com.xunda.mo.R;
+import com.xunda.mo.hx.DemoHelper;
+import com.xunda.mo.hx.common.constant.DemoConstant;
+import com.xunda.mo.hx.common.livedatas.LiveDataBus;
+import com.xunda.mo.hx.common.permission.PermissionsManager;
+import com.xunda.mo.hx.common.permission.PermissionsResultAction;
+import com.xunda.mo.hx.common.utils.PreferenceManager;
+import com.xunda.mo.hx.common.utils.PushUtils;
+import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.hx.section.chat.ChatPresenter;
 import com.xunda.mo.hx.section.contact.fragment.ContactListFragment;
 import com.xunda.mo.hx.section.contact.viewmodels.ContactsViewModel;
 import com.xunda.mo.hx.section.conversation.ConversationListFragment;
-import com.xunda.mo.staticdata.RsaEncodeMethod;
+import com.xunda.mo.main.discover.DiscoverFragment;
+import com.xunda.mo.main.me.MeFragment;
+import com.xunda.mo.main.viewmodels.MainViewModel;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseInitActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+    private BottomNavigationView navView;
+    //    private EaseTitleBar mTitleBar;
+    private EaseBaseFragment mConversationListFragment, mFriendsFragment, mDiscoverFragment, mAboutMeFragment;
+    private EaseBaseFragment mCurrentFragment;
+    private TextView mTvMainHomeMsg, mTvMainFriendsMsg, mTvMainDiscoverMsg, mTvMainAboutMeMsg;
+    private int[] badgeIds = {R.layout.demo_badge_home, R.layout.demo_badge_friends, R.layout.demo_badge_discover, R.layout.demo_badge_about_me};
+    private int[] msgIds = {R.id.tv_main_home_msg, R.id.tv_main_friends_msg, R.id.tv_main_discover_msg, R.id.tv_main_about_me_msg};
+    private MainViewModel viewModel;
+    private boolean showMenu = true;//是否显示菜单项
 
-    private ViewPager tab_viewpager;
-    private List<Fragment> fragments;
-    private TabLayout ac_tab_layout;
-    private EMGroup mDBData;
+    public static void startAction(Context context) {
+        Intent starter = new Intent(context, MainActivity.class);
+        starter.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(starter);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
 
-        StatusBar(this);
-        MIUISetStatusBarLightMode(this.getWindow(), true);
-        FlymeSetStatusBarLightMode(this.getWindow(), true);
+    /**
+     * 显示menu的icon，通过反射，设置menu的icon显示
+     *
+     * @param featureId
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if (menu != null) {
+            if (menu.getClass().getSimpleName().equalsIgnoreCase("MenuBuilder")) {
+                try {
+                    Method method = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+                    method.setAccessible(true);
+                    method.invoke(menu, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+        return super.onMenuOpened(featureId, menu);
+    }
+
+    @Override
+    protected void initSystemFit() {
+        setFitSystemForTheme(false);
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        super.initView(savedInstanceState);
+        navView = findViewById(R.id.nav_view);
+//        mTitleBar = findViewById(R.id.title_bar_main);
+        navView.setItemIconTintList(null);
+        // 可以动态显示隐藏相应tab
+        //navView.getMenu().findItem(R.id.em_main_nav_me).setVisible(false);
+        switchToHome();
+        checkIfShowSavedFragment(savedInstanceState);
+        addTabBadge();
+
 
         //设置头像配置属性
         EaseAvatarOptions avatarOptions = new EaseAvatarOptions();
         //设置头像形状为圆形，1代表圆形，2代表方形
         avatarOptions.setAvatarShape(2);
         EaseIM.getInstance().setAvatarOptions(avatarOptions);
+    }
 
-//        if (saveFile.getShareData("phoneNum", MainActivity.this).equals("false")) {
-//            Intent intent = new Intent(MainActivity.this, MainLogin_Register.class);
-//            startActivity(intent);
-//            finish();
-//        } else {
-//            Intent intent = new Intent(MainActivity.this, MainLogin_OldUsers.class);
-//            startActivity(intent);
-//            finish();
-//        }
+    @Override
+    protected void initListener() {
+        super.initListener();
+        navView.setOnNavigationItemSelectedListener(this);
+    }
 
-        RsaEncodeMethod.rsaEncode("测试");
-
-        initView();
-//        initData();
+    @Override
+    protected void initData() {
+        super.initData();
         initViewModel();
+//        requestPermissions();
         startLocation();
+        checkUnreadMsg();
+        ChatPresenter.getInstance().init();
+
+        // 获取华为 HMS 推送 token
+//        HMSPushHelper.getInstance().getHMSToken(this);
+
+        //判断是否为来电推送
+        if (PushUtils.isRtcCall) {
+            if (EaseCallType.getfrom(PushUtils.type) != EaseCallType.CONFERENCE_CALL) {
+                EaseVideoCallActivity callActivity = new EaseVideoCallActivity();
+                Intent intent = new Intent(getApplicationContext(), callActivity.getClass()).addFlags(FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+            } else {
+                EaseMultipleVideoActivity callActivity = new EaseMultipleVideoActivity();
+                Intent intent = new Intent(getApplication().getApplicationContext(), callActivity.getClass()).addFlags(FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+            }
+            PushUtils.isRtcCall = false;
+        }
     }
 
-    private void initView() {
-        tab_viewpager = findViewById(R.id.tab_viewpager);
-        ac_tab_layout = findViewById(R.id.ac_tab_layout);
-        ac_tab_layout.setSelectedTabIndicatorHeight(0);//去掉下导航条
-        fragments = new ArrayList<>();
-        EaseBaseFragment mConversationListFragment = new ConversationListFragment();
-//        EaseBaseFragment mConversationListFragment = new EaseConversationListFragment();
-        fragments.add(mConversationListFragment);
+    private void initViewModel() {
+        viewModel = new ViewModelProvider(mContext).get(MainViewModel.class);
+        viewModel.getSwitchObservable().observe(this, response -> {
+            if (response == null || response == 0) {
+                return;
+            }
+        });
 
-//        EaseBaseFragment mContactListFragment = new EaseContactListFragment();
-//        fragments.add(mContactListFragment);
+        viewModel.homeUnReadObservable().observe(this, readCount -> {
+            if (!TextUtils.isEmpty(readCount)) {
+                mTvMainHomeMsg.setVisibility(View.VISIBLE);
+                mTvMainHomeMsg.setText(readCount);
+            } else {
+                mTvMainHomeMsg.setVisibility(View.GONE);
+            }
+        });
 
-        ContactListFragment mFriendsFragment = new ContactListFragment();
-        fragments.add(mFriendsFragment);
-        //use EaseChatFratFragment
-//       EaseChatFragment chatFragment = new EaseChatFragment();
-//        //pass parameters to chat fragment
-//        chatFragment.setArguments(getIntent().getExtras());
-//        getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
+        //加载联系人
+        ContactsViewModel contactsViewModel = new ViewModelProvider(mContext).get(ContactsViewModel.class);
+        contactsViewModel.loadContactList(true);
 
-//        fragments.add(Fragment_chat.newInstance("首页", ""));
-//        fragments.add(Fragment_adress.newInstance("联系人", ""));
-        fragments.add(Fragment_Person.newInstance("我", ""));
-        String[] tab_titles = new String[]{"聊天", "联系人", "我"};
-        int[] tab_imgs = new int[]{R.drawable.tab_chat_selector, R.drawable.tab_adress_selector, R.drawable.tab_my_selector};
-        setTabs(tab_titles, tab_imgs);
-        //设置viewpager的adapter
-        tab_viewpager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), fragments));
-        //TabLayout与ViewPager的绑定
-//        ac_tab_layout.setupWithViewPager(tab_viewpager);
-        tab_viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(ac_tab_layout));
-        ac_tab_layout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(tab_viewpager));
-        tab_viewpager.setCurrentItem(0);
+        viewModel.messageChangeObservable().with(DemoConstant.GROUP_CHANGE, EaseEvent.class).observe(this, this::checkUnReadMsg);
+        viewModel.messageChangeObservable().with(DemoConstant.NOTIFY_CHANGE, EaseEvent.class).observe(this, this::checkUnReadMsg);
+        viewModel.messageChangeObservable().with(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.class).observe(this, this::checkUnReadMsg);
 
-//        tab_viewpager.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                return true;//true:消费事件
-//            }
-//        });
+        viewModel.messageChangeObservable().with(DemoConstant.CONVERSATION_DELETE, EaseEvent.class).observe(this, this::checkUnReadMsg);
+        viewModel.messageChangeObservable().with(DemoConstant.CONTACT_CHANGE, EaseEvent.class).observe(this, this::checkUnReadMsg);
+        viewModel.messageChangeObservable().with(DemoConstant.CONVERSATION_READ, EaseEvent.class).observe(this, this::checkUnReadMsg);
+
     }
 
+    private void checkUnReadMsg(EaseEvent event) {
+        if (event == null) {
+            return;
+        }
+        viewModel.checkUnreadMsg();
+    }
 
     /**
-     * @param tab_titles tab条目名字
-     * @param tab_imgs   tab上条目上的图片
-     * @description: 设置添加Tab
+     * 添加BottomNavigationView中每个item右上角的红点
      */
-    private void setTabs(String[] tab_titles, int[] tab_imgs) {
-        for (int i = 0; i < tab_titles.length; i++) {
-            //获取TabLayout的tab
-            TabLayout.Tab tab = ac_tab_layout.newTab();
-            //初始化条目布局view
-            View view = getLayoutInflater().inflate(R.layout.tab_item, null);
-            tab.setCustomView(view);
-            //tab的文字
-            TextView tvTitle = view.findViewById(R.id.tv_des);
-            tvTitle.setText(tab_titles[i]);
-            //tab的图片
-            ImageView imgTab = view.findViewById(R.id.iv_top);
-            imgTab.setImageResource(tab_imgs[i]);
-            if (i == 0) {
-                //设置第一个默认选中
-                ac_tab_layout.addTab(tab, true);
-            } else {
-                ac_tab_layout.addTab(tab, false);
+    private void addTabBadge() {
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) navView.getChildAt(0);
+        int childCount = menuView.getChildCount();
+        Log.e("TAG", "bottom child count = " + childCount);
+        BottomNavigationItemView itemTab;
+        for (int i = 0; i < childCount; i++) {
+            itemTab = (BottomNavigationItemView) menuView.getChildAt(i);
+            View badge = LayoutInflater.from(mContext).inflate(badgeIds[i], menuView, false);
+            switch (i) {
+                case 0:
+                    mTvMainHomeMsg = badge.findViewById(msgIds[0]);
+                    break;
+                case 1:
+                    mTvMainFriendsMsg = badge.findViewById(msgIds[1]);
+                    break;
+                case 2:
+                    mTvMainDiscoverMsg = badge.findViewById(msgIds[2]);
+                    break;
+                case 3:
+                    mTvMainAboutMeMsg = badge.findViewById(msgIds[3]);
+                    break;
+            }
+            itemTab.addView(badge);
+        }
+    }
+
+    /**
+     * 用于展示是否已经存在的Fragment
+     *
+     * @param savedInstanceState
+     */
+    private void checkIfShowSavedFragment(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            String tag = savedInstanceState.getString("tag");
+            if (!TextUtils.isEmpty(tag)) {
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+                if (fragment instanceof EaseBaseFragment) {
+                    replace((EaseBaseFragment) fragment, tag);
+                }
             }
         }
     }
 
     /**
-     * Created by ruancw on 2018/5/28.
-     * FragmentAdapter
+     * 申请权限
      */
+    // TODO: 2019/12/19 0019 有必要修改一下
+    private void requestPermissions() {
+        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(mContext, new PermissionsResultAction() {
+            @Override
+            public void onGranted() {
 
-    public class FragmentAdapter extends FragmentPagerAdapter {
-        private List<Fragment> mFragments;
+            }
 
-        public FragmentAdapter(FragmentManager fragmentManager, List<Fragment> mFragments) {
-            super(fragmentManager);
-            this.mFragments = mFragments;
-        }
+            @Override
+            public void onDenied(String permission) {
 
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
+            }
+        });
     }
 
-    private void initViewModel() {
-        //加载联系人
-        ContactsViewModel contactsViewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
-        contactsViewModel.loadContactList(true);
+    private void switchToHome() {
+        if (mConversationListFragment == null) {
+            mConversationListFragment = new ConversationListFragment();
+        }
+        replace(mConversationListFragment, "conversation");
     }
 
+    private void switchToFriends() {
+        if (mFriendsFragment == null) {
+            mFriendsFragment = new ContactListFragment();
+        }
+        replace(mFriendsFragment, "contact");
+    }
 
+    private void switchToDiscover() {
+        if (mDiscoverFragment == null) {
+            mDiscoverFragment = new DiscoverFragment();
+        }
+        replace(mDiscoverFragment, "discover");
+    }
+
+    private void switchToAboutMe() {
+        if (mAboutMeFragment == null) {
+            mAboutMeFragment = new MeFragment();
+        }
+        //获取自己用户信息
+        fetchSelfInfo();
+        replace(mAboutMeFragment, "me");
+    }
+
+    private void replace(EaseBaseFragment fragment, String tag) {
+        if (mCurrentFragment != fragment) {
+            FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+            if (mCurrentFragment != null) {
+                t.hide(mCurrentFragment);
+            }
+            mCurrentFragment = fragment;
+
+            if (!fragment.isAdded()) {
+                t.add(R.id.fl_main_fragment, fragment, tag).show(fragment).commit();
+            } else {
+                t.show(fragment).commit();
+            }
+        }
+    }
+
+    private void fetchSelfInfo() {
+        String[] userId = new String[1];
+        userId[0] = EMClient.getInstance().getCurrentUser();
+        EMUserInfo.EMUserInfoType[] userInfoTypes = new EMUserInfo.EMUserInfoType[2];
+        userInfoTypes[0] = EMUserInfo.EMUserInfoType.NICKNAME;
+        userInfoTypes[1] = EMUserInfo.EMUserInfoType.AVATAR_URL;
+        EMClient.getInstance().userInfoManager().fetchUserInfoByAttribute(userId, userInfoTypes, new EMValueCallBack<Map<String, EMUserInfo>>() {
+            @Override
+            public void onSuccess(Map<String, EMUserInfo> userInfos) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        EMUserInfo userInfo = userInfos.get(EMClient.getInstance().getCurrentUser());
+                        //昵称
+                        if (userInfo != null && userInfo.getNickName() != null &&
+                                userInfo.getNickName().length() > 0) {
+                            EaseEvent event = EaseEvent.create(DemoConstant.NICK_NAME_CHANGE, EaseEvent.TYPE.CONTACT);
+                            event.message = userInfo.getNickName();
+                            LiveDataBus.get().with(DemoConstant.NICK_NAME_CHANGE).postValue(event);
+                            PreferenceManager.getInstance().setCurrentUserNick(userInfo.getNickName());
+                        }
+                        //头像
+                        if (userInfo != null && userInfo.getAvatarUrl() != null && userInfo.getAvatarUrl().length() > 0) {
+
+                            EaseEvent event = EaseEvent.create(DemoConstant.AVATAR_CHANGE, EaseEvent.TYPE.CONTACT);
+                            event.message = userInfo.getAvatarUrl();
+                            LiveDataBus.get().with(DemoConstant.AVATAR_CHANGE).postValue(event);
+                            PreferenceManager.getInstance().setCurrentUserAvatar(userInfo.getAvatarUrl());
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                EMLog.e("MainActivity", "fetchUserInfoByIds error:" + error + " errorMsg:" + errorMsg);
+            }
+        });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        showMenu = true;
+        boolean showNavigation = false;
+        switch (menuItem.getItemId()) {
+            case R.id.em_main_nav_home:
+                switchToHome();
+                showNavigation = true;
+                break;
+            case R.id.em_main_nav_friends:
+                switchToFriends();
+                showNavigation = true;
+                invalidateOptionsMenu();
+                break;
+            case R.id.em_main_nav_discover:
+                switchToDiscover();
+                showNavigation = true;
+                break;
+            case R.id.em_main_nav_me:
+                switchToAboutMe();
+                showMenu = false;
+                showNavigation = true;
+                break;
+        }
+        invalidateOptionsMenu();
+        return showNavigation;
+    }
+
+    private void checkUnreadMsg() {
+        viewModel.checkUnreadMsg();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DemoHelper.getInstance().showNotificationPermissionDialog();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mCurrentFragment != null) {
+            outState.putString("tag", mCurrentFragment.getTag());
+        }
+    }
 
     public void startLocation() {
         //监听授权

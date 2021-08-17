@@ -194,14 +194,20 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
                 try {
                     EaseUser user = userProvider.getUser(conversationId);
                     String selectInfoExt = user.getExt();
-                    JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
-                    String name = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
-                    if (user != null) {
+                    if (!TextUtils.isEmpty(selectInfoExt)){
+                        JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                        String name = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
+                        if (user != null) {
 //                        title = user.getNickname();
-                        title = name;
-                    } else {
-                        title = conversationId;
+                            title = name;
+                        } else {
+                            title = conversationId;
+                        }
+
                     }
+//                    if (TextUtils.isEmpty(selectInfoExt)){
+//                        return;
+//                    }
                 } catch (
                         JSONException e) {
                     e.printStackTrace();

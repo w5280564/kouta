@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="9dp"
-        android:text="Le ID:"
+        android:text="Mo ID:"
         android:textColor="@color/yellowfive"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,6 +85,7 @@
         app:layout_constraintRight_toLeftOf="@id/grade_Txt" />
 
     <LinearLayout
+        android:id="@+id/garde_Lin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"

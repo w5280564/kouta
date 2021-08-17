@@ -205,18 +205,15 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
 //            mySimpleArr.add(mySimple);
             int position = photoLayout.getChildCount() - 1;//下标
             myFlow.addView(mySimple, position);
-            mySimple.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    for (int i = 0; i < photoLayout.getChildCount(); i++) {
-                        if (view == photoLayout.getChildAt(i)) {
-                            deletePhotoByPosition(i);
-                            break;
-                        }
+            mySimple.setOnLongClickListener(view -> {
+                for (int i12 = 0; i12 < photoLayout.getChildCount(); i12++) {
+                    if (view == photoLayout.getChildAt(i12)) {
+                        deletePhotoByPosition(i12);
+                        break;
                     }
-                    photoLayout.removeView(view);
-                    return true;
                 }
+                photoLayout.removeView(view);
+                return true;
             });
             mySimple.setOnClickListener(v -> {
                 mySimple.setFocusable(false);
@@ -225,12 +222,6 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
                 for (int i1 = 0; i1 < imgList.size(); i1++) {
                     myArr.add(imgList.get(i1));
                 }
-//                    Intent i = new Intent(this, ImagePagerActivity.class);
-////                    i.putExtra("imgArr", (Parcelable) myBean);
-//                    i.putExtra("imgArr", (Serializable) myArr);
-//                    i.putExtra("tag", tag);
-//                    startActivity(i);
-//                    mySimple.setFocusable(true);
             });
         }
         ChangeAddPhotoImage();//检查增加图片是否显示
@@ -273,9 +264,6 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             setPhotoMetod(MainLogin_QuestionFeedBack.this);
-//            int choice = 9 - photoPaths.size();
-//            ImgOptions options = new ImgOptions(choice, 1, true);
-//            startActivityForResult(SelectedPhotoActivity.makeIntent(MainLogin_QuestionFeedBack.this, options), REQUEST_IMAGE);
         }
     }
 
@@ -344,24 +332,6 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
             "android.permission.READ_EXTERNAL_STORAGE",
             "android.permission.WRITE_EXTERNAL_STORAGE",
             "android.permission.CAMER"};
-
-    //然后通过一个函数来申请
-    public void verifyStoragePermissions(Activity activity) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            PermissionUtils.requestPermission(MainLogin_QuestionFeedBack.this, PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE, permissionGrant);
-//        }
-
-        try {
-            //检测是否有写的权限
-            int permission = ActivityCompat.checkSelfPermission(activity, "android.permission.WRITE_EXTERNAL_STORAGE");
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-                // 没有写的权限，去申请写的权限，会弹出对话框
-                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     /*申请权限的回调*/

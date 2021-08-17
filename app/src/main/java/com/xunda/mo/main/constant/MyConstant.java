@@ -39,7 +39,6 @@ public interface MyConstant extends DemoConstant {
 
     String Chat_BG = "chatBg";
 
-
     String MESSAGE_TYPE_ADDUSER = "addUser";
     String MESSAGE_TYPE_DELETUSER = "deletUser";
     String MESSAGE_TYPE_ADDADMIN = "addAdmin";
@@ -57,5 +56,9 @@ public interface MyConstant extends DemoConstant {
 
     String GROUP_CHAT_ANONYMOUS = "anonymousChat";
     String GROUP_UPDATE_GROUPDES = "updateGroupDes";
+
+    String MESSAGE_TYPE_DOUBLE_RECALL = "doubleRecall";
+    String MY_GROUP_LABEL = "group_Label";
+    String MY_LABEL = "label";
 
 }

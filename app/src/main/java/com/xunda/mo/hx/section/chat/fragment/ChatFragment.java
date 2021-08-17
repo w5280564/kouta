@@ -31,8 +31,10 @@ import com.google.gson.Gson;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMUserInfo;
 import com.hyphenate.easecallkit.EaseCallKit;
 import com.hyphenate.easecallkit.base.EaseCallType;
@@ -181,6 +183,9 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     @Override
     public void addMsgAttrsBeforeSend(EMMessage message) {
         super.addMsgAttrsBeforeSend(message);
+        if (groupModel == null) {
+            return;
+        }
         MyInfo myInfo = new MyInfo(requireActivity());
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_CHAT);
@@ -364,7 +369,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         });
 
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-            AddFriendMethod(getActivity(),  saveFile.Friend_info_Url);
+            AddFriendMethod(getActivity(), saveFile.Friend_info_Url);
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
             GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url);
         }
@@ -437,7 +442,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             String myGroupId = groupModel.getData().getGroupId();
             String userID = "";
             String hxUserName = username;
-            GroupFriend_Detail.actionStart(mContext, userID, hxUserName,groupModel);
+            GroupFriend_Detail.actionStart(mContext, userID, hxUserName, groupModel);
         }
 
     }
@@ -446,6 +451,18 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     public void onUserAvatarLongClick(String username) {
         EditText editText = chatLayout.getChatInputMenu().getPrimaryMenu().getEditText();
         editText.setText("");
+
+//        EMGroup emGroup = null;
+//        try {
+//            emGroup = DemoHelper.getInstance().getGroupManager().getGroupFromServer(username,true);
+//        } catch (HyphenateException e) {
+//            e.printStackTrace();
+//        }
+//        editText.setText(emGroup.getMembers().get(0));
+
+//        EMConversation emMessage = DemoHelper.getInstance().getChatManager().getConversation(username);
+//        String name = emMessage.getLastMessage().getStringAttribute(MyConstant.SEND_NAME,"");
+//        editText.setText(name);
         //        if (user != null){
 //            username = user.getNickname();
 //        }
@@ -455,6 +472,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 //            insertText(editText, AT_PREFIX + username + AT_SUFFIX);
 //        else
 //            insertText(editText, username + AT_SUFFIX);
+
     }
 
 
@@ -525,7 +543,10 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 break;
             case R.id.extend_item_two_withdraw:
                 Toast.makeText(getActivity(), "点击撤回", Toast.LENGTH_SHORT).show();
-                EMClient.getInstance().chatManager().deleteConversation(conversationId, true);
+                if (model.getData().getVipType() == 0) {
+
+                }
+                doubleRecall();
                 requireActivity().finish();
                 break;
         }
@@ -696,9 +717,9 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     ChatUserBean model;
 
     public void AddFriendMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("friendHxName",conversationId);
-        xUtils3Http.get(context,baseUrl,map, new xUtils3Http.GetDataCallback() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("friendHxName", conversationId);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 model = new Gson().fromJson(result, ChatUserBean.class);
@@ -716,12 +737,14 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                             event.message = myInfo.getUserInfo().getHxUserName();
                             LiveDataBus.get().with(DemoConstant.AVATAR_CHANGE).postValue(event);
                         }
+
                         @Override
                         public void onError(int error, String errorMsg) {
                         }
                     });
                 }
             }
+
             @Override
             public void failed(String... args) {
 
@@ -730,10 +753,11 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
     GruopInfo_Bean groupModel;
+
     public void GroupMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("groupHxId",conversationId);
-        xUtils3Http.get(context,baseUrl,map, new xUtils3Http.GetDataCallback() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupHxId", conversationId);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 groupModel = new Gson().fromJson(result, GruopInfo_Bean.class);
@@ -743,6 +767,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
                 sendAnonymousName(groupModel.getData().getIsAnonymous());
             }
+
             @Override
             public void failed(String... args) {
 
@@ -779,6 +804,15 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             //获取自定义的属性，第2个参数为没有此定义的属性时返回的默认值
             if (chatType == EaseConstant.CHATTYPE_SINGLE) {
 //                messageListLayout.setData(messages);
+                if (!messages.isEmpty()) {
+                    String isDouble_Recall = messages.get(0).getStringAttribute("messageType", "");
+                    if (TextUtils.equals(isDouble_Recall, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
+                        removeMes();
+                        saveMes(model);
+                    }
+                }
+
+
             } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
                 if (!messages.isEmpty()) {
                     String isAnonymousOn = messages.get(0).getStringAttribute("messageType", "");
@@ -821,4 +855,65 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             //消息状态变动
         }
     }
+
+
+    private void doubleRecall() {
+//        EMClient.getInstance().chatManager().deleteConversation(conversationId, true);
+//        saveMes();
+        removeMes();
+        sendMes(model);
+        saveMes(model);
+    }
+
+    private void removeMes() {
+        //删除当前会话所有消息
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId);
+        conversation.clearAllMessages();
+    }
+
+    private void saveMes(ChatUserBean Model) {
+        String conversationId = Model.getData().getHxUserName();
+        EMConversation conversation = DemoHelper.getInstance().getChatManager().getConversation(conversationId);
+        EMMessage conMsg = conversation.getLastMessage();
+        DemoHelper.getInstance().getConversation(conversationId, EMConversation.EMConversationType.Chat,false);
+        EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        EMTextMessageBody txtBody = new EMTextMessageBody("撤回了一条消息");
+        msgNotification.addBody(txtBody);
+//        msgNotification.setFrom(conMsg.getFrom());
+//        msgNotification.setTo(conMsg.getTo());
+        msgNotification.setTo(Model.getData().getHxUserName());
+        msgNotification.setUnread(false);
+        msgNotification.setMsgTime(conMsg.getMsgTime());
+        msgNotification.setLocalTime(conMsg.getMsgTime());
+        msgNotification.setChatType(EMMessage.ChatType.Chat);
+        msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL);
+        msgNotification.setStatus(EMMessage.Status.SUCCESS);
+        EMClient.getInstance().chatManager().saveMessage(msgNotification);
+    }
+
+
+    //发送消息
+    private void sendMes(ChatUserBean Model) {
+        MyInfo myInfo = new MyInfo(mContext);
+        String conversationId = Model.getData().getHxUserName();
+//        EMMessage message = EMMessage.createTxtSendMessage(mContext.getString(R.string.CREATE_GROUP_CONTENT), conversationId);
+        EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+        EMTextMessageBody txtBody = new EMTextMessageBody("");
+        message.addBody(txtBody);
+        message.setTo(conversationId);
+        message.setChatType(EMMessage.ChatType.Chat);
+        message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL);
+//        message.setAttribute(MyConstant.USER_NAME, UserName);
+        message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
+        message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
+        message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
+        message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
+        String toName = TextUtils.isEmpty(model.getData().getRemarkName()) ? model.getData().getNickname() : model.getData().getRemarkName();
+        message.setAttribute(MyConstant.TO_NAME, toName);
+        message.setAttribute(MyConstant.TO_HEAD, model.getData().getHeadImg());
+        message.setAttribute(MyConstant.TO_LH, model.getData().getLightStatus());
+        message.setAttribute(MyConstant.TO_VIP, model.getData().getVipType());
+        EMClient.getInstance().chatManager().sendMessage(message);
+    }
+
 }

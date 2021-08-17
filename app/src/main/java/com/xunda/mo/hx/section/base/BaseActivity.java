@@ -466,4 +466,9 @@ public class BaseActivity extends AppCompatActivity {
         }
         fragmentTransaction.commitNow();
     }
+
+
+
+
+
 }

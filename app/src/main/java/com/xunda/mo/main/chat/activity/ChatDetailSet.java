@@ -14,6 +14,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -43,6 +44,7 @@ import com.xunda.mo.hx.section.chat.viewmodel.ChatViewModel;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
+import com.xunda.mo.hx.section.group.activity.GroupPrePickActivity;
 import com.xunda.mo.hx.section.search.SearchSingleChatActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.MyArrowItemView;
@@ -51,6 +53,7 @@ import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.BeanUtils1;
+import com.xunda.mo.staticdata.MyLevel;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
@@ -74,7 +77,8 @@ public class ChatDetailSet extends BaseInitActivity {
     private EMConversation conversation;
     private MySwitchItemView top_Switch, disturb_Switch, vip_Switch;
     private ChatViewModel viewModel;
-    private MyArrowItemView nick_ArrowItemView;
+    private MyArrowItemView nick_ArrowItemView,group_ArrowItemView;
+    private LinearLayout grade_Lin;
 
     public static void actionStart(Context context, String toChatUsername) {
         Intent intent = new Intent(context, ChatDetailSet.class);
@@ -106,6 +110,8 @@ public class ChatDetailSet extends BaseInitActivity {
         friend_tv_content = friend_ArrowItemView.findViewById(R.id.tv_content);
         nick_ArrowItemView = findViewById(R.id.nick_ArrowItemView);
         nick_ArrowItemView.setOnClickListener(new nick_ArrowItemViewClick());
+        group_ArrowItemView = findViewById(R.id.group_ArrowItemView);
+        group_ArrowItemView.setOnClickListener(new group_ArrowItemViewClick());
         nick_tv_content = nick_ArrowItemView.findViewById(R.id.tv_content);
         top_Switch = findViewById(R.id.top_Switch);
         top_Switch.setOnCheckedChangeListener(new top_SwitchOnCheckLister());
@@ -123,6 +129,7 @@ public class ChatDetailSet extends BaseInitActivity {
 
         remove_Txt = findViewById(R.id.remove_Txt);
         remove_Txt.setOnClickListener(new remove_TxtClick());
+        grade_Lin = findViewById(R.id.grade_Lin);
     }
 
     @Override
@@ -208,6 +215,14 @@ public class ChatDetailSet extends BaseInitActivity {
         @Override
         protected void onNoDoubleClick(View v) {
             changeNick();
+        }
+    }
+    //创建群聊
+    private class group_ArrowItemViewClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            GroupPrePickActivity.actionStart(mContext);
+//            GroupPickContactsActivity.actionStartForResult(mContext, newmembers, ADD_NEW_CONTACTS);
         }
     }
 
@@ -365,7 +380,7 @@ public class ChatDetailSet extends BaseInitActivity {
                 nick_nameTxt.setText(name);
                 cententTxt.setText(name);
                 nick_tv_content.setText(name);
-                leID_Txt.setText("Le ID:" + dataDTO.getUserNum().intValue());
+                leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
                 signature_Txt.setText("个性签名：" + dataDTO.getSignature());
                 friend_tv_content.setText(dataDTO.getSource());
                 grade_Txt.setText("LV" + dataDTO.getGrade().intValue());
@@ -376,6 +391,8 @@ public class ChatDetailSet extends BaseInitActivity {
 //                            .setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
                 }
                 IsSilenceMethod(dataDTO.getIsSilence());
+
+                MyLevel.setGrade(grade_Lin, dataDTO.getGrade().intValue(), context);
             }
 
             @Override

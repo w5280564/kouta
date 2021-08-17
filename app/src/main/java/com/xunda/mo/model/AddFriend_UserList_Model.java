@@ -63,8 +63,8 @@ public class AddFriend_UserList_Model {
             private String headImg;
             @JsonProperty("lightStatus")
             private Integer lightStatus;
-            @JsonProperty("NickName")
-            private String NickName;
+            @JsonProperty("nickname")
+            private String nickname;
             @JsonProperty("sex")
             private Integer sex;
             @JsonProperty("signature")

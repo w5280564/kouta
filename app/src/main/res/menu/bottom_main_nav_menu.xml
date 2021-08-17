@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/em_main_nav_home"
+        android:icon="@drawable/tab_chat_selector"
+        android:title="会话" />
+
+    <item
+        android:id="@+id/em_main_nav_friends"
+        android:icon="@drawable/tab_adress_selector"
+        android:title="联系人" />
+
+    <item
+        android:id="@+id/em_main_nav_discover"
+        android:icon="@drawable/tab_discover_selector"
+        android:title="发现"/>
+
+    <item
+        android:id="@+id/em_main_nav_me"
+        android:icon="@drawable/tab_my_selector"
+        android:title="我的" />
+
+</menu>

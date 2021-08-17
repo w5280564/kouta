@@ -209,8 +209,8 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
                     head_simple.setImageURI(imgUri);
                 }
                 long strVip = userListDTO.getVipType();
-                name.setText(userListDTO.getNickName());
-                contentid_txt.setText("Le ID: " + userListDTO.getUserNum());
+                name.setText(userListDTO.getNickname());
+                contentid_txt.setText("Mo ID: " + userListDTO.getUserNum());
 
                 if (strVip == 0) {
                     vipType_txt.setVisibility(View.GONE);
@@ -235,18 +235,15 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
             myView.setTag(i);
             myFlex.addView(myView);
 
-            myView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int tag = (Integer) v.getTag();
-                    if (typeStr.equals("User")) {
-                        Toast.makeText(context, "用户Le ID "+model.getUserList().get(tag).getUserNum(),Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(context, "群 ID "+model.getGroupList().get(tag).getGroupNum(),Toast.LENGTH_SHORT).show();
-                    }
-
-
+            myView.setOnClickListener(v -> {
+                int tag1 = (Integer) v.getTag();
+                if (typeStr.equals("User")) {
+                    Toast.makeText(context, "用户Mo ID "+model.getUserList().get(tag1).getUserNum(),Toast.LENGTH_SHORT).show();
+                }else{
+                    String GroupId =  model.getGroupList().get(tag1).getGroupId();
+                    Friend_Group_Detail.actionStart(Friend_Add_SeekGroup.this, GroupId);
                 }
+
             });
         }
     }

@@ -148,10 +148,10 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
 //    implementation 'io.hyphenate:hyphenate-sdk:3.8.2' //完整版本，包含音视频功能
-    implementation 'io.hyphenate:hyphenate-chat:3.8.3'
-    implementation 'io.hyphenate:ease-im-kit:3.8.3'
+    implementation 'io.hyphenate:hyphenate-chat:3.8.4'
+    implementation 'io.hyphenate:ease-im-kit:3.8.4'
     //EaseCallKit依赖，必须添加环信IM SDK
-    implementation 'io.hyphenate:ease-call-kit:3.8.1.1'
+    implementation 'io.hyphenate:ease-call-kit:3.8.4'
     // fresh and load more
     api 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
     // parse
@@ -167,5 +167,6 @@ dependencies {
     implementation 'liji.library.dev:citypickerview:5.2.4'
 
     implementation 'io.github.everythingme:overscroll-decor-android:1.1.1'
-
+    implementation 'com.github.bingoogolapple.BGAQRCode-Android:zxing:1.3.8'
+    implementation 'org.apache.commons:commons-lang3:3.7'
 }

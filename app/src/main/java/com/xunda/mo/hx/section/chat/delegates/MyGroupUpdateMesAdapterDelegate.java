@@ -17,8 +17,8 @@ public class MyGroupUpdateMesAdapterDelegate extends EaseMessageAdapterDelegate<
     public boolean isForViewType(EMMessage item, int position) {
 //        return item.getType() == TXT && !item.getStringAttribute(MyConstant.MESSAGE_TYPE_CREATE_GROUP, "").isEmpty();
         if (item.getType() == EMMessage.Type.TXT) {
-            String Group = item.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-            switch (Group) {
+            String message_Type = item.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
+            switch (message_Type) {
                 case MyConstant.UPDATE_GROUP_NAME:
                 case MyConstant.MESSAGE_TYPE_DELETUSER:
                 case MyConstant.MESSAGE_TYPE_ADDUSER:
@@ -35,6 +35,7 @@ public class MyGroupUpdateMesAdapterDelegate extends EaseMessageAdapterDelegate<
                 case MyConstant.MESSAGE_TYPE_PUSH_OFF:
                 case MyConstant.MESSAGE_GROUP_LEAVE:
                 case MyConstant.GROUP_UPDATE_GROUPDES:
+                case MyConstant.MESSAGE_TYPE_DOUBLE_RECALL:
                     return true;
             }
 

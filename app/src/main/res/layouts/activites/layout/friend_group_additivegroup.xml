@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.friend.Friend_Group_AdditiveGroup">
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/group_Head_Image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/picture_image_placeholder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_Include" />
+
+    <TextView
+        android:id="@+id/group_Nick_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="Audrey Hepburn"
+        android:textColor="@color/blacktitle"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/group_Head_Image"
+        app:layout_constraintTop_toTopOf="@+id/group_Head_Image" />
+
+
+    <TextView
+        android:id="@+id/group_MoId_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="群ID: 520520"
+        android:textColor="@color/blacktitlettwo"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/group_Nick_Txt"
+        app:layout_constraintTop_toBottomOf="@+id/group_Nick_Txt" />
+
+    <TextView
+        android:id="@+id/group_Brief_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="简介"
+        android:textColor="@color/blacktitlettwo"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/group_Nick_Txt"
+        app:layout_constraintTop_toBottomOf="@+id/group_MoId_Txt" />
+
+
+    <TextView
+        android:id="@+id/yan_Txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:text="加群验证消息"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/group_Brief_Txt"
+        app:layout_goneMarginTop="10dp"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0.5dp"
+        android:background="@color/greyline"
+        app:layout_constraintStart_toStartOf="@+id/yan_Txt"
+        app:layout_constraintTop_toBottomOf="@id/yan_Txt" />
+
+    <EditText
+        android:id="@+id/apply_Edit"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@null"
+        android:gravity="top"
+        android:hint="输入验证信息"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:textColor="@color/blacktitlettwo"
+        android:textColorHint="@color/greytwo"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/yan_Txt"
+        app:layout_constraintTop_toBottomOf="@id/yan_Txt" />
+
+    <TextView
+        android:id="@+id/apply_group_Txt"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/group_btn_radius"
+        android:gravity="center"
+        android:text="申请"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

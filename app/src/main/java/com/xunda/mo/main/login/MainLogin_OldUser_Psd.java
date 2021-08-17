@@ -33,10 +33,10 @@ import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainLogin_OldUser_Psd extends BaseInitActivity {
 
@@ -199,12 +199,11 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
     }
 
     private void Data(Context context) {
-
-//        LoginMethod(context, saveFile.BaseUrl + saveFile.User_Login_Url + "?equipmentName=" + equipmentName +
-//                "&loginType=" + type + "&meid=" + meid + "&version=" + version + "&userNum=" + leId + "&password=" + psw+ "&osType=" + "2", type);
-        LoginMethod(context, saveFile.BaseUrl + saveFile.User_Login_Url, "2");
+        LoginMethod(context, saveFile.User_Login_Url, "2");
 
     }
+
+
 
     //登录
     public void LoginMethod(Context context, String baseUrl, String type) {
@@ -214,59 +213,40 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
         String version = android.os.Build.VERSION.RELEASE;
         String leId = phone_edit.getText().toString().trim();
         String psw = psw_edit.getText().toString().trim();
-        RequestParams params = new RequestParams(baseUrl);
-        params.addBodyParameter("equipmentName", equipmentName);
-        params.addBodyParameter("loginType", loginType);
-        params.addBodyParameter("meid", meid);
-        params.addBodyParameter("version", version);
-        params.addBodyParameter("userNum", leId);
-        params.addBodyParameter("password", psw);
-        params.addBodyParameter("osType", "2");
-        params.setAsJsonContent(true);
-
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("equipmentName", equipmentName);
+        map.put("loginType", loginType);
+        map.put("meid", meid);
+        map.put("version", version);
+        map.put("userNum", leId);
+        map.put("password", psw);
+        map.put("osType", "2");
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    // {"msg":"操作成功","code":200}
-                    Olduser_Model baseModel = new Gson().fromJson(resultString, Olduser_Model.class);
-                    if (baseModel.getCode() == 200) {
-//                        startTimer();
-                        String name = baseModel.getData().getHxUserName();
-                        loginViewModels.login(name, name, false);
-                        DemoHelper.getInstance().setAutoLogin(true);
+            public void success(String result) {
+                Olduser_Model baseModel = new Gson().fromJson(result, Olduser_Model.class);
+                String name = baseModel.getData().getHxUserName();
+                loginViewModels.login(name, name, false);
+                DemoHelper.getInstance().setAutoLogin(true);
 
-                        saveFile.saveShareData("JSESSIONID", baseModel.getData().getToken(), context);
-                        saveFile.saveShareData("phoneNum", baseModel.getData().getPhoneNum(), context);
-                        saveFile.saveShareData("userId", baseModel.getData().getUserId(), context);
+                saveFile.saveShareData("JSESSIONID", baseModel.getData().getToken(), context);
+                saveFile.saveShareData("phoneNum", baseModel.getData().getPhoneNum(), context);
+                saveFile.saveShareData("userId", baseModel.getData().getUserId(), context);
 
-                        MyInfo myInfo = new MyInfo(context);
-                        myInfo.setUserInfo(baseModel.getData());
-
-                        Intent intent = new Intent(context, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(context, baseModel.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
+                MyInfo myInfo = new MyInfo(context);
+                myInfo.setUserInfo(baseModel.getData());
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
+            public void failed(String... args) {
 
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
             }
         });
     }
+
 
 
 }

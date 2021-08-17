@@ -58,9 +58,46 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".main.me.activity.MeDetail_Edit_LabelAdd"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".main.me.activity.MeDetail_Edit_Label"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".main.group.activity.GroupDetail_Edit_LabelAdd"
+            android:screenOrientation="portrait"
+            android:exported="true" />
+        <activity
+            android:name=".main.group.activity.GroupDetail_Edit_Label"
+            android:screenOrientation="portrait"
+            android:exported="true" />
+
+        <activity
+            android:name=".main.group.activity.GroupDetail_Report"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.friend.Friend_Group_AdditiveGroup"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.discover.activity.Discover_Invite"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.me.activity.MeAndGroup_QRCode"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.discover.activity.Discover_QRCode"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".main.friend.Friend_Group_Detail"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".main.group.activity.GroupFriend_Detail"
             android:screenOrientation="portrait" />
@@ -98,7 +135,7 @@
             android:name=".main.group.activity.GroupAllMembers"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.group.activity.GroupDetail_Edit_Adress"
+            android:name=".main.group.activity.GroupDetail_Edit_Address"
             android:screenOrientation="portrait" />
         <activity
             android:name=".main.group.activity.GroupDetail_Edit"

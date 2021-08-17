@@ -234,7 +234,8 @@ public class GroupAllMembers_Manage_Apply extends BaseInitActivity {
         Map<String,Object> map = new HashMap<>();
         map.put("pageNum",PageIndex);
         map.put("pageSize",pageSize);
-        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        map.put("groupId",groupId);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 Model = new Gson().fromJson(result, Group_Apply_Bean.class);

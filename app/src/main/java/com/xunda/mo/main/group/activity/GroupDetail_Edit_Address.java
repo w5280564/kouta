@@ -35,7 +35,7 @@ import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.xunda.mo.R;
 import com.xunda.mo.main.group.adapter.GroupDetail_Edit_Adress_Adapter;
 
-public class GroupDetail_Edit_Adress extends EaseBaseActivity implements AMap.OnMyLocationChangeListener, PoiSearch.OnPoiSearchListener, EaseTitleBar.OnBackPressListener {
+public class GroupDetail_Edit_Address extends EaseBaseActivity implements AMap.OnMyLocationChangeListener, PoiSearch.OnPoiSearchListener, EaseTitleBar.OnBackPressListener {
 
     protected double latitude;
     protected double longtitude;
@@ -49,17 +49,17 @@ public class GroupDetail_Edit_Adress extends EaseBaseActivity implements AMap.On
     private LatLonPoint lp;
 
     public static void actionStartForResult(Activity activity, int requestCode) {
-        Intent intent = new Intent(activity, GroupDetail_Edit_Adress.class);
+        Intent intent = new Intent(activity, GroupDetail_Edit_Address.class);
         activity.startActivityForResult(intent, requestCode);
     }
 
     public static void actionStart(Context context) {
-        Intent intent = new Intent(context, GroupDetail_Edit_Adress.class);
+        Intent intent = new Intent(context, GroupDetail_Edit_Address.class);
         context.startActivity(intent);
     }
 
     public static void actionStart(Context context, double latitude, double longtitude, String address) {
-        Intent intent = new Intent(context, GroupDetail_Edit_Adress.class);
+        Intent intent = new Intent(context, GroupDetail_Edit_Address.class);
         intent.putExtra("latitude", latitude);
         intent.putExtra("longtitude", longtitude);
         intent.putExtra("address", address);
@@ -249,7 +249,7 @@ public class GroupDetail_Edit_Adress extends EaseBaseActivity implements AMap.On
     public void onPoiSearched(PoiResult poiResult, int i) {
 //        poiResult.getPois().get(0).getSnippet();
 
-        initlist(GroupDetail_Edit_Adress.this, poiResult);
+        initlist(GroupDetail_Edit_Address.this, poiResult);
     }
 
     @Override

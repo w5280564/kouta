@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.group.activity.GroupDetail_Edit"
-    android:background="@color/greyfive">
+    android:background="@color/greyfive"
+    tools:context=".main.group.activity.GroupDetail_Edit">
 
 
     <include
@@ -57,27 +57,80 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.xunda.mo.main.baseView.MyArrowItemView
-        android:id="@+id/friend_ArrowItemView"
-        android:layout_width="0dp"
+    <!--    <com.xunda.mo.main.baseView.MyArrowItemView-->
+    <!--        android:id="@+id/friend_ArrowItemView"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="50dp"-->
+    <!--        android:background="@color/white"-->
+    <!--        app:arrowItemContent=""-->
+    <!--        app:arrowItemContentColor="@color/greytwo"-->
+    <!--        app:arrowItemTitle="群标签"-->
+    <!--        app:arrowItemTitleColor="@color/blacktitlettwo"-->
+    <!--        app:arrowItemTitleSize="15sp"-->
+    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--        app:layout_constraintRight_toRightOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/head_Constraint" />-->
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/label_Constraint"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white"
         android:paddingLeft="15dp"
-        app:arrowItemContent=""
-        app:arrowItemContentColor="@color/greytwo"
-        app:arrowItemTitle="群标签"
-        app:arrowItemTitleColor="@color/blacktitlettwo"
-        app:arrowItemTitleSize="15sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/head_Constraint" />
+        android:paddingRight="15dp"
+        app:layout_constraintTop_toBottomOf="@id/head_Constraint"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="群标签"
+            android:textColor="#ff6f6f6f"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <ImageView
+            android:id="@+id/iv_arrow"
+            android:layout_width="7dp"
+            android:layout_height="12dp"
+            android:src="@mipmap/person_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UseAppTint" />
+
+        <LinearLayout
+            android:id="@+id/label_Lin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_arrow"
+            app:layout_constraintStart_toEndOf="@+id/textView16"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/greyfive"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.xunda.mo.main.baseView.MyArrowItemView
         android:id="@+id/adress_ArrowItemView"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@color/white"
-        android:paddingLeft="15dp"
         app:arrowItemContent=""
         app:arrowItemContentColor="@color/greytwo"
         app:arrowItemTitle="群地点"
@@ -85,24 +138,23 @@
         app:arrowItemTitleSize="15sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/friend_ArrowItemView" />
+        app:layout_constraintTop_toBottomOf="@id/label_Constraint" />
 
     <com.xunda.mo.main.baseView.MyArrowItemView
         android:id="@+id/brief_ArrowItemView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="60dp"
-        android:background="@color/white"
-        android:paddingLeft="15dp"
         android:layout_marginTop="15dp"
+        android:background="@color/white"
+        android:minHeight="60dp"
         app:arrowItemContent=""
         app:arrowItemContentColor="@color/greytwo"
+        app:arrowItemShowDivider="false"
+        app:arrowItemTip="群主很懒"
         app:arrowItemTitle="群简介"
         app:arrowItemTitleColor="@color/blacktitlettwo"
         app:arrowItemTitleSize="15sp"
         app:arrowItemshowTip="true"
-        app:arrowItemShowDivider="false"
-        app:arrowItemTip="群主很懒"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/adress_ArrowItemView" />

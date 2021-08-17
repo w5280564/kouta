@@ -138,8 +138,7 @@ public class Main_Launch extends BaseInitActivity {
             parseResource(response, new OnResourceParseCallback<Boolean>(true) {
                 @Override
                 public void onSuccess(Boolean data) {
-                    Intent intent = new Intent(Main_Launch.this, MainActivity.class);
-                    startActivity(intent);
+                    MainActivity.startAction(Main_Launch.this);
                     finish();
                 }
                 @Override

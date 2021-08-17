@@ -61,6 +61,8 @@ import java.util.regex.Pattern;
 @SuppressLint("SimpleDateFormat")
 public class StaticData {
 
+    public static Object viewTou;
+
     /**
      * 验证邮箱格式
      *
@@ -532,7 +534,7 @@ public class StaticData {
         String verName = "";
         try {
             //注意："com.example.try_downloadfile_progress"对应AndroidManifest.xml里的package="……"部分
-            verName = context.getPackageManager().getPackageInfo("com.moying.energyring", 0).versionName;
+            verName = context.getPackageManager().getPackageInfo("com.xunda.mo", 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("msg", e.getMessage());
         }

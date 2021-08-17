@@ -110,6 +110,14 @@ public class GroupRowUpdateMes extends EaseChatRow {
                 content = "群主修改了群简介";
             }
             content_Txt.setText(content);
+        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
+            if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL) && isSender) {
+                String SEND_NAME = message.getStringAttribute(MyConstant.SEND_NAME, "");
+                content = "您撤回了所有消息";
+            } else {
+                content = "撤回了所有消息";
+            }
+            content_Txt.setText(content);
         }
 
 

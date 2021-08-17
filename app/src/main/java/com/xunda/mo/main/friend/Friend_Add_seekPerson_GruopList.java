@@ -151,11 +151,8 @@ public class Friend_Add_seekPerson_GruopList extends AppCompatActivity implement
         mAdapter.setOnItemClickLitener(new Friend_Seek_GroupList_Adapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-//                Intent intent = new Intent(context, Person_ShopDetails.class);
-//                intent.putExtra("ProductID", baseModel.get(position).getProductID() + "");
-//                intent.putExtra("Integral", Integral);
-//                startActivity(intent);
-                baseModel.get(position).getGroupId();
+                String GroupId = baseModel.get(position).getGroupId();
+                Friend_Group_Detail.actionStart(Friend_Add_seekPerson_GruopList.this, GroupId);
 
             }
 
@@ -170,11 +167,11 @@ public class Friend_Add_seekPerson_GruopList extends AppCompatActivity implement
     private AddFriend_FriendGroup_Model Model;
 
     public void AddFriendMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("search",seekStr);
-        map.put("type",type);
-        map.put("pageNum",PageIndex);
-        map.put("pageSize",pageSize);
+        Map<String, Object> map = new HashMap<>();
+        map.put("search", seekStr);
+        map.put("type", type);
+        map.put("pageNum", PageIndex);
+        map.put("pageSize", pageSize);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
@@ -203,6 +200,7 @@ public class Friend_Add_seekPerson_GruopList extends AppCompatActivity implement
                 }
 
             }
+
             @Override
             public void failed(String... args) {
 

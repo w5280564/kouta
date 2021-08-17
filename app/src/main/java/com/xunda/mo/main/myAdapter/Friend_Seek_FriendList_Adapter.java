@@ -73,7 +73,7 @@ public class Friend_Seek_FriendList_Adapter extends RecyclerView.Adapter<Friend_
 //            StaticData.lodingheadBg(holder.head_simple);
         }
         holder.name.setText(oneData.getNickname());
-        holder.contentid_txt.setText("Le ID: " + oneData.getUserNum());
+        holder.contentid_txt.setText("Mo ID: " + oneData.getUserNum());
 
         if (oneData.getVipType() == 0) {
             holder.vipType_txt.setVisibility(View.GONE);

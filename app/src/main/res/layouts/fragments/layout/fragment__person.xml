@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/name_lin"
         android:layout_alignStart="@id/name_lin"
-        android:text="Le ID:520520"
+        android:text="Mo ID:520520"
         android:textColor="@color/yellowfive"
         android:textSize="12sp" />
 
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/id_txt"
         android:layout_alignStart="@id/name_lin"
-        android:text="Le ID:520520"
+        android:text="Mo ID:520520"
         android:textColor="@color/yellowfive"
         android:textSize="12sp" />
 
@@ -214,7 +214,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/person_servise_rel"
+        android:id="@+id/person_service_rel"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_below="@id/person_invitation_rel"
@@ -222,18 +222,18 @@
         android:layout_marginEnd="15dp">
 
         <ImageView
-            android:id="@+id/person_servise_img"
+            android:id="@+id/person_service_img"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_centerVertical="true"
-            android:src="@mipmap/person_servise" />
+            android:src="@mipmap/person_service" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:layout_toEndOf="@id/person_servise_img"
+            android:layout_toEndOf="@id/person_service_img"
             android:text="客服"
             android:textColor="@color/blacktitlettwo"
             android:textSize="14sp" />
@@ -335,7 +335,7 @@
         android:id="@+id/person_help_rel"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_below="@id/person_servise_rel"
+        android:layout_below="@id/person_service_rel"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp">
 

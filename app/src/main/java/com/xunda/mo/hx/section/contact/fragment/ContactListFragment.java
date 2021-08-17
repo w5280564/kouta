@@ -52,7 +52,6 @@ import com.xunda.mo.hx.section.contact.adapter.MyContactList_Adapter;
 import com.xunda.mo.hx.section.contact.viewmodels.ContactsViewModel;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
-import com.xunda.mo.hx.section.domain.MyEaseUser;
 import com.xunda.mo.hx.section.search.SearchFriendsActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
@@ -354,7 +353,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
         });
 
         mViewModel.loadContactList(true);
-        adressData(getActivity(),  saveFile.User_Friendlist_Url, "0");
+        addressData(getActivity(),  saveFile.User_Friendlist_Url, "0");
     }
 
     @Override
@@ -426,7 +425,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
 
 
     //联系人列表
-    public void adressData(final Context context, String baseUrl, String projectId) {
+    public void addressData(final Context context, String baseUrl, String projectId) {
         Map<String,Object> map = new HashMap<>();
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
@@ -435,10 +434,8 @@ public class ContactListFragment extends EaseContactListFragment implements View
                 List<EaseUser> data = new ArrayList<>();
                 for (int i = 0; i < model.getData().size(); i++) {
                     adress_Model.DataDTO dataDTO = model.getData().get(i);
-                    EaseUser user = new MyEaseUser();
-//                            user.setContact(dataDTO.);
+                    EaseUser user = new EaseUser();
                     user.setUsername(dataDTO.getHxUserName());
-
                     user.setNickname(dataDTO.getNickname());
                     // 正则表达式，判断首字母是否是英文字母
                     String pinyin = PinyinUtils.getPingYin(dataDTO.getNickname());
@@ -456,7 +453,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
                     user.setGender(0);
                     user.setBirth("");
                     user.setSign("");
-//                            user.setExt("");
                     user.setPhone("");
 //                            user.setLightStatus(dataDTO.getLightStatus());
 //                            user.setVipType(dataDTO.getVipType());
@@ -481,8 +477,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
                 sortList(data);
                 myContactList_adapter.setData(data);
                 contactLayout.getSwipeRefreshLayout().setRefreshing(false);
-//                        contactList.setData(data);
-//                        contactList.refreshList();
+
                 //更新本地数据库信息
                 DemoHelper.getInstance().updateUserList(data);
                 //更新本地联系人列表

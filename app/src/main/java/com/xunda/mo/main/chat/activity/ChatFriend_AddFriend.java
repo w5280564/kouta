@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import com.xunda.mo.hx.section.chat.viewmodel.ChatViewModel;
 import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.model.baseModel;
 import com.xunda.mo.network.saveFile;
+import com.xunda.mo.staticdata.MyLevel;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
@@ -50,6 +52,7 @@ public class ChatFriend_AddFriend extends BaseInitActivity {
     private EditText apply_Edit;
     private String addType;
     private String source;
+    private LinearLayout garde_Lin;
 
     /**
      * @param context
@@ -110,6 +113,7 @@ public class ChatFriend_AddFriend extends BaseInitActivity {
         send_mess_Txt = findViewById(R.id.send_mess_Txt);
         apply_Edit = findViewById(R.id.apply_Edit);
         send_mess_Txt.setOnClickListener(new send_mess_TxtClick());
+        garde_Lin = findViewById(R.id.garde_Lin);
     }
 
     @Override
@@ -155,7 +159,7 @@ public class ChatFriend_AddFriend extends BaseInitActivity {
     private class send_mess_TxtClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            if (TextUtils.isEmpty(apply_Edit.getText())) {
+            if (TextUtils.isEmpty(apply_Edit.getText().toString())) {
                 Toast.makeText(ChatFriend_AddFriend.this, "请输入验证信息", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -211,6 +215,7 @@ public class ChatFriend_AddFriend extends BaseInitActivity {
                 } else {
                     vip_Txt.setVisibility(View.VISIBLE);
                 }
+                MyLevel.setGrade(garde_Lin, dataDTO.getGrade().intValue(), context);
             }
             @Override
             public void failed(String... args) {

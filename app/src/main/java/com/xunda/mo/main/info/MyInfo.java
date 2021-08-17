@@ -81,14 +81,14 @@ public class MyInfo {
         editor.putString("userId", model.getUserId());
         editor.putInt("userNum", model.getUserNum());
         editor.putInt("VipType", model.getVipType());
-        editor.commit();
+        editor.apply();
     }
 
     //修改存储的一条数据
     public void setOneData(String keyStr, String valueStr) {
         SharedPreferences.Editor editor = share.edit();
         editor.putString(keyStr, valueStr);
-        editor.commit();
+        editor.apply();
     }
 
 
@@ -108,7 +108,7 @@ public class MyInfo {
                 String string64 = new String(Base64.encode(baos.toByteArray(), 0));
 //                SharedPreferences.Editor editor = getSharedPreferences(context).edit();
                 SharedPreferences.Editor editor = share.edit();
-                editor.putString(key, string64).commit();
+                editor.putString(key, string64).apply();
             } catch (IOException e) {
                 e.printStackTrace();
             }

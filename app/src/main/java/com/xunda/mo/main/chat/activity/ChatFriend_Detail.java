@@ -9,12 +9,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -53,6 +56,7 @@ import com.xunda.mo.main.baseView.MySwitchItemView;
 import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.model.baseModel;
 import com.xunda.mo.network.saveFile;
+import com.xunda.mo.staticdata.MyLevel;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
@@ -75,6 +79,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private String FriendApplyId;
     private ProgressBar site_progressbar;
     private MyArrowItemView nick_ArrowItemView;
+    private LinearLayout grade_Lin, label_Lin;
 //    private Switch switch_item;
 
     /**
@@ -103,6 +108,13 @@ public class ChatFriend_Detail extends BaseInitActivity {
         } else {
             intent.putExtra("isFriend", false);
         }
+        intent.putExtra("addType", addType);
+        context.startActivity(intent);
+    }
+
+    public static void actionStartActivity(Context context, String toChatUsername, String addType) {
+        Intent intent = new Intent(context, ChatFriend_Detail.class);
+        intent.putExtra("toChatUsername", toChatUsername);
         intent.putExtra("addType", addType);
         context.startActivity(intent);
     }
@@ -142,6 +154,8 @@ public class ChatFriend_Detail extends BaseInitActivity {
         add_friend_Group = findViewById(R.id.add_friend_Group);
         send_mess_Txt.setOnClickListener(new send_mess_TxtOnClick());
         site_progressbar = findViewById(R.id.site_progressbar);
+        grade_Lin = findViewById(R.id.grade_Lin);
+        label_Lin = findViewById(R.id.label_Lin);
 
 
         MyArrowItemView friend_ArrowItemView = findViewById(R.id.friend_ArrowItemView);
@@ -261,7 +275,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private class add_TxtClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-                ChatFriend_AddFriend.actionStart(mContext, toChatUsername, addType);
+            ChatFriend_AddFriend.actionStart(mContext, toChatUsername, addType);
 //                ChatFriend_AddFriend.actionStart(mContext, toChatUsername, mUser, addType);
 
         }
@@ -303,12 +317,13 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private class move_Block_TxtClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            BlackMethod(ChatFriend_Detail.this,  saveFile.Friend_SetBlack_Url, false, black_Switch.getSwitch());
+            BlackMethod(ChatFriend_Detail.this, saveFile.Friend_SetBlack_Url, false, black_Switch.getSwitch());
         }
     }
 
     String userName;
     String userID;
+
     @Override
     protected void initData() {
         super.initData();
@@ -334,15 +349,15 @@ public class ChatFriend_Detail extends BaseInitActivity {
             userName = "friendUserId";
             userID = FriendApplyId;
         }
-        FriendMethod(ChatFriend_Detail.this,  saveFile.Friend_info_Url );
+        FriendMethod(ChatFriend_Detail.this, saveFile.Friend_info_Url);
     }
 
     Friend_Details_Bean model;
 
     @SuppressLint("SetTextI18n")
     public void FriendMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put(userName,userID);
+        Map<String, Object> map = new HashMap<>();
+        map.put(userName, userID);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
@@ -356,7 +371,10 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 cententTxt.setText(name);
                 nick_tv_content.setText(name);
                 leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
-                signature_Txt.setText("个性签名：" + dataDTO.getSignature());
+                String signature = dataDTO.getSignature();
+                if (!TextUtils.isEmpty(signature)) {
+                    signature_Txt.setText("个性签名：" + dataDTO.getSignature());
+                }
                 friend_tv_content.setText(dataDTO.getSource());
                 grade_Txt.setText("LV." + dataDTO.getGrade().intValue());
                 if (dataDTO.getVipType() == 0) {
@@ -367,12 +385,41 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 }
                 isFriendSetView(dataDTO.getIsFriend(), dataDTO.getFriendStatus());
                 toChatUsername = dataDTO.getHxUserName();
+                tagList(label_Lin, context, dataDTO.getTag());
+
+                MyLevel.setGrade(grade_Lin, dataDTO.getGrade().intValue(), context);
             }
+
             @Override
             public void failed(String... args) {
 
             }
         });
+    }
+
+    public void tagList(LinearLayout label_Lin, Context mContext, String tag) {
+        if (label_Lin != null) {
+            label_Lin.removeAllViews();
+        }
+        if (TextUtils.isEmpty(tag)) {
+            return;
+        }
+        String[] tagS = tag.split(",");
+        for (int i = 0; i < tagS.length; i++) {
+            TextView textView = new TextView(mContext);
+            textView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+            textView.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+            textView.setBackgroundResource(R.drawable.group_label_radius);
+            textView.setText(tagS[i]);
+            LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            int margins = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, mContext.getResources().getDisplayMetrics());
+            itemParams.setMargins(0, 0, margins, 0);
+            textView.setLayoutParams(itemParams);
+            textView.setTag(i);
+            label_Lin.addView(textView);
+            textView.setOnClickListener(v -> {
+            });
+        }
     }
 
 
@@ -454,7 +501,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
         newregistr_txt.setOnClickListener(new NoDoubleClickListener() {
             @Override
             protected void onNoDoubleClick(View v) {
-                QuestionMethod(mContext,  saveFile.User_PublicQuestionBack_Url);
+                QuestionMethod(mContext, saveFile.User_PublicQuestionBack_Url);
                 MorePopup.dismiss();
             }
         });
@@ -464,12 +511,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 MorePopup.dismiss();
             }
         });
-//        contentView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                MorePopup.dismiss();
-//            }
-//        });
     }
 
 
@@ -485,7 +526,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
 
     //举报用户头像
     public void QuestionMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("picture", model.getData().getHeadImg());
         map.put("toReportUserId", model.getData().getUserNum());
         map.put("type", "1");
@@ -495,6 +536,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 Toast.makeText(context, "反馈已上传", Toast.LENGTH_SHORT).show();
                 finish();
             }
+
             @Override
             public void failed(String... args) {
             }
@@ -508,7 +550,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
      * @param baseUrl
      */
     public void RemoveMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("friendUserId", model.getData().getUserId());
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @SneakyThrows
@@ -522,6 +564,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 finish();
 
             }
+
             @Override
             public void failed(String... args) {
             }
@@ -536,7 +579,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
      */
     public void BlackMethod(Context context, String baseUrl, boolean isBlock, View switchView) {
         site_progressbar.setVisibility(View.VISIBLE);
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("friendUserId", model.getData().getUserId());
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
@@ -550,6 +593,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 site_progressbar.setVisibility(View.GONE);
                 switchView.setEnabled(true);
             }
+
             @Override
             public void failed(String... args) {
                 site_progressbar.setVisibility(View.GONE);
@@ -562,7 +606,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
      * 修改用户信息
      */
     public void ChangeUserMethod(Context context, String baseUrl, String remarkName) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("friendUserId", model.getData().getUserId());
         map.put("remarkName", remarkName);
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
@@ -583,6 +627,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 String hxUserName = model.getData().getHxUserName();
                 DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
             }
+
             @Override
             public void failed(String... args) {
             }

@@ -106,6 +106,7 @@
                 app:layout_constraintRight_toLeftOf="@id/grade_Txt" />
 
             <LinearLayout
+                android:id="@+id/garde_Lin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -126,6 +127,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/grade_Txt" />
 
+            <LinearLayout
+                android:id="@+id/label_Lin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintTop_toBottomOf="@id/signature_Txt" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -134,9 +146,9 @@
                 android:layout_width="0dp"
                 android:layout_height="45dp"
                 android:background="@color/white"
-                android:paddingStart="15dp"
                 app:arrowItemContent=""
                 app:arrowItemContentColor="@color/greytwo"
+
                 app:arrowItemTitle="修改群昵称"
                 app:arrowItemTitleColor="@color/blacktitlettwo"
                 app:arrowItemTitleSize="15sp"
@@ -179,7 +191,6 @@
                 android:layout_width="0dp"
                 android:layout_height="45dp"
                 android:background="@color/white"
-                android:paddingStart="15dp"
                 app:arrowItemContent=""
                 app:arrowItemContentColor="@color/greytwo"
                 app:arrowItemTitle="设置群内禁言"

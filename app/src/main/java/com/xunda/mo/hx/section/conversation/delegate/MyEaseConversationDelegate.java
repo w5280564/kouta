@@ -67,46 +67,47 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
 
 //            String ext = item.getLastMessage().getStringAttribute(MyConstant.EXT);
 //            JSONObject jsonObject = new JSONObject(ext);
+        holder.name.setTextColor(ContextCompat.getColor(context, R.color.blacktitle));
 
-            if (item.getType() == EMConversation.EMConversationType.GroupChat) {
-                if (EaseAtMessageHelper.get().hasAtMeMsg(username)) {
-                    holder.mentioned.setText(R.string.were_mentioned);
-                    holder.mentioned.setVisibility(View.VISIBLE);
-                }
-                defaultAvatar = R.drawable.ease_group_icon;
-                EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
-                showName = group != null ? group.getGroupName() : username;
+        if (item.getType() == EMConversation.EMConversationType.GroupChat) {
+            if (EaseAtMessageHelper.get().hasAtMeMsg(username)) {
+                holder.mentioned.setText(R.string.were_mentioned);
+                holder.mentioned.setVisibility(View.VISIBLE);
+            }
+            defaultAvatar = R.drawable.ease_group_icon;
+            EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
+            showName = group != null ? group.getGroupName() : username;
+            if (item.getAllMsgCount() != 0) {
+                item.conversationId();
+                HeadName = item.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME, "");
+                HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.GROUP_HEAD, "");
+            }
 
-                if (item.getAllMsgCount() != 0) {
-                    item.conversationId();
-                    HeadName = item.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME,"");
-                    HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.GROUP_HEAD,"");
-                }
+        } else if (item.getType() == EMConversation.EMConversationType.ChatRoom) {
+            defaultAvatar = R.drawable.ease_chat_room_icon;
+            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().getChatRoom(username);
+            showName = chatRoom != null && !TextUtils.isEmpty(chatRoom.getName()) ? chatRoom.getName() : username;
 
-            } else if (item.getType() == EMConversation.EMConversationType.ChatRoom) {
-                defaultAvatar = R.drawable.ease_chat_room_icon;
-                EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().getChatRoom(username);
-                showName = chatRoom != null && !TextUtils.isEmpty(chatRoom.getName()) ? chatRoom.getName() : username;
-            } else if (TextUtils.equals(((EMConversation) item).getLastMessage().getFrom(), MyConstant.ADMIN)) {
+        } else if (TextUtils.equals(item.getLastMessage().getFrom(), MyConstant.ADMIN)) {
+            HeadName = "群通知";
+            defaultAvatar = R.mipmap.group_notification;
+            holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
 
-                HeadName = "admin";
-//                holder.message.setText(item.getLastMessage().getBody().toString());
-            } else {
-                defaultAvatar = R.drawable.ease_default_avatar;
-                showName = username;
-//                String SEND_NAME =  item.getLastMessage().getStringAttribute(MyConstant.SEND_NAME,"");
-                if (item.getAllMsgCount() != 0) {
-                    HeadName = item.getLastMessage().getStringAttribute(MyConstant.SEND_NAME, "");
-                    HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.SEND_HEAD, "");
-                }
+        } else {
+            defaultAvatar = R.drawable.mo_icon;
+            showName = username;
+            if (item.getAllMsgCount() != 0) {
+                HeadName = item.getLastMessage().getStringAttribute(MyConstant.SEND_NAME, "");
+                HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.SEND_HEAD, "");
 
             }
+        }
 
 
 //        holder.avatar.setImageResource(defaultAvatar);
 //        holder.name.setText(showName);
 
-        Glide.with(context).load(HeadAvatar).into(holder.avatar);
+        Glide.with(context).load(HeadAvatar).error(defaultAvatar).into(holder.avatar);
         holder.name.setText(HeadName);
 
         EaseConversationInfoProvider infoProvider = EaseIM.getInstance().getConversationInfoProvider();
@@ -125,10 +126,12 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                 if (user != null) {
                     try {
                         String selectInfoExt = user.getExt();
-                        JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
-                        String name = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
-                        if (!TextUtils.isEmpty(name)) {
-                            holder.name.setText(name);
+                        if (!TextUtils.isEmpty(selectInfoExt)) {
+                            JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                            String name = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
+                            if (!TextUtils.isEmpty(name)) {
+                                holder.name.setText(name);
+                            }
                         }
                     } catch (
                             JSONException e) {
@@ -152,6 +155,10 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         if (item.getAllMsgCount() != 0) {
             EMMessage lastMessage = item.getLastMessage();
             holder.message.setText(EaseSmileUtils.getSmiledText(context, EaseCommonUtils.getMessageDigest(lastMessage, context)));
+            if (TextUtils.equals(item.getLastMessage().getFrom(), MyConstant.ADMIN)) {
+                String content = item.getLastMessage().getStringAttribute("content", "");
+                holder.message.setText(content);
+            }
             holder.time.setText(EaseDateUtils.getTimestampString(context, new Date(lastMessage.getMsgTime())));
             if (lastMessage.direct() == EMMessage.Direct.SEND && lastMessage.status() == EMMessage.Status.FAIL) {
                 holder.mMsgState.setVisibility(View.VISIBLE);

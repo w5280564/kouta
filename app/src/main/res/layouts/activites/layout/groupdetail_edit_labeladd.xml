@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.group.activity.GroupDetail_Edit_LabelAdd"
+    tools:ignore="MissingConstraints">
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/greyfive"
+        app:layout_constraintTop_toBottomOf="@+id/title_Include"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:id="@+id/query"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="请输入新标签"
+            android:lines="1"
+            android:maxLength="8"
+            android:paddingStart="15dp"
+            android:textColor="@color/blacktitle"
+            android:textColorHint="@color/blacktitlettwo"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/Label_Add" />
+
+        <ImageButton
+            android:id="@+id/search_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
+            android:background="@android:color/transparent"
+            android:padding="6dp"
+            android:src="@drawable/ease_search_clear"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/query"
+            app:layout_constraintRight_toRightOf="@id/query"
+            app:layout_constraintTop_toTopOf="@id/query" />
+
+        <TextView
+            android:id="@+id/Label_Add"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="2dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="添加"
+            android:textColor="@color/em_color_brand"
+            android:textSize="@dimen/em_size_normal"
+            app:layout_constraintBottom_toBottomOf="@id/query"
+            app:layout_constraintLeft_toRightOf="@id/query"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/query" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/label_Lin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="7dp"
-            android:text="MoID/昵称/手机号/标签/群"
+            android:text="Mo ID/昵称/手机号/标签/群"
             android:textColor="@color/greytwo"
             android:textSize="12sp" />
 

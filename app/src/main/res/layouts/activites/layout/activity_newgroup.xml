@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".main.group.activity.newGroup"
-    tools:ignore="MissingConstraints"
-    android:background="@color/white">
+    tools:ignore="MissingConstraints">
 
     <include
         android:id="@+id/title_Include"
@@ -70,7 +70,6 @@
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:background="@color/white"
-            android:paddingLeft="15dp"
             android:paddingRight="15dp"
             app:arrowItemContent="需要身份验证，由管理员审核"
             app:arrowItemContentColor="@color/greytwo"
@@ -101,8 +100,8 @@
             android:id="@+id/addUser_Recy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/addGroup_count"
-            android:background="@color/white"/>
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/addGroup_count" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -118,7 +117,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/title_Include" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

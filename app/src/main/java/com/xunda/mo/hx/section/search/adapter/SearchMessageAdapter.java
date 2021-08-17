@@ -59,6 +59,7 @@ public class SearchMessageAdapter extends EaseBaseRecyclerViewAdapter<EMMessage>
 
         @Override
         public void setData(EMMessage item, int position) {
+
             EMMessage.ChatType chatType = item.getChatType();
             time.setText(EaseDateUtils.getTimestampString(mContext, new Date(item.getMsgTime())));
             if (chatType == EMMessage.ChatType.GroupChat || chatType == EMMessage.ChatType.ChatRoom) {
@@ -70,12 +71,12 @@ public class SearchMessageAdapter extends EaseBaseRecyclerViewAdapter<EMMessage>
                 Glide.with(mContext).load(item.getStringAttribute(MyConstant.SEND_HEAD, "")).placeholder(R.drawable.em_login_logo).into(avatar);
             } else {
                 if (item.direct() == EMMessage.Direct.SEND) {
-                    name.setText(item.getStringAttribute("sendName", ""));
-                    Glide.with(mContext).load(item.getStringAttribute("sendHead", "")).placeholder(R.drawable.em_login_logo).into(avatar);
+                    name.setText(item.getStringAttribute(MyConstant.SEND_NAME, ""));
+                    Glide.with(mContext).load(item.getStringAttribute(MyConstant.SEND_HEAD, "")).placeholder(R.drawable.em_login_logo).into(avatar);
 //                    name.setText(item.getFrom());
                 } else {
-                    name.setText(item.getStringAttribute("sendName", ""));
-                    Glide.with(mContext).load(item.getStringAttribute("sendHead", "")).placeholder(R.drawable.em_login_logo).into(avatar);
+                    name.setText(item.getStringAttribute(MyConstant.SEND_NAME, ""));
+                    Glide.with(mContext).load(item.getStringAttribute(MyConstant.SEND_HEAD, "")).placeholder(R.drawable.em_login_logo).into(avatar);
 //                    name.setText(item.getTo());
                 }
             }

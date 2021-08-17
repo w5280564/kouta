@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.group.activity.GroupDetail_Report"
+    tools:ignore="MissingConstraints">
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.xunda.mo.main.baseView.MyArrowItemView
+        android:id="@+id/report_ArrowItemView"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:paddingRight="15dp"
+        app:arrowItemContent="请选择"
+        app:arrowItemContentColor="@color/greytwo"
+        app:arrowItemTitle="举报原因"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
+        app:arrowItemTitleSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_Include" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/greyfive"
+        android:gravity="center_vertical"
+        android:paddingStart="15dp"
+        android:text="如果对方已撤回消息，请选择撤回后的聊天界面截图举报"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/report_ArrowItemView" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="15dp"
+        android:text="问题描述（必填）"
+        android:textColor="@color/blacktitlettwo"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <EditText
+        android:id="@+id/content_edit"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/white"
+        android:gravity="start"
+        android:hint="请输入描述内容"
+        android:inputType="textMultiLine"
+        android:padding="15dp"
+        android:singleLine="false"
+        android:textColor="@color/greytwo"
+        android:textColorHint="@color/greytwo"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+    <TextView
+        android:id="@+id/zi_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/content_edit"
+        android:background="@color/white"
+        android:gravity="right"
+        android:paddingRight="15dp"
+        android:paddingBottom="15dp"
+        android:text="50字节以内"
+        android:textColor="#ffa1a1a1"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/content_edit" />
+
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/greyfive"
+        android:gravity="center_vertical"
+        android:paddingStart="15dp"
+        android:text="最多上传6张截图"
+        app:layout_constraintTop_toBottomOf="@+id/zi_txt" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="15dp"
+        android:text="举报附件（选填）"
+        android:textColor="#ff6f6f6f"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+
+    <com.xunda.mo.main.baseView.FlowLayout
+        android:id="@+id/photoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/textView12"
+        tools:layout_editor_absoluteX="10dp">
+
+        <ImageButton
+            android:id="@+id/add_photo_Img"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/add_photo" />
+    </com.xunda.mo.main.baseView.FlowLayout>
+
+
+    <Button
+        android:id="@+id/next_Btn"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/loginbtn_radius_yellow"
+        android:text="提交"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/photoLayout"
+        tools:layout_editor_absoluteX="15dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

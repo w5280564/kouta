@@ -14,9 +14,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputFilter;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +42,7 @@ import com.obs.services.exception.ObsException;
 import com.obs.services.model.AuthTypeEnum;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
+import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.group.fragment.GroupEditFragment;
 import com.xunda.mo.main.baseView.MyArrowItemView;
@@ -65,12 +70,13 @@ import lombok.SneakyThrows;
 public class GroupDetail_Edit extends BaseInitActivity {
 
     protected static final int ADRESS_CODE = 1;
-    private ConstraintLayout head_Constraint;
+    private ConstraintLayout head_Constraint,label_Constraint;
     private ObsClient obsClient;
     private int Identity;
     private GruopInfo_Bean groupModel;
     private SimpleDraweeView person_img;
     private MyArrowItemView adress_ArrowItemView, brief_ArrowItemView;
+    private LinearLayout label_Lin;
 
     public static void actionStart(Context context, int Identity, GruopInfo_Bean groupModel) {
         Intent intent = new Intent(context, GroupDetail_Edit.class);
@@ -88,7 +94,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
     protected void initIntent(Intent intent) {
         super.initIntent(intent);
         groupModel = (GruopInfo_Bean) intent.getSerializableExtra("groupModel");
-        Identity = intent.getIntExtra("Identity",5);
+        Identity = intent.getIntExtra("Identity", 5);
     }
 
     @Override
@@ -99,12 +105,19 @@ public class GroupDetail_Edit extends BaseInitActivity {
         head_Constraint = findViewById(R.id.head_Constraint);
         head_Constraint.setOnClickListener(new head_ConstraintClick());
         person_img = findViewById(R.id.person_img);
+        label_Constraint = findViewById(R.id.label_Constraint);
+        label_Constraint.setOnClickListener(new label_ConstraintClick());
+        label_Lin = findViewById(R.id.label_Lin);
         adress_ArrowItemView = findViewById(R.id.adress_ArrowItemView);
         adress_ArrowItemView.setOnClickListener(new adress_ArrowItemViewClick());
         brief_ArrowItemView = findViewById(R.id.brief_ArrowItemView);
         brief_ArrowItemView.setOnClickListener(new brief_ArrowItemViewClick());
 
         initObsClient();
+
+        LiveDataBus.get().with(MyConstant.MY_GROUP_LABEL,String.class).observe(this, s -> {
+            tagList(label_Lin,  GroupDetail_Edit.this,s);
+        });
     }
 
     private void initTitle() {
@@ -131,21 +144,23 @@ public class GroupDetail_Edit extends BaseInitActivity {
     @Override
     protected void initData() {
         super.initData();
-        if (!TextUtils.isEmpty(groupModel.getMsg()) && groupModel.getCode() == 200) {
+        if (groupModel != null) {
             GruopInfo_Bean.DataDTO dataDTO = groupModel.getData();
             Uri uri = Uri.parse(dataDTO.getGroupHeadImg());
             person_img.setImageURI(uri);
-
             String adressStr = dataDTO.getGroupAddr().isEmpty() ? "未设置" : dataDTO.getGroupAddr();
             adress_ArrowItemView.getTvContent().setText(adressStr);
             String content = dataDTO.getGroupIntroduction().isEmpty() ? "群主很懒，还没有群介绍哦~" : dataDTO.getGroupIntroduction();
             brief_ArrowItemView.getTip().setText(content);
+            String tag = groupModel.getData().getTag();
+            tagList(label_Lin,  GroupDetail_Edit.this,tag);
 
             //3是普通成员不能修改
-            if (Identity == 3){
+            if (Identity == 3) {
                 head_Constraint.setEnabled(false);
                 adress_ArrowItemView.setEnabled(false);
                 brief_ArrowItemView.setEnabled(false);
+                label_Constraint.setEnabled(false);
             }
 
         }
@@ -179,10 +194,37 @@ public class GroupDetail_Edit extends BaseInitActivity {
             }
             String Address = groupModel.getData().getGroupAddr();
 
-            GroupDetail_Edit_Adress.actionStartForResult(GroupDetail_Edit.this, ADRESS_CODE);
+            GroupDetail_Edit_Address.actionStartForResult(GroupDetail_Edit.this, ADRESS_CODE);
 //            GroupDetail_Edit_Adress.actionStart(mContext, Latitude, Longitude, Address);
         }
     }
+
+
+    public void tagList(LinearLayout label_Lin, Context mContext,String tag) {
+        if (label_Lin != null){
+            label_Lin.removeAllViews();
+        }
+        if (TextUtils.isEmpty(tag)){
+            return;
+        }
+        String[] tagS = tag.split(",");
+        for (int i = 0; i < tagS.length; i++) {
+            TextView textView = new TextView(mContext);
+            textView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+            textView.setTextColor(ContextCompat.getColor(mContext,R.color.white));
+            textView.setBackgroundResource(R.drawable.group_label_radius);
+            textView.setText(tagS[i]);
+            LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            int margins = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, mContext.getResources().getDisplayMetrics());
+            itemParams.setMargins(0, 0, margins, 0);
+            textView.setLayoutParams(itemParams);
+            textView.setTag(i);
+            label_Lin.addView(textView);
+            textView.setOnClickListener(v -> {
+            });
+        }
+    }
+
 
     private class brief_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
@@ -203,7 +245,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
                         brief_ArrowItemView.getTip().setText(content);
                         String changType = "3";
                         String keyStr = "groupIntroduction";
-                        CreateGroupMethod(GroupDetail_Edit.this,  saveFile.Group_UpdateInfo_Url, changType, keyStr, content, "", "");
+                        CreateGroupMethod(GroupDetail_Edit.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, content, "", "");
                     }
                 });
     }
@@ -293,7 +335,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
             }
             String changType = "2";
             String keyStr = "groupAddr";
-            CreateGroupMethod(GroupDetail_Edit.this,  saveFile.Group_UpdateInfo_Url, changType, keyStr, locationAddress, "", "");
+            CreateGroupMethod(GroupDetail_Edit.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, locationAddress, "", "");
         }
     }
 
@@ -343,7 +385,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
 //            pictures = pic;
             String changType = "1";
             String keyStr = "groupHeadImg";
-            CreateGroupMethod(GroupDetail_Edit.this,  saveFile.Group_UpdateInfo_Url, changType, keyStr, pic, "", "");
+            CreateGroupMethod(GroupDetail_Edit.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, pic, "", "");
         }
     }
 
@@ -357,8 +399,9 @@ public class GroupDetail_Edit extends BaseInitActivity {
      * @param valueStr
      */
     public void CreateGroupMethod(Context context, String baseUrl, String changType, String keyStr, String valueStr, String keyCity, String valueCityStr) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("groupId",groupModel.getData().getGroupId());
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", groupModel.getData().getGroupId());
+        map.put(keyStr, valueStr);
         xUtils3Http.post(mContext, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
@@ -370,10 +413,11 @@ public class GroupDetail_Edit extends BaseInitActivity {
                 } else if (TextUtils.equals(changType, "2")) {
                     String adressStr = valueStr.isEmpty() ? "未设置" : valueStr;
                     adress_ArrowItemView.getTvContent().setText(adressStr);
-                }else if (TextUtils.equals(changType, "3")){
+                } else if (TextUtils.equals(changType, "3")) {
                     sendMes(groupModel);
                 }
             }
+
             @Override
             public void failed(String... args) {
             }
@@ -401,6 +445,13 @@ public class GroupDetail_Edit extends BaseInitActivity {
         DemoHelper.getInstance().getChatManager().sendMessage(message);
     }
 
+
+    private class label_ConstraintClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            GroupDetail_Edit_Label.actionStart(mContext, Identity, groupModel);
+        }
+    }
 
 
 }

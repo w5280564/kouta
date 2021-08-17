@@ -7,11 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -47,6 +50,7 @@ import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.Group_Details_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
+import com.xunda.mo.staticdata.MyLevel;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
@@ -76,6 +80,7 @@ public class GroupFriend_Detail extends BaseInitActivity {
     private TextView send_mess_Txt, remove_Txt, add_Txt;
     private EMConversation conversation;
     private MySwitchItemView black_Switch;
+    private LinearLayout garde_Lin,label_Lin;
 
     /**
      * @param context
@@ -137,6 +142,8 @@ public class GroupFriend_Detail extends BaseInitActivity {
         add_Txt.setOnClickListener(new add_TxtClick());
         black_Switch = findViewById(R.id.black_Switch);
         black_Switch.getSwitch().setOnClickListener(new black_SwitchClick());
+        garde_Lin = findViewById(R.id.garde_Lin);
+        label_Lin = findViewById(R.id.label_Lin);
     }
 
     @Override
@@ -377,13 +384,12 @@ public class GroupFriend_Detail extends BaseInitActivity {
                 cententTxt.setText(groupRemarkStr);
                 nick_ArrowItemView.getTvContent().setText(groupRemarkStr);
                 leID_Txt.setText("Mo ID:" + dataDTO.getUserNum());
-                signature_Txt.setText("个性签名：" + dataDTO.getSignature());
+                String signature = dataDTO.getSignature();
+                if (!TextUtils.isEmpty(signature)) {
+                    signature_Txt.setText("个性签名：" + dataDTO.getSignature());
+                }
                 grade_Txt.setText("LV." + dataDTO.getGrade());
-//                        if (dataDTO.getVipType() == 0) {
-//                            vip_Txt.setVisibility(View.GONE);
-//                        } else {
-//                            vip_Txt.setVisibility(View.VISIBLE);
-//                        }
+
                 groupDisplay();
                 if (model.getData().getIdentity() == 2) {
                     manage_Switch.getSwitch().setChecked(true);
@@ -398,7 +404,9 @@ public class GroupFriend_Detail extends BaseInitActivity {
                     forbidden_ArrowItemView.getTvContent().setText("剩余禁言时间：" + dataStr);
                 }
 
+                tagList(label_Lin, mContext, dataDTO.getTag());
                 UserName = groupRemarkStr;
+                MyLevel.setGrade(garde_Lin, dataDTO.getGrade().intValue(), mContext);
             }
 
             @Override
@@ -451,6 +459,32 @@ public class GroupFriend_Detail extends BaseInitActivity {
             send_mess_Txt.setVisibility(View.VISIBLE);
         }
     }
+
+    public void tagList(LinearLayout label_Lin, Context mContext, String tag) {
+        if (label_Lin != null) {
+            label_Lin.removeAllViews();
+        }
+        if (TextUtils.isEmpty(tag)) {
+            return;
+        }
+        String[] tagS = tag.split(",");
+        for (int i = 0; i < tagS.length; i++) {
+            TextView textView = new TextView(mContext);
+            textView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+            textView.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+            textView.setBackgroundResource(R.drawable.group_label_radius);
+            textView.setText(tagS[i]);
+            LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            int margins = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, mContext.getResources().getDisplayMetrics());
+            itemParams.setMargins(0, 0, margins, 0);
+            textView.setLayoutParams(itemParams);
+            textView.setTag(i);
+            label_Lin.addView(textView);
+            textView.setOnClickListener(v -> {
+            });
+        }
+    }
+
 
     private void showMore(final Context mContext, final View view) {
         View contentView = View.inflate(mContext, R.layout.chatdetailset_feedback, null);
