@@ -134,7 +134,7 @@ public class newGroup extends BaseInitActivity {
         return_Btn.setVisibility(View.VISIBLE);
         TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
         cententTxt.setText("创建新的群聊");
-         right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
+        right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.VISIBLE);
         right_Btn.setText("完成");
         viewTouchDelegate.expandViewTouchDelegate(right_Btn, 50, 50, 50, 50);
@@ -160,7 +160,7 @@ public class newGroup extends BaseInitActivity {
             }
             right_Btn.setEnabled(false);
             if (selectList.isEmpty()) {
-                CreateGroupMethod(newGroup.this,  saveFile.Group_Create_Url);
+                CreateGroupMethod(newGroup.this, saveFile.Group_Create_Url);
             } else {
                 AsyncTask<Void, Void, String> task = new PostObjectTask();
                 task.execute();
@@ -389,9 +389,10 @@ public class newGroup extends BaseInitActivity {
     String pictures = "";
     String joinWay = "3";
     String userIds;
+
     public void CreateGroupMethod(Context context, String baseUrl) {
         site_progressbar.setVisibility(View.VISIBLE);
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("groupName", group_edit.getText().toString());
         map.put("isAnonymous", mySwitchItemView.getSwitch().isChecked() ? 1 : 0);
         map.put("joinWay", joinWay);
@@ -401,12 +402,13 @@ public class newGroup extends BaseInitActivity {
             @Override
             public void success(String result) {
                 createGroup_Bean baseModel = new Gson().fromJson(result, createGroup_Bean.class);
-                    Toast.makeText(context, "群已创建", Toast.LENGTH_SHORT).show();
-                    sendMes(baseModel);
-                    finish();
+                Toast.makeText(context, "群已创建", Toast.LENGTH_SHORT).show();
+                sendMes(baseModel);
+                finish();
                 site_progressbar.setVisibility(View.GONE);
                 right_Btn.setEnabled(true);
             }
+
             @Override
             public void failed(String... args) {
                 site_progressbar.setVisibility(View.GONE);

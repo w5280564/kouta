@@ -37,7 +37,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.google.android.material.internal.FlowLayout;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -49,6 +48,7 @@ import com.obs.services.model.AccessControlList;
 import com.obs.services.model.AuthTypeEnum;
 import com.obs.services.model.PutObjectRequest;
 import com.xunda.mo.R;
+import com.xunda.mo.main.baseView.FlowLayout;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.GlideEnGine;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
@@ -70,12 +70,12 @@ import lombok.SneakyThrows;
 public class MainLogin_QuestionFeedBack extends AppCompatActivity {
 
     private EditText phone_edit, email_edit, content_edit;
-    private FlowLayout photoLayout;
     private ArrayList<String> photoPaths;
     private ImageButton add_photo_Img;
     private Button next_Btn;
 
     private ObsClient obsClient;
+    private FlowLayout photoLayout;
 //    private String userId;
 
     @Override
@@ -133,7 +133,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
         phone_edit = findViewById(R.id.phone_edit);
         email_edit = findViewById(R.id.email_edit);
         content_edit = findViewById(R.id.content_edit);
-        photoLayout = (FlowLayout) findViewById(R.id.photoLayout);
+        photoLayout =  findViewById(R.id.photoLayout);
         add_photo_Img = (ImageButton) findViewById(R.id.add_photo_Img);
         next_Btn = findViewById(R.id.next_Btn);
 
@@ -186,7 +186,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
     }
 
     //图片选择器
-    public void imgFlow(FlowLayout myFlow, final List<String> imgList) {
+    public void imgFlow(com.xunda.mo.main.baseView.FlowLayout myFlow, final List<String> imgList) {
         int size = imgList.size();
         for (int i = 0; i < size; i++) {
             photoPaths.add(imgList.get(i));

@@ -49,7 +49,6 @@ public class PrivacyIndexActivity extends BaseInitActivity implements View.OnCli
                 ContactBlackListActivity.actionStart(mContext);
                 break;
             case R.id.item_equipment_manager :
-
                 break;
         }
     }

@@ -18,10 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -38,6 +40,7 @@ import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
+import com.xunda.mo.hx.common.repositories.EMPushManagerRepository;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.chat.activicy.SelectUserCardActivity;
 import com.xunda.mo.hx.section.chat.viewmodel.ChatViewModel;
@@ -50,9 +53,10 @@ import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.baseView.MySwitchItemView;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.group.activity.GroupDetail_Report;
+import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.network.saveFile;
-import com.xunda.mo.staticdata.BeanUtils1;
 import com.xunda.mo.staticdata.MyLevel;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
@@ -63,10 +67,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import lombok.SneakyThrows;
+import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 
 public class ChatDetailSet extends BaseInitActivity {
     private String toChatUsername;
@@ -77,7 +84,7 @@ public class ChatDetailSet extends BaseInitActivity {
     private EMConversation conversation;
     private MySwitchItemView top_Switch, disturb_Switch, vip_Switch;
     private ChatViewModel viewModel;
-    private MyArrowItemView nick_ArrowItemView,group_ArrowItemView;
+    private MyArrowItemView nick_ArrowItemView, group_ArrowItemView;
     private LinearLayout grade_Lin;
 
     public static void actionStart(Context context, String toChatUsername) {
@@ -96,6 +103,8 @@ public class ChatDetailSet extends BaseInitActivity {
         super.initView(savedInstanceState);
 
         initTitle();
+        ScrollView my_Scroll = findViewById(R.id.my_Scroll);
+        OverScrollDecoratorHelper.setUpOverScroll(my_Scroll);
         person_img = findViewById(R.id.person_img);
         nick_nameTxt = findViewById(R.id.nick_nameTxt);
         leID_Txt = findViewById(R.id.leID_Txt);
@@ -140,6 +149,7 @@ public class ChatDetailSet extends BaseInitActivity {
 
     private void initTitle() {
         View title_Include = findViewById(R.id.title_Include);
+        title_Include.setBackgroundColor(ContextCompat.getColor(ChatDetailSet.this, R.color.white));
         title_Include.setElevation(2f);//阴影
         Button return_Btn = (Button) title_Include.findViewById(R.id.return_Btn);
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
@@ -158,7 +168,6 @@ public class ChatDetailSet extends BaseInitActivity {
         layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         right_Btn.setLayoutParams(layoutParams);
-
 
         return_Btn.setOnClickListener(new return_Btn());
         right_Btn.setOnClickListener(new right_Btn());
@@ -217,6 +226,7 @@ public class ChatDetailSet extends BaseInitActivity {
             changeNick();
         }
     }
+
     //创建群聊
     private class group_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
@@ -291,12 +301,13 @@ public class ChatDetailSet extends BaseInitActivity {
     private class vip_SwitchOnCheckLister implements MySwitchItemView.OnCheckedChangeListener {
         @Override
         public void onCheckedChanged(MySwitchItemView buttonView, boolean isChecked) {
-            if (!BeanUtils1.isEmpty(model)) {
-                if (model.getData().getVipType() == 0) {
-                    Toast.makeText(ChatDetailSet.this, "请开通vip", Toast.LENGTH_SHORT).show();
-                } else {
 
-                }
+            MyInfo myInfo = new MyInfo(ChatDetailSet.this);
+            int vipType = myInfo.getUserInfo().getVipType();
+            if (vipType  == 0) {
+                Toast.makeText(ChatDetailSet.this, "请开通vip", Toast.LENGTH_SHORT).show();
+            } else {
+//                LiveDataBus.get().with("").postValue();
             }
 
 
@@ -416,6 +427,16 @@ public class ChatDetailSet extends BaseInitActivity {
     }
 
 
+    private void changePush() {
+        new EMPushManagerRepository().getPushConfigsFromServer();
+        List<String> onPushList = new ArrayList<>();
+        String hxUserName = model.getData().getHxUserName();
+        onPushList.add(hxUserName);
+        boolean isPush = disturb_Switch.getSwitch().isChecked();
+        viewModel.setUserNotDisturb(hxUserName, isPush);
+    }
+
+
     private void showMore(final Context mContext, final View view, final int pos) {
         View contentView = View.inflate(mContext, R.layout.chatdetailset_feedback, null);
         PopupWindow MorePopup = new BasePopupWindow(mContext);
@@ -427,53 +448,54 @@ public class ChatDetailSet extends BaseInitActivity {
         TextView change_txt = contentView.findViewById(R.id.change_txt);
         TextView newregistr_txt = contentView.findViewById(R.id.newregistr_txt);
         TextView cancel_txt = contentView.findViewById(R.id.cancel_txt);
-        change_txt.setOnClickListener(new NoDoubleClickListener() {
-            @Override
-            protected void onNoDoubleClick(View v) {
+        change_txt.setOnClickListener(v -> {
+            String type = "2";
+//            reportMethod(mContext, saveFile.Report_CreatReportLog_Url,type);
+            String userId = model.getData().getUserId();
+            String user = "user";
+            GroupDetail_Report.actionStart(mContext, userId, user);
+            MorePopup.dismiss();
+        });
+        newregistr_txt.setOnClickListener(v -> {
+            String type = "1";
+            reportMethod(mContext, saveFile.Report_CreatReportLog_Url, type);
+            MorePopup.dismiss();
+        });
+        cancel_txt.setOnClickListener(v -> {
+            MorePopup.dismiss();
+        });
 
-                MorePopup.dismiss();
-            }
-        });
-        newregistr_txt.setOnClickListener(new NoDoubleClickListener() {
-            @Override
-            protected void onNoDoubleClick(View v) {
-                QuestionMethod(mContext, saveFile.User_PublicQuestionBack_Url);
-                MorePopup.dismiss();
-            }
-        });
-        cancel_txt.setOnClickListener(new NoDoubleClickListener() {
-            @Override
-            protected void onNoDoubleClick(View v) {
-                MorePopup.dismiss();
-            }
-        });
-//        contentView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                MorePopup.dismiss();
-//            }
-//        });
+
     }
 
 
-    //举报用户头像
-    public void QuestionMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("picture", model.getData().getHeadImg());
-        map.put("toReportUserId", model.getData().getUserNum());
-        map.put("type", "1");
+    /**
+     * 举报用户 或头像
+     *
+     * @param context
+     * @param baseUrl
+     * @param type    1用户头像2用户3群头像4群
+     */
+    public void reportMethod(Context context, String baseUrl, String type) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("toReportId", model.getData().getUserNum());
+        map.put("type", type);
+        if (TextUtils.equals(type, "1")) {
+            map.put("picture", model.getData().getHeadImg());
+        }
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                Toast.makeText(context, "反馈已上传", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "举报已上传", Toast.LENGTH_SHORT).show();
                 finish();
             }
+
             @Override
             public void failed(String... args) {
             }
         });
-
     }
+
 
     /**
      * 删除好友
@@ -482,7 +504,7 @@ public class ChatDetailSet extends BaseInitActivity {
      * @param baseUrl
      */
     public void RemoveMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("friendUserId", model.getData().getUserId());
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @SneakyThrows
@@ -493,6 +515,7 @@ public class ChatDetailSet extends BaseInitActivity {
                 DemoHelper.getInstance().getChatManager().deleteConversation(model.getData().getHxUserName(), true);
                 finish();
             }
+
             @Override
             public void failed(String... args) {
             }
@@ -548,13 +571,12 @@ public class ChatDetailSet extends BaseInitActivity {
      */
     public void DisturbMethod(Context context, String baseUrl, boolean isBlock, View switchView) {
 //        site_progressbar.setVisibility(View.VISIBLE);
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("friendUserId", model.getData().getUserId());
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @SneakyThrows
             @Override
             public void success(String result) {
-
                 if (isBlock) {
                     model.getData().setIsSilence(1L);
                 } else {
@@ -562,10 +584,11 @@ public class ChatDetailSet extends BaseInitActivity {
                 }
                 IsSilenceMethod(model.getData().getIsSilence());
                 switchView.setEnabled(true);
+                changePush();
             }
             @Override
             public void failed(String... args) {
-                //                site_progressbar.setVisibility(View.GONE);
+//                site_progressbar.setVisibility(View.GONE);
                 switchView.setEnabled(true);
             }
         });
@@ -575,7 +598,7 @@ public class ChatDetailSet extends BaseInitActivity {
      * 修改用户信息
      */
     public void ChangeUserMethod(Context context, String baseUrl, String remarkName) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("friendUserId", model.getData().getUserId());
         map.put("remarkName", remarkName);
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
@@ -597,6 +620,7 @@ public class ChatDetailSet extends BaseInitActivity {
                 String hxUserName = model.getData().getHxUserName();
                 DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
             }
+
             @Override
             public void failed(String... args) {
             }

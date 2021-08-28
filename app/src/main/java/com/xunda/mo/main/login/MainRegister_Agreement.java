@@ -39,6 +39,7 @@ public class MainRegister_Agreement extends Activity {
     private TextView cententtxt;
     String shareTitle = "";
     String url;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +111,7 @@ public class MainRegister_Agreement extends Activity {
 //        StaticData.layoutParamsScale(paramrel, 0, 88);
 //        view.setLayoutParams(paramrel);
         Button return_Btn = (Button) view.findViewById(R.id.return_Btn);
-        viewTouchDelegate.expandViewTouchDelegate(return_Btn,50,50,50,50);
+        viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         cententtxt = (TextView) view.findViewById(R.id.cententtxt);
         cententtxt.setText(myWebView.getTitle());
         cententtxt.setText("用户协议");
@@ -130,7 +131,7 @@ public class MainRegister_Agreement extends Activity {
     }
 
 
-    public  String getStringToday() {
+    public String getStringToday() {
         Date currentTime = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = formatter.format(currentTime);
@@ -151,7 +152,6 @@ public class MainRegister_Agreement extends Activity {
     private void initData() {
 //        shareData(this, saveFile.BaseUrl + saveFile.Share_Project_Url);
     }
-
 
 
     /**
@@ -189,7 +189,6 @@ public class MainRegister_Agreement extends Activity {
 //        sbCookie.append(String.format(";path=%s", "/"));
         cookies.setCookie(url, sbCookie.toString());
     }
-
 
 
 }

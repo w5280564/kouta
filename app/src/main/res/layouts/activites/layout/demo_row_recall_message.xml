@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="@dimen/recall_dimen_256"
-                android:textColor="@color/recall_black_38"
+                android:textColor="@color/blacktitlettwo"
                 android:textSize="@dimen/recall_size_12" />
 
         </LinearLayout>

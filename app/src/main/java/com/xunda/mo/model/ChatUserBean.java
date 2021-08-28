@@ -49,7 +49,7 @@ public class ChatUserBean {
         @JsonProperty("userNum")
         private Double userNum;
         @JsonProperty("vipType")
-        private Long vipType;
+        private int vipType;
         @JsonProperty("areaName")
         private String areaName;
         @JsonProperty("friendStatus")

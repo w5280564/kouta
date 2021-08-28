@@ -38,8 +38,10 @@ import com.hyphenate.easeui.widget.EaseSearchTextView;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
+import com.xunda.mo.hx.common.db.DemoDbHelper;
 import com.xunda.mo.hx.common.enums.SearchType;
 import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
+import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.common.net.Resource;
 import com.xunda.mo.hx.common.utils.ToastUtils;
 import com.xunda.mo.hx.section.base.BaseActivity;
@@ -54,7 +56,9 @@ import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.search.SearchFriendsActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
+import com.xunda.mo.main.baseView.MyApplication;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
+import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.friend.Friend_Add;
 import com.xunda.mo.main.friend.Friend_NewFriends;
 import com.xunda.mo.main.friend.MyGroup;
@@ -115,7 +119,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
 
         addAdapter();
     }
-
 
 
     //修改成自己定义的头部 与列表适配器
@@ -232,17 +235,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
     }
 
 
-    /**
-     * 添加头布局
-     */
-//    public void addHeader() {
-//        contactLayout.getContactList().addCustomItem(R.id.contact_header_item_new_chat, R.mipmap.adress_head_friend, getString(R.string.em_friends_new_chat));
-//        contactLayout.getContactList().addCustomItem(R.id.contact_header_item_group_list, R.mipmap.adress_head_chat, getString(R.string.em_friends_group_chat));
-//        contactLayout.getContactList().addCustomItem(R.id.contact_header_item_creat_group, R.mipmap.adress_head_group, "好友分组");
-//        contactLayout.getContactList().addCustomItem(R.id.contact_header_item_head_file, R.mipmap.adress_head_file, "文件传输助手");
-//        contactLayout.getContactList().addCustomItem(R.id.contact_header_item_head_service, R.mipmap.adress_head_service, "Mo 客服");
-////        contactLayout.getContactList().addCustomItem(R.id.contact_header_item_chat_room_list, R.drawable.em_friends_chat_room, getString(R.string.em_friends_chat_room));
-//    }
+
     @Override
     public void initListener() {
         super.initListener();
@@ -353,7 +346,13 @@ public class ContactListFragment extends EaseContactListFragment implements View
         });
 
         mViewModel.loadContactList(true);
-        addressData(getActivity(),  saveFile.User_Friendlist_Url, "0");
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        addressData(getActivity(), saveFile.User_Friendlist_Url, "0");
     }
 
     @Override
@@ -426,67 +425,16 @@ public class ContactListFragment extends EaseContactListFragment implements View
 
     //联系人列表
     public void addressData(final Context context, String baseUrl, String projectId) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 adress_Model model = new Gson().fromJson(result, adress_Model.class);
-                List<EaseUser> data = new ArrayList<>();
-                for (int i = 0; i < model.getData().size(); i++) {
-                    adress_Model.DataDTO dataDTO = model.getData().get(i);
-                    EaseUser user = new EaseUser();
-                    user.setUsername(dataDTO.getHxUserName());
-                    user.setNickname(dataDTO.getNickname());
-                    // 正则表达式，判断首字母是否是英文字母
-                    String pinyin = PinyinUtils.getPingYin(dataDTO.getNickname());
-                    String sortString = pinyin.substring(0, 1).toUpperCase();
-                    if (sortString.matches("[A-Z]")) {
-//                                user.setInitialLetter(PinyinUtils.getFirstSpell(dataDTO.getNickName()));
-                        user.setInitialLetter(sortString);
-                    } else {
-                        user.setInitialLetter("#");
-                    }
-                    user.setAvatar(dataDTO.getHeadImg());
-                    user.setBirth("");
-                    user.setContact(0);//朋友属性 4是没有预设置
-                    user.setEmail("");
-                    user.setGender(0);
-                    user.setBirth("");
-                    user.setSign("");
-                    user.setPhone("");
-//                            user.setLightStatus(dataDTO.getLightStatus());
-//                            user.setVipType(dataDTO.getVipType());
-//                            user.setUserNum(dataDTO.getUserNum());
-                    JSONObject obj = new JSONObject();
-                    try {
-                        obj.put("lightStatus", dataDTO.getLightStatus());
-                        obj.put("vipType", dataDTO.getVipType());
-                        obj.put("userNum", dataDTO.getUserNum());
-                        obj.put("userId", dataDTO.getUserId());
-                        obj.put("remarkName", dataDTO.getRemarkName());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    user.setExt(obj.toString());
-                    data.add(user);
-                    //通知callKit更新头像昵称
-                    EaseCallUserInfo info = new EaseCallUserInfo(dataDTO.getNickname(), dataDTO.getHeadImg());
-                    info.setUserId(info.getUserId());
-                    EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
-                }
-                sortList(data);
-                myContactList_adapter.setData(data);
-                contactLayout.getSwipeRefreshLayout().setRefreshing(false);
-
-                //更新本地数据库信息
-                DemoHelper.getInstance().updateUserList(data);
-                //更新本地联系人列表
-                DemoHelper.getInstance().updateContactList();
-
+                addContactList(model);
             }
+
             @Override
             public void failed(String... args) {
-
             }
         });
 
@@ -538,12 +486,66 @@ public class ContactListFragment extends EaseContactListFragment implements View
                 MorePopup.dismiss();
             }
         });
-
-
     }
 
+    private void addContactList(adress_Model model) {
+        List<EaseUser> data = new ArrayList<>();
+        for (int i = 0; i < model.getData().size(); i++) {
+            adress_Model.DataDTO dataDTO = model.getData().get(i);
+            EaseUser user = new EaseUser();
+            user.setUsername(dataDTO.getHxUserName());
+            user.setNickname(dataDTO.getNickname());
+            // 正则表达式，判断首字母是否是英文字母
+            String pinyin = PinyinUtils.getPingYin(dataDTO.getNickname());
+            String sortString = pinyin.substring(0, 1).toUpperCase();
+            if (sortString.matches("[A-Z]")) {
+//                                user.setInitialLetter(PinyinUtils.getFirstSpell(dataDTO.getNickName()));
+                user.setInitialLetter(sortString);
+            } else {
+                user.setInitialLetter("#");
+            }
+            user.setAvatar(dataDTO.getHeadImg());
+            user.setBirth("");
+            user.setContact(0);//朋友属性 4是没有预设置
+            user.setEmail("");
+            user.setGender(0);
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put(MyConstant.LIGHT_STATUS, dataDTO.getLightStatus());
+                obj.put(MyConstant.VIP_TYPE, dataDTO.getVipType());
+                obj.put(MyConstant.USER_NUM, dataDTO.getUserNum());
+                obj.put(MyConstant.ONLINE_STATUS, dataDTO.getOnlineStatus());
+                obj.put(MyConstant.USER_ID, dataDTO.getUserId());
+                obj.put(MyConstant.REMARK_NAME, dataDTO.getRemarkName());
+             } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            user.setExt(obj.toString());
+            data.add(user);
+            //通知callKit更新头像昵称
+            EaseCallUserInfo info = new EaseCallUserInfo(dataDTO.getNickname(), dataDTO.getHeadImg());
+            info.setUserId(info.getUserId());
+            EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
+        }
+        sortList(data);
+        myContactList_adapter.setData(data);
+        contactLayout.getSwipeRefreshLayout().setRefreshing(false);
 
-
+        //先清空本地数据库
+        DemoDbHelper.getInstance(MyApplication.getInstance()).getUserDao().clearUsers();
+        //更新本地数据库信息
+        DemoHelper.getInstance().updateUserList(data);
+        //更新本地联系人列表
+        DemoHelper.getInstance().updateContactList();
+        //通知UI刷新列表
+        EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_ADD, EaseEvent.TYPE.CONTACT);
+        event.message = "";
+        for (EaseUser user : data) {
+            event.message += user.getUsername() + ",";
+        }
+        //发送联系人更新事件
+        LiveDataBus.get().with(DemoConstant.CONTACT_ADD).postValue(event);
+    }
 
 
 }

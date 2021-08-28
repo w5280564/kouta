@@ -285,11 +285,11 @@ public class GroupAllMembers_Manage extends BaseInitActivity {
                 if (isProtect == 1) {
                     groupManage_Protect_Switch.getSwitch().setChecked(true);
                 }
-                int FindWay = groupModel.getData().getFindWay();
+                int FindWay = groupModel.getData().getJoinWay();
                 String findStr = GroupAdd(FindWay);
                 groupManage_AddGroup_ArrowItemView.getTvContent().setText(findStr);
 
-                int JoinWay = groupModel.getData().getJoinWay();
+                int JoinWay = groupModel.getData().getFindWay();
                 String joinStr = GroupSearchMethod(JoinWay);
                 groupManage_Seek_ArrowItemView.getTvContent().setText(joinStr);
             }

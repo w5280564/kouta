@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
@@ -53,6 +54,7 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
 
     @Override
     protected int getLayoutId() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         return R.layout.demo_activity_chat;
     }
 

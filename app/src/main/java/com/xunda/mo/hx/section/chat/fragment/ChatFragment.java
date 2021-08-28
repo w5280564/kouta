@@ -18,8 +18,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -27,12 +27,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.common.util.CollectionUtils;
 import com.google.gson.Gson;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
-import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMUserInfo;
@@ -41,10 +41,8 @@ import com.hyphenate.easecallkit.base.EaseCallType;
 import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseEvent;
-import com.hyphenate.easeui.modules.chat.EaseChatInputMenu;
 import com.hyphenate.easeui.modules.chat.EaseChatMessageListLayout;
 import com.hyphenate.easeui.modules.chat.interfaces.IChatExtendMenu;
-import com.hyphenate.easeui.modules.chat.interfaces.IChatPrimaryMenu;
 import com.hyphenate.easeui.modules.chat.interfaces.OnRecallMessageResultListener;
 import com.hyphenate.easeui.modules.menu.EasePopupWindowHelper;
 import com.hyphenate.easeui.modules.menu.MenuItemBean;
@@ -67,7 +65,6 @@ import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.DemoListDialogFragment;
 import com.xunda.mo.hx.section.dialog.FullEditDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
-import com.xunda.mo.hx.section.group.GroupHelper;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.chat.activity.UserDetail_Set;
 import com.xunda.mo.main.constant.MyConstant;
@@ -130,11 +127,12 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
         LiveDataBus.get().with(MyConstant.Chat_BG, String.class).observe(requireActivity(), filePath ->
                 Glide.with(requireActivity()).asBitmap().load(filePath).into(new SimpleTarget<Bitmap>() {
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
                         Drawable drawable = new BitmapDrawable(resource);
                         messageListLayout.setBackground(drawable);
                     }
                 }));
+
 
         if (!saveFile.getShareData(MyConstant.Chat_BG + conversationId, requireActivity()).equals("false")) {
             String filePath = saveFile.getShareData(MyConstant.Chat_BG + conversationId, requireActivity());
@@ -143,7 +141,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 //                .load("https://ahxd-private.obs.cn-east-3.myhuaweicloud.com/user%2F841997676445491200%2FheadImg%2Ffirst.jpg")
                     .load(filePath)
                     .into(new SimpleTarget<Bitmap>() {
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
                             Drawable drawable = new BitmapDrawable(resource);
                             messageListLayout.setBackground(drawable);
                         }
@@ -162,16 +160,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         });
 
         cancel_Btn.setOnClickListener(new cancel_BtnClick());
-
-
-        //获取到菜单输入父控件
-        EaseChatInputMenu chatInputMenu = chatLayout.getChatInputMenu();
-        //获取到菜单输入控件
-        IChatPrimaryMenu primaryMenu = chatInputMenu.getPrimaryMenu();
-        //if(primaryMenu != null) {
-        //设置菜单样式为不可用语音模式
-        //    primaryMenu.setMenuShowType(EaseInputMenuStyle.ONLY_TEXT);
-        //}
 
         //收到的消息
         msgListener = new EMMessageMethod();
@@ -198,7 +186,10 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             message.setAttribute(MyConstant.TO_HEAD, model.getData().getHeadImg());
             message.setAttribute(MyConstant.TO_LH, model.getData().getLightStatus());
             message.setAttribute(MyConstant.TO_VIP, model.getData().getVipType());
-//            message.setAttribute(MyConstant.FIRE_TYPE, model.getData().getFireType());
+
+//            message.setAttribute(MyConstant.FIRE_TYPE, "true");
+//            message.setAttribute("isSleckt", "false");
+
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
             message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP);
             message.setAttribute(MyConstant.SEND_NAME, sendAnonymousName(groupModel.getData().getIsAnonymous()));
@@ -237,7 +228,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
 
-    private EMMessageListener msgListener;
+    public EMMessageListener msgListener;
 
     @Override
     public void onResume() {
@@ -262,33 +253,32 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         chatExtendMenu.clear();
         chatExtendMenu.registerMenuItem(R.string.attach_picture, R.drawable.ease_chat_image_selector, R.id.extend_item_picture);
         chatExtendMenu.registerMenuItem(R.string.attach_take_pic, R.drawable.ease_chat_takepic_selector, R.id.extend_item_take_picture);
+        chatExtendMenu.registerMenuItem(R.string.attach_location, R.drawable.ease_chat_location_selector, R.id.extend_item_location);
         //添加扩展槽
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-            //inputMenu.registerExtendMenuItem(R.string.attach_voice_call, R.drawable.em_chat_voice_call_selector, EaseChatInputMenu.ITEM_VOICE_CALL, this);
+//            inputMenu.registerExtendMenuItem(R.string.attach_voice_call, R.drawable.em_chat_voice_call_selector, EaseChatInputMenu.ITEM_VOICE_CALL, this);
             chatExtendMenu.registerMenuItem(R.string.attach_media_call, R.drawable.em_chat_video_call_selector, R.id.extend_item_video_call);
         }
-        if (chatType == EaseConstant.CHATTYPE_GROUP) { // 音视频会议
-            chatExtendMenu.registerMenuItem(R.string.voice_and_video_conference, R.drawable.em_chat_video_call_selector, R.id.extend_item_conference_call);
-            //目前普通模式也支持设置主播和观众人数，都建议使用普通模式
-            //inputMenu.registerExtendMenuItem(R.string.title_live, R.drawable.em_chat_video_call_selector, EaseChatInputMenu.ITEM_LIVE, this);
-        }
         chatExtendMenu.registerMenuItem(R.string.attach_two_withdraw, R.mipmap.chat_two_withdraw, R.id.extend_item_two_withdraw);
-
-        chatExtendMenu.registerMenuItem(R.string.attach_location, R.drawable.ease_chat_location_selector, R.id.extend_item_location);
-
         //名片扩展
         chatExtendMenu.registerMenuItem(R.string.attach_user_card, R.drawable.em_chat_user_card_selector, R.id.extend_item_user_card);
         chatExtendMenu.registerMenuItem(R.string.attach_file, R.drawable.em_chat_file_selector, R.id.extend_item_file);
-        if (chatType == EaseConstant.CHATTYPE_GROUP && EMClient.getInstance().getOptions().getRequireAck()) {
-            chatExtendMenu.registerMenuItem(R.string.attach_video, R.drawable.em_chat_video_selector, R.id.extend_item_video);
-        }
+
+//        if (chatType == EaseConstant.CHATTYPE_GROUP && EMClient.getInstance().getOptions().getRequireAck()) {
+//            chatExtendMenu.registerMenuItem(R.string.attach_video, R.drawable.em_chat_video_selector, R.id.extend_item_video);
+//        }
+//        if (chatType == EaseConstant.CHATTYPE_GROUP) { // 音视频会议
+//            chatExtendMenu.registerMenuItem(R.string.voice_and_video_conference, R.drawable.em_chat_video_call_selector, R.id.extend_item_conference_call);
+//            //目前普通模式也支持设置主播和观众人数，都建议使用普通模式
+        //inputMenu.registerExtendMenuItem(R.string.title_live, R.drawable.em_chat_video_call_selector, EaseChatInputMenu.ITEM_LIVE, this);
+//        }
         //群组类型，开启消息回执，且是owner
-        if (chatType == EaseConstant.CHATTYPE_GROUP && EMClient.getInstance().getOptions().getRequireAck()) {
-            EMGroup group = DemoHelper.getInstance().getGroupManager().getGroup(conversationId);
-            if (GroupHelper.isOwner(group)) {
-                chatExtendMenu.registerMenuItem(R.string.em_chat_group_delivery_ack, R.drawable.demo_chat_delivery_selector, R.id.extend_item_delivery);
-            }
-        }
+//        if (chatType == EaseConstant.CHATTYPE_GROUP && EMClient.getInstance().getOptions().getRequireAck()) {
+//            EMGroup group = DemoHelper.getInstance().getGroupManager().getGroup(conversationId);
+//            if (GroupHelper.isOwner(group)) {
+//                chatExtendMenu.registerMenuItem(R.string.em_chat_group_delivery_ack, R.drawable.demo_chat_delivery_selector, R.id.extend_item_delivery);
+//            }
+//        }
         //添加扩展表情
         chatLayout.getChatInputMenu().getEmojiconMenu().addEmojiconGroup(EmojiconExampleGroupData.getData());
     }
@@ -339,12 +329,11 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             if (event == null) {
                 return;
             }
+            EMMessage conMsg = chatLayout.getChatMessageListLayout().getCurrentConversation().getLastMessage();
             if (event.isMessageChange()) {
-
-                if (messageListLayout.getCurrentConversation().getLastMessage().getStringAttribute(MyConstant.FIRE_TYPE, "").equals("fireType")) {
+                if (conMsg.getStringAttribute(MyConstant.FIRE_TYPE, "").equals("fireType")) {
                     chatLayout.deleteMessage(messageListLayout.getCurrentConversation().getLastMessage());
                 }
-
                 chatLayout.getChatMessageListLayout().refreshMessages();
             }
         });
@@ -368,11 +357,24 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
         });
 
+
+        LiveDataBus.get().with(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL, EaseEvent.class).observe(requireActivity(), event -> {
+            if (event == null) {
+                return;
+            }
+            EMMessage conMsg = chatLayout.getChatMessageListLayout().getCurrentConversation().getLastMessage();
+            String isDouble_Recall = conMsg.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
+            if (TextUtils.equals(isDouble_Recall, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
+                recallTo();
+            }
+        });
+
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             AddFriendMethod(getActivity(), saveFile.Friend_info_Url);
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
             GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url);
         }
+
     }
 
     private void showDeliveryDialog() {
@@ -408,6 +410,31 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                         }
                     }
                 })
+                .show();
+    }
+
+    //通知开通VIP
+    private void changeVip() {
+        new SimpleDialogFragment.Builder((BaseActivity) mContext)
+                .setTitle("提示通知")
+                .showContent(true)
+                .setContent("该功能为会员特权功能，请开通会员后使用")
+                .setOnConfirmClickListener(view -> {
+
+                })
+                .showCancelButton(true)
+                .show();
+    }
+    //撤回
+    private void changeRecall() {
+        new SimpleDialogFragment.Builder((BaseActivity) mContext)
+                .setTitle("双向撤回")
+                .showContent(true)
+                .setContent("聊天记录一键双向撤回，同时删除你和对方设备上的所有聊天记录，撤回数据多次覆盖删除，不可恢复")
+                .setOnConfirmClickListener(view -> {
+                    doubleRecall();
+                })
+                .showCancelButton(true)
                 .show();
     }
 
@@ -542,12 +569,16 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 this.requireContext().startActivity(userCardIntent);
                 break;
             case R.id.extend_item_two_withdraw:
-                Toast.makeText(getActivity(), "点击撤回", Toast.LENGTH_SHORT).show();
-                if (model.getData().getVipType() == 0) {
+//                Toast.makeText(getActivity(), "点击撤回", Toast.LENGTH_SHORT).show();
 
+
+                MyInfo myInfo = new MyInfo(requireContext());
+                int vipType = myInfo.getUserInfo().getVipType();
+                if (vipType == 0) {
+                    changeVip();
+                } else if (vipType == 1) {
+                    changeRecall();
                 }
-                doubleRecall();
-                requireActivity().finish();
                 break;
         }
     }
@@ -802,89 +833,94 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         public void onMessageReceived(List<EMMessage> messages) {
             //接收消息的时候获取到扩展属性
             //获取自定义的属性，第2个参数为没有此定义的属性时返回的默认值
-            if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-//                messageListLayout.setData(messages);
-                if (!messages.isEmpty()) {
-                    String isDouble_Recall = messages.get(0).getStringAttribute("messageType", "");
-                    if (TextUtils.equals(isDouble_Recall, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
-                        removeMes();
-                        saveMes(model);
+            for (EMMessage msg : messages) {
+
+
+                if (chatType == EaseConstant.CHATTYPE_SINGLE) {
+//                if (!CollectionUtils.isEmpty(messages)) {
+//                    for (EMMessage msg : messages) {
+//                        String isDouble_Recall = msg.getStringAttribute("messageType", "");
+//                        if (TextUtils.equals(isDouble_Recall, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
+//                            recallTo();
+//                        }
+//                    }
+//                }
+                } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
+                    if (!CollectionUtils.isEmpty(messages)) {
+                        String isAnonymousOn = msg.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
+                        if (TextUtils.equals(isAnonymousOn, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
+                            groupModel.getData().setIsAnonymous(1);
+                            sendAnonymousName(1);
+                        } else if (TextUtils.equals(isAnonymousOn, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
+                            groupModel.getData().setIsAnonymous(0);
+                            sendAnonymousName(0);
+                        }
                     }
                 }
-
-
-            } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-                if (!messages.isEmpty()) {
-                    String isAnonymousOn = messages.get(0).getStringAttribute("messageType", "");
-                    if (TextUtils.equals(isAnonymousOn, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
-                        groupModel.getData().setIsAnonymous(1);
-                        sendAnonymousName(1);
-                    } else if (TextUtils.equals(isAnonymousOn, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
-                        groupModel.getData().setIsAnonymous(0);
-                        sendAnonymousName(0);
-                    }
-
-                }
-
             }
-            Log.i("messreceived", messages.toString());
+
+            Log.i("message", messages.toString());
         }
 
         @Override
         public void onCmdMessageReceived(List<EMMessage> messages) {
             //收到透传消息
+            Log.i("message", "透传");
         }
 
         @Override
         public void onMessageRead(List<EMMessage> messages) {
             //收到已读回执
+            Log.i("message", "回执");
         }
 
         @Override
         public void onMessageDelivered(List<EMMessage> message) {
             //收到已送达回执
+            Log.i("message", "送达");
         }
 
         @Override
         public void onMessageRecalled(List<EMMessage> messages) {
             //消息被撤回
+            Log.i("message", "撤回");
         }
 
         @Override
         public void onMessageChanged(EMMessage message, Object change) {
             //消息状态变动
+            Log.i("message", "消息变动");
         }
     }
 
 
     private void doubleRecall() {
-//        EMClient.getInstance().chatManager().deleteConversation(conversationId, true);
-//        saveMes();
         removeMes();
         sendMes(model);
+        chatLayout.getChatMessageListLayout().refreshToLatest();
+    }
+
+    public void recallTo() {
+        removeMes();
         saveMes(model);
+        chatLayout.getChatMessageListLayout().refreshToLatest();
     }
 
     private void removeMes() {
-        //删除当前会话所有消息
-        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId);
+        EMConversation conversation = chatLayout.getChatMessageListLayout().getCurrentConversation();
         conversation.clearAllMessages();
     }
 
     private void saveMes(ChatUserBean Model) {
-        String conversationId = Model.getData().getHxUserName();
-        EMConversation conversation = DemoHelper.getInstance().getChatManager().getConversation(conversationId);
-        EMMessage conMsg = conversation.getLastMessage();
-        DemoHelper.getInstance().getConversation(conversationId, EMConversation.EMConversationType.Chat,false);
+        DemoHelper.getInstance().getConversation(conversationId, EMConversation.EMConversationType.Chat, false);
         EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        EMTextMessageBody txtBody = new EMTextMessageBody("撤回了一条消息");
+        EMTextMessageBody txtBody = new EMTextMessageBody("撤回了所有消息");
         msgNotification.addBody(txtBody);
-//        msgNotification.setFrom(conMsg.getFrom());
-//        msgNotification.setTo(conMsg.getTo());
-        msgNotification.setTo(Model.getData().getHxUserName());
+        msgNotification.setFrom(conversationId);
+        msgNotification.setTo(conversationId);
         msgNotification.setUnread(false);
-        msgNotification.setMsgTime(conMsg.getMsgTime());
-        msgNotification.setLocalTime(conMsg.getMsgTime());
+//        msgNotification.setMsgTime(conMsg.getMsgTime());
+//        msgNotification.setLocalTime(conMsg.getMsgTime());
         msgNotification.setChatType(EMMessage.ChatType.Chat);
         msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL);
         msgNotification.setStatus(EMMessage.Status.SUCCESS);
@@ -896,23 +932,21 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     private void sendMes(ChatUserBean Model) {
         MyInfo myInfo = new MyInfo(mContext);
         String conversationId = Model.getData().getHxUserName();
-//        EMMessage message = EMMessage.createTxtSendMessage(mContext.getString(R.string.CREATE_GROUP_CONTENT), conversationId);
         EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
         EMTextMessageBody txtBody = new EMTextMessageBody("");
         message.addBody(txtBody);
         message.setTo(conversationId);
         message.setChatType(EMMessage.ChatType.Chat);
         message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL);
-//        message.setAttribute(MyConstant.USER_NAME, UserName);
         message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
         message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
         message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
         message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
-        String toName = TextUtils.isEmpty(model.getData().getRemarkName()) ? model.getData().getNickname() : model.getData().getRemarkName();
+        String toName = TextUtils.isEmpty(Model.getData().getRemarkName()) ? Model.getData().getNickname() : Model.getData().getRemarkName();
         message.setAttribute(MyConstant.TO_NAME, toName);
-        message.setAttribute(MyConstant.TO_HEAD, model.getData().getHeadImg());
-        message.setAttribute(MyConstant.TO_LH, model.getData().getLightStatus());
-        message.setAttribute(MyConstant.TO_VIP, model.getData().getVipType());
+        message.setAttribute(MyConstant.TO_HEAD, Model.getData().getHeadImg());
+        message.setAttribute(MyConstant.TO_LH, Model.getData().getLightStatus());
+        message.setAttribute(MyConstant.TO_VIP, Model.getData().getVipType());
         EMClient.getInstance().chatManager().sendMessage(message);
     }
 

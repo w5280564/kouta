@@ -45,6 +45,7 @@ import com.xunda.mo.hx.section.message.SystemMsgsActivity;
 import com.xunda.mo.hx.section.search.SearchConversationActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.conversation.Group_Notices;
 import com.xunda.mo.main.discover.activity.Discover_QRCode;
 import com.xunda.mo.main.friend.Friend_Add;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
@@ -92,6 +93,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         conversationListLayout.showUnreadDotPosition(EaseConversationSetStyle.UnreadDotPosition.RIGHT);
 
         conversationListLayout.showSystemMessage(false);//是否展示系统消息
+        makeAllMsgRead();//系统消息设置为已读
 
         initViewModel();
     }
@@ -199,8 +201,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         messageChange.with(DemoConstant.CONTACT_UPDATE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.MESSAGE_CALL_SAVE, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
         messageChange.with(DemoConstant.MESSAGE_NOT_SEND, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
-
-    }
+     }
 
     private void refreshList(Boolean event) {
         if (event == null) {
@@ -259,12 +260,12 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         super.onItemClick(view, position);
         Object item = conversationListLayout.getItem(position).getInfo();
         if (item instanceof EMConversation) {
-
             if (TextUtils.equals(((EMConversation) item).getLastMessage().getFrom(), MyConstant.ADMIN)) {
-                ToastUtils.showToast("群组消息");
+//                ToastUtils.showToast("群组消息");
+                Group_Notices.actionStart(mContext,((EMConversation) item).conversationId());
+
             } else if (EaseSystemMsgManager.getInstance().isSystemConversation((EMConversation) item)) {
                 SystemMsgsActivity.actionStart(mContext);
-
             } else {
                 ChatActivity.actionStart(mContext, ((EMConversation) item).conversationId(), EaseCommonUtils.getChatType((EMConversation) item));
             }
@@ -323,4 +324,9 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
 
     }
 
+    public void makeAllMsgRead() {
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(DemoConstant.DEFAULT_SYSTEM_MESSAGE_ID, EMConversation.EMConversationType.Chat, true);
+        conversation.markAllMessagesAsRead();
+        LiveDataBus.get().with(DemoConstant.NOTIFY_CHANGE).postValue(EaseEvent.create(DemoConstant.NOTIFY_CHANGE, EaseEvent.TYPE.NOTIFY));
+    }
 }

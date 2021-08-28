@@ -70,6 +70,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.SneakyThrows;
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 
 public class GroupDetailSet extends BaseInitActivity {
@@ -131,7 +132,7 @@ public class GroupDetailSet extends BaseInitActivity {
         group_chatTop_Switch = findViewById(R.id.group_chatTop_Switch);
         group_chatTop_Switch.setOnCheckedChangeListener(new group_chatTop_SwitchClick());
         disturb_Switch = findViewById(R.id.disturb_Switch);
-        disturb_Switch.setOnCheckedChangeListener(new disturb_SwitchCheckClick());
+        disturb_Switch.getSwitch().setOnClickListener(new disturb_SwitchClick());
 //        groupmember_add = findViewById(R.id.groupmember_add);
 //        groupmember_remove = findViewById(R.id.groupmember_remove);
         clearHistory_Txt = findViewById(R.id.clear_Txt);
@@ -156,7 +157,7 @@ public class GroupDetailSet extends BaseInitActivity {
         return_Btn.setVisibility(View.VISIBLE);
         TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
         cententTxt.setText("群聊详情");
-         right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
+        right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.VISIBLE);
         right_Btn.setBackgroundResource(R.mipmap.adress_head_more);
         viewTouchDelegate.expandViewTouchDelegate(right_Btn, 50, 50, 50, 50);
@@ -195,6 +196,7 @@ public class GroupDetailSet extends BaseInitActivity {
             showMore(GroupDetailSet.this, right_Btn, 0);
         }
     }
+
     private void showMore(final Context mContext, final View view, final int pos) {
         View contentView = View.inflate(mContext, R.layout.chatdetailset_feedback, null);
         PopupWindow MorePopup = new BasePopupWindow(mContext);
@@ -213,7 +215,8 @@ public class GroupDetailSet extends BaseInitActivity {
             MorePopup.dismiss();
         });
         newregistr_txt.setOnClickListener(v -> {
-            GroupDetail_Report.actionStart(mContext,myGroupId);
+            String group = "group";
+            GroupDetail_Report.actionStart(mContext, myGroupId, group);
             MorePopup.dismiss();
         });
         cancel_txt.setOnClickListener(v -> {
@@ -284,9 +287,10 @@ public class GroupDetailSet extends BaseInitActivity {
     private class group_Code_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            MeAndGroup_QRCode.actionGroupStart(GroupDetailSet.this,groupModel);
+            MeAndGroup_QRCode.actionGroupStart(GroupDetailSet.this, groupModel);
         }
     }
+
     //群昵称
     private class group_Nick_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
@@ -302,7 +306,7 @@ public class GroupDetailSet extends BaseInitActivity {
                     if (!TextUtils.isEmpty(content)) {
 //                            itemGroupName.getTvContent().setText(content);
                         String changType = "3";
-                        changeGroupNameMethod(GroupDetailSet.this,  saveFile.Group_UpdateNickName_Url, content);
+                        changeGroupNameMethod(GroupDetailSet.this, saveFile.Group_UpdateNickName_Url, content);
                     }
                 })
                 .setTitle("设置群昵称")
@@ -353,7 +357,7 @@ public class GroupDetailSet extends BaseInitActivity {
 //                            signature_ArrowItemView.getTvContent().setText(content);
                         String changType = "4";
                         String keyStr = "groupNotice";
-                        CreateGroupMethod(GroupDetailSet.this,  saveFile.Group_UpdateInfo_Url, changType, keyStr, content1, "", "");
+                        CreateGroupMethod(GroupDetailSet.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, content1, "", "");
                     }
                 }, new GroupTopDialogFragment.OnEmptyClickLister() {
                     @Override
@@ -383,11 +387,20 @@ public class GroupDetailSet extends BaseInitActivity {
     }
 
     //群消息免打扰 接入推送
-    private class disturb_SwitchCheckClick implements MySwitchItemView.OnCheckedChangeListener {
+    private class disturb_SwitchClick implements View.OnClickListener {
         @Override
-        public void onCheckedChanged(MySwitchItemView buttonView, boolean isChecked) {
-//            viewModel.updatePushServiceForGroup(groupId, isChecked);
+        public void onClick(View v) {
+            v.setEnabled(false);
+            DisturbMethod(GroupDetailSet.this, saveFile.Group_Disturb_Url, disturb_Switch.getSwitch().isChecked(), disturb_Switch.getSwitch());
         }
+    }
+
+    private void changePush() {
+        List<String> onPushList = new ArrayList<>();
+        String hxUserName = groupModel.getData().getGroupHxId();
+        onPushList.add(hxUserName);
+        boolean isPush = disturb_Switch.getSwitch().isChecked();
+        viewModel.updatePushServiceForGroup(hxUserName, isPush);
     }
 
     //修改背景图
@@ -482,9 +495,12 @@ public class GroupDetailSet extends BaseInitActivity {
                 }
                 myGroupId = dataDTO.getGroupId();
                 Identity = dataDTO.getIdentity();
+                isSilenceMethod(groupModel.getData().getIsDisturb());
 
                 GroupMemberListMethod(GroupDetailSet.this, saveFile.Group_UserList_Url, Identity);
+
                 setGroupManagement(Identity);
+
             }
 
             @Override
@@ -493,6 +509,19 @@ public class GroupDetailSet extends BaseInitActivity {
             }
         });
 
+    }
+
+    /**
+     * 消息免打扰
+     *
+     * @param isSilence
+     */
+    private void isSilenceMethod(int isSilence) {
+        if (isSilence == 0) {
+            disturb_Switch.getSwitch().setChecked(true);
+        } else {
+            disturb_Switch.getSwitch().setChecked(false);
+        }
     }
 
     /**
@@ -505,15 +534,15 @@ public class GroupDetailSet extends BaseInitActivity {
             Muggle_Group.setVisibility(View.GONE);
             group_Name_ArrowItemView.setEnabled(false);
             group_Name_ArrowItemView.getArrow().setVisibility(View.GONE);
-            groupmember_remove.setVisibility(View.GONE);
+//            groupmember_remove.setVisibility(View.GONE);
             remove_Txt.setText("删除并退出");
         } else if (Identity == 2) {
             Muggle_Group.setVisibility(View.VISIBLE);
-            groupmember_remove.setVisibility(View.VISIBLE);
+//            groupmember_remove.setVisibility(View.VISIBLE);
             remove_Txt.setText("删除并退出");
         } else if (Identity == 1) {
             Muggle_Group.setVisibility(View.VISIBLE);
-            groupmember_remove.setVisibility(View.VISIBLE);
+//            groupmember_remove.setVisibility(View.VISIBLE);
             remove_Txt.setText("解散本群");
         }
     }
@@ -616,6 +645,7 @@ public class GroupDetailSet extends BaseInitActivity {
 
 
     GroupMember_Bean groupListModel;
+
     public void GroupMemberListMethod(Context context, String baseUrl, int Identity) {
         Map<String, Object> map = new HashMap<>();
         map.put("groupId", myGroupId);
@@ -628,6 +658,7 @@ public class GroupDetailSet extends BaseInitActivity {
                 imgFlow(group_Flow, groupListModel.getData(), Identity);
                 addMembers(groupListModel.getData());
             }
+
             @Override
             public void failed(String... args) {
 
@@ -759,6 +790,7 @@ public class GroupDetailSet extends BaseInitActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
+
             @Override
             public void failed(String... args) {
             }
@@ -780,6 +812,7 @@ public class GroupDetailSet extends BaseInitActivity {
             public void success(String result) {
                 switchView.setEnabled(true);
             }
+
             @Override
             public void failed(String... args) {
                 switchView.setEnabled(true);
@@ -788,6 +821,38 @@ public class GroupDetailSet extends BaseInitActivity {
     }
 
 
+    /**
+     * 消息免打扰
+     *
+     * @param context
+     * @param baseUrl
+     */
+    public void DisturbMethod(Context context, String baseUrl, boolean isBlock, View switchView) {
+//        site_progressbar.setVisibility(View.VISIBLE);
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", groupModel.getData().getGroupId());
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @SneakyThrows
+            @Override
+            public void success(String result) {
+
+                if (isBlock) {
+                    groupModel.getData().setIsDisturb(0);
+                } else {
+                    groupModel.getData().setIsDisturb(1);
+                }
+                isSilenceMethod(groupModel.getData().getIsDisturb());
+                switchView.setEnabled(true);
+                changePush();
+            }
+
+            @Override
+            public void failed(String... args) {
+                //                site_progressbar.setVisibility(View.GONE);
+                switchView.setEnabled(true);
+            }
+        });
+    }
 
     protected static final int REQUEST_CODE_LOCAL = 3;
 

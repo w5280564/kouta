@@ -1,7 +1,11 @@
 package com.xunda.mo.hx.section.contact.adapter;
 
 import android.graphics.drawable.Drawable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +25,7 @@ import com.hyphenate.easeui.provider.EaseUserProfileProvider;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.xunda.mo.R;
+import com.xunda.mo.main.constant.MyConstant;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +36,7 @@ public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser>
 
     @Override
     public ViewHolder getViewHolder(ViewGroup parent, int viewType) {
-        return new ContactViewHolder(LayoutInflater.from(mContext).inflate(R.layout.ease_widget_contact_item, parent, false));
+        return new ContactViewHolder(LayoutInflater.from(mContext).inflate(R.layout.my_contact_item, parent, false));
     }
 
     public void setSettingModel(EaseContactSetStyle settingModel) {
@@ -42,7 +47,7 @@ public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser>
     private class ContactViewHolder extends ViewHolder<EaseUser> {
         private TextView mHeader;
         private EaseImageView mAvatar;
-        private TextView mName;
+        private TextView mName,vipType_txt;
         private TextView mSignature;
         private TextView mUnreadMsgNumber;
         private ConstraintLayout clUser;
@@ -59,6 +64,7 @@ public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser>
             mSignature = findViewById(R.id.signature);
             mUnreadMsgNumber = findViewById(R.id.unread_msg_number);
             clUser = findViewById(R.id.cl_user);
+            vipType_txt = findViewById(R.id.vipType_txt);
             EaseUserUtils.setUserAvatarStyle(mAvatar);
             if (contactSetModel != null) {
                 float headerTextSize = contactSetModel.getHeaderTextSize();
@@ -136,16 +142,27 @@ public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser>
             }
 
             try {
-
                 String selectInfoExt = item.getExt();
-                JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
-                String name = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? item.getNickname() : JsonObject.getString("remarkName");
-                mName.setText(name);
+                JSONObject jsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                if (jsonObject != null) {
+                    String remarkName = jsonObject.getString(MyConstant.REMARK_NAME);
+                    String name = TextUtils.isEmpty(remarkName) ? item.getNickname() : remarkName;
+                    int nameLength = name.length();
+                    String nameAndNum = name + " (" + jsonObject.getString(MyConstant.USER_NUM) + ")";
+                    setName(nameAndNum, nameLength, mName);
 
-//                String name = TextUtils.isEmpty(JsonObject.getString(MyConstant.)) ? dataDTO.getnickname() : dataDTO.getRemarkName();
-//                mName.setText(item.getnickname());
-            } catch (
-                    JSONException e) {
+                    String vipTypeString = jsonObject.getString(MyConstant.VIP_TYPE);
+                    if (TextUtils.equals(vipTypeString, "0")) {
+                        vipType_txt.setVisibility(View.GONE);
+                    } else {
+                        vipType_txt.setVisibility(View.VISIBLE);
+                        mName.setTextColor(ContextCompat.getColor(mContext,R.color.yellowfive));
+                    }
+                   String on_LightStatus =  jsonObject.getString(MyConstant.ONLINE_STATUS);
+                    mSignature.setText(on_LightStatus);
+
+                }
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             Glide.with(mContext)
@@ -153,7 +170,28 @@ public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser>
                     .error(contactSetModel.getAvatarDefaultSrc() != null ? contactSetModel.getAvatarDefaultSrc()
                             : ContextCompat.getDrawable(mContext, R.drawable.ease_default_avatar))
                     .into(mAvatar);
+
+
+
+
         }
+    }
+
+    /**
+     * @param name       要显示的数据
+     * @param nameLength 要放大改颜色的字体长度
+     * @param viewName
+     */
+    private void setName(String name, int nameLength, TextView viewName) {
+        SpannableString spannableString = new SpannableString(name);
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getColor(R.color.yellowfive));
+//        StyleSpan styleSpan_B = new StyleSpan(Typeface.BOLD);//粗体
+        RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(1.1f);//字放大
+//        spannableString.setSpan(styleS
+//        pan_B, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+//        spannableString.setSpan(foregroundColorSpan, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(relativeSizeSpan, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        viewName.setText(spannableString);
     }
 
 

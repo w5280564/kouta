@@ -153,6 +153,8 @@ public class DemoHelper {
             fetchUserRunnable = new FetchUserRunnable();
             fetchUserTread = new Thread(fetchUserRunnable);
             fetchUserTread.start();
+
+
         }
 
     }
@@ -425,9 +427,8 @@ public class DemoHelper {
 
         //开启代理
 //        options.setUseRtcConfig(true);
-
         // 设置是否使用 fcm，有些华为设备本身带有 google 服务，
-        options.setUseFCM(demoModel.isUseFCM());
+//        options.setUseFCM(demoModel.isUseFCM());
 
         /**
          * NOTE:你需要设置自己申请的账号来使用三方推送功能，详见集成文档
@@ -435,12 +436,12 @@ public class DemoHelper {
         EMPushConfig.Builder builder = new EMPushConfig.Builder(context);
 
         builder.enableVivoPush() // 需要在AndroidManifest.xml中配置appId和appKey
-                .enableMeiZuPush("134952", "f00e7e8499a549e09731a60a4da399e3")
-                .enableMiPush("2882303761517426801", "5381742660801")
-                .enableOppoPush("0bb597c5e9234f3ab9f821adbeceecdb",
-                        "cd93056d03e1418eaa6c3faf10fd7537")
-                .enableHWPush() // 需要在AndroidManifest.xml中配置appId
-                .enableFCM("921300338324");
+                .enableMiPush("2882303761520023110", "5282002363110")
+                .enableOppoPush("80033444a9c64912afecd130c90c5230","f3a256e66ec74114839e0a09efc7e597")
+//                .enableMeiZuPush("134952", "f00e7e8499a549e09731a60a4da399e3")
+//                        "cd93056d03e1418eaa6c3faf10fd7537")
+//                .enableFCM("921300338324")
+                .enableHWPush(); // 需要在AndroidManifest.xml中配置appId
         options.setPushConfig(builder.build());
 
         //set custom servers, commonly used in private deployment
@@ -495,7 +496,6 @@ public class DemoHelper {
 
             //OPPO SDK升级到2.1.0后需要进行初始化
 //            HeytapPushManager.init(context, true);
-
 
             //HMSPushHelper.getInstance().initHMSAgent(DemoApplication.getInstance());
             EMPushHelper.getInstance().setPushListener(new PushListener() {
@@ -995,4 +995,7 @@ public class DemoHelper {
     private void chatgroup(String name){
 
     }
+
+
+
 }

@@ -1,4 +1,4 @@
-package com.xunda.mo.main.myAdapter;
+package com.xunda.mo.main.group.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,38 +9,41 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.Group;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.xunda.mo.R;
-import com.xunda.mo.model.NewFriend_Bean;
+import com.xunda.mo.model.Group_notices_Bean;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.StaticData;
 
 import java.util.List;
 
 /**
  * Created by Admin on
  */
-public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_NewFriendList_Adapter.MyViewHolder> {
-    List<NewFriend_Bean.DataDTO.ListDTO> otherList;
-    private NewFriend_Bean listModel;
+public class GroupNotice_Adapter extends RecyclerView.Adapter<GroupNotice_Adapter.MyViewHolder> {
+    List<Group_notices_Bean.DataDTO> otherList;
+    private Group_notices_Bean listModel;
     Context context;
     private int myposition;
 
-    public Friend_NewFriendList_Adapter(Context context, List<NewFriend_Bean.DataDTO.ListDTO> otherList, NewFriend_Bean listModel) {
+    public GroupNotice_Adapter(Context context, List<Group_notices_Bean.DataDTO> otherList, Group_notices_Bean listModel) {
         this.otherList = otherList;
         this.context = context;
         this.listModel = listModel;
     }
 
-    public void addMoreData(List<NewFriend_Bean.DataDTO.ListDTO> otherList) {
-//        this.otherList = otherList;
+    public void addMoreData(List<Group_notices_Bean.DataDTO> otherList) {
+        this.otherList = otherList;
         notifyDataSetChanged();
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MyViewHolder myview = new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.friend_newfriendlist_adapter, null));
+        MyViewHolder myview = new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.group_applylist_adapter, null));
         return myview;
     }
 
@@ -74,9 +77,8 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
                 protected void onNoDoubleClick(View v) {
                     int pos = holder.getLayoutPosition();
                     if (v instanceof Button) {
-                        v.setVisibility(View.GONE);
                         v.setEnabled(false);
-                        holder.refuse_Btn.setVisibility(View.GONE);
+                        holder.isAgree_Group.setVisibility(View.GONE);
                         holder.time_Txt.setVisibility(View.VISIBLE);
                         holder.result_Txt.setText("已通过");
                     }
@@ -90,56 +92,66 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
                 protected void onNoDoubleClick(View v) {
                     int pos = holder.getLayoutPosition();
                     if (v instanceof Button) {
-                        v.setVisibility(View.GONE);
                         v.setEnabled(false);
-                        holder.add_Btn.setVisibility(View.GONE);
+                        holder.isAgree_Group.setVisibility(View.GONE);
                         holder.time_Txt.setVisibility(View.VISIBLE);
                         holder.result_Txt.setText("已拒绝");
                     }
                     onItemAddRemoveClickLister.onItemRemoveClick(v, position);
                 }
             });
+
+            holder.black_Btn.setOnClickListener(new NoDoubleClickListener() {
+                @Override
+                protected void onNoDoubleClick(View v) {
+                    if (v instanceof Button) {
+                        v.setEnabled(false);
+                        holder.isAgree_Group.setVisibility(View.GONE);
+                        holder.time_Txt.setVisibility(View.VISIBLE);
+                        holder.result_Txt.setText("已拉黑");
+                    }
+                    onItemAddRemoveClickLister.onItemBlackClick(v,position);
+
+                }
+            });
+
+
         }
 
         if (otherList.isEmpty()) {
             return;
         }
-        final NewFriend_Bean.DataDTO.ListDTO oneData = otherList.get(position);
+        final Group_notices_Bean.DataDTO oneData = otherList.get(position);
         if (oneData.getHeadImg() != null) {
             Uri uri = Uri.parse(oneData.getHeadImg());
             holder.head_Simple.setImageURI(uri);
         } else {
 //            StaticData.lodingheadBg(holder.head_simple);
         }
+        holder.name_Txt.setTextColor(ContextCompat.getColor(context,R.color.blacktitle));
+        holder.name_Txt.setText(oneData.getTitleName());
+        holder.friend_Txt.setText(oneData.getEvent());
+        holder.time_Txt.setText(StaticData.stampToDate(oneData.getCreateTime()));
 
-        if (oneData.getVipType() == 0) {
-            holder.vipType_txt.setVisibility(View.GONE);
-            holder.name_Txt.setTextColor(context.getColor(R.color.blacktitle));
-        } else if (oneData.getVipType() == 1) {
-            holder.vipType_txt.setVisibility(View.VISIBLE);
-            holder.name_Txt.setTextColor(context.getColor(R.color.yellow));
-        }
-
-        holder.name_Txt.setText(oneData.getNickname());
-        holder.friend_Txt.setText(oneData.getRemark());
-        holder.apply_Txt.setText(oneData.getSource());
-
-
-        holder.refuse_Btn.setVisibility(View.INVISIBLE);
-        holder.add_Btn.setVisibility(View.INVISIBLE);
+        holder.vipType_txt.setVisibility(View.GONE);
+        holder.isAgree_Group.setVisibility(View.GONE);
         holder.time_Txt.setVisibility(View.VISIBLE);
-//        holder.time_Txt.setText(StaticData.stampToDate(oneData.getUpdateTime()));
-        //1申请中2已通过3被拒绝4已过期
-        if (oneData.getApplyStatus() == 1) {
-            holder.refuse_Btn.setVisibility(View.VISIBLE);
-            holder.add_Btn.setVisibility(View.VISIBLE);
-            holder.time_Txt.setVisibility(View.INVISIBLE);
-        } else if (oneData.getApplyStatus() == 2) {
-            holder.result_Txt.setText("已通过");
-        } else if (oneData.getApplyStatus() == 3) {
-            holder.result_Txt.setText("被拒绝");
-        } else if (oneData.getApplyStatus() == 4) {
-            holder.result_Txt.setText("已过期");
+        if (oneData.getNotifyType() == 1){
+            holder.result_Txt.setVisibility(View.INVISIBLE);
+        }else {
+            //1申请中2已通过3被拒绝4拉黑5已过期
+            if (oneData.getApplyStatus() == 1) {
+                holder.isAgree_Group.setVisibility(View.VISIBLE);
+                holder.time_Txt.setVisibility(View.INVISIBLE);
+            } else if (oneData.getApplyStatus() == 2) {
+                holder.result_Txt.setText("已通过");
+            } else if (oneData.getApplyStatus() == 3) {
+                holder.result_Txt.setText("被拒绝");
+            } else if (oneData.getApplyStatus() == 5) {
+                holder.result_Txt.setText("已拉黑");
+            }else if (oneData.getApplyStatus() == 4) {
+                holder.result_Txt.setText("已过期");
+            }
         }
 
 
@@ -158,7 +170,8 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private Button add_Btn, refuse_Btn;
+        private final Group isAgree_Group;
+        private Button add_Btn, refuse_Btn, black_Btn;
         private SimpleDraweeView head_Simple;
         private TextView name_Txt, vipType_txt, friend_Txt, apply_Txt, result_Txt, time_Txt;
 
@@ -174,8 +187,10 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
             apply_Txt = itemView.findViewById(R.id.apply_Txt);
             add_Btn = itemView.findViewById(R.id.add_Btn);
             refuse_Btn = itemView.findViewById(R.id.refuse_Btn);
+            black_Btn = itemView.findViewById(R.id.black_Btn);
             result_Txt = itemView.findViewById(R.id.result_Txt);
             time_Txt = itemView.findViewById(R.id.time_Txt);
+            isAgree_Group = itemView.findViewById(R.id.isAgree_Group);
 
         }
     }
@@ -198,6 +213,8 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
         void onItemAddClick(View view, int position);
 
         void onItemRemoveClick(View view, int position);
+
+        void onItemBlackClick(View view, int position);
     }
 
     private OnItemAddRemoveClickLister onItemAddRemoveClickLister;

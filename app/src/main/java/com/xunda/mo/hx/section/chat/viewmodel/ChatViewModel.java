@@ -14,11 +14,15 @@ import com.xunda.mo.hx.common.repositories.EMChatManagerRepository;
 import com.xunda.mo.hx.common.repositories.EMChatRoomManagerRepository;
 import com.xunda.mo.hx.section.conversation.viewmodel.ConversationListViewModel;
 
+import java.util.List;
+
 public class ChatViewModel extends ConversationListViewModel {
     private EMChatRoomManagerRepository chatRoomManagerRepository;
     private EMChatManagerRepository chatManagerRepository;
     private SingleSourceLiveData<Resource<EMChatRoom>> chatRoomObservable;
     private SingleSourceLiveData<Resource<Boolean>> makeConversationReadObservable;
+    private SingleSourceLiveData<Resource< List<String>>> getNoPushUsersObservable;
+    private SingleSourceLiveData<Resource<Boolean>> setNoPushUsersObservable;
 
     public ChatViewModel(@NonNull Application application) {
         super(application);
@@ -26,10 +30,19 @@ public class ChatViewModel extends ConversationListViewModel {
         chatManagerRepository = new EMChatManagerRepository();
         chatRoomObservable = new SingleSourceLiveData<>();
         makeConversationReadObservable = new SingleSourceLiveData<>();
+        getNoPushUsersObservable = new SingleSourceLiveData<>();
+        setNoPushUsersObservable = new SingleSourceLiveData<>();
     }
 
     public LiveData<Resource<EMChatRoom>> getChatRoomObservable() {
         return chatRoomObservable;
+    }
+
+    public LiveData<Resource<List<String>>> getNoPushUsersObservable() {
+        return getNoPushUsersObservable;
+    }
+    public LiveData<Resource<Boolean>> setNoPushUsersObservable() {
+        return setNoPushUsersObservable;
     }
 
     public void getChatRoom(String roomId) {
@@ -48,5 +61,25 @@ public class ChatViewModel extends ConversationListViewModel {
     public LiveData<Resource<Boolean>> getMakeConversationReadObservable() {
         return makeConversationReadObservable;
     }
+
+    /**
+     * 设置单聊用户聊天免打扰
+     *
+     * @param userId 用户名
+     * @param noPush 是否免打扰
+     */
+    public void setUserNotDisturb(String userId, boolean noPush) {
+        setNoPushUsersObservable.setSource(chatManagerRepository.setUserNotDisturb(userId,noPush));
+    }
+    /**
+     * 获取聊天免打扰用户
+     */
+    public void getNoPushUsers() {
+        getNoPushUsersObservable.setSource(chatManagerRepository.getNoPushUsers());
+    }
+
+
+
+
 
 }

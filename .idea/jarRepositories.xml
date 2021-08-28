@@ -46,5 +46,10 @@
       <option name="name" value="maven4" />
       <option name="url" value="https://dl.bintray.com/jetbrains/anko" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven4" />
+      <option name="name" value="maven4" />
+      <option name="url" value="https://developer.huawei.com/repo/" />
+    </remote-repository>
   </component>
 </project>

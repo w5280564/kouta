@@ -40,6 +40,7 @@ import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
+import com.xunda.mo.hx.common.manager.HMSPushHelper;
 import com.xunda.mo.hx.common.permission.PermissionsManager;
 import com.xunda.mo.hx.common.permission.PermissionsResultAction;
 import com.xunda.mo.hx.common.utils.PreferenceManager;
@@ -118,6 +119,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         navView.setItemIconTintList(null);
         // 可以动态显示隐藏相应tab
         //navView.getMenu().findItem(R.id.em_main_nav_me).setVisible(false);
+        switchToFriends();
         switchToHome();
         checkIfShowSavedFragment(savedInstanceState);
         addTabBadge();
@@ -146,7 +148,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         ChatPresenter.getInstance().init();
 
         // 获取华为 HMS 推送 token
-//        HMSPushHelper.getInstance().getHMSToken(this);
+        HMSPushHelper.getInstance().getHMSToken(this);
 
         //判断是否为来电推送
         if (PushUtils.isRtcCall) {

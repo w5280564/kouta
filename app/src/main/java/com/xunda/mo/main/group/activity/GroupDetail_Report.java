@@ -67,13 +67,14 @@ public class GroupDetail_Report extends BaseInitActivity {
     private Button next_Btn;
     private EditText content_edit;
     private ObsClient obsClient;
-    private String GroupId;
+    private String toReportId, userOrGroup;
     private com.xunda.mo.main.baseView.FlowLayout photoLayout;
     private int reportType;
 
-    public static void actionStart(Context context, String GroupId) {
+    public static void actionStart(Context context, String toReportId, String userOrGroup) {
         Intent intent = new Intent(context, GroupDetail_Report.class);
-        intent.putExtra("GroupId", GroupId);
+        intent.putExtra("toReportId", toReportId);
+        intent.putExtra("userOrGroup", userOrGroup);
         context.startActivity(intent);
     }
 
@@ -85,7 +86,8 @@ public class GroupDetail_Report extends BaseInitActivity {
     @Override
     protected void initIntent(Intent intent) {
         super.initIntent(intent);
-        GroupId = intent.getStringExtra("GroupId");
+        toReportId = intent.getStringExtra("toReportId");
+        userOrGroup = intent.getStringExtra("userOrGroup");
     }
 
     @Override
@@ -94,16 +96,17 @@ public class GroupDetail_Report extends BaseInitActivity {
         initTitle();
         report_ArrowItemView = findViewById(R.id.report_ArrowItemView);
         report_ArrowItemView.setOnClickListener(new report_ArrowItemViewClick());
-        photoLayout =  findViewById(R.id.photoLayout);
+        photoLayout = findViewById(R.id.photoLayout);
         add_photo_Img = (ImageButton) findViewById(R.id.add_photo_Img);
         add_photo_Img.setOnClickListener(new add_photo_ImgOnclickLister());
-        content_edit =  findViewById(R.id.content_edit);
-        next_Btn =  findViewById(R.id.next_Btn);
+        content_edit = findViewById(R.id.content_edit);
+        next_Btn = findViewById(R.id.next_Btn);
         next_Btn.setOnClickListener(new next_BtnClick());
 
         photoPaths = new ArrayList<>();
         initObsClient();
     }
+
     private void initObsClient() {
         ObsConfiguration config = new ObsConfiguration();
         config.setSocketTimeout(30000);
@@ -155,11 +158,12 @@ public class GroupDetail_Report extends BaseInitActivity {
         mOptionsItems.add("其他");
         OptionsPickerView pvOptions = new OptionsPickerBuilder(GroupDetail_Report.this, (options1, option2, options3, v) -> {
             report_ArrowItemView.getTvContent().setText(mOptionsItems.get(options1));
-             reportType = options1 + 1;
+            reportType = options1 + 1;
         }).build();
         pvOptions.setPicker(mOptionsItems);
         pvOptions.show();
     }
+
     private class add_photo_ImgOnclickLister implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -173,7 +177,7 @@ public class GroupDetail_Report extends BaseInitActivity {
             String contenttxt = content_edit.getText().toString().trim();
             String reportStr = report_ArrowItemView.getTvContent().getText().toString().trim();
 
-            if (TextUtils.equals(reportStr,"请选择")){
+            if (TextUtils.equals(reportStr, "请选择")) {
                 Toast.makeText(GroupDetail_Report.this, "请选择举报原因", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -183,7 +187,7 @@ public class GroupDetail_Report extends BaseInitActivity {
                 return;
             }
             if (photoPaths.isEmpty()) {
-                reportMethod(GroupDetail_Report.this,  saveFile.Report_CreatReportLog_Url);
+                reportMethod(GroupDetail_Report.this, saveFile.Report_CreatReportLog_Url);
 
             } else {
                 AsyncTask<Void, Void, String> task = new PostObjectTask();
@@ -194,6 +198,7 @@ public class GroupDetail_Report extends BaseInitActivity {
 
     private ArrayList<String> photoPaths;
     private int maxPic = 6;
+
     private void setPhotoMetod(Context context) {
         int choice = maxPic - photoPaths.size();
         PictureSelector.create((Activity) context)
@@ -330,7 +335,7 @@ public class GroupDetail_Report extends BaseInitActivity {
                 int size = photoPaths.size();
                 String objectName = "";
                 for (int i = 0; i < size; i++) {
-                objectName = "report/" + GroupId + "/" + pathNameList.get(i);//对应上传之后的文件名称
+                    objectName = "report/" + toReportId + "/" + pathNameList.get(i);//对应上传之后的文件名称
                     FileInputStream fis = new FileInputStream(new File(photoPaths.get(i)));
                     obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
 //                    addAcl(obsClient,bucketName,objectName,photoPaths.get(i));
@@ -372,31 +377,35 @@ public class GroupDetail_Report extends BaseInitActivity {
             super.onPostExecute(s);
 //            Log.i("abc", " result.getStatusCode():" + s);
             pictures = s;
-            reportMethod(GroupDetail_Report.this,  saveFile.Report_CreatReportLog_Url);
+            reportMethod(GroupDetail_Report.this, saveFile.Report_CreatReportLog_Url);
         }
     }
 
-    String pictures="";
+    String pictures = "";
 
     //问题反馈
     public void reportMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("picture", pictures);
-        map.put("reasons",reportType);
+        map.put("reasons", reportType);
         map.put("remark", content_edit.getText().toString());
-        map.put("toReportId", GroupId);
-        map.put("type", "4");
+        map.put("toReportId", toReportId);
+        if (TextUtils.equals(userOrGroup, "user")) {
+            map.put("type", "2");
+        } else {
+            map.put("type", "4");
+        }
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 Toast.makeText(context, "举报已上传", Toast.LENGTH_SHORT).show();
                 finish();
             }
+
             @Override
             public void failed(String... args) {
             }
         });
-
     }
 
 

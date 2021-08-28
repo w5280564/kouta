@@ -29,7 +29,7 @@
             android:layout_marginTop="34dp"
             android:layout_marginBottom="24dp"
             app:layout_goneMarginBottom="70dp"
-            app:layout_goneMarginTop="70dp"
+            app:layout_goneMarginTop="50dp"
             android:layout_marginLeft="31dp"
             android:layout_marginStart="31dp"
             android:layout_marginRight="31dp"
@@ -44,16 +44,17 @@
 
         <TextView
             android:id="@+id/tv_dialog_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_dialog_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:gravity="center"
             android:textColor="@color/blacktitlettwo"
-            android:visibility="gone"
-            android:text="内容"/>
+            android:text="内容"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:id="@+id/rl_dialog_middle"

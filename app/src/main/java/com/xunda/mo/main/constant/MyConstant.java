@@ -26,10 +26,10 @@ public interface MyConstant extends DemoConstant {
     String UNUM = "uNum";
     String AVATAR = "avatar";
     String NICK_NAME = "nickname";
+    String REMARK_NAME = "remarkName";
     String HX_NAME = "hxName";
     String ADMIN = "admin";
 
-    String USER_NAME = "userName";
     String MESSAGE_TYPE_CREATE_GROUP = "createGroup";
     String CREATE_GROUP_CONTENT = "创建";
 
@@ -60,5 +60,11 @@ public interface MyConstant extends DemoConstant {
     String MESSAGE_TYPE_DOUBLE_RECALL = "doubleRecall";
     String MY_GROUP_LABEL = "group_Label";
     String MY_LABEL = "label";
+
+    String USER_NAME = "userName";
+    String VIP_TYPE = "vipType";
+    String USER_NUM = "userNum";
+    String LIGHT_STATUS = "lightStatus";
+    String ONLINE_STATUS = "onlineStatus";
 
 }

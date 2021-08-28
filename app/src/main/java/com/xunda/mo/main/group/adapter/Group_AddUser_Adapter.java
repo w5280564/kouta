@@ -1,5 +1,6 @@
 package com.xunda.mo.main.group.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.text.SpannableString;
@@ -54,7 +55,8 @@ public class Group_AddUser_Adapter extends RecyclerView.Adapter<Group_AddUser_Ad
 
     @SneakyThrows
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    @SuppressLint("RecyclerView")
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {

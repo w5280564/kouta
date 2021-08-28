@@ -23,7 +23,7 @@ import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.baseView.BasePopupWindow;
-import com.xunda.mo.main.myAdapter.Friend_NewFriendList_Adapter;
+import com.xunda.mo.main.friend.myAdapter.Friend_NewFriendList_Adapter;
 import com.xunda.mo.model.NewFriend_Bean;
 import com.xunda.mo.model.baseModel;
 import com.xunda.mo.network.saveFile;

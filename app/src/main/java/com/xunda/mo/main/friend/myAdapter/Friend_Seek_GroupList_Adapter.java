@@ -1,4 +1,4 @@
-package com.xunda.mo.main.myAdapter;
+package com.xunda.mo.main.friend.myAdapter;
 
 import android.content.Context;
 import android.net.Uri;

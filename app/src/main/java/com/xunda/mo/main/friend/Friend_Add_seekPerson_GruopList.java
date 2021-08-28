@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.xunda.mo.R;
-import com.xunda.mo.main.myAdapter.Friend_Seek_GroupList_Adapter;
+import com.xunda.mo.main.friend.myAdapter.Friend_Seek_GroupList_Adapter;
 import com.xunda.mo.model.AddFriend_FriendGroup_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.xUtils3Http;

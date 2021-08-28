@@ -82,6 +82,9 @@ public class saveFile {
     public static String Inviter_UserNum_Url = "inviter/userNum";
     public static String Inviter_Bind_Url = "inviter/bind";
     public static String Group_ApplyInto_Url = "group/applyInto";
+    public static String Group_Notify_Url = "group/notify";
+    public static String Group_Disturb_Url = "group/disturb";
+    public static String Friend_Fire_Url = "friend/fire";
 
 
 
