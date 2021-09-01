@@ -62,6 +62,7 @@ import com.xunda.mo.hx.common.utils.FetchUserInfoList;
 import com.xunda.mo.hx.common.utils.FetchUserRunnable;
 import com.xunda.mo.hx.common.utils.PreferenceManager;
 import com.xunda.mo.hx.section.chat.ChatPresenter;
+import com.xunda.mo.hx.section.chat.delegates.BurnAfterReadingAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.ChatConferenceInviteAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.ChatNotificationAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.ChatRecallAdapterDelegate;
@@ -209,6 +210,7 @@ public class DemoHelper {
      */
     private void registerConversationType() {
         EaseMessageTypeSetManager.getInstance()
+                .addMessageType(BurnAfterReadingAdapterDelegate.class)        //阅后即焚
                 .addMessageType(MyGroupUpdateMesAdapterDelegate.class)     //群设置更新
                 .addMessageType(MyGroupAddMesAdapterDelegate.class)     //创建群消息
 //                .addMessageType(EaseCustomAdapterDelegate.class)           //自定义消息

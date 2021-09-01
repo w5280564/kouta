@@ -11,11 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 public class NewFriend_Bean {
 
-
     @JsonProperty("msg")
     private String msg;
     @JsonProperty("code")
-    private Long code;
+    private Integer code;
     @JsonProperty("data")
     private DataDTO data;
 
@@ -23,7 +22,7 @@ public class NewFriend_Bean {
     @Data
     public static class DataDTO {
         @JsonProperty("endRow")
-        private Long endRow;
+        private Integer endRow;
         @JsonProperty("hasNextPage")
         private Boolean hasNextPage;
         @JsonProperty("hasPreviousPage")
@@ -35,41 +34,43 @@ public class NewFriend_Bean {
         @JsonProperty("list")
         private List<ListDTO> list;
         @JsonProperty("navigateFirstPage")
-        private Long navigateFirstPage;
+        private Integer navigateFirstPage;
         @JsonProperty("navigateLastPage")
-        private Long navigateLastPage;
+        private Integer navigateLastPage;
         @JsonProperty("navigatePages")
-        private Long navigatePages;
+        private Integer navigatePages;
         @JsonProperty("navigatepageNums")
-        private List<Long> navigatepageNums;
+        private List<Integer> navigatepageNums;
         @JsonProperty("nextPage")
-        private Long nextPage;
+        private Integer nextPage;
         @JsonProperty("pageNum")
-        private Double pageNum;
+        private Integer pageNum;
         @JsonProperty("pageSize")
-        private Double pageSize;
+        private Integer pageSize;
         @JsonProperty("pages")
-        private Long pages;
+        private Integer pages;
         @JsonProperty("prePage")
-        private Double prePage;
+        private Integer prePage;
         @JsonProperty("size")
-        private Long size;
+        private Integer size;
         @JsonProperty("startRow")
-        private Double startRow;
+        private Integer startRow;
         @JsonProperty("total")
-        private Long total;
+        private Integer total;
 
         @NoArgsConstructor
         @Data
         public static class ListDTO {
             @JsonProperty("applyStatus")
-            private Long applyStatus;
+            private Integer applyStatus;
             @JsonProperty("friendApplyId")
             private String friendApplyId;
             @JsonProperty("headImg")
             private String headImg;
+            @JsonProperty("hxUserName")
+            private String hxUserName;
             @JsonProperty("lightStatus")
-            private Double lightStatus;
+            private Integer lightStatus;
             @JsonProperty("nickname")
             private String nickname;
             @JsonProperty("remark")
@@ -79,9 +80,9 @@ public class NewFriend_Bean {
             @JsonProperty("updateTime")
             private Long updateTime;
             @JsonProperty("userNum")
-            private Double userNum;
+            private Integer userNum;
             @JsonProperty("vipType")
-            private Double vipType;
+            private Integer vipType;
         }
     }
 }

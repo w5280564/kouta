@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="13dp"
+    tools:ignore="MissingConstraints">
+
+    <TextView
+        android:id="@+id/timestamp"
+        style="@style/chat_text_date_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/timestamp">
+
+        <com.hyphenate.easeui.widget.EaseImageView
+            android:id="@+id/iv_userhead"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="18dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ease_default_avatar" />
+
+        <RelativeLayout
+            android:id="@+id/bubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_userid"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_chat_activity"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@id/iv_userhead"
+            android:background="@drawable/ease_chat_bubble_receive_bg"
+            android:minWidth="30dp"
+            android:padding="8dp">
+
+            <com.xunda.mo.staticdata.FireTimerTextView
+                android:id="@+id/tv_chatcontent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:autoLink="web"
+                android:gravity="center|left"
+                android:lineSpacingExtra="2dp"
+                android:maxWidth="225.0dip"
+                android:minHeight="@dimen/ease_chat_text_min_height"
+                android:textColor="#ff000000"
+                android:textSize="15sp"
+                tools:text="环信" />
+        </RelativeLayout>
+
+
+        <ImageView
+            android:layout_width="13dp"
+            android:layout_height="17dp"
+            android:layout_above="@id/bubble"
+            android:layout_alignEnd="@id/bubble"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="-17dp"
+            android:src="@mipmap/fire_icon" />
+
+        <TextView
+            android:id="@+id/tv_userid"
+            style="@style/chat_text_name_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/chat_nick_margin_left"
+            android:layout_toRightOf="@id/iv_userhead"
+            android:textSize="@dimen/chat_nick_text_size"
+            android:visibility="gone"
+            tools:text="som" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/fire_Img"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@mipmap/fire_bg"
+        android:layout_marginStart="18dp"
+        android:background="@color/greyfive"
+        android:visibility="visible"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

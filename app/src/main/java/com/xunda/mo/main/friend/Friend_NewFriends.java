@@ -18,6 +18,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
@@ -122,7 +124,7 @@ public class Friend_NewFriends extends BaseInitActivity {
         public void onLoadMore() {
             PageIndex = PageIndex + 1;
             pageSize = 10;
-            NewFriendMethod(Friend_NewFriends.this,  saveFile.Friend_ApplyList_Url );
+            NewFriendMethod(Friend_NewFriends.this, saveFile.Friend_ApplyList_Url);
         }
     }
 
@@ -142,6 +144,7 @@ public class Friend_NewFriends extends BaseInitActivity {
 //                String friendUserId = baseModel.get(position).
 //                ChatFriend_Detail.actionStart(mContext, friendUserId, addType);
             }
+
             @Override
             public void onItemLongClick(View view, int position) {
             }
@@ -153,7 +156,8 @@ public class Friend_NewFriends extends BaseInitActivity {
             public void onItemAddClick(View view, int position) {
                 String agreeType = "1";
                 String friendApplyId = baseModel.get(position).getFriendApplyId();
-                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId);
+                String hXUserName = baseModel.get(position).getHxUserName();
+                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId, hXUserName);
                 try {
 //                    String name = baseModel.get(position).getUserNum().toString();
 //                    DemoHelper.getInstance().getContactManager().acceptInvitation(name);
@@ -165,7 +169,8 @@ public class Friend_NewFriends extends BaseInitActivity {
             public void onItemRemoveClick(View view, int position) {
                 String agreeType = "2";
                 String friendApplyId = baseModel.get(position).getFriendApplyId();
-                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId);
+                String hXUserName = baseModel.get(position).getHxUserName();
+                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId, hXUserName);
             }
         });
     }
@@ -213,7 +218,7 @@ public class Friend_NewFriends extends BaseInitActivity {
                 .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
                     @Override
                     public void onConfirmClick(View view) {
-                        rejectAll_AndClearMethod(Friend_NewFriends.this,  saveFile.Friend_ClearApplyList_Url);
+                        rejectAll_AndClearMethod(Friend_NewFriends.this, saveFile.Friend_ClearApplyList_Url);
                     }
                 })
                 .showCancelButton(true)
@@ -225,9 +230,9 @@ public class Friend_NewFriends extends BaseInitActivity {
     private NewFriend_Bean Model;
 
     public void NewFriendMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("pageNum",PageIndex);
-        map.put("pageSize",pageSize);
+        Map<String, Object> map = new HashMap<>();
+        map.put("pageNum", PageIndex);
+        map.put("pageSize", pageSize);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
@@ -256,6 +261,7 @@ public class Friend_NewFriends extends BaseInitActivity {
                 }
 
             }
+
             @Override
             public void failed(String... args) {
 
@@ -273,19 +279,27 @@ public class Friend_NewFriends extends BaseInitActivity {
      * @param agreeType     1通过2拒绝
      * @param friendApplyId 好友申请ID
      */
-    public void AddRemoveMethod(Context context, String baseUrl, String agreeType, String friendApplyId) {
-        Map<String,Object> map = new HashMap<>();
+    public void AddRemoveMethod(Context context, String baseUrl, String agreeType, String friendApplyId, String hXUserName) {
+        Map<String, Object> map = new HashMap<>();
         map.put("agreeType", agreeType);
         map.put("friendApplyId", friendApplyId);
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                if (TextUtils.equals(agreeType, "1")) {
-                    Toast.makeText(mContext, "已通过", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(mContext, "已拒绝", Toast.LENGTH_SHORT).show();
+                try {
+                    if (TextUtils.equals(agreeType, "1")) {
+                        EMClient.getInstance().contactManager().acceptInvitation(hXUserName);
+
+                        Toast.makeText(mContext, "已通过", Toast.LENGTH_SHORT).show();
+                    } else {
+                        EMClient.getInstance().contactManager().declineInvitation(hXUserName);
+                        Toast.makeText(mContext, "已拒绝", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
                 }
             }
+
             @Override
             public void failed(String... args) {
             }
@@ -299,7 +313,7 @@ public class Friend_NewFriends extends BaseInitActivity {
      * @param baseUrl
      */
     public void rejectAll_AndClearMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
@@ -307,6 +321,7 @@ public class Friend_NewFriends extends BaseInitActivity {
                 list_xrecycler.refreshComplete();
                 Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void failed(String... args) {
             }

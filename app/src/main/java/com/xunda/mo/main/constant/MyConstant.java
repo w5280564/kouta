@@ -14,6 +14,7 @@ public interface MyConstant extends DemoConstant {
     String TO_LH = "toLH";
     String TO_VIP = "toVIP";
     String FIRE_TYPE = "fireType";
+    String APPLY = "apply";
 
     String MESSAGE_TYPE_GROUP = "group";
     String GROUP_NAME = "groupName";
@@ -58,6 +59,8 @@ public interface MyConstant extends DemoConstant {
     String GROUP_UPDATE_GROUPDES = "updateGroupDes";
 
     String MESSAGE_TYPE_DOUBLE_RECALL = "doubleRecall";
+    String MESSAGE_TYPE_GROUP_DOUBLE_RECALL = "GroupDoubleRecall";
+    String BURN_AFTER_READING_SET = "BurnAfterReading";
     String MY_GROUP_LABEL = "group_Label";
     String MY_LABEL = "label";
 
@@ -66,5 +69,7 @@ public interface MyConstant extends DemoConstant {
     String USER_NUM = "userNum";
     String LIGHT_STATUS = "lightStatus";
     String ONLINE_STATUS = "onlineStatus";
+
+    String FIRE_REFRESH = "fireRefresh";
 
 }

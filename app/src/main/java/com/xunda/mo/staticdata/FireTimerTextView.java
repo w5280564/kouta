@@ -7,12 +7,12 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 @SuppressLint("AppCompatCustomView")
-public class TimerTextView extends TextView {
+public class FireTimerTextView extends TextView {
     private CountDownTimer timer;
 
     private TimerListener timerListener;
     private boolean isTiming = false;
-    public TimerTextView(Context context, AttributeSet attrs) {
+    public FireTimerTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initTimer();
     }
@@ -20,10 +20,10 @@ public class TimerTextView extends TextView {
 
 
     private void initTimer() {
-        timer = new CountDownTimer(60000, 1000) {
+        timer = new CountDownTimer(3000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                setText(millisUntilFinished / 1000 + "s");
+//                setText(millisUntilFinished / 1000 + "s");
             }
 
             @Override

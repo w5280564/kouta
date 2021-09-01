@@ -19,6 +19,7 @@ import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -128,7 +129,7 @@ public class ChatDetailSet extends BaseInitActivity {
 //        disturb_Switch.setOnCheckedChangeListener(new disturb_SwitchOnCheckLister());
         disturb_Switch.getSwitch().setOnClickListener(new disturb_SwitchClick());
         vip_Switch = findViewById(R.id.vip_Switch);
-        vip_Switch.setOnCheckedChangeListener(new vip_SwitchOnCheckLister());
+        vip_Switch.getSwitch().setOnClickListener(new vip_SwitchClick());
         MyArrowItemView recommend_ArrowItemView = findViewById(R.id.recommend_ArrowItemView);
         recommend_ArrowItemView.setOnClickListener(new recommend_ArrowItemOnClick());
         MyArrowItemView chatRecord_ArrowItemView = findViewById(R.id.chatRecord_ArrowItemView);
@@ -298,19 +299,20 @@ public class ChatDetailSet extends BaseInitActivity {
         }
     }
 
-    private class vip_SwitchOnCheckLister implements MySwitchItemView.OnCheckedChangeListener {
-        @Override
-        public void onCheckedChanged(MySwitchItemView buttonView, boolean isChecked) {
 
+    private class vip_SwitchClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+//            v.setEnabled(false);
             MyInfo myInfo = new MyInfo(ChatDetailSet.this);
             int vipType = myInfo.getUserInfo().getVipType();
-            if (vipType  == 0) {
-                Toast.makeText(ChatDetailSet.this, "请开通vip", Toast.LENGTH_SHORT).show();
+            if (vipType == 0) {
+                vip_Switch.getSwitch().setChecked(false);
+                changeVip();
             } else {
-//                LiveDataBus.get().with("").postValue();
+                String baseUrl = saveFile.Friend_Fire_Url;
+                double_RecallMethod(ChatDetailSet.this, baseUrl, vip_Switch.getSwitch().isChecked(), vip_Switch.getSwitch());
             }
-
-
         }
     }
 
@@ -373,6 +375,19 @@ public class ChatDetailSet extends BaseInitActivity {
                 .show();
     }
 
+    //通知开通VIP
+    private void changeVip() {
+        new SimpleDialogFragment.Builder(mContext)
+                .setTitle("提示通知")
+                .showContent(true)
+                .setContent("该功能为会员特权功能，请开通会员后使用")
+                .setOnConfirmClickListener(view -> {
+
+                })
+                .showCancelButton(true)
+                .show();
+    }
+
 
     Friend_Details_Bean model;
 
@@ -400,6 +415,10 @@ public class ChatDetailSet extends BaseInitActivity {
                 } else {
                     vip_Txt.setVisibility(View.VISIBLE);
 //                            .setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
+                }
+
+                if (TextUtils.equals(dataDTO.getFireType(), "2")) {
+                    vip_Switch.getSwitch().setChecked(true);
                 }
                 IsSilenceMethod(dataDTO.getIsSilence());
 
@@ -586,6 +605,7 @@ public class ChatDetailSet extends BaseInitActivity {
                 switchView.setEnabled(true);
                 changePush();
             }
+
             @Override
             public void failed(String... args) {
 //                site_progressbar.setVisibility(View.GONE);
@@ -619,6 +639,31 @@ public class ChatDetailSet extends BaseInitActivity {
                 //修改本地其他用户名
                 String hxUserName = model.getData().getHxUserName();
                 DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
+            }
+
+            @Override
+            public void failed(String... args) {
+            }
+        });
+    }
+
+    /**开启阅后即焚
+     * @param context
+     * @param baseUrl
+     * @param
+     */
+    public void double_RecallMethod(Context context, String baseUrl, boolean isBlock, Switch switchView) {
+        String fireType = "1";
+        if (switchView.isChecked()) {
+            fireType = "2";
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("fireType", fireType);
+        map.put("friendUserId", model.getData().getUserId());
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                LiveDataBus.get().with(MyConstant.BURN_AFTER_READING_SET).setValue(isBlock);
             }
 
             @Override

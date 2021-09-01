@@ -111,8 +111,6 @@ public class GroupRowUpdateMes extends EaseChatRow {
             }
             content_Txt.setText(content);
         } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
-//            MyInfo myInfo = new MyInfo(context);
-//            String nickName = myInfo.getUserInfo().getNickname();
             String SEND_NAME = message.getStringAttribute(MyConstant.SEND_NAME, "");
             if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL) && isSender) {
 //            if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL) && !TextUtils.isEmpty(SEND_NAME)) {
@@ -121,8 +119,19 @@ public class GroupRowUpdateMes extends EaseChatRow {
                 content = "对方撤回了所有消息";
             }
             content_Txt.setText(content);
+        }else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
+            String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
+            if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL) && isSender) {
+                content = "您撤回了所有消息";
+            } else {
+                content = String.format("'%1$s'撤回了所有消息", sendName);
+            }
+            content_Txt.setText(content);
+        } else if (TextUtils.equals(Group, MyConstant.APPLY)) {
+            String invitationStr = message.getStringAttribute(MyConstant.SEND_NAME, "");
+            content = String.format("您已同意添加'%1$s'，现在可以开始聊天了", invitationStr);
+            content_Txt.setText(content);
         }
-
 
     }
 

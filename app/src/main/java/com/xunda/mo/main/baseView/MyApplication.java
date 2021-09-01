@@ -56,7 +56,8 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         initHx();
 
         if (DemoHelper.getInstance().getAutoLogin()) {
-            DemoHelper.getInstance().getChatManager().addMessageListener(new EMMessageMethod());
+//            DemoHelper.getInstance().getChatManager().addMessageListener(new EMMessageMethod());
+//            DemoHelper.getInstance().getChatManager().addMessageListener(new EMMessageMethod());
         }
         registerActivityLifecycleCallbacks();
         closeAndroidPDialog();
@@ -178,7 +179,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
     }
 
 
-    private class EMMessageMethod implements EMMessageListener {
+    public  class EMMessageMethod implements EMMessageListener {
         @SneakyThrows
         @Override
         public void onMessageReceived(List<EMMessage> messages) {
@@ -187,7 +188,6 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
 //            if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             if (!CollectionUtils.isEmpty(messages)) {
                 for (EMMessage msg : messages) {
-                    String HXUserName = msg.conversationId();
                     // 消息所属会话
                     EMConversation conversation = EMClient.getInstance().chatManager().getConversation(msg.getFrom(), EMConversation.EMConversationType.Chat, false);
                     if (conversation == null) {
@@ -203,7 +203,6 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
                             conversation.clearAllMessages();
                             saveMes(conversation.conversationId());
                         }
-
                     }
                 }
             }
@@ -233,6 +232,14 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         public void onMessageRead(List<EMMessage> messages) {
             //收到已读回执
             Log.i("message", "回执");
+            for (EMMessage message : messages) {
+                String fireType = message.getStringAttribute(MyConstant.FIRE_TYPE, "");
+                if (TextUtils.equals(fireType, "1")) {
+                    // 消息所属会话
+                    EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.getUserName(), EMConversation.EMConversationType.Chat, true);
+                    conversation.removeMessage(message.getMsgId());
+                }
+            }
         }
 
         @Override
@@ -253,6 +260,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
             Log.i("message", "消息变动");
         }
     }
+
 
     private void saveMes(String conversationId) {
 //        String conversationId = Model.getData().getHxUserName();
@@ -275,6 +283,5 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         msgNotification.setStatus(EMMessage.Status.SUCCESS);
         EMClient.getInstance().chatManager().saveMessage(msgNotification);
     }
-
 
 }

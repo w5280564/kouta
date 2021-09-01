@@ -558,7 +558,7 @@ public class UserDetail_Set extends BaseInitActivity {
                         if (!TextUtils.isEmpty(content)) {
 //                            itemGroupName.getTvContent().setText(content);
                             String changType = "2";
-                            ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "NickName", content, "", "");
+                            ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "nickname", content, "", "");
                         }
                     }
                 })

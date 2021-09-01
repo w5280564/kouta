@@ -286,13 +286,10 @@ public class MainLogin_Code extends BaseInitActivity {
             timer_txt.setText("获取验证码");
             timer_txt.setTextColor(ContextCompat.getColor(MainLogin_Code.this, R.color.greytwo));
             timer_txt.setEnabled(false);
-            timer_txt.startTimer(new TimerTextView.TimerListener() {
-                @Override
-                public void onFinish() {
-                    timer_txt.setEnabled(true);
-                    timer_txt.setTextColor(ContextCompat.getColor(MainLogin_Code.this, R.color.yellowthree));
-                    timer_txt.setText("重新获取验证码");
-                }
+            timer_txt.startTimer(() -> {
+                timer_txt.setEnabled(true);
+                timer_txt.setTextColor(ContextCompat.getColor(MainLogin_Code.this, R.color.yellowthree));
+                timer_txt.setText("重新获取验证码");
             });
         }
     }
