@@ -85,11 +85,14 @@ public class GroupRowUpdateMes extends EaseChatRow {
             content = "群主关闭了群员保护";
             content_Txt.setText(content);
         } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_UPDATE_MASTER)) {
-            String invitationStr = message.getStringAttribute(MyConstant.USER_NAME, "");
-            content = String.format("您将群主转让给'%1$s'", invitationStr);
-            int startLength = content.length() - 1 - invitationStr.length();
+            String userName = message.getStringAttribute(MyConstant.USER_NAME, "");
+            if (isSender()) {
+                content = String.format("您将群主转让给'%1$s'", userName);
+            }else {
+                content = String.format("群主将群主转让给'%1$s'", userName);
+            }
+            int startLength = content.length() - 1 - userName.length();
             int endLength = content.length() - 1;
-//            setName(content, invitationStr.length(), content_Txt);
             setName(content, startLength, endLength, content_Txt);
         } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_PUSH_ON)) {
             String invitationStr = message.getStringAttribute(MyConstant.SEND_NAME, "");
@@ -119,7 +122,7 @@ public class GroupRowUpdateMes extends EaseChatRow {
                 content = "对方撤回了所有消息";
             }
             content_Txt.setText(content);
-        }else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
+        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
             String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
             if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL) && isSender) {
                 content = "您撤回了所有消息";

@@ -25,8 +25,9 @@
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/5c2a28e5dbbe81a85e854bd3a5ed24de/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_widget_contact_item.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/aa5c64c6bdb5fc81b021c25af6d7dc35/transformed/jetified-ease-im-kit-3.8.4/res/drawable/ease_chat_bubble_receive_bg.xml" value="0.32146118721461187" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/aa5c64c6bdb5fc81b021c25af6d7dc35/transformed/jetified-ease-im-kit-3.8.4/res/drawable/ease_chat_bubble_send_bg.xml" value="0.32146118721461187" />
+        <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/aa5c64c6bdb5fc81b021c25af6d7dc35/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_row_received_custom.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/aa5c64c6bdb5fc81b021c25af6d7dc35/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_row_received_message.xml" value="0.33" />
-        <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/aa5c64c6bdb5fc81b021c25af6d7dc35/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_row_sent_message.xml" value="0.1519873532068654" />
+        <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/aa5c64c6bdb5fc81b021c25af6d7dc35/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_row_sent_message.xml" value="0.33" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/abe77a4ae5b03392fd3c1784ff0559b9/transformed/jetified-zxing-lite-1.1.7-androidx/res/layout/zxl_capture.xml" value="0.32546296296296295" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/c207501cbcbb45096dc108b3c068eb77/transformed/jetified-ease-im-kit-3.8.3/res/layout/ease_chat_message_list.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/c207501cbcbb45096dc108b3c068eb77/transformed/jetified-ease-im-kit-3.8.3/res/layout/ease_layout_chat.xml" value="0.1983695652173913" />
@@ -46,6 +47,8 @@
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/group_label_radius.xml" value="0.32146118721461187" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/group_label_stroke.xml" value="0.33515981735159817" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/group_labeladd_radius.xml" value="0.33515981735159817" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/loginbtn_radius_yellow.xml" value="0.29768518518518516" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/question_label_stroke.xml" value="0.29768518518518516" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/search_bg.xml" value="0.33515981735159817" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/tab_adress_selector.xml" value="0.31689497716894977" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/tab_chat_selector.xml" value="0.31689497716894977" />
@@ -120,6 +123,8 @@
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/demo_dialog_default_list_item.xml" value="0.1519873532068654" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/demo_item_row_chat_history.xml" value="0.15876242095754292" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/demo_layout_friends_empty_list.xml" value="0.31157407407407406" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/ease_row_received_custom.xml" value="0.31157407407407406" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/ease_row_sent_custom.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/friend_newfriendlist_adapter.xml" value="0.1519873532068654" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/group_adduser_adapter.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/group_applylist_adapter.xml" value="0.33" />
@@ -142,7 +147,7 @@
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/fragments/layout/fragment_chat.xml" value="0.15876242095754292" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/fragments/layout/fragment_discover.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/fragments/layout/mefragment.xml" value="0.31157407407407406" />
-        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/fragments/layout/myease_fragment_chat_list.xml" value="0.1983695652173913" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/fragments/layout/myease_fragment_chat_list.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/popupwindows/layout/addseek_friendlist.xml" value="0.14859981933152666" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/popupwindows/layout/addseek_friendlist_detail.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/popupwindows/layout/chatdetailset_feedback.xml" value="0.33" />
@@ -154,6 +159,7 @@
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/popupwindows/layout/group_members.xml" value="0.15876242095754292" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/popupwindows/layout/my_switchitemview.xml" value="0.1519873532068654" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/popupwindows/layout/popup_more_convers.xml" value="0.25" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/popupwindows/layout/question_label.xml" value="0.2833333333333333" />
         <entry key="..\:/waylen/kouta/app/src/main/res/menu/bottom_main_nav_menu.xml" value="0.30694444444444446" />
         <entry key="..\:/waylen/kouta/app/src/main/res/menu/demo_chat_list_menu.xml" value="0.25833333333333336" />
       </map>

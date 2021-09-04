@@ -45,6 +45,7 @@ import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.common.net.Resource;
 import com.xunda.mo.hx.common.utils.ToastUtils;
 import com.xunda.mo.hx.section.base.BaseActivity;
+import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.hx.section.contact.activity.AddContactActivity;
 import com.xunda.mo.hx.section.contact.activity.ChatRoomContactManageActivity;
 import com.xunda.mo.hx.section.contact.activity.ContactDetailActivity;
@@ -63,6 +64,7 @@ import com.xunda.mo.main.friend.Friend_Add;
 import com.xunda.mo.main.friend.Friend_NewFriends;
 import com.xunda.mo.main.friend.MyGroup;
 import com.xunda.mo.model.adress_Model;
+import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
@@ -170,9 +172,8 @@ public class ContactListFragment extends EaseContactListFragment implements View
                     ToastUtils.showToast("点击文件助手");
                     break;
                 case R.id.contact_header_item_head_service:
-                    ToastUtils.showToast("点击客服");
+                    customerServiceData(getActivity(), saveFile.Receptionist_MyMoRoom);
                     break;
-
 //                case R.id.contact_header_item_chat_room_list:
 //                    ChatRoomContactManageActivity.actionStart(mContext);
 //                    break;
@@ -185,7 +186,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_new_chat, R.mipmap.adress_head_friend, "新的朋友");
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_group_list, R.mipmap.adress_head_chat, getString(R.string.em_friends_group_chat));
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_creat_group, R.mipmap.adress_head_group, "好友分组");
-        myContact_Head_listAdapter.addItem(R.id.contact_header_item_head_file, R.mipmap.adress_head_file, "文件传输助手");
+//        myContact_Head_listAdapter.addItem(R.id.contact_header_item_head_file, R.mipmap.adress_head_file, "文件传输助手");
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_head_service, R.mipmap.adress_head_service, "Mo 客服");
     }
 
@@ -233,7 +234,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
         tvSearch = view.findViewById(R.id.tv_search);
         tvSearch.setHint(R.string.em_friend_list_search_hint);
     }
-
 
 
     @Override
@@ -440,6 +440,23 @@ public class ContactListFragment extends EaseContactListFragment implements View
 
     }
 
+    //客服
+    public void customerServiceData(final Context context, String baseUrl) {
+        Map<String, Object> map = new HashMap<>();
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                baseDataModel model = new Gson().fromJson(result, baseDataModel.class);
+                //跳转到群组聊天页面
+                ChatActivity.actionStart(mContext, model.getData(), DemoConstant.CHATTYPE_GROUP);
+            }
+
+            @Override
+            public void failed(String... args) {
+            }
+        });
+    }
+
 
     /**
      * 排序
@@ -517,7 +534,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
                 obj.put(MyConstant.ONLINE_STATUS, dataDTO.getOnlineStatus());
                 obj.put(MyConstant.USER_ID, dataDTO.getUserId());
                 obj.put(MyConstant.REMARK_NAME, dataDTO.getRemarkName());
-             } catch (JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             user.setExt(obj.toString());

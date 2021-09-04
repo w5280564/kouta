@@ -84,6 +84,7 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initData();
+
     }
 
     public void initArguments() {

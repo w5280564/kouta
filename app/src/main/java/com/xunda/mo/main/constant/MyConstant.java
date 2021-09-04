@@ -18,7 +18,10 @@ public interface MyConstant extends DemoConstant {
 
     String MESSAGE_TYPE_GROUP = "group";
     String GROUP_NAME = "groupName";
+    String MO_CUSTOMER = "MOCustomer";
+    String MO_NAME = "MO客服";
     String GROUP_HEAD = "groupHead";
+    String IDENTITY = "identity";
     String EXT = "ext";
 
     String MESSAGE_TYPE_USERCARD = "userCard";
@@ -72,4 +75,5 @@ public interface MyConstant extends DemoConstant {
 
     String FIRE_REFRESH = "fireRefresh";
 
+    int CHATTYPE_MO = 4;
 }

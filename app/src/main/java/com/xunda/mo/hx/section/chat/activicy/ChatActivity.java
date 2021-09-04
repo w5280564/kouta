@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseIM;
 import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.domain.EaseUser;
@@ -36,6 +37,8 @@ import com.xunda.mo.main.group.activity.GroupDetailSet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Map;
 
 public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener, EaseTitleBar.OnRightClickListener, ChatFragment.OnFragmentInfoListener {
     private EaseTitleBar titleBarMessage;
@@ -89,8 +92,31 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
         if (chatType == DemoConstant.CHATTYPE_SINGLE) {
             titleBarMessage.setRightImageResource(R.drawable.chat_user_info);
         } else {
+            if (isMOCustomer()){
+                return;
+            }
             titleBarMessage.setRightImageResource(R.drawable.chat_group_info);
         }
+    }
+
+    //是否是客服会话
+    private boolean isMOCustomer(){
+        EMConversation emConversation = DemoHelper.getInstance().getChatManager().getConversation(conversationId);
+        if (emConversation == null) {
+            return false;
+        }
+        EMMessage conMsg = emConversation.getLastMessage();
+        if (conMsg == null) {
+            return false;
+        }
+        Map<String, Object> mapExt = conMsg.ext();
+        if (mapExt != null && !mapExt.isEmpty()) {
+            String messType = (String) mapExt.get(MyConstant.MESSAGE_TYPE);
+            if (!TextUtils.isEmpty(messType) && messType.equals(MyConstant.MO_CUSTOMER)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -183,6 +209,22 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
             if (emConversation != null && emConversation.getAllMsgCount() != 0) {
                 title = emConversation.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME, "");
             }
+//            EMMessage conMsg = emConversation.getLastMessage();
+//            if (conMsg == null) {
+//                return;
+//            }
+//            Map<String, Object> mapExt = conMsg.ext();
+//            if (mapExt != null && !mapExt.isEmpty()) {
+//                String messType = (String) mapExt.get(MyConstant.MESSAGE_TYPE);
+//                if (!TextUtils.isEmpty(messType) && messType.equals(MyConstant.MO_CUSTOMER)) {
+//                    title = "MO 客服";
+//                }
+//            }
+
+            if (isMOCustomer()){
+                title = "MO 客服";
+            }
+
         } else if (chatType == DemoConstant.CHATTYPE_CHATROOM) {
             EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(conversationId);
             if (room == null) {
@@ -190,13 +232,13 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
                 return;
             }
             title = TextUtils.isEmpty(room.getName()) ? conversationId : room.getName();
-        } else {
+        } else if (chatType == DemoConstant.CHATTYPE_SINGLE) {
             EaseUserProfileProvider userProvider = EaseIM.getInstance().getUserProvider();
             if (userProvider != null) {
                 try {
                     EaseUser user = userProvider.getUser(conversationId);
                     String selectInfoExt = user.getExt();
-                    if (!TextUtils.isEmpty(selectInfoExt)){
+                    if (!TextUtils.isEmpty(selectInfoExt)) {
                         JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
                         String name = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
                         if (user != null) {
@@ -207,9 +249,7 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
                         }
 
                     }
-//                    if (TextUtils.isEmpty(selectInfoExt)){
-//                        return;
-//                    }
+
                 } catch (
                         JSONException e) {
                     e.printStackTrace();

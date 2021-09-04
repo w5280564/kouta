@@ -85,6 +85,8 @@ public class saveFile {
     public static String Group_Notify_Url = "group/notify";
     public static String Group_Disturb_Url = "group/disturb";
     public static String Friend_Fire_Url = "friend/fire";
+    public static String Receptionist_MyMoRoom = "receptionist/myMoRoom";
+    public static String Receptionist_Answer = "receptionist/answer";
 
 
 

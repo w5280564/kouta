@@ -201,7 +201,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         messageChange.with(DemoConstant.CONTACT_UPDATE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.MESSAGE_CALL_SAVE, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
         messageChange.with(DemoConstant.MESSAGE_NOT_SEND, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
-     }
+    }
 
     private void refreshList(Boolean event) {
         if (event == null) {
@@ -262,11 +262,19 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         if (item instanceof EMConversation) {
             if (TextUtils.equals(((EMConversation) item).getLastMessage().getFrom(), MyConstant.ADMIN)) {
 //                ToastUtils.showToast("群组消息");
-                Group_Notices.actionStart(mContext,((EMConversation) item).conversationId());
+                Group_Notices.actionStart(mContext, ((EMConversation) item).conversationId());
 
             } else if (EaseSystemMsgManager.getInstance().isSystemConversation((EMConversation) item)) {
                 SystemMsgsActivity.actionStart(mContext);
             } else {
+//                int type = EaseCommonUtils.getChatType((EMConversation) item);
+//                String mess_Type = (String) ((EMConversation) item).getLastMessage().ext().get(MyConstant.MESSAGE_TYPE);
+//                if (mess_Type == null){
+//                    return;
+//                }
+//                if (mess_Type.equals(MyConstant.MO_CUSTOMER)) {
+//                    type = MyConstant.CHATTYPE_MO;
+//                }
                 ChatActivity.actionStart(mContext, ((EMConversation) item).conversationId(), EaseCommonUtils.getChatType((EMConversation) item));
             }
 

@@ -163,8 +163,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         //收到的消息
         msgListener = new EMMessageMethod();
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
-
-
     }
 
 
@@ -174,31 +172,75 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         super.addMsgAttrsBeforeSend(message);
         MyInfo myInfo = new MyInfo(requireActivity());
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-            message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_CHAT);
-            message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
-            message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
-            message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
-            message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
-            String toName = TextUtils.isEmpty(model.getData().getRemarkName()) ? model.getData().getNickname() : model.getData().getRemarkName();
-            message.setAttribute(MyConstant.TO_NAME, toName);
-            message.setAttribute(MyConstant.TO_HEAD, model.getData().getHeadImg());
-            message.setAttribute(MyConstant.TO_LH, model.getData().getLightStatus());
-            message.setAttribute(MyConstant.TO_VIP, model.getData().getVipType());
-            isBurnAfterReading(model.getData().getFireType(), message);
+            singleSendMes(message, myInfo);
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-            if (groupModel == null) {
-                return;
+            if (isMOCustomer()){
+                serviceSendMes(message, myInfo);
+            }else {
+                groupSendMes(message, myInfo);
             }
-            message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP);
-            message.setAttribute(MyConstant.SEND_NAME, sendAnonymousName(groupModel.getData().getIsAnonymous()));
-            message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
-            message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
-            message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
-            message.setAttribute(MyConstant.GROUP_NAME, groupModel.getData().getGroupName());
-            message.setAttribute(MyConstant.GROUP_HEAD, groupModel.getData().getGroupHeadImg());
         }
     }
 
+    //是否是客服会话
+    private boolean isMOCustomer(){
+        EMMessage conMsg = chatLayout.getChatMessageListLayout().getCurrentConversation().getLastMessage();
+        if (conMsg == null) {
+            return false;
+        }
+        Map<String, Object> mapExt = conMsg.ext();
+        if (mapExt != null && !mapExt.isEmpty()) {
+            String messType = (String) mapExt.get(MyConstant.MESSAGE_TYPE);
+            if (!TextUtils.isEmpty(messType) && messType.equals(MyConstant.MO_CUSTOMER)) {
+                return true;
+            }else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+
+    //单人聊天发送扩展字段
+    private void singleSendMes(EMMessage message, MyInfo myInfo) {
+        message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_CHAT);
+        message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
+        message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
+        message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
+        message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
+        String toName = TextUtils.isEmpty(model.getData().getRemarkName()) ? model.getData().getNickname() : model.getData().getRemarkName();
+        message.setAttribute(MyConstant.TO_NAME, toName);
+        message.setAttribute(MyConstant.TO_HEAD, model.getData().getHeadImg());
+        message.setAttribute(MyConstant.TO_LH, model.getData().getLightStatus());
+        message.setAttribute(MyConstant.TO_VIP, model.getData().getVipType());
+        isBurnAfterReading(model.getData().getFireType(), message);
+    }
+
+    //群组聊天 人工客服添加扩展
+    private void serviceSendMes(EMMessage message, MyInfo myInfo) {
+        message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MO_CUSTOMER);
+        message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
+        message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
+        message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
+        message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
+    }
+
+    //群组聊天 通用聊天扩展字段
+    private void groupSendMes(EMMessage message, MyInfo myInfo) {
+        if (groupModel == null) {
+            return;
+        }
+        message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP);
+        message.setAttribute(MyConstant.SEND_NAME, sendAnonymousName(groupModel.getData().getIsAnonymous()));
+        message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
+        message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
+        message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
+        message.setAttribute(MyConstant.GROUP_NAME, groupModel.getData().getGroupName());
+        message.setAttribute(MyConstant.GROUP_HEAD, groupModel.getData().getGroupHeadImg());
+        message.setAttribute(MyConstant.IDENTITY, groupModel.getData().getIdentity());
+    }
+
+    //单人聊天 阅后即焚扩展字段
     private void isBurnAfterReading(String fireType, EMMessage message) {
         if (fireType.equals("2")) {
             message.setAttribute(MyConstant.FIRE_TYPE, true);
@@ -207,6 +249,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
 
+    //匿名聊天随机用户名
     private String sendAnonymousName(int IsAnonymous) {
         MyInfo myInfo = new MyInfo(requireActivity());
         String nameStr;
@@ -259,16 +302,21 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         chatExtendMenu.clear();
         chatExtendMenu.registerMenuItem(R.string.attach_picture, R.drawable.ease_chat_image_selector, R.id.extend_item_picture);
         chatExtendMenu.registerMenuItem(R.string.attach_take_pic, R.drawable.ease_chat_takepic_selector, R.id.extend_item_take_picture);
-        chatExtendMenu.registerMenuItem(R.string.attach_location, R.drawable.ease_chat_location_selector, R.id.extend_item_location);
-        //添加扩展槽
-        if (chatType == EaseConstant.CHATTYPE_SINGLE) {
+
+        if (isMOCustomer()){
+            chatExtendMenu.registerMenuItem(R.string.chat_complaint, R.mipmap.chat_complaint_icon, R.id.chat_complaint);
+        }else {
+            chatExtendMenu.registerMenuItem(R.string.attach_location, R.drawable.ease_chat_location_selector, R.id.extend_item_location);
+            //添加扩展槽
+            if (chatType == EaseConstant.CHATTYPE_SINGLE) {
 //            inputMenu.registerExtendMenuItem(R.string.attach_voice_call, R.drawable.em_chat_voice_call_selector, EaseChatInputMenu.ITEM_VOICE_CALL, this);
-            chatExtendMenu.registerMenuItem(R.string.attach_media_call, R.drawable.em_chat_video_call_selector, R.id.extend_item_video_call);
+                chatExtendMenu.registerMenuItem(R.string.attach_media_call, R.drawable.em_chat_video_call_selector, R.id.extend_item_video_call);
+            }
+            chatExtendMenu.registerMenuItem(R.string.attach_two_withdraw, R.mipmap.chat_two_withdraw, R.id.extend_item_two_withdraw);
+            //名片扩展
+            chatExtendMenu.registerMenuItem(R.string.attach_user_card, R.drawable.em_chat_user_card_selector, R.id.extend_item_user_card);
+            chatExtendMenu.registerMenuItem(R.string.attach_file, R.drawable.em_chat_file_selector, R.id.extend_item_file);
         }
-        chatExtendMenu.registerMenuItem(R.string.attach_two_withdraw, R.mipmap.chat_two_withdraw, R.id.extend_item_two_withdraw);
-        //名片扩展
-        chatExtendMenu.registerMenuItem(R.string.attach_user_card, R.drawable.em_chat_user_card_selector, R.id.extend_item_user_card);
-        chatExtendMenu.registerMenuItem(R.string.attach_file, R.drawable.em_chat_file_selector, R.id.extend_item_file);
 
 //        if (chatType == EaseConstant.CHATTYPE_GROUP && EMClient.getInstance().getOptions().getRequireAck()) {
 //            chatExtendMenu.registerMenuItem(R.string.attach_video, R.drawable.em_chat_video_selector, R.id.extend_item_video);
@@ -394,9 +442,12 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             AddFriendMethod(getActivity(), saveFile.Friend_info_Url);
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-            GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url);
-        }
+            if (isMOCustomer()){
 
+            }else {
+                GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url);
+            }
+        }
     }
 
     private void showDeliveryDialog() {
@@ -493,6 +544,9 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 UserDetail_Set.actionStart(mContext);
             }
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
+            if (isMOCustomer()){
+                return;
+            }
             int isAnonymous = groupModel.getData().getIsAnonymous();
             int issProtect = groupModel.getData().getIsProtect();
             if (isAnonymous == 1 || issProtect == 1) {
@@ -607,6 +661,8 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 } else {
                     groupRecall();
                 }
+                case R.id.chat_complaint:
+                Toast.makeText(requireContext(),"投诉",Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -877,7 +933,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         }
     }
 
-    private  class EMMessageMethod implements EMMessageListener {
+    private class EMMessageMethod implements EMMessageListener {
         @SneakyThrows
         @Override
         public void onMessageReceived(List<EMMessage> messages) {
@@ -1067,7 +1123,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 //        msgNotification.setMsgTime(conMsg.getMsgTime());
 //        msgNotification.setLocalTime(conMsg.getMsgTime());
         msgNotification.setChatType(EMMessage.ChatType.GroupChat);
-        msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL);
         msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL);
 //        msgNotification.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
         msgNotification.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());

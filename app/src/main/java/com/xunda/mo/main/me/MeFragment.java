@@ -16,11 +16,14 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.gson.Gson;
 import com.xunda.mo.R;
+import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.section.base.BaseInitFragment;
+import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.hx.section.me.activity.SetIndexActivity;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.chat.activity.UserDetail_Set;
 import com.xunda.mo.model.UserDetail_Bean;
+import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.MyLevel;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
@@ -32,7 +35,7 @@ import java.util.Map;
 
 public class MeFragment extends BaseInitFragment {
     private ConstraintLayout head_Constraint;
-    private MyArrowItemView item_set, version_set;
+    private MyArrowItemView item_set, version_set,item_service_set;
     private LinearLayout garde_Lin;
     private ImageView head_Image;
     private TextView nick_Txt, moId_Txt,vipType_txt;
@@ -56,6 +59,8 @@ public class MeFragment extends BaseInitFragment {
         nick_Txt = findViewById(R.id.nick_Txt);
         moId_Txt = findViewById(R.id.moId_Txt);
         vipType_txt = findViewById(R.id.vipType_txt);
+        item_service_set = findViewById(R.id.item_service_set);
+        item_service_set.setOnClickListener(new item_service_setClick());
 
     }
 
@@ -83,6 +88,13 @@ public class MeFragment extends BaseInitFragment {
             SetIndexActivity.actionStart(mContext);
         }
     }
+    private class item_service_setClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            customerServiceData(getActivity(), saveFile.Receptionist_MyMoRoom);
+        }
+    }
+
 
     UserDetail_Bean userModel;
 
@@ -124,5 +136,21 @@ public class MeFragment extends BaseInitFragment {
         }
     }
 
+    //客服
+    public void customerServiceData(final Context context, String baseUrl) {
+        Map<String, Object> map = new HashMap<>();
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                baseDataModel model = new Gson().fromJson(result, baseDataModel.class);
+                //跳转到群组聊天页面
+                ChatActivity.actionStart(mContext, model.getData(), DemoConstant.CHATTYPE_GROUP);
+            }
+
+            @Override
+            public void failed(String... args) {
+            }
+        });
+    }
 
 }

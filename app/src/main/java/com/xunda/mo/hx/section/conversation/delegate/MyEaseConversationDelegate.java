@@ -60,7 +60,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                 : null);
         holder.mentioned.setVisibility(View.GONE);
         int defaultAvatar = 0;
-        String showName = null;
+        String showName = "";
         String HeadAvatar = "";
         String HeadName = "";
 
@@ -68,38 +68,46 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
 //            String ext = item.getLastMessage().getStringAttribute(MyConstant.EXT);
 //            JSONObject jsonObject = new JSONObject(ext);
         holder.name.setTextColor(ContextCompat.getColor(context, R.color.blacktitle));
+         if (item.getType() == EMConversation.EMConversationType.GroupChat) {
 
-        if (item.getType() == EMConversation.EMConversationType.GroupChat) {
             if (EaseAtMessageHelper.get().hasAtMeMsg(username)) {
                 holder.mentioned.setText(R.string.were_mentioned);
                 holder.mentioned.setVisibility(View.VISIBLE);
             }
-            defaultAvatar = R.drawable.ease_group_icon;
+//            defaultAvatar = R.drawable.ease_group_icon;
+            defaultAvatar = R.drawable.mo_icon;
             EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
             showName = group != null ? group.getGroupName() : username;
-            if (item.getAllMsgCount() != 0) {
-                item.conversationId();
-                HeadName = item.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME, "");
-                HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.GROUP_HEAD, "");
-            }
+
+           if (showName.equals(MyConstant.MO_NAME)){
+               HeadName = showName;
+               defaultAvatar = R.mipmap.adress_head_service;
+               holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
+           }else {
+               if (item.getAllMsgCount() != 0) {
+                   HeadName = item.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME, "");
+                   HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.GROUP_HEAD, "");
+               }
+           }
+
 
         } else if (item.getType() == EMConversation.EMConversationType.ChatRoom) {
             defaultAvatar = R.drawable.ease_chat_room_icon;
             EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().getChatRoom(username);
             showName = chatRoom != null && !TextUtils.isEmpty(chatRoom.getName()) ? chatRoom.getName() : username;
 
-        } else if (TextUtils.equals(item.getLastMessage().getFrom(), MyConstant.ADMIN)) {
-            HeadName = "群通知";
-            defaultAvatar = R.mipmap.group_notification;
-            holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
-
-        } else {
+        } else if (item.getType() == EMConversation.EMConversationType.Chat) {
             defaultAvatar = R.drawable.mo_icon;
             showName = username;
-            if (item.getAllMsgCount() != 0) {
-                HeadName = item.getLastMessage().getStringAttribute(MyConstant.SEND_NAME, "");
-                HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.SEND_HEAD, "");
-
+            if (username.equals(MyConstant.ADMIN)){
+                HeadName = "群通知";
+                defaultAvatar = R.mipmap.group_notification;
+                holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
+            }else {
+                if (item.getAllMsgCount() != 0) {
+                    HeadName = item.getLastMessage().getStringAttribute(MyConstant.SEND_NAME, "");
+                    HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.SEND_HEAD, "");
+                }
             }
         }
 

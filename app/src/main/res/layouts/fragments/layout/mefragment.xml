@@ -173,6 +173,7 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 app:arrowItemAvatarHeight="25dp"
+                android:visibility="gone"
                 app:arrowItemAvatarSrc="@mipmap/item_collection_icon"
                 app:arrowItemAvatarWidth="25dp"
                 app:arrowItemShowAvatar="true"
