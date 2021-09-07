@@ -75,16 +75,16 @@ public class MyEaseChatRowCustom extends EaseChatRow {
                 if (TextUtils.isEmpty(sendName)) {
                     sendName = "MO 客服";
                     if (mapExt != null) {
-                        String questionStr = (String) mapExt.get("questions");
+                        String questionStr = (String) mapExt.get(MyConstant.QUESTIONS);
                         //没有问题列表 显示客服答案
                         if (!TextUtils.isEmpty(questionStr)) {
-                            String content = (String) mapExt.get("content");
+                            String content = (String) mapExt.get(MyConstant.CONTENT);
                             contentView.setText(content);
                             question_Txt.setVisibility(VISIBLE);
                             label_Flow.setVisibility(VISIBLE);
                             labelFlow(label_Flow, context, questionStr);
                         } else {
-                            String content = (String) mapExt.get("msg");
+                            String content = (String) mapExt.get(MyConstant.MSG);
                             contentView.setText(content);
                         }
                     }

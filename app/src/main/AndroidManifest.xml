@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.xunda.mo"
     tools:ignore="LockedOrientationActivity">
-
     <!-- 调用PictureSelector 使用相机需要添加判断 如不加captureIntent.resolveActivity(context.getPackageManager())==null -->
     <queries>
         <intent>
@@ -48,21 +47,21 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 允许程序开机自动运行 -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- 捕获屏幕所需权限，Q后新增权限(多人音视频屏幕分享使用) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- OPPO推送配置 start -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- OPPO推送配置 start -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
-    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" />
-    <!-- OPPO推送配置 end -->
-
-
+    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" /> <!-- OPPO推送配置 end -->
     <!-- Mi推送配置 start -->
     <permission
         android:name="${applicationId}.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
-    <!-- Mi推送配置 end -->
 
+    <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
+
+    <queries>
+        <intent>
+            <action android:name="com.huawei.hms.core.aidlservice" />
+        </intent>
+    </queries>
 
     <application
         android:name=".main.baseView.MyApplication"
@@ -74,7 +73,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".main.chat.activity.ChatComplaint"
+            android:exported="true" />
         <activity
             android:name=".main.conversation.Group_Notices"
             android:screenOrientation="portrait" />
@@ -92,7 +93,6 @@
             android:name=".main.group.activity.GroupDetail_Edit_Label"
             android:exported="true"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".main.group.activity.GroupDetail_Report"
             android:exported="true"
@@ -182,12 +182,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".main.chat.activity.ChatDetailSet"
-            android:screenOrientation="portrait" />
-        <!-- 设置环信应用的AppKey -->
+            android:screenOrientation="portrait" /> <!-- 设置环信应用的AppKey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="1107210427030313#lexiaobei" />
-        <!-- 声明SDK所需的service SDK核心功能 -->
+            android:value="1107210427030313#lexiaobei" /> <!-- 声明SDK所需的service SDK核心功能 -->
         <service
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true"
@@ -195,8 +193,7 @@
         <service
             android:name="com.hyphenate.chat.EMJobService"
             android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <!-- 声明SDK所需的receiver -->
+            android:permission="android.permission.BIND_JOB_SERVICE" /> <!-- 声明SDK所需的receiver -->
         <receiver
             android:name="com.hyphenate.chat.EMMonitorReceiver"
             tools:ignore="IntentFilterExportedReceiver">
@@ -210,8 +207,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
-        </receiver>
-        <!-- 适配Android 7.0, 需要将下方的com.hyphenate.easeim替换为你的app包名 -->
+        </receiver> <!-- 适配Android 7.0, 需要将下方的com.hyphenate.easeim替换为你的app包名 -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
@@ -220,63 +216,51 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-        </provider>
-
-        <!--华为 HMS Config-->
+        </provider> <!-- 华为 HMS Config -->
         <service
             android:name=".hx.common.service.MyPushService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-        <!-- huawei push end -->
+        </service> <!-- huawei push end -->
         <meta-data
             android:name="com.huawei.hms.client.channel.androidMarket"
-            android:value="false" />
-
-        <!-- Mi推送配置 start -->
+            android:value="false" /> <!-- Mi推送配置 start -->
         <service
             android:name="com.xiaomi.push.service.XMPushService"
             android:enabled="true"
             android:process=":pushservice" />
-
         <service
             android:name="com.xiaomi.push.service.XMJobService"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"
-            android:process=":pushservice" /> <!--注：此service必须在3.0.1版本以后（包括3.0.1版本）加入-->
-
+            android:process=":pushservice" /> <!-- 注：此service必须在3.0.1版本以后（包括3.0.1版本）加入 -->
         <service
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
             android:enabled="true"
             android:exported="true" />
-
         <service
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
-            android:enabled="true" /> <!--注：此service必须在2.2.5版本以后（包括2.2.5版本）加入-->
+            android:enabled="true" /> <!-- 注：此service必须在2.2.5版本以后（包括2.2.5版本）加入 -->
         <receiver
             android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name="com.xiaomi.push.service.receivers.PingReceiver"
             android:exported="false"
             android:process=":pushservice">
-
             <intent-filter>
                 <action android:name="com.xiaomi.push.PING_TIMER" />
             </intent-filter>
-
         </receiver>
-
         <receiver android:name=".hx.common.receiver.MiMsgReceiver">
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
@@ -287,19 +271,17 @@
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.ERROR" />
             </intent-filter>
-        </receiver>
-        <!-- Mi推送配置 end-->
-
+        </receiver> <!-- Mi推送配置 end -->
         <!-- VIVO推送配置 start -->
         <service
             android:name="com.vivo.push.sdk.service.CommandClientService"
             android:exported="true" />
+
         <activity
             android:name="com.vivo.push.sdk.LinkProxyClientActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!--推送配置项-->
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- 推送配置项 -->
         <meta-data
             android:name="com.vivo.push.api_key"
             android:value="${VIVO_PUSH_APPKEY}" />
@@ -309,13 +291,11 @@
 
         <receiver android:name="com.hyphenate.push.platform.vivo.EMVivoMsgReceiver">
             <intent-filter>
+
                 <!-- 接收 push 消息 -->
                 <action android:name="com.vivo.pushclient.action.RECEIVE" />
             </intent-filter>
-        </receiver>
-        <!-- VIVO推送配置 end -->
-
-
+        </receiver> <!-- VIVO推送配置 end -->
         <!-- OPPO 推送配置 start -->
         <service
             android:name="com.heytap.msp.push.service.CompatibleDataMessageCallbackService"
@@ -323,8 +303,7 @@
             <intent-filter>
                 <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
-        </service> <!--兼容Q以下版本-->
-
+        </service> <!-- 兼容Q以下版本 -->
         <service
             android:name="com.heytap.msp.push.service.DataMessageCallbackService"
             android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE"
@@ -333,55 +312,42 @@
                 <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE" />
                 <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
-        </service> <!--兼容Q版本-->
+        </service> <!-- 兼容Q版本 -->
         <!-- OPPO 推送配置 end -->
-
-
-
         <!-- 添加好友 -->
         <activity
             android:name=".hx.section.contact.activity.AddContactActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.AddContactTheme" />
-        <!-- 好友资料 -->
+            android:theme="@style/AppTheme.AddContactTheme" /> <!-- 好友资料 -->
         <activity
             android:name=".hx.section.contact.activity.ContactDetailActivity"
-            android:screenOrientation="portrait" />
-        <!-- 聊天页面 -->
+            android:screenOrientation="portrait" /> <!-- 聊天页面 -->
         <activity
             android:name=".hx.section.chat.activicy.ChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <!-- 群组列表 -->
+            android:windowSoftInputMode="stateHidden|adjustResize" /> <!-- 群组列表 -->
         <activity
             android:name=".hx.section.contact.activity.GroupContactManageActivity"
-            android:screenOrientation="portrait" />
-        <!-- 聊天室列表 -->
+            android:screenOrientation="portrait" /> <!-- 聊天室列表 -->
         <activity
             android:name=".hx.section.contact.activity.ChatRoomContactManageActivity"
-            android:screenOrientation="portrait" />
-        <!-- 展示大图 -->
+            android:screenOrientation="portrait" /> <!-- 展示大图 -->
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
-            android:screenOrientation="portrait" />
-        <!-- 地图 -->
+            android:screenOrientation="portrait" /> <!-- 地图 -->
         <activity
             android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"
-            android:screenOrientation="portrait" />
-        <!-- 视频列表 -->
+            android:screenOrientation="portrait" /> <!-- 视频列表 -->
         <activity
             android:name=".hx.section.chat.activicy.ImageGridActivity"
-            android:screenOrientation="portrait" />
-        <!-- 录制视频 -->
+            android:screenOrientation="portrait" /> <!-- 录制视频 -->
         <activity
             android:name=".hx.section.chat.activicy.RecorderVideoActivity"
-            android:screenOrientation="portrait" />
-        <!-- 播放视频 -->
+            android:screenOrientation="portrait" /> <!-- 播放视频 -->
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowVideoActivity"
-            android:screenOrientation="portrait" />
-        <!-- 视频通话 -->
+            android:screenOrientation="portrait" /> <!-- 视频通话 -->
         <activity
             android:name="com.hyphenate.easecallkit.ui.EaseVideoCallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -393,230 +359,175 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
-            android:screenOrientation="portrait" />
-        <!-- 会议成员邀请 -->
+            android:screenOrientation="portrait" /> <!-- 会议成员邀请 -->
         <activity
             android:name=".hx.section.conference.ConferenceInviteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <!-- 添加现有好友 -->
+            android:windowSoftInputMode="adjustPan" /> <!-- 添加现有好友 -->
         <activity
             android:name=".hx.section.chat.activicy.PickAtUserActivity"
-            android:screenOrientation="portrait" />
-        <!-- 转发好友列表 -->
+            android:screenOrientation="portrait" /> <!-- 转发好友列表 -->
         <activity
             android:name=".hx.section.chat.activicy.ForwardMessageActivity"
-            android:screenOrientation="portrait" />
-        <!-- 群组详情 -->
+            android:screenOrientation="portrait" /> <!-- 群组详情 -->
         <activity
             android:name=".hx.section.group.activity.GroupDetailActivity"
-            android:screenOrientation="portrait" />
-        <!-- 聊天室详情 -->
+            android:screenOrientation="portrait" /> <!-- 聊天室详情 -->
         <activity
             android:name=".hx.section.group.activity.ChatRoomDetailActivity"
-            android:screenOrientation="portrait" />
-        <!-- 群分享文件 -->
+            android:screenOrientation="portrait" /> <!-- 群分享文件 -->
         <activity
             android:name=".hx.section.group.activity.GroupSharedFilesActivity"
-            android:screenOrientation="portrait" />
-        <!-- 邀请群成员 -->
+            android:screenOrientation="portrait" /> <!-- 邀请群成员 -->
         <activity
             android:name=".hx.section.group.activity.GroupPickContactsActivity"
-            android:screenOrientation="portrait" />
-        <!-- 群成员身份统计 -->
+            android:screenOrientation="portrait" /> <!-- 群成员身份统计 -->
         <activity
             android:name=".hx.section.group.activity.GroupMemberTypeActivity"
-            android:screenOrientation="portrait" />
-        <!-- 群成员权限管理 -->
+            android:screenOrientation="portrait" /> <!-- 群成员权限管理 -->
         <activity
             android:name=".hx.section.group.activity.GroupMemberAuthorityActivity"
-            android:screenOrientation="portrait" />
-        <!-- 群管理员管理 -->
+            android:screenOrientation="portrait" /> <!-- 群管理员管理 -->
         <activity
             android:name=".hx.section.group.activity.GroupAdminAuthorityActivity"
-            android:screenOrientation="portrait" />
-        <!-- 聊天室成员权限管理 -->
+            android:screenOrientation="portrait" /> <!-- 聊天室成员权限管理 -->
         <activity
             android:name=".hx.section.group.activity.ChatRoomMemberAuthorityActivity"
-            android:screenOrientation="portrait" />
-        <!-- 聊天室管理员管理 -->
+            android:screenOrientation="portrait" /> <!-- 聊天室管理员管理 -->
         <activity
             android:name=".hx.section.group.activity.ChatRoomAdminAuthorityActivity"
-            android:screenOrientation="portrait" />
-        <!-- 新建群组 -->
+            android:screenOrientation="portrait" /> <!-- 新建群组 -->
         <activity
             android:name=".hx.section.group.activity.NewGroupActivity"
-            android:screenOrientation="portrait" />
-        <!-- 新建聊天室 -->
+            android:screenOrientation="portrait" /> <!-- 新建聊天室 -->
         <activity
             android:name=".hx.section.group.activity.NewChatRoomActivity"
-            android:screenOrientation="portrait" />
-        <!-- 系统通知 -->
+            android:screenOrientation="portrait" /> <!-- 系统通知 -->
         <activity
             android:name=".hx.section.message.SystemMsgsActivity"
-            android:screenOrientation="portrait" />
-        <!-- 安全与隐私首页 -->
+            android:screenOrientation="portrait" /> <!-- 安全与隐私首页 -->
         <activity
             android:name=".hx.section.me.activity.PrivacyIndexActivity"
-            android:screenOrientation="portrait" />
-        <!-- 联系人黑名单 -->
+            android:screenOrientation="portrait" /> <!-- 联系人黑名单 -->
         <activity
             android:name=".hx.section.contact.activity.ContactBlackListActivity"
-            android:screenOrientation="portrait" />
-        <!-- 下载并展示文件 -->
+            android:screenOrientation="portrait" /> <!-- 下载并展示文件 -->
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
-            android:screenOrientation="portrait" />
-        <!-- 设置 -->
+            android:screenOrientation="portrait" /> <!-- 设置 -->
         <activity
             android:name=".hx.section.me.activity.SetIndexActivity"
-            android:screenOrientation="portrait" />
-        <!-- 账号与安全 -->
+            android:screenOrientation="portrait" /> <!-- 账号与安全 -->
         <activity
             android:name=".hx.section.me.activity.AccountSecurityActivity"
-            android:screenOrientation="portrait" />
-        <!-- 输入用户名密码 -->
+            android:screenOrientation="portrait" /> <!-- 输入用户名密码 -->
         <activity
             android:name=".hx.section.me.activity.NamePasswordActivity"
-            android:screenOrientation="portrait" />
-        <!-- 多端多设备管理 -->
+            android:screenOrientation="portrait" /> <!-- 多端多设备管理 -->
         <activity
             android:name=".hx.section.me.activity.MultiDeviceActivity"
-            android:screenOrientation="portrait" />
-        <!-- 新消息提醒 -->
+            android:screenOrientation="portrait" /> <!-- 新消息提醒 -->
         <activity
             android:name=".hx.section.me.activity.MessageReceiveSetActivity"
-            android:screenOrientation="portrait" />
-        <!-- 通用设置 -->
+            android:screenOrientation="portrait" /> <!-- 通用设置 -->
         <activity
             android:name=".hx.section.me.activity.CommonSettingsActivity"
-            android:screenOrientation="portrait" />
-        <!-- 消息推送设置 -->
+            android:screenOrientation="portrait" /> <!-- 消息推送设置 -->
         <activity
             android:name=".hx.section.me.activity.OfflinePushSettingsActivity"
-            android:screenOrientation="portrait" />
-        <!-- 关于环信IM -->
+            android:screenOrientation="portrait" /> <!-- 关于环信IM -->
         <activity
             android:name=".hx.section.me.activity.AboutHxActivity"
-            android:screenOrientation="portrait" />
-        <!-- 开发者服务 -->
+            android:screenOrientation="portrait" /> <!-- 开发者服务 -->
         <activity
             android:name=".hx.section.me.activity.DeveloperSetActivity"
-            android:screenOrientation="portrait" />
-        <!-- 自定义AppKey -->
+            android:screenOrientation="portrait" /> <!-- 自定义AppKey -->
         <activity
             android:name=".hx.section.me.activity.AppKeyManageActivity"
-            android:screenOrientation="portrait" />
-        <!-- 添加自定义AppKey -->
+            android:screenOrientation="portrait" /> <!-- 添加自定义AppKey -->
         <activity
             android:name=".hx.section.me.activity.AppKeyAddActivity"
-            android:screenOrientation="portrait" />
-        <!-- 诊断 -->
+            android:screenOrientation="portrait" /> <!-- 诊断 -->
         <activity
             android:name=".hx.section.me.activity.DiagnoseActivity"
-            android:screenOrientation="portrait" />
-        <!-- iOS离线推送昵称 -->
+            android:screenOrientation="portrait" /> <!-- iOS离线推送昵称 -->
         <activity
             android:name=".hx.section.me.activity.OfflinePushNickActivity"
-            android:screenOrientation="portrait" />
-        <!-- 通话设置 -->
+            android:screenOrientation="portrait" /> <!-- 通话设置 -->
         <activity
             android:name=".hx.section.me.activity.CallOptionActivity"
-            android:screenOrientation="portrait" />
-        <!-- 聊天信息 -->
+            android:screenOrientation="portrait" /> <!-- 聊天信息 -->
         <activity
             android:name=".hx.section.chat.activicy.SingleChatSetActivity"
-            android:screenOrientation="portrait" />
-        <!-- 搜索聊天室 -->
+            android:screenOrientation="portrait" /> <!-- 搜索聊天室 -->
         <activity
             android:name=".hx.section.search.SearchChatRoomActivity"
-            android:screenOrientation="portrait" />
-        <!-- 搜索群组 -->
+            android:screenOrientation="portrait" /> <!-- 搜索群组 -->
         <activity
             android:name=".hx.section.search.SearchGroupActivity"
-            android:screenOrientation="portrait" />
-        <!-- 搜索会话 -->
+            android:screenOrientation="portrait" /> <!-- 搜索会话 -->
         <activity
             android:name=".hx.section.search.SearchConversationActivity"
-            android:screenOrientation="portrait" />
-        <!-- 搜索联系人 -->
+            android:screenOrientation="portrait" /> <!-- 搜索联系人 -->
         <activity
             android:name=".hx.section.search.SearchFriendsActivity"
-            android:screenOrientation="portrait" />
-        <!-- 搜索群聊会话 -->
+            android:screenOrientation="portrait" /> <!-- 搜索群聊会话 -->
         <activity
             android:name=".hx.section.search.SearchGroupChatActivity"
-            android:screenOrientation="portrait" />
-        <!-- 搜索单人会话 -->
+            android:screenOrientation="portrait" /> <!-- 搜索单人会话 -->
         <activity
             android:name=".hx.section.search.SearchSingleChatActivity"
-            android:screenOrientation="portrait" />
-        <!-- 搜索黑名单用户 -->
+            android:screenOrientation="portrait" /> <!-- 搜索黑名单用户 -->
         <activity
             android:name=".hx.section.search.SearchBlackActivity"
-            android:screenOrientation="portrait" />
-        <!-- 搜索公开群 -->
+            android:screenOrientation="portrait" /> <!-- 搜索公开群 -->
         <activity
             android:name=".hx.section.search.SearchPublicGroupActivity"
-            android:screenOrientation="portrait" />
-        <!-- 聊天历史 -->
+            android:screenOrientation="portrait" /> <!-- 聊天历史 -->
         <activity
             android:name=".hx.section.chat.activicy.ChatHistoryActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <!-- 个人资料 -->
+            android:windowSoftInputMode="stateHidden|adjustResize" /> <!-- 个人资料 -->
         <activity
             android:name=".hx.section.me.activity.UserDetailActivity"
-            android:screenOrientation="portrait" />
-        <!-- 选择头像 -->
+            android:screenOrientation="portrait" /> <!-- 选择头像 -->
         <activity
             android:name=".hx.section.me.activity.ChooseHeadImageActivity"
             android:label="@string/title_activity_choose_head_image"
-            android:screenOrientation="portrait" />
-        <!-- 选择用户名片 -->
+            android:screenOrientation="portrait" /> <!-- 选择用户名片 -->
         <activity
             android:name=".hx.section.chat.activicy.SelectUserCardActivity"
             android:label="@string/title_activity_select_user_card"
-            android:screenOrientation="portrait" />
-        <!-- 意见反馈 -->
+            android:screenOrientation="portrait" /> <!-- 意见反馈 -->
         <activity
             android:name=".hx.section.me.activity.FeedbackActivity"
-            android:screenOrientation="portrait" />
-        <!-- 已读回执列表 -->
+            android:screenOrientation="portrait" /> <!-- 已读回执列表 -->
         <activity
             android:name="com.hyphenate.easeui.ui.EaseDingAckUserListActivity"
-            android:screenOrientation="portrait" />
-        <!-- 公开群详情页 -->
+            android:screenOrientation="portrait" /> <!-- 公开群详情页 -->
         <activity
             android:name=".hx.section.group.activity.GroupSimpleDetailActivity"
-            android:screenOrientation="portrait" />
-        <!-- 群组管理 -->
+            android:screenOrientation="portrait" /> <!-- 群组管理 -->
         <activity
             android:name=".hx.section.group.activity.GroupManageIndexActivity"
-            android:screenOrientation="portrait" />
-        <!-- 移交权限 -->
+            android:screenOrientation="portrait" /> <!-- 移交权限 -->
         <activity
             android:name=".hx.section.group.activity.GroupTransferActivity"
-            android:screenOrientation="portrait" />
-        <!-- 播放视频 -->
+            android:screenOrientation="portrait" /> <!-- 播放视频 -->
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowLocalVideoActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <!-- 创群预选成员 -->
+            android:screenOrientation="portrait" /> <!-- 创群预选成员 -->
         <activity
             android:name=".hx.section.group.activity.GroupPrePickActivity"
-            android:screenOrientation="portrait" />
-        <!-- 推送消息显示样式 -->
+            android:screenOrientation="portrait" /> <!-- 推送消息显示样式 -->
         <activity
             android:name=".hx.section.me.activity.MessagePushStyleActivity"
-            android:screenOrientation="portrait" />
-        <!-- WebView加载网页 -->
+            android:screenOrientation="portrait" /> <!-- WebView加载网页 -->
         <activity
             android:name=".hx.section.base.WebViewActivity"
-            android:screenOrientation="portrait" />
-        <!-- 捕获屏幕service -->
+            android:screenOrientation="portrait" /> <!-- 捕获屏幕service -->
         <activity
             android:name=".main.friend.Friend_Detalis"
             android:screenOrientation="portrait" />
@@ -677,27 +588,24 @@
         <activity
             android:name=".main.login.MainRegister_Agreement"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".main.login.Main_Launch"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".hx.section.chat.activicy.MyEaseGaodeMapActivity"
-            android:screenOrientation="portrait" />
-        <!-- 会议成员邀请 -->
+            android:screenOrientation="portrait" /> <!-- 会议成员邀请 -->
         <activity
             android:name=".hx.section.conference.ConferenceInviteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             tools:ignore="DuplicateActivity" /> <!-- 定位需要的服务 适配Android Q需要加上android:foregroundServiceType="location" -->
-
         <service
             android:name="com.amap.api.location.APSService"
             android:foregroundServiceType="location" />
@@ -705,20 +613,12 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="2489d29db8d833cfe33f2d83e9afc1f2" />
-
         <meta-data
             android:name="design_width_in_dp"
             android:value="375" />
         <meta-data
             android:name="design_height_in_dp"
             android:value="667" />
-
     </application>
 
-    <queries>
-        <intent>
-            <action android:name="com.huawei.hms.core.aidlservice" />
-        </intent>
-    </queries>
 </manifest>
-

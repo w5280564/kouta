@@ -99,26 +99,6 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
         }
     }
 
-    //是否是客服会话
-    private boolean isMOCustomer(){
-        EMConversation emConversation = DemoHelper.getInstance().getChatManager().getConversation(conversationId);
-        if (emConversation == null) {
-            return false;
-        }
-        EMMessage conMsg = emConversation.getLastMessage();
-        if (conMsg == null) {
-            return false;
-        }
-        Map<String, Object> mapExt = conMsg.ext();
-        if (mapExt != null && !mapExt.isEmpty()) {
-            String messType = (String) mapExt.get(MyConstant.MESSAGE_TYPE);
-            if (!TextUtils.isEmpty(messType) && messType.equals(MyConstant.MO_CUSTOMER)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     protected void initListener() {
         super.initListener();
@@ -202,25 +182,12 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
 
     private void setDefaultTitle() {
         String title = "";
-
         if (chatType == DemoConstant.CHATTYPE_GROUP) {
             title = GroupHelper.getGroupName(conversationId);
             EMConversation emConversation = DemoHelper.getInstance().getChatManager().getConversation(conversationId);
             if (emConversation != null && emConversation.getAllMsgCount() != 0) {
                 title = emConversation.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME, "");
             }
-//            EMMessage conMsg = emConversation.getLastMessage();
-//            if (conMsg == null) {
-//                return;
-//            }
-//            Map<String, Object> mapExt = conMsg.ext();
-//            if (mapExt != null && !mapExt.isEmpty()) {
-//                String messType = (String) mapExt.get(MyConstant.MESSAGE_TYPE);
-//                if (!TextUtils.isEmpty(messType) && messType.equals(MyConstant.MO_CUSTOMER)) {
-//                    title = "MO 客服";
-//                }
-//            }
-
             if (isMOCustomer()){
                 title = "MO 客服";
             }
@@ -300,29 +267,24 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
         }
     }
 
-
-    /**
-     * @param linearLayout 要转化为图片的布局
-     */
-//    private void generatBitmap(LinearLayout linearLayout) {
-//        linearLayout.setDrawingCacheEnabled(true);
-//        linearLayout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-//                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-//        linearLayout.layout(0, 0, linearLayout.getMeasuredWidth(), linearLayout.getMeasuredHeight());
-//        linearLayout.buildDrawingCache();
-//        bitmap = Bitmap.createBitmap(linearLayout.getDrawingCache());
-//        linearLayout.setDrawingCacheEnabled(false);
-//        linearLayout.setGravity(Gravity.CENTER);  //因为刚刚重新测量布局一次，需要重新设置view居中
-////        MediaScannerConnection.scanFile(UIUtils.getContext(), new String[]{file.toString()}, null, null);
-//    }
-//    public static Bitmap captureView(View view) {
-//        view.setDrawingCacheEnabled(true);
-//        view.buildDrawingCache();
-//        Bitmap bmp = view.getDrawingCache();
-//        bmp = Bitmap.createBitmap(bmp);
-//        view.destroyDrawingCache();
-//        return bmp;
-//    }
-
+    //是否是客服会话
+    private boolean isMOCustomer(){
+        EMConversation emConversation = DemoHelper.getInstance().getChatManager().getConversation(conversationId);
+        if (emConversation == null) {
+            return false;
+        }
+        EMMessage conMsg = emConversation.getLastMessage();
+        if (conMsg == null) {
+            return false;
+        }
+        Map<String, Object> mapExt = conMsg.ext();
+        if (mapExt != null && !mapExt.isEmpty()) {
+            String messType = (String) mapExt.get(MyConstant.MESSAGE_TYPE);
+            if (!TextUtils.isEmpty(messType) && messType.equals(MyConstant.MO_CUSTOMER)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

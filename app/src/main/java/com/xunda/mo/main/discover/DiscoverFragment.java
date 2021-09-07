@@ -14,8 +14,6 @@ import com.xunda.mo.main.discover.activity.Discover_QRCode;
 import com.xunda.mo.main.friend.Friend_Add;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 
-import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
-
 public class DiscoverFragment extends BaseInitFragment {
     private MyArrowItemView item_search_set,item_scan_set,item_invite_set;
 
@@ -28,7 +26,7 @@ public class DiscoverFragment extends BaseInitFragment {
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
         ScrollView my_Scroll = findViewById(R.id.my_Scroll);
-        OverScrollDecoratorHelper.setUpOverScroll(my_Scroll);
+//        OverScrollDecoratorHelper.setUpOverScroll(my_Scroll);
         item_search_set = findViewById(R.id.item_search_set);
         item_search_set.setOnClickListener(new item_search_setClick());
         item_invite_set = findViewById(R.id.item_invite_set);

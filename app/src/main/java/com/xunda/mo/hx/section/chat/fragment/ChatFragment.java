@@ -64,6 +64,7 @@ import com.xunda.mo.hx.section.conference.ConferenceInviteActivity;
 import com.xunda.mo.hx.section.dialog.DemoListDialogFragment;
 import com.xunda.mo.hx.section.dialog.FullEditDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
+import com.xunda.mo.main.chat.activity.ChatComplaint;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.chat.activity.UserDetail_Set;
 import com.xunda.mo.main.constant.MyConstant;
@@ -174,16 +175,16 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             singleSendMes(message, myInfo);
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-            if (isMOCustomer()){
+            if (isMOCustomer()) {
                 serviceSendMes(message, myInfo);
-            }else {
+            } else {
                 groupSendMes(message, myInfo);
             }
         }
     }
 
     //是否是客服会话
-    private boolean isMOCustomer(){
+    private boolean isMOCustomer() {
         EMMessage conMsg = chatLayout.getChatMessageListLayout().getCurrentConversation().getLastMessage();
         if (conMsg == null) {
             return false;
@@ -193,7 +194,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             String messType = (String) mapExt.get(MyConstant.MESSAGE_TYPE);
             if (!TextUtils.isEmpty(messType) && messType.equals(MyConstant.MO_CUSTOMER)) {
                 return true;
-            }else {
+            } else {
                 return false;
             }
         }
@@ -303,9 +304,9 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         chatExtendMenu.registerMenuItem(R.string.attach_picture, R.drawable.ease_chat_image_selector, R.id.extend_item_picture);
         chatExtendMenu.registerMenuItem(R.string.attach_take_pic, R.drawable.ease_chat_takepic_selector, R.id.extend_item_take_picture);
 
-        if (isMOCustomer()){
+        if (isMOCustomer()) {
             chatExtendMenu.registerMenuItem(R.string.chat_complaint, R.mipmap.chat_complaint_icon, R.id.chat_complaint);
-        }else {
+        } else {
             chatExtendMenu.registerMenuItem(R.string.attach_location, R.drawable.ease_chat_location_selector, R.id.extend_item_location);
             //添加扩展槽
             if (chatType == EaseConstant.CHATTYPE_SINGLE) {
@@ -442,9 +443,9 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             AddFriendMethod(getActivity(), saveFile.Friend_info_Url);
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-            if (isMOCustomer()){
+            if (isMOCustomer()) {
 
-            }else {
+            } else {
                 GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url);
             }
         }
@@ -544,7 +545,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 UserDetail_Set.actionStart(mContext);
             }
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-            if (isMOCustomer()){
+            if (isMOCustomer()) {
                 return;
             }
             int isAnonymous = groupModel.getData().getIsAnonymous();
@@ -661,10 +662,32 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 } else {
                     groupRecall();
                 }
-                case R.id.chat_complaint:
-                Toast.makeText(requireContext(),"投诉",Toast.LENGTH_SHORT).show();
+            case R.id.chat_complaint:
+//                if (isComplaint()){
+//
+//
+//                }else {
+//                    Toast.makeText(requireContext(), "投诉", Toast.LENGTH_SHORT).show();
+//                }
+                ChatComplaint.actionStart(requireContext());
                 break;
         }
+    }
+
+
+    //能否投诉客服
+    private boolean isComplaint() {
+        chatLayout.getChatMessageListLayout().getCurrentConversation().getLastMessage();
+        EMMessage conMsg = chatLayout.getChatMessageListLayout().getCurrentConversation().getLastMessage();
+        if (conMsg == null) {
+            return false;
+        }
+        String sendName = conMsg.getStringAttribute(MyConstant.SEND_NAME, "");
+        if (!TextUtils.isEmpty(sendName)){
+            return true;
+        }
+
+        return false;
     }
 
 

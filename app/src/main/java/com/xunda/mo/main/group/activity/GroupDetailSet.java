@@ -597,6 +597,7 @@ public class GroupDetailSet extends BaseInitActivity {
                 int isAnonymous = groupModel.getData().getIsAnonymous();
                 int issProtect = groupModel.getData().getIsProtect();
                 if (isAnonymous == 1 || issProtect == 1) {
+                    Toast.makeText(mContext,"成员保护中",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 int tag = (int) v.getTag();
@@ -639,7 +640,7 @@ public class GroupDetailSet extends BaseInitActivity {
     private class group_member_ArrowItemViewClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            GroupAllMembers.actionStart(GroupDetailSet.this, groupListModel.getData(), myGroupId, Identity);
+            GroupAllMembers.actionStart(GroupDetailSet.this, groupListModel.getData(),groupModel);
         }
     }
 

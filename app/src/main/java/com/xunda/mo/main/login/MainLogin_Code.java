@@ -153,10 +153,14 @@ public class MainLogin_Code extends BaseInitActivity {
         }));
     }
 
+    private boolean isShow=false;
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        CodeMore(this, phone_txt, 0);
+        if (hasFocus && !isShow) {
+            CodeMore(this, phone_txt, 0);
+            isShow = true;
+        }
     }
 
     private void initReceiver() {
@@ -175,8 +179,8 @@ public class MainLogin_Code extends BaseInitActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS}, REQUEST_PERMISSION_CODE);
         }
-
     }
+
 
     /*高版本手动获取权限*/
     @Override
@@ -304,6 +308,7 @@ public class MainLogin_Code extends BaseInitActivity {
             public void success(String result) {
                 startTimer();
             }
+
             @Override
             public void failed(String... args) {
             }
@@ -322,6 +327,7 @@ public class MainLogin_Code extends BaseInitActivity {
                 intent.putExtra("phoneNum", LoginPhoneNume);
                 startActivity(intent);
             }
+
             @Override
             public void failed(String... args) {
             }

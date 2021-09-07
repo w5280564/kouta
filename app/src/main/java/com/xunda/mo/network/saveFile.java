@@ -87,6 +87,7 @@ public class saveFile {
     public static String Friend_Fire_Url = "friend/fire";
     public static String Receptionist_MyMoRoom = "receptionist/myMoRoom";
     public static String Receptionist_Answer = "receptionist/answer";
+    public static String Receptionist_Complaint = "receptionist/complaint";
 
 
 

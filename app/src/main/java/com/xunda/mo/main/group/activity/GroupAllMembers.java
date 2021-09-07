@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.ConcatAdapter;
 
@@ -20,6 +21,7 @@ import com.xunda.mo.hx.section.domain.MyEaseUser;
 import com.xunda.mo.main.group.adapter.MyGroupHead_ListAdapter;
 import com.xunda.mo.main.group.adapter.MyGroupMembersList_Adapter;
 import com.xunda.mo.model.GroupMember_Bean;
+import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
@@ -42,12 +44,12 @@ public class GroupAllMembers extends BaseInitActivity {
     private EaseSearchTextView query_Edit;
     private String groupId;
     private int Identity;
+    private GruopInfo_Bean groupModel;
 
-    public static void actionStart(Context context, List<GroupMember_Bean.DataDTO> groupMember,String groupId,int Identity) {
+    public static void actionStart(Context context, List<GroupMember_Bean.DataDTO> groupMember, GruopInfo_Bean groupModel) {
         Intent intent = new Intent(context, GroupAllMembers.class);
         intent.putExtra("groupMember", (Serializable) groupMember);
-        intent.putExtra("groupId", groupId);
-        intent.putExtra("Identity", Identity);
+        intent.putExtra("groupModel", groupModel);
         context.startActivity(intent);
     }
 
@@ -63,8 +65,11 @@ public class GroupAllMembers extends BaseInitActivity {
     protected void initIntent(Intent intent) {
         super.initIntent(intent);
         groupMember = (List<GroupMember_Bean.DataDTO>) intent.getSerializableExtra("groupMember");
-        groupId = intent.getStringExtra("groupId");
-        Identity = intent.getIntExtra("Identity",3);
+        groupModel = (GruopInfo_Bean) intent.getSerializableExtra("groupModel");
+        if (groupModel != null) {
+            groupId = groupModel.getData().getGroupId();
+            Identity = groupModel.getData().getIdentity();
+        }
     }
 
     @Override
@@ -83,7 +88,7 @@ public class GroupAllMembers extends BaseInitActivity {
         contactList = contact_layout.getContactList();
         addAdapter();
 
-        if (Identity == 3){
+        if (Identity == 3) {
             group_add_Txt.setVisibility(View.GONE);
             group_remove_Txt.setVisibility(View.GONE);
         }
@@ -98,7 +103,7 @@ public class GroupAllMembers extends BaseInitActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        GroupMemberListMethod(GroupAllMembers.this,  saveFile.Group_UserList_Url);
+        GroupMemberListMethod(GroupAllMembers.this, saveFile.Group_UserList_Url);
     }
 
     private void addAdapter() {
@@ -123,7 +128,7 @@ public class GroupAllMembers extends BaseInitActivity {
         for (int i = 0; i < groupListModel.getData().size(); i++) {
             GroupMember_Bean.DataDTO dataDTO = groupListModel.getData().get(i);
             MyEaseUser user = new MyEaseUser();
-            user.setUsername("");
+            user.setUsername(dataDTO.getHxUserName());
             user.setNickname(dataDTO.getNickname());
             String pinyin = PinyinUtils.getPingYin(dataDTO.getNickname());
             String sortString = pinyin.substring(0, 1).toUpperCase();
@@ -150,7 +155,33 @@ public class GroupAllMembers extends BaseInitActivity {
         }
         myContact_Head_listAdapter.setData(dataHeadList);
         myGroupList_adapter.setData(data);
+
+        myContact_Head_listAdapter.setOnItemClickListener((view, position) -> {
+            if (!isProtect()) {
+                String userID = dataHeadList.get(position).getUserId();
+                String hxUserName = dataHeadList.get(position).getUsername();
+                GroupFriend_Detail.actionStart(mContext, userID, hxUserName, groupModel);
+            }
+        });
+        myGroupList_adapter.setOnItemClickListener((view, position) -> {
+            if (!isProtect()) {
+                String userID = data.get(position).getUserId();
+                String hxUserName = data.get(position).getUsername();
+                GroupFriend_Detail.actionStart(mContext, userID, hxUserName, groupModel);
+            }
+        });
     }
+
+    private boolean isProtect() {
+        int isAnonymous = groupModel.getData().getIsAnonymous();
+        int issProtect = groupModel.getData().getIsProtect();
+        if (isAnonymous == 1 || issProtect == 1) {
+            Toast.makeText(mContext, "成员保护中", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+
 
     private class return_BtnClick extends NoDoubleClickListener {
         @Override
@@ -163,14 +194,14 @@ public class GroupAllMembers extends BaseInitActivity {
     private class group_add_TxtClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            GroupAllMembers_Add.actionStart(GroupAllMembers.this,groupId);
+            GroupAllMembers_Add.actionStart(GroupAllMembers.this, groupId);
         }
     }
 
     private class group_remove_TxtClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            GroupAllMembers_Remove.actionStart(GroupAllMembers.this,groupId);
+            GroupAllMembers_Remove.actionStart(GroupAllMembers.this, groupId);
         }
     }
 
@@ -184,15 +215,17 @@ public class GroupAllMembers extends BaseInitActivity {
     }
 
     GroupMember_Bean groupListModel;
+
     public void GroupMemberListMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("groupId",groupId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", groupId);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 groupListModel = new Gson().fromJson(result, GroupMember_Bean.class);
                 getGroupList();
             }
+
             @Override
             public void failed(String... args) {
             }

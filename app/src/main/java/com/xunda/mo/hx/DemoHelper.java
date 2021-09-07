@@ -215,7 +215,7 @@ public class DemoHelper {
                 .addMessageType(MyGroupAddMesAdapterDelegate.class)     //创建群消息
                 .addMessageType(BurnAfterReadingAdapterDelegate.class)        //阅后即焚
 //                .addMessageType(EaseCustomAdapterDelegate.class)           //自定义消息
-                .addMessageType(MyEaseCustomAdapterDelegate.class)           //自定义消息
+                .addMessageType(MyEaseCustomAdapterDelegate.class)           //自定义客服消息
                 .addMessageType(ChatUserCardAdapterDelegate.class)         //名片消息
                 .addMessageType(ChatNotificationAdapterDelegate.class)     //入群等通知消息
                 .addMessageType(ChatRecallAdapterDelegate.class)           //消息撤回

@@ -14,6 +14,7 @@ public class FireTimerTextView extends TextView {
     private boolean isTiming = false;
     public FireTimerTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+//        getText().toString().length();
         initTimer();
     }
 

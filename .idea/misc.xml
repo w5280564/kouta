@@ -47,6 +47,7 @@
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/group_label_radius.xml" value="0.32146118721461187" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/group_label_stroke.xml" value="0.33515981735159817" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/group_labeladd_radius.xml" value="0.33515981735159817" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/loginbtn_radius.xml" value="0.32146118721461187" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/loginbtn_radius_yellow.xml" value="0.29768518518518516" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/question_label_stroke.xml" value="0.29768518518518516" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/search_bg.xml" value="0.33515981735159817" />
@@ -56,6 +57,7 @@
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/tab_my_selector.xml" value="0.31689497716894977" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/tab_txt_selector.xml" value="0.31689497716894977" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/vip_txt_radius.xml" value="0.32146118721461187" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_chat_complaint.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_chatdetailset.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_chatfriend_addfriend.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_chatfriend_detail.xml" value="0.25" />
