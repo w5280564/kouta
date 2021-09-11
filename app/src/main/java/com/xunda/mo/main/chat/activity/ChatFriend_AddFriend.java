@@ -26,7 +26,9 @@ import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.exceptions.HyphenateException;
 import com.xunda.mo.R;
+import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.db.DemoDbHelper;
 import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
@@ -241,7 +243,7 @@ public class ChatFriend_AddFriend extends BaseInitActivity {
     public void AddFriendMethod(Context context, String baseUrl) {
         Map<String,Object> map = new HashMap<>();
         map.put("addType", addType);
-        map.put("remark", apply_Edit.getText());
+        map.put("remark", apply_Edit.getText().toString());
         map.put("source", source);
         map.put("userId", detailModel.getData().getUserId());
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
@@ -249,6 +251,13 @@ public class ChatFriend_AddFriend extends BaseInitActivity {
             public void success(String result) {
                 baseModel baseBean = new Gson().fromJson(result, baseModel.class);
                 Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
+                //参数为要添加的好友的username和添加理由
+                String  reason = apply_Edit.getText().toString();
+                try {
+                    DemoHelper.getInstance().getContactManager().addContact(toChatUsername,reason);
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
             @Override

@@ -27,7 +27,9 @@
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/aa5c64c6bdb5fc81b021c25af6d7dc35/transformed/jetified-ease-im-kit-3.8.4/res/drawable/ease_chat_bubble_send_bg.xml" value="0.32146118721461187" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/aa5c64c6bdb5fc81b021c25af6d7dc35/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_row_received_custom.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/aa5c64c6bdb5fc81b021c25af6d7dc35/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_row_received_message.xml" value="0.33" />
+        <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/aa5c64c6bdb5fc81b021c25af6d7dc35/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_row_received_picture.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/aa5c64c6bdb5fc81b021c25af6d7dc35/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_row_sent_message.xml" value="0.33" />
+        <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/aa5c64c6bdb5fc81b021c25af6d7dc35/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_widget_chat_input_menu_container.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/abe77a4ae5b03392fd3c1784ff0559b9/transformed/jetified-zxing-lite-1.1.7-androidx/res/layout/zxl_capture.xml" value="0.32546296296296295" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/c207501cbcbb45096dc108b3c068eb77/transformed/jetified-ease-im-kit-3.8.3/res/layout/ease_chat_message_list.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/c207501cbcbb45096dc108b3c068eb77/transformed/jetified-ease-im-kit-3.8.3/res/layout/ease_layout_chat.xml" value="0.1983695652173913" />
@@ -56,7 +58,21 @@
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/tab_discover_selector.xml" value="0.3178082191780822" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/tab_my_selector.xml" value="0.31689497716894977" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/tab_txt_selector.xml" value="0.31689497716894977" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/thumb_bg.xml" value="0.32146118721461187" />
         <entry key="..\:/waylen/kouta/app/src/main/res/drawable/vip_txt_radius.xml" value="0.32146118721461187" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/welfare_radius_white.xml" value="0.32146118721461187" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/welfare_radius_yellow.xml" value="0.32146118721461187" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/welfare_white_radius.xml" value="0.32592592592592595" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/welfareadapter_blue.xml" value="0.32592592592592595" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/welfareadapter_blue_radius.xml" value="0.32592592592592595" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/welfareadapter_blue_stroke.xml" value="0.32592592592592595" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/welfareadapter_pro_stroke.xml" value="0.32592592592592595" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/welfareadapter_purple.xml" value="0.32592592592592595" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/welfareadapter_purple_stroke.xml" value="0.32592592592592595" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/welfareadapter_white_radius.xml" value="0.32592592592592595" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/welfareadapter_yellow.xml" value="0.32592592592592595" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/welfareadapter_yellow_stroke.xml" value="0.32592592592592595" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/drawable/white_radius.xml" value="0.32592592592592595" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_chat_complaint.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_chatdetailset.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_chatfriend_addfriend.xml" value="0.33" />
@@ -64,6 +80,7 @@
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_discover_capturecode.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_discover_invite.xml" value="0.3125" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_discover_qrcode.xml" value="0.22" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_discover_welfare.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_friend_groupdetail.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_friend_newfriends.xml" value="0.20108695652173914" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activity_group_allmembers.xml" value="0.1519873532068654" />
@@ -100,6 +117,7 @@
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/demo_row_notification.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/demo_row_recall_message.xml" value="0.15876242095754292" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/demo_row_received_conference_invite.xml" value="0.19067028985507245" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/ease_activity_gaodemap.xml" value="0.1519873532068654" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/ease_fragment_conversations.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/ease_row_received_burnafterreading.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/ease_row_sent_burnafterreading.xml" value="0.30782169890664424" />
@@ -125,6 +143,7 @@
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/demo_dialog_default_list_item.xml" value="0.1519873532068654" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/demo_item_row_chat_history.xml" value="0.15876242095754292" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/demo_layout_friends_empty_list.xml" value="0.31157407407407406" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/discover_welfare_adapter.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/ease_row_received_custom.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/ease_row_sent_custom.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/adapter/layout/friend_newfriendlist_adapter.xml" value="0.1519873532068654" />

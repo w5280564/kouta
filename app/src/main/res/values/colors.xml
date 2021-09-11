@@ -13,6 +13,7 @@
     <color name="yellowfour">#FFFACF27</color>
     <color name="yellowfive">#fff9d22e</color>
     <color name="yellowTitle">#FFFAD026</color>
+    <color name="yellowwelfare">#FFFEF6D5</color>
     <color name="grey">#d1d1d1</color>
     <color name="greytwo">#ffa1a1a1</color>
     <color name="greythree">#fff5f5f5</color>
@@ -24,5 +25,8 @@
     <color name="greyline">#ffdcdcdc</color>
     <color name="vipred">#ffff0000</color>
     <color name="lvRed">#fffead8d</color>
-    <color name="blue">#2391F3</color>
+    <color name="blue">#ff2391F3</color>
+    <color name="bluetwo">#d3e9fd</color>
+    <color name="purple">#dee3f8</color>
+    <color name="purpleTxt">#ff5874de</color>
 </resources>

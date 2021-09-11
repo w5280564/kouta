@@ -74,6 +74,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".main.discover.activity.Discover_Welfare_Card"
+            android:exported="true" />
+        <activity
+            android:name=".main.discover.activity.Discover_Welfare"
+            android:exported="true" />
+        <activity
             android:name=".main.chat.activity.ChatComplaint"
             android:exported="true" />
         <activity

@@ -18,14 +18,16 @@ public class MyEaseCustomAdapterDelegate extends EaseMessageAdapterDelegate<EMMe
 
     @Override
     public boolean isForViewType(EMMessage item, int position) {
-        Map<String, Object> mapExt = item.ext();
-        if (mapExt != null) {
-            String messType = (String) mapExt.get(MyConstant.MESSAGE_TYPE);
-            if (messType == null){
-                return false;
-            }
-            if (messType.equals(MyConstant.MO_CUSTOMER)){
-                return true;
+        if (item.getType() == EMMessage.Type.CUSTOM) {
+            Map<String, Object> mapExt = item.ext();
+            if (mapExt != null) {
+                String messType = (String) mapExt.get(MyConstant.MESSAGE_TYPE);
+                if (messType == null) {
+                    return false;
+                }
+                if (messType.equals(MyConstant.MO_CUSTOMER)) {
+                    return true;
+                }
             }
         }
         return false;

@@ -79,4 +79,5 @@ public interface MyConstant extends DemoConstant {
     String FIRE_REFRESH = "fireRefresh";
 
     int CHATTYPE_MO = 4;
+    String MESSAGE_TYPE_APPLY = "apply";
 }

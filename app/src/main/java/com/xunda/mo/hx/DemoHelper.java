@@ -14,6 +14,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
 
+import com.heytap.msp.push.HeytapPushManager;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMChatManager;
 import com.hyphenate.chat.EMChatRoomManager;
@@ -499,7 +500,7 @@ public class DemoHelper {
         if(EaseIM.getInstance().isMainProcess(context)) {
 
             //OPPO SDK升级到2.1.0后需要进行初始化
-//            HeytapPushManager.init(context, true);
+            HeytapPushManager.init(context, true);
 
             //HMSPushHelper.getInstance().initHMSAgent(DemoApplication.getInstance());
             EMPushHelper.getInstance().setPushListener(new PushListener() {

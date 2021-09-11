@@ -2,6 +2,7 @@ package com.xunda.mo.hx.section.chat.views;
 
 import android.content.Context;
 import android.text.Spannable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
@@ -73,9 +74,15 @@ public class MyEaseChatRowText extends EaseChatRow {
 //                }else if (message.getStringAttribute("messageType").equals("group")) {
             //添加群聊其他用户的名字与头像
         } else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-            usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME, ""));
+            String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
+            usernickView.setText(sendName);
             String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
-            Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);
+            int  defaultAvatar = R.drawable.mo_icon;
+            //没有名字是客服
+            if (TextUtils.isEmpty(sendName)) {
+                defaultAvatar = R.mipmap.adress_head_service;
+            }
+            Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).error(defaultAvatar).into(userAvatarView);
 
             //匿名聊天
             if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {

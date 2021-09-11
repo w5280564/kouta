@@ -88,6 +88,10 @@ public class saveFile {
     public static String Receptionist_MyMoRoom = "receptionist/myMoRoom";
     public static String Receptionist_Answer = "receptionist/answer";
     public static String Receptionist_Complaint = "receptionist/complaint";
+    public static String Sign_Log = "sign/log";
+    public static String Sign_Do = "sign/do";
+    public static String ExchangeLog_AllExchangeCard = "exchangeLog/getAllExchangeCard";
+    public static String ExchangeLog_ExchangeCard = "exchangeLog/exchangeCard";
 
 
 

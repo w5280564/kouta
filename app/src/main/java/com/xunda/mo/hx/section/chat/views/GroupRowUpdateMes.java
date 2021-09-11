@@ -88,7 +88,7 @@ public class GroupRowUpdateMes extends EaseChatRow {
             String userName = message.getStringAttribute(MyConstant.USER_NAME, "");
             if (isSender()) {
                 content = String.format("您将群主转让给'%1$s'", userName);
-            }else {
+            } else {
                 content = String.format("群主将群主转让给'%1$s'", userName);
             }
             int startLength = content.length() - 1 - userName.length();
@@ -131,8 +131,12 @@ public class GroupRowUpdateMes extends EaseChatRow {
             }
             content_Txt.setText(content);
         } else if (TextUtils.equals(Group, MyConstant.APPLY)) {
-            String invitationStr = message.getStringAttribute(MyConstant.SEND_NAME, "");
-            content = String.format("您已同意添加'%1$s'，现在可以开始聊天了", invitationStr);
+            String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
+            if (isSender()) {
+                content = String.format("您已同意添加'%1$s'，现在可以开始聊天了", sendName);
+            }else {
+                content = String.format("'%1$s'已同意添加好友，现在可以开始聊天了", sendName);
+            }
             content_Txt.setText(content);
         }
 

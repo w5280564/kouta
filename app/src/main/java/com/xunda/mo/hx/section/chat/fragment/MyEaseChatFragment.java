@@ -378,5 +378,7 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
     public void addMsgAttrsBeforeSend(EMMessage message) {
 
     }
+
+
 }
 

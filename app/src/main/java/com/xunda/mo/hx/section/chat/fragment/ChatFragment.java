@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.Gson;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
@@ -164,7 +165,10 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         //收到的消息
         msgListener = new EMMessageMethod();
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
+
+
     }
+
 
 
     @SneakyThrows
@@ -177,6 +181,20 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
             if (isMOCustomer()) {
                 serviceSendMes(message, myInfo);
+                message.setMessageStatusCallback(new EMCallBack() {
+                    @Override
+                    public void onSuccess() {
+                        chatLayout.getChatInputMenu().getPrimaryMenu().getEditText().getText().toString().trim();
+                        Toast.makeText(requireContext(),"消息送达",Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onError(int code, String error) {
+                    }
+                    @Override
+                    public void onProgress(int progress, String status) {
+                    }
+                });
+
             } else {
                 groupSendMes(message, myInfo);
             }
@@ -219,12 +237,15 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     //群组聊天 人工客服添加扩展
     private void serviceSendMes(EMMessage message, MyInfo myInfo) {
+
         message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MO_CUSTOMER);
         message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
         message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
         message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
         message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
+
     }
+
 
     //群组聊天 通用聊天扩展字段
     private void groupSendMes(EMMessage message, MyInfo myInfo) {
@@ -773,6 +794,8 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
         }
     }
+
+
 
     //================================== for video and voice start ====================================
 

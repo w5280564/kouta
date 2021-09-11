@@ -18,14 +18,20 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
 import com.xunda.mo.R;
+import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.baseView.BasePopupWindow;
+import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.friend.myAdapter.Friend_NewFriendList_Adapter;
+import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.NewFriend_Bean;
 import com.xunda.mo.model.baseModel;
 import com.xunda.mo.network.saveFile;
@@ -157,12 +163,7 @@ public class Friend_NewFriends extends BaseInitActivity {
                 String agreeType = "1";
                 String friendApplyId = baseModel.get(position).getFriendApplyId();
                 String hXUserName = baseModel.get(position).getHxUserName();
-                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId, hXUserName);
-                try {
-//                    String name = baseModel.get(position).getUserNum().toString();
-//                    DemoHelper.getInstance().getContactManager().acceptInvitation(name);
-                } catch (Exception e) {
-                }
+                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId, hXUserName,position);
             }
 
             @Override
@@ -170,7 +171,7 @@ public class Friend_NewFriends extends BaseInitActivity {
                 String agreeType = "2";
                 String friendApplyId = baseModel.get(position).getFriendApplyId();
                 String hXUserName = baseModel.get(position).getHxUserName();
-                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId, hXUserName);
+                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId, hXUserName,position);
             }
         });
     }
@@ -279,7 +280,7 @@ public class Friend_NewFriends extends BaseInitActivity {
      * @param agreeType     1通过2拒绝
      * @param friendApplyId 好友申请ID
      */
-    public void AddRemoveMethod(Context context, String baseUrl, String agreeType, String friendApplyId, String hXUserName) {
+    public void AddRemoveMethod(Context context, String baseUrl, String agreeType, String friendApplyId, String hXUserName,int position) {
         Map<String, Object> map = new HashMap<>();
         map.put("agreeType", agreeType);
         map.put("friendApplyId", friendApplyId);
@@ -288,7 +289,23 @@ public class Friend_NewFriends extends BaseInitActivity {
             public void success(String result) {
                 try {
                     if (TextUtils.equals(agreeType, "1")) {
-                        EMClient.getInstance().contactManager().acceptInvitation(hXUserName);
+//                        EMClient.getInstance().contactManager().acceptInvitation(hXUserName);
+                        DemoHelper.getInstance().getContactManager().asyncAcceptInvitation(hXUserName, new EMCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                singleSendMes(hXUserName,baseModel,position);
+                            }
+
+                            @Override
+                            public void onError(int code, String error) {
+
+                            }
+
+                            @Override
+                            public void onProgress(int progress, String status) {
+
+                            }
+                        });
 
                         Toast.makeText(mContext, "已通过", Toast.LENGTH_SHORT).show();
                     } else {
@@ -327,5 +344,29 @@ public class Friend_NewFriends extends BaseInitActivity {
             }
         });
     }
+
+
+    //单人聊天发送扩展字段
+    private void singleSendMes(String hxUserName,List<NewFriend_Bean.DataDTO.ListDTO> listData,int position) {
+        MyInfo myInfo = new MyInfo(mContext);
+        NewFriend_Bean.DataDTO.ListDTO oneData = listData.get(position);
+        EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+        EMTextMessageBody txtBody = new EMTextMessageBody("");
+        message.addBody(txtBody);
+        message.setTo(hxUserName);
+        message.setChatType(EMMessage.ChatType.Chat);
+        message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_APPLY);
+        message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
+        message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
+        message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
+        message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
+        String toName = TextUtils.isEmpty(oneData.getRemark()) ? oneData.getNickname() : oneData.getRemark();
+        message.setAttribute(MyConstant.TO_NAME, toName);
+        message.setAttribute(MyConstant.TO_HEAD, oneData.getHeadImg());
+        message.setAttribute(MyConstant.TO_LH, oneData.getLightStatus());
+        message.setAttribute(MyConstant.TO_VIP, oneData.getVipType());
+        DemoHelper.getInstance().getChatManager().sendMessage(message);
+    }
+
 
 }
