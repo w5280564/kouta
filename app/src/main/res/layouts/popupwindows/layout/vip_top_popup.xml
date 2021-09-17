@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="375dp"
+    android:background="@color/white"
+    tools:ignore="MissingConstraints">
+
+    <TextView
+        android:id="@+id/textView34"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:text="推荐开通特权"
+        android:textColor="#ff6f6f6f"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="19dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="10dp"
+        android:src="@mipmap/vip_popup_gem"
+        app:layout_constraintBottom_toBottomOf="@+id/textView34"
+        app:layout_constraintStart_toEndOf="@+id/textView34"
+        app:layout_constraintTop_toTopOf="@+id/textView34" />
+
+    <ImageView
+        android:id="@+id/vip_Fork"
+        android:layout_width="19dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/top_fork"
+        app:layout_constraintBottom_toBottomOf="@+id/textView34"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView34" />
+
+
+    <LinearLayout
+        android:id="@+id/choice_Lin"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/textView34" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/coupon_Con"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/choice_Lin">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:src="@mipmap/vip_popup_coupon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/coupon_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="暂未选择折扣券"
+            android:textColor="#ffa1a1a1"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+            app:layout_constraintStart_toEndOf="@+id/imageView3"
+            app:layout_constraintTop_toTopOf="@+id/imageView3" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:src="@mipmap/person_arrow"
+            app:layout_constraintBottom_toBottomOf="@+id/coupon_type"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/coupon_type" />
+
+        <TextView
+            android:id="@+id/coupon_Txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-￥10"
+            android:textColor="#fff54040"
+            android:textSize="12sp"
+            android:layout_marginEnd="10dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageView4"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="15dp"
+        android:background="@mipmap/vip_bottom_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/coupon_Con">
+
+        <TextView
+            android:id="@+id/payPrice_Txt"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="15dp"
+            android:text="￥90.00"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread"
+            app:layout_constraintVertical_weight="1"
+            app:layout_constraintBottom_toTopOf="@id/discount_Txt"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/discount_Txt"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="VIP折扣券立抵10元"
+            android:textColor="@color/greytwo"
+            android:textSize="10sp"
+            android:visibility="gone"
+            app:layout_constraintVertical_weight="1"
+            app:layout_constraintStart_toStartOf="@+id/payPrice_Txt"
+            app:layout_constraintTop_toBottomOf="@+id/payPrice_Txt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:id="@+id/payRenew_Txt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:text="立即续费"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

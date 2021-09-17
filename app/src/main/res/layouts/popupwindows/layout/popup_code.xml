@@ -12,7 +12,7 @@
         android:layout_height="150dp"
         android:layout_centerHorizontal="true"
         android:scaleType="centerCrop"
-        android:src="@mipmap/zanicon_img"
+        android:src="@mipmap/code_bg"
         app:captchaHeight="30dp"
         app:captchaWidth="30dp" />
 

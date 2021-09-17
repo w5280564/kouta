@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="113dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:background="@mipmap/card_adapter_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/head_Simple"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/mo_icon"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/name_Txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="小乐"
+            android:textColor="@color/blacktitlettwo"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toRightOf="@id/head_Simple"
+            app:layout_constraintTop_toTopOf="@+id/head_Simple" />
+
+        <TextView
+            android:id="@+id/time_Txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="id"
+            android:textColor="@color/greytwo"
+            android:textSize="10sp"
+            app:layout_constraintLeft_toRightOf="@id/head_Simple"
+            app:layout_constraintStart_toStartOf="@+id/name_Txt"
+            app:layout_constraintTop_toBottomOf="@id/name_Txt" />
+
+        <Button
+            android:id="@+id/change_Btn"
+            android:layout_width="62dp"
+            android:layout_height="29dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/loginbtn_radius_yellow"
+            android:text="使用"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="38dp"
+            android:visibility="gone"/>
+
+
+        <Button
+            android:id="@+id/select_Btn"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/card_select_radius"
+            android:text="已使用"
+            android:textColor="@color/greytwo"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="15dp"
+            android:visibility="gone"/>
+
+
+
+        <View
+            android:id="@+id/view6"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="117dp"
+            android:background="@color/greyline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/head_Simple"
+            app:layout_constraintTop_toBottomOf="@+id/head_Simple" />
+
+
+        <TextView
+            android:id="@+id/type_Txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="经验"
+            android:textColor="#ffa1a1a1"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/head_Simple"
+            app:layout_constraintTop_toBottomOf="@+id/view6" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

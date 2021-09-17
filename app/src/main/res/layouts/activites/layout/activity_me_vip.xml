@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.me.activity.Me_VIP"
+    tools:ignore="MissingConstraints">
+
+    <Button
+        android:id="@+id/return_Btn"
+        android:layout_width="11dp"
+        android:layout_height="18dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@mipmap/return_img"
+        android:backgroundTint="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/titlt_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/vip_top_bg"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/titleName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VIP尊享"
+        android:textColor="#fffefefe"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/return_Btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/return_Btn"
+        app:layout_goneMarginTop="10dp" />
+
+
+    <com.hyphenate.easeui.widget.EaseImageView
+        android:id="@+id/head_Image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="39dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/picture_image_placeholder"
+        app:ease_shape_type="round"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/return_Btn" />
+
+    <TextView
+        android:id="@+id/name_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:text="Audrey Hepbu..."
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/head_Image"
+        app:layout_constraintTop_toTopOf="@+id/head_Image" />
+
+    <TextView
+        android:id="@+id/vip_Txt"
+        android:layout_width="29dp"
+        android:layout_height="15dp"
+        android:background="@drawable/vip_txt_radius"
+        android:gravity="center"
+        android:text="VIP"
+        android:textColor="@color/vipred"
+        android:textSize="10sp"
+        android:layout_marginStart="10dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/name_Txt"
+        app:layout_constraintLeft_toRightOf="@id/name_Txt"
+        app:layout_constraintStart_toEndOf="@+id/name_Txt"
+        app:layout_constraintTop_toTopOf="@+id/name_Txt" />
+
+
+    <TextView
+        android:id="@+id/id_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Mo ID:520520"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/name_Txt"
+        app:layout_constraintTop_toBottomOf="@+id/name_Txt" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vip_Con"
+        android:layout_width="345dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="15dp"
+        android:background="@mipmap/vip_copy_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/head_Image">
+
+        <TextView
+            android:id="@+id/textView28"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:text="尊贵的VIP用户，您好！"
+            android:textColor="#ff9e7158"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/vip_Time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="VIP特权将在2022-06-03过期"
+            android:textColor="#ff9e7158"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/textView28"
+            app:layout_constraintTop_toBottomOf="@+id/textView28" />
+
+        <TextView
+            android:id="@+id/couponCount_Txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="5"
+            android:textColor="#ff9e7158"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/attemptCount_Txt"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/vip_Time" />
+
+        <TextView
+            android:id="@+id/attemptCount_Txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="7"
+            android:textColor="#ff9e7158"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/expCount_Txt"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/couponCount_Txt"
+            app:layout_constraintTop_toBottomOf="@+id/vip_Time" />
+
+        <TextView
+            android:id="@+id/expCount_Txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="10"
+            android:textColor="#ff9e7158"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/attemptCount_Txt"
+            app:layout_constraintTop_toBottomOf="@+id/vip_Time" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="折扣券"
+            android:textColor="#ff9e7158"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/couponCount_Txt"
+            app:layout_constraintStart_toStartOf="@+id/couponCount_Txt"
+            app:layout_constraintTop_toBottomOf="@+id/couponCount_Txt" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="体验券"
+            android:textColor="#ff9e7158"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/attemptCount_Txt"
+            app:layout_constraintStart_toEndOf="@+id/couponCount_Txt"
+            app:layout_constraintTop_toBottomOf="@+id/attemptCount_Txt" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="经验券"
+            android:textColor="#ff9e7158"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/expCount_Txt"
+            app:layout_constraintStart_toEndOf="@+id/attemptCount_Txt"
+            app:layout_constraintTop_toBottomOf="@+id/expCount_Txt" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/zun_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="30dp"
+        android:text="VIP尊享特权"
+        android:textColor="#ff6f6f6f"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vip_Con" />
+
+
+    <com.xunda.mo.main.baseView.FlowLayout
+        android:id="@+id/vipType_Flow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/zun_Txt"/>
+
+
+    <Button
+        android:id="@+id/on_Btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/vip_radius_yellow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:text="开通特权"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

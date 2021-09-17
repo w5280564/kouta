@@ -105,8 +105,8 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                 holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
             }else {
                 if (item.getAllMsgCount() != 0) {
-                    HeadName = item.getLastMessage().getStringAttribute(MyConstant.SEND_NAME, "");
-                    HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.SEND_HEAD, "");
+//                    HeadName = item.getLastMessage().getStringAttribute(MyConstant.SEND_NAME, "");
+//                    HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.SEND_HEAD, "");
                 }
             }
         }

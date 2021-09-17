@@ -194,6 +194,12 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
     }
 
     @Override
+    public void onChatSuccess(EMMessage message) {
+        // you can do something after sending a successful message
+    }
+
+
+    @Override
     public void onChatError(int code, String errorMsg) {
         if(listener != null) {
             listener.onChatError(code, errorMsg);

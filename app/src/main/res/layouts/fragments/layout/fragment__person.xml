@@ -13,7 +13,7 @@
         android:layout_height="56dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="57.5dp"
-        android:src="@mipmap/zanicon_img" />
+        android:src="@drawable/mo_icon" />
 
     <LinearLayout
         android:id="@+id/name_lin"

@@ -772,6 +772,13 @@ public class StaticData {
         String sd = sdf.format(date);
         return sd;
     }
+    public static String toDateDay(String forMat,long stamp) {
+        Long ssTime = Math.round(stamp * 1.0 / 1000);//毫秒转化秒
+        SimpleDateFormat sdf = new SimpleDateFormat(forMat);//这个是你要转成后的时间的格式
+        Date date = new Date(ssTime * 1000);
+        String sd = sdf.format(date);
+        return sd;
+    }
 
     /**
      * 将时间戳转为代表"距现在多久之前"的字符串
@@ -913,6 +920,7 @@ public class StaticData {
         return bmp;
     }
 
+    //修改shape背景颜色
     public static void changeShapColor(View v, int color) {
         GradientDrawable da = (GradientDrawable) v.getBackground();
         da.setColor(color);

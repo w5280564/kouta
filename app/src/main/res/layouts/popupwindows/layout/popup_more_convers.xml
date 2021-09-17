@@ -129,6 +129,7 @@
         android:layout_width="122dp"
         android:layout_height="44dp"
         android:gravity="center_vertical"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/friend_Constraint">
 
         <ImageView

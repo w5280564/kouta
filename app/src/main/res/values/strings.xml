@@ -580,5 +580,20 @@
     <string name="GROUP_OWNER">群主</string>
 
 
+    <string name="pay_success">Payment success:</string>
+    <string name="pay_failed">Payment failed:</string>
+    <string name="auth_success">Authentication success:</string>
+    <string name="auth_failed">Authentication failed:</string>
+    <string name="pay_result_tip">这个界面用于显示第三方app通过微信支付的结果</string>
+    <string name="pay_result_callback_msg" formatted="false">微信支付结果：%s</string>
+    <string name="app_tip">提示</string>
+
+    <string name="launch_from_wx">Launch From Weixin</string>
+
+    <string name="errcode_success">发送成功</string>
+    <string name="errcode_cancel">发送取消</string>
+    <string name="errcode_deny">发送被拒绝</string>
+    <string name="errcode_unknown">发送返回</string>
+
 
 </resources>

@@ -166,7 +166,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
                     MyGroup.actionStart(mContext);
                     break;
                 case R.id.contact_header_item_creat_group:
-                    ToastUtils.showToast("点击好友分组");
+//                    ToastUtils.showToast("点击好友分组");
                     break;
                 case R.id.contact_header_item_head_file:
                     ToastUtils.showToast("点击文件助手");

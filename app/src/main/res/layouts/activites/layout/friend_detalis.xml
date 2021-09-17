@@ -52,7 +52,7 @@
                 android:layout_width="12dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="5dp"
-                android:src="@mipmap/zanicon_img" />
+                android:src="@drawable/mo_icon" />
 
         </LinearLayout>
 

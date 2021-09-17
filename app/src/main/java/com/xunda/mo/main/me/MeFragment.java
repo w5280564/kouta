@@ -22,6 +22,8 @@ import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.hx.section.me.activity.SetIndexActivity;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.chat.activity.UserDetail_Set;
+import com.xunda.mo.main.discover.activity.Discover_Welfare_Card;
+import com.xunda.mo.main.me.activity.Me_VIP;
 import com.xunda.mo.model.UserDetail_Bean;
 import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
@@ -35,7 +37,7 @@ import java.util.Map;
 
 public class MeFragment extends BaseInitFragment {
     private ConstraintLayout head_Constraint;
-    private MyArrowItemView item_set, version_set,item_service_set;
+    private MyArrowItemView item_set, version_set,item_service_set,item_coupon_set,item_vip_set;
     private LinearLayout garde_Lin;
     private ImageView head_Image;
     private TextView nick_Txt, moId_Txt,vipType_txt;
@@ -61,8 +63,13 @@ public class MeFragment extends BaseInitFragment {
         vipType_txt = findViewById(R.id.vipType_txt);
         item_service_set = findViewById(R.id.item_service_set);
         item_service_set.setOnClickListener(new item_service_setClick());
+        item_coupon_set = findViewById(R.id.item_coupon_set);
+        item_coupon_set.setOnClickListener(new item_coupon_setClick());
+        item_vip_set = findViewById(R.id.item_vip_set);
+        item_vip_set.setOnClickListener(new item_vip_setClick());
 
     }
+
 
     @Override
     protected void initData() {
@@ -95,9 +102,22 @@ public class MeFragment extends BaseInitFragment {
         }
     }
 
+    private class item_coupon_setClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            Discover_Welfare_Card.actionStart(mContext);
+        }
+    }
+
+    private class item_vip_setClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            Me_VIP.actionStart(mContext);
+        }
+    }
+
 
     UserDetail_Bean userModel;
-
     @SuppressLint("SetTextI18n")
     public void UserMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();

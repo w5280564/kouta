@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/result_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    
+    <Button
+        android:id="@+id/reg_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+	    android:layout_margin="10dp"/>
+    
+    <Button
+        android:id="@+id/goto_send_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+	    android:layout_margin="10dp"/>
+    
+    <Button
+        android:id="@+id/goto_pay_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+	    android:layout_margin="10dp"/>
+    <Button
+        android:id="@+id/goto_fav_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+	    android:layout_margin="10dp"/>
+    
+    <Button
+        android:id="@+id/launch_wx_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+	    android:layout_margin="10dp"/>
+    
+    <Button
+        android:id="@+id/check_timeline_supported_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"/>
+
+</LinearLayout>

@@ -15,6 +15,7 @@ import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.widget.ArrowItemView;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.main.login.MainLogin_Register;
+import com.xunda.mo.network.saveFile;
 
 public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener, View.OnClickListener {
     private EaseTitleBar titleBar;
@@ -82,13 +83,14 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
         }
     }
 
+
     void logout() {
-        final ProgressDialog pd = new ProgressDialog(mContext);
+        final ProgressDialog pd = new ProgressDialog(this);
         String st = getResources().getString(R.string.Are_logged_out);
         pd.setMessage(st);
         pd.setCanceledOnTouchOutside(false);
         pd.show();
-        DemoHelper.getInstance().logout(true,new EMCallBack() {
+        DemoHelper.getInstance().logout(true, new EMCallBack() {
 
             @Override
             public void onSuccess() {
@@ -96,11 +98,11 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
                     public void run() {
                         pd.dismiss();
                         // show login screen
-                        finishOtherActivities();
-//                        startActivity(new Intent(mContext, LoginActivity.class));
-                        Intent intent = new Intent(mContext, MainLogin_Register.class);
+                        saveFile.clearShareData("JSESSIONID", SetIndexActivity.this);
+                        Intent intent = new Intent(SetIndexActivity.this, MainLogin_Register.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
-                        finish();
                     }
                 });
             }
@@ -117,11 +119,52 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
                     @Override
                     public void run() {
                         pd.dismiss();
-                        Toast.makeText(mContext, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SetIndexActivity.this, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
     }
+//    void logout() {
+//        final ProgressDialog pd = new ProgressDialog(mContext);
+//        String st = getResources().getString(R.string.Are_logged_out);
+//        pd.setMessage(st);
+//        pd.setCanceledOnTouchOutside(false);
+//        pd.show();
+//        DemoHelper.getInstance().logout(true,new EMCallBack() {
+//
+//            @Override
+//            public void onSuccess() {
+//                runOnUiThread(new Runnable() {
+//                    public void run() {
+//                        pd.dismiss();
+//                        // show login screen
+//                        finishOtherActivities();
+////                        startActivity(new Intent(mContext, LoginActivity.class));
+//                        Intent intent = new Intent(mContext, MainLogin_Register.class);
+//                        startActivity(intent);
+//                        finish();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onProgress(int progress, String status) {
+//
+//            }
+//
+//            @Override
+//            public void onError(int code, String message) {
+//                runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        pd.dismiss();
+//                        Toast.makeText(mContext, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        });
+//    }
 
 }

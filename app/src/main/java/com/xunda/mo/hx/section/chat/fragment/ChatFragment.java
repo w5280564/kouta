@@ -29,11 +29,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.Gson;
-import com.hyphenate.EMCallBack;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMUserInfo;
@@ -74,6 +74,7 @@ import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.info.NameResource;
 import com.xunda.mo.model.ChatUserBean;
 import com.xunda.mo.model.GruopInfo_Bean;
+import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.xUtils3Http;
@@ -170,6 +171,22 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
 
+    //消息发送成功
+    @Override
+    public void onChatSuccess(EMMessage message) {
+        super.onChatSuccess(message);
+        if (isMOCustomer()) {
+            String sendTxt = "";
+            if (message.getType() == EMMessage.Type.TXT) {
+                EMTextMessageBody sendBody = (EMTextMessageBody) message.getBody();
+                 sendTxt = sendBody.getMessage();
+            } else if (message.getType() == EMMessage.Type.IMAGE) {
+                EMImageMessageBody img = (EMImageMessageBody) message.getBody();
+                sendTxt =  img.getFileName();
+            }
+            serviceAnswerData(mContext, saveFile.Receptionist_Answer, sendTxt);
+        }
+    }
 
     @SneakyThrows
     @Override
@@ -181,20 +198,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
             if (isMOCustomer()) {
                 serviceSendMes(message, myInfo);
-                message.setMessageStatusCallback(new EMCallBack() {
-                    @Override
-                    public void onSuccess() {
-                        chatLayout.getChatInputMenu().getPrimaryMenu().getEditText().getText().toString().trim();
-                        Toast.makeText(requireContext(),"消息送达",Toast.LENGTH_SHORT).show();
-                    }
-                    @Override
-                    public void onError(int code, String error) {
-                    }
-                    @Override
-                    public void onProgress(int progress, String status) {
-                    }
-                });
-
             } else {
                 groupSendMes(message, myInfo);
             }
@@ -203,7 +206,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     //是否是客服会话
     private boolean isMOCustomer() {
-        EMMessage conMsg = chatLayout.getChatMessageListLayout().getCurrentConversation().getLastMessage();
+        EMMessage conMsg = messageListLayout.getCurrentConversation().getLastMessage();
         if (conMsg == null) {
             return false;
         }
@@ -237,15 +240,12 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     //群组聊天 人工客服添加扩展
     private void serviceSendMes(EMMessage message, MyInfo myInfo) {
-
         message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MO_CUSTOMER);
         message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
         message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
         message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
         message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
-
     }
-
 
     //群组聊天 通用聊天扩展字段
     private void groupSendMes(EMMessage message, MyInfo myInfo) {
@@ -457,7 +457,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         //阅后即焚刷新数据
         LiveDataBus.get().with(MyConstant.FIRE_REFRESH, Boolean.class).observe(requireActivity(), aBoolean -> {
             if (aBoolean) {
-                chatLayout.getChatMessageListLayout().refreshToLatest();
+                messageListLayout.refreshToLatest();
             }
         });
 
@@ -633,7 +633,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (!chatLayout.getChatMessageListLayout().isGroupChat()) {
+        if (!messageListLayout.isGroupChat()) {
             return;
         }
         if (count == 1 && "@".equals(String.valueOf(s.charAt(start)))) {
@@ -698,16 +698,14 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     //能否投诉客服
     private boolean isComplaint() {
-        chatLayout.getChatMessageListLayout().getCurrentConversation().getLastMessage();
-        EMMessage conMsg = chatLayout.getChatMessageListLayout().getCurrentConversation().getLastMessage();
+        EMMessage conMsg = messageListLayout.getCurrentConversation().getLastMessage();
         if (conMsg == null) {
             return false;
         }
         String sendName = conMsg.getStringAttribute(MyConstant.SEND_NAME, "");
-        if (!TextUtils.isEmpty(sendName)){
+        if (!TextUtils.isEmpty(sendName)) {
             return true;
         }
-
         return false;
     }
 
@@ -794,7 +792,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
         }
     }
-
 
 
     //================================== for video and voice start ====================================
@@ -979,6 +976,24 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         }
     }
 
+
+    //问题
+    public void serviceAnswerData(final Context context, String baseUrl, String question) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("question", question);
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                baseDataModel model = new Gson().fromJson(result, baseDataModel.class);
+            }
+
+            @Override
+            public void failed(String... args) {
+            }
+        });
+    }
+
+
     private class EMMessageMethod implements EMMessageListener {
         @SneakyThrows
         @Override
@@ -1067,33 +1082,33 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     private void doubleRecall() {
         removeMes();
         sendMes(model);
-        chatLayout.getChatMessageListLayout().refreshToLatest();
+        messageListLayout.refreshToLatest();
     }
 
     //收到单聊撤回消息
     public void recallTo() {
         removeMes();
         saveMes(conversationId);
-        chatLayout.getChatMessageListLayout().refreshToLatest();
+        messageListLayout.refreshToLatest();
     }
 
     //发送群里撤回消息
     private void doubleGroupRecall() {
         removeMes();
         sendGroupMes(groupModel);
-        chatLayout.getChatMessageListLayout().refreshToLatest();
+        messageListLayout.refreshToLatest();
     }
 
     //收到群撤回消息
     public void recallGroupTo() {
         removeMes();
         saveGroupMes(conversationId);
-        chatLayout.getChatMessageListLayout().refreshToLatest();
+        messageListLayout.refreshToLatest();
     }
 
 
     private void removeMes() {
-        EMConversation conversation = chatLayout.getChatMessageListLayout().getCurrentConversation();
+        EMConversation conversation = messageListLayout.getCurrentConversation();
         conversation.clearAllMessages();
     }
 

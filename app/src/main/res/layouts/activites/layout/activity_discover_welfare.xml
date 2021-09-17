@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greyfive"
+    tools:context=".main.discover.activity.Discover_Welfare"
+    tools:ignore="MissingConstraints">
+
+    <ImageView
+        android:id="@+id/titlt_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/qrcode_title_bg" />
+
+    <Button
+        android:id="@+id/return_Btn"
+        android:layout_width="11dp"
+        android:layout_height="18dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@mipmap/return_img"
+        android:backgroundTint="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/titleName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="领福利"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/return_Btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/return_Btn"
+        app:layout_goneMarginTop="10dp" />
+
+    <TextView
+        android:id="@+id/right_Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:text="我的卡券"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/return_Btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/return_Btn"
+        app:layout_goneMarginTop="10dp" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="345dp"
+        android:layout_height="225dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/white_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleName">
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:text="7"
+            android:textColor="@color/yellowfive"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="天签到领福利"
+            android:textColor="@color/blacktitle"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView13"
+            app:layout_constraintStart_toEndOf="@+id/textView13"
+            app:layout_constraintTop_toTopOf="@+id/textView13" />
+
+        <LinearLayout
+            android:id="@+id/monday_Lin"
+            android:layout_width="66dp"
+            android:layout_height="72dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/welfare_radius_yellow"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView15">
+
+            <ImageView
+                android:id="@+id/monday_Img"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="10dp"
+                android:src="@mipmap/signin_icon" />
+
+            <TextView
+                android:id="@+id/monday_Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="星期一"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tuesday_Lin"
+            android:layout_width="66dp"
+            android:layout_height="72dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/welfare_radius_yellow"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/monday_Lin"
+            app:layout_constraintStart_toEndOf="@+id/monday_Lin"
+            app:layout_constraintTop_toTopOf="@+id/monday_Lin">
+
+            <ImageView
+                android:id="@+id/tuesday_Img"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="10dp"
+                android:src="@mipmap/signin_icon" />
+
+            <TextView
+                android:id="@+id/tuesday_Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="星期二"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/wednesday_Lin"
+            android:layout_width="66dp"
+            android:layout_height="72dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/welfare_radius_yellow"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/tuesday_Lin"
+            app:layout_constraintStart_toEndOf="@+id/tuesday_Lin"
+            app:layout_constraintTop_toTopOf="@+id/tuesday_Lin">
+
+            <ImageView
+                android:id="@+id/wednesday_Img"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="10dp"
+                android:src="@mipmap/signin_icon" />
+
+            <TextView
+                android:id="@+id/wednesday_Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="星期三"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/thursday_Lin"
+            android:layout_width="66dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/welfare_radius_yellow"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/monday_Lin"
+            app:layout_constraintStart_toStartOf="@+id/monday_Lin"
+            app:layout_constraintTop_toBottomOf="@+id/monday_Lin">
+
+            <ImageView
+                android:id="@+id/thursday_Img"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="10dp"
+                android:src="@mipmap/signin_icon" />
+
+            <TextView
+                android:id="@+id/thursday_Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="星期四"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/friday_Lin"
+            android:layout_width="66dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/welfare_radius_yellow"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/tuesday_Lin"
+            app:layout_constraintStart_toStartOf="@+id/tuesday_Lin"
+            app:layout_constraintTop_toBottomOf="@+id/tuesday_Lin">
+
+            <ImageView
+                android:id="@+id/friday_Img"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="10dp"
+                android:src="@mipmap/signin_icon" />
+
+            <TextView
+                android:id="@+id/friday_Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="星期五"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/saturday_Lin"
+            android:layout_width="66dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/welfare_radius_yellow"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/wednesday_Lin"
+            app:layout_constraintStart_toStartOf="@+id/wednesday_Lin"
+            app:layout_constraintTop_toBottomOf="@+id/wednesday_Lin">
+
+            <ImageView
+                android:id="@+id/saturday_Img"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="10dp"
+                android:src="@mipmap/signin_icon" />
+
+            <TextView
+                android:id="@+id/saturday_Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="星期六"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sunday_Con"
+            android:layout_width="72dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/welfare_radius_yellow"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/saturday_Lin"
+            app:layout_constraintStart_toEndOf="@+id/saturday_Lin"
+            app:layout_constraintTop_toTopOf="@+id/wednesday_Lin">
+
+            <ImageView
+                android:id="@+id/sunday_Img"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="30dp"
+                android:src="@mipmap/signin_gift_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/sunday_Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="累计签到"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sunday_Img" />
+
+            <TextView
+                android:id="@+id/sundayCount_Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="7"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sunday_Txt" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="领丰厚奖励"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sundayCount_Txt" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="积分兑换"
+        android:textColor="#ff6f6f6f"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+    <TextView
+        android:id="@+id/integral_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我的积分：120"
+        android:textColor="#ffa1a1a1"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView17"
+        app:layout_constraintEnd_toEndOf="@+id/constraintLayout2" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/card_Recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

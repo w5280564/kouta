@@ -55,7 +55,9 @@ public class MainRegister_Agreement extends Activity {
         params.gravity = Gravity.CENTER;
         layoutRoot.setLayoutParams(params);
 
-        url = "https://www.baidu.com/";
+
+//        url = "https://www.baidu.com/";
+        url =   "file:///android_asset/service.html";
         final Intent intent = getIntent();
 //        if (content != null) {
 //            shareTitle = HtmlToText.delHTMLTag(content);

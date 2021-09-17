@@ -641,6 +641,8 @@ public class UserDetail_Set extends BaseInitActivity {
         protected String doInBackground(Void... voids) {
             StringBuffer sbf = new StringBuffer();
             try {
+                MyInfo myInfo = new MyInfo(mContext);
+
                 objectName = "user/" + userModel.getData().getUserId() + "/headImg/" + selectList.get(0).getFileName();//对应上传之后的文件名称
                 FileInputStream fis = new FileInputStream(new File(selectList.get(0).getAndroidQToPath()));
                 obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
