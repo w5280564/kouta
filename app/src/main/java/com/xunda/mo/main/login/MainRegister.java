@@ -150,8 +150,10 @@ public class MainRegister extends AppCompatActivity {
     private class login_txtOnClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            Intent Intent = new Intent(MainRegister.this, MainRegister_Agreement.class);
-            startActivity(Intent);
+//            Intent Intent = new Intent(MainRegister.this, MainRegister_Agreement.class);
+//            startActivity(Intent);
+            String  url =  "file:///android_asset/service.html";
+            MainRegister_Agreement.actionStart(MainRegister.this,url);
         }
     }
 

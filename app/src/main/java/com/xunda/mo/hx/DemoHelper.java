@@ -136,7 +136,7 @@ public class DemoHelper {
         if(initSDK(context)) {
             // debug mode, you'd better set it to false, if you want release your App officially.
             //在做打包混淆时，关闭debug模式，避免消耗不必要的资源
-            EMClient.getInstance().setDebugMode(true);
+//            EMClient.getInstance().setDebugMode(true);
             // set Call options
             setCallOptions(context);
             //初始化推送

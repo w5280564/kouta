@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -30,15 +31,18 @@ import androidx.core.content.ContextCompat;
 import com.xunda.mo.R;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 
 public class MainRegister_Agreement extends Activity {
     private WebView myWebView;
     private TextView cententtxt;
     String shareTitle = "";
     String url;
+    public static void actionStart(Context context,String webUrl) {
+        Intent intent = new Intent(context, MainRegister_Agreement.class);
+        intent.putExtra("webUrl",webUrl);
+        context.startActivity(intent);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +61,9 @@ public class MainRegister_Agreement extends Activity {
 
 
 //        url = "https://www.baidu.com/";
-        url =   "file:///android_asset/service.html";
+//        url =  "file:///android_asset/service.html";
         final Intent intent = getIntent();
+        url = intent.getStringExtra("webUrl");
 //        if (content != null) {
 //            shareTitle = HtmlToText.delHTMLTag(content);
 //        }
@@ -80,6 +85,15 @@ public class MainRegister_Agreement extends Activity {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 view.loadUrl(url);
                 return false;
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                String title = view.getTitle();
+                if (!TextUtils.isEmpty(title)) {
+                    cententtxt.setText(title);
+                }
             }
         });
 
@@ -105,23 +119,18 @@ public class MainRegister_Agreement extends Activity {
 
     private void initTitle(LinearLayout mycontentView) {
         final View view = LayoutInflater.from(MainRegister_Agreement.this).inflate(R.layout.base_titlebar, null);
-//        view.setBackgroundColor(ContextCompat.getColor(this,R.color.colorFristWhite));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             view.setElevation(2f);//阴影
         }
-//        RelativeLayout.LayoutParams paramrel = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//        StaticData.layoutParamsScale(paramrel, 0, 88);
-//        view.setLayoutParams(paramrel);
         Button return_Btn = (Button) view.findViewById(R.id.return_Btn);
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         cententtxt = (TextView) view.findViewById(R.id.cententtxt);
         cententtxt.setText(myWebView.getTitle());
-        cententtxt.setText("用户协议");
+//        cententtxt.setText("用户协议");
         Button right_Btn = (Button) view.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.GONE);
         mycontentView.addView(view);
         return_Btn.setOnClickListener(new return_Btn());
-//        right_Btn.setOnClickListener(new right_Btn());
     }
 
 
@@ -131,15 +140,6 @@ public class MainRegister_Agreement extends Activity {
             finish();
         }
     }
-
-
-    public String getStringToday() {
-        Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString = formatter.format(currentTime);
-        return dateString;
-    }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

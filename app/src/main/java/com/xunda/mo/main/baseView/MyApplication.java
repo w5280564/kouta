@@ -63,7 +63,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         closeAndroidPDialog();
         //xUtils初始化
         x.Ext.init(this);
-        x.Ext.setDebug(true); // 是否输出debug日志
+//        x.Ext.setDebug(true); // 是否输出debug日志
 ////		//Jush初始化
 //		Log.d(TAG, "[ExampleApplication] onCreate");
 //		JPushInterface.setDebugMode(true);
