@@ -1,4 +1,4 @@
-package com.xunda.mo.main.friend;
+package com.xunda.mo.main.friend.activity;
 
 import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
@@ -16,16 +16,15 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.xunda.mo.R;
+import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.model.AddFriend_UserList_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.viewTouchDelegate;
@@ -34,16 +33,17 @@ import com.xunda.mo.staticdata.xUtils3Http;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Friend_Add_SeekGroup extends AppCompatActivity {
+public class Friend_Add_SeekFriend extends AppCompatActivity {
 
     private View cancel_txt;
     private EditText seek_edit;
     private LinearLayout friend_lin;
     String searchStr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activityfriend_addseek_group);
+        setContentView(R.layout.activityfriend_addseek_person);
 
         StatusBar(this);
         MIUISetStatusBarLightMode(this.getWindow(), true);
@@ -51,13 +51,9 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
 
         initView();
     }
-
     private void initData(int type) {
          searchStr = seek_edit.getText().toString().trim();
-        AddFriendMethod(Friend_Add_SeekGroup.this,  saveFile.User_SearchAll_Url );
-
-//        AddFriendMethod(Friend_Add_SeekGroup.this, saveFile.BaseUrl + saveFile.Group_SearchGroup_Url
-//                + "?search=" + searchStr + "&type=" + type + "&pageNum=" + 1 + "&pageSize=" + 10);
+        AddFriendMethod(Friend_Add_SeekFriend.this, saveFile.User_SearchAll_Url );
     }
 
     private void initView() {
@@ -77,8 +73,6 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
     }
 
     private AddFriend_UserList_Model model;
-
-    //
     public void AddFriendMethod(Context context, String baseUrl) {
         Map<String,Object> map = new HashMap<>();
         map.put("search",searchStr);
@@ -86,7 +80,7 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
             @Override
             public void success(String result) {
                 model = new Gson().fromJson(result, AddFriend_UserList_Model.class);
-                FriendList(Friend_Add_SeekGroup.this, friend_lin);
+                FriendList(Friend_Add_SeekFriend.this, friend_lin, 0);
             }
             @Override
             public void failed(String... args) {
@@ -105,14 +99,14 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
             }
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
 //                searchData();
-                initData(1);
+                initData(2);
             }
             return false;
         }
     }
 
 
-    public void FriendList(Context context, LinearLayout myFlex) {
+    public void FriendList(Context context, LinearLayout myFlex, int count) {
         if (myFlex != null) {
             myFlex.removeAllViews();
         }
@@ -127,7 +121,7 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
             if (UserType.equals("NickNameUser")) {
                 tag_txt.setText("联系人");
             } else if (UserType.equals("userNumUser")) {
-                tag_txt.setText("LeId");
+                tag_txt.setText("MoId");
             } else if (UserType.equals("phoneNumUser")) {
                 tag_txt.setText("手机号");
             } else if (UserType.equals("tagUser")) {
@@ -138,35 +132,26 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
                 tag_txt.setText("含有该标签的群聊");
             }
             FriendListDetail(context, list_lin, myView, i, model.getData().get(i));
-//            questiontxt_List.add(questionTxt);
-//            questionlin_List.add(choice_lin);
-//            pk_img.setImageResource(badgeArr[i]);
-            RadioGroup.LayoutParams itemParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-//            pk_Lin.setLayoutParams(itemParams);
             list_lin.setTag(i);
             more_txt.setTag(i);
             myFlex.addView(myView);
-
-            more_txt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int tag = (Integer) v.getTag();
-                    String typeStr = model.getData().get(tag).getUserType().substring(model.getData().get(tag).getUserType().length() - 4);
-                    if (typeStr.equals("User")) {
-                        Intent intent = new Intent(context, Friend_Add_seekPerson_FriendList.class);
-                        intent.putExtra("type", model.getData().get(tag).getUserType());
-                        intent.putExtra("seekStr", seek_edit.getText().toString());
-                        startActivity(intent);
-                    }else {
-                        Intent intent = new Intent(context, Friend_Add_seekPerson_GruopList.class);
-                        intent.putExtra("type", model.getData().get(tag).getUserType());
-                        intent.putExtra("seekStr", seek_edit.getText().toString());
-                        startActivity(intent);
-
-                    }
-
+            more_txt.setOnClickListener(v -> {
+                int tag = (Integer) v.getTag();
+                String typeStr = model.getData().get(tag).getUserType().substring(model.getData().get(tag).getUserType().length() - 4);
+                if (typeStr.equals("User")) {
+                    Intent intent = new Intent(context, Friend_Add_seekPerson_FriendList.class);
+                    intent.putExtra("type", model.getData().get(tag).getUserType());
+                    intent.putExtra("seekStr", seek_edit.getText().toString());
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(context, Friend_Add_seekPerson_GruopList.class);
+                    intent.putExtra("type", model.getData().get(tag).getUserType());
+                    intent.putExtra("seekStr", seek_edit.getText().toString());
+                    startActivity(intent);
 
                 }
+
+
             });
         }
     }
@@ -179,10 +164,9 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
         int size = 0;
         if (typeStr.equals("User")) {
             size = model.getUserList().size();
-//            if (model.getUserList().isEmpty()) {
+            if (model.getUserList().isEmpty()) {
                 view.setVisibility(View.GONE);
-//            }
-            return;
+            }
         } else {
             size = model.getGroupList().size();
             if (model.getGroupList().isEmpty()) {
@@ -196,7 +180,6 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
 //            int margisleft = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
 //            itemParams.setMargins(margisleft, 0, 0, 0);
             myView.setLayoutParams(itemParams);
-
             SimpleDraweeView head_simple = myView.findViewById(R.id.head_simple);
             TextView name = myView.findViewById(R.id.name);
             TextView vipType_txt = myView.findViewById(R.id.vipType_txt);
@@ -211,7 +194,6 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
                 long strVip = userListDTO.getVipType();
                 name.setText(userListDTO.getNickname());
                 contentid_txt.setText("Mo ID: " + userListDTO.getUserNum());
-
                 if (strVip == 0) {
                     vipType_txt.setVisibility(View.GONE);
                     name.setTextColor(getColor(R.color.blacktitle));
@@ -221,7 +203,6 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
                     name.setTextColor(getColor(R.color.yellow));
                     contentid_txt.setTextColor(getColor(R.color.yellow));
                 }
-
             } else {
                 AddFriend_UserList_Model.DataDTO.GroupListDTO groupListDTO = model.getGroupList().get(i);
                 if (groupListDTO.getGroupHeadImg() != null) {
@@ -238,12 +219,13 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
             myView.setOnClickListener(v -> {
                 int tag1 = (Integer) v.getTag();
                 if (typeStr.equals("User")) {
-                    Toast.makeText(context, "用户Mo ID "+model.getUserList().get(tag1).getUserNum(),Toast.LENGTH_SHORT).show();
+                    String friendUserId = model.getUserList().get(tag1).getUserId();
+                    String addType = "2";
+                    ChatFriend_Detail.actionStart(context, friendUserId,  addType);
                 }else{
                     String GroupId =  model.getGroupList().get(tag1).getGroupId();
-                    Friend_Group_Detail.actionStart(Friend_Add_SeekGroup.this, GroupId);
+                    Friend_Group_Detail.actionStart(Friend_Add_SeekFriend.this, GroupId);
                 }
-
             });
         }
     }

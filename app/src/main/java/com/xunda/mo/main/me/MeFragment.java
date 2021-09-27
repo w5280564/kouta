@@ -21,7 +21,7 @@ import com.xunda.mo.hx.section.base.BaseInitFragment;
 import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.hx.section.me.activity.SetIndexActivity;
 import com.xunda.mo.main.baseView.MyArrowItemView;
-import com.xunda.mo.main.chat.activity.UserDetail_Set;
+import com.xunda.mo.main.me.activity.UserDetail_Set;
 import com.xunda.mo.main.discover.activity.Discover_Welfare_Card;
 import com.xunda.mo.main.me.activity.Me_VIP;
 import com.xunda.mo.model.UserDetail_Bean;
@@ -77,10 +77,14 @@ public class MeFragment extends BaseInitFragment {
         String versionName = "版本" + StaticData.getversionName(requireContext());
         version_set.getTvContent().setText(versionName);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         MyLevel.setGrade(garde_Lin, 0, requireContext());
         UserMethod(requireContext(), saveFile.User_GetUserInfo_Url);
     }
-
 
     private class head_ConstraintClick extends NoDoubleClickListener {
         @Override

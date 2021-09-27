@@ -15,6 +15,7 @@ import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.widget.ArrowItemView;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.main.login.MainLogin_Register;
+import com.xunda.mo.main.me.activity.Me_Safety;
 import com.xunda.mo.network.saveFile;
 
 public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener, View.OnClickListener {
@@ -22,7 +23,7 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
     private ArrowItemView itemSecurity;
     private ArrowItemView itemNotification;
     private ArrowItemView itemCommonSet;
-    private ArrowItemView itemPrivacy;
+    private ArrowItemView itemPrivacy, item_se;
     private Button btnLogout;
 
     public static void actionStart(Context context) {
@@ -44,6 +45,7 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
         itemCommonSet = findViewById(R.id.item_common_set);
         itemPrivacy = findViewById(R.id.item_privacy);
         btnLogout = findViewById(R.id.btn_logout);
+        item_se = findViewById(R.id.item_se);
     }
 
     @Override
@@ -55,6 +57,7 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
         itemCommonSet.setOnClickListener(this);
         itemPrivacy.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
+        item_se.setOnClickListener(this);
     }
 
     @Override
@@ -65,23 +68,27 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.item_security ://账号与安全
+            case R.id.item_security://账号与安全
                 AccountSecurityActivity.actionStart(mContext);
                 break;
-            case R.id.item_notification ://消息设置
+            case R.id.item_notification://消息设置
                 MessageReceiveSetActivity.actionStart(mContext);
                 break;
-            case R.id.item_common_set ://通用
+            case R.id.item_common_set://通用
                 CommonSettingsActivity.actionStart(mContext);
                 break;
-            case R.id.item_privacy ://隐私
+            case R.id.item_privacy://隐私
                 PrivacyIndexActivity.actionStart(mContext);
                 break;
             case R.id.btn_logout:
                 logout();
                 break;
+            case R.id.item_se:
+                Me_Safety.actionStart(mContext);
+                break;
         }
     }
+
 
 
     void logout() {

@@ -1,4 +1,4 @@
-package com.xunda.mo.main.friend;
+package com.xunda.mo.main.friend.activity;
 
 import android.content.Context;
 import android.content.Intent;

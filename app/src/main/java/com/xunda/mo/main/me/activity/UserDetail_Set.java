@@ -1,4 +1,4 @@
-package com.xunda.mo.main.chat.activity;
+package com.xunda.mo.main.me.activity;
 
 import static com.xunda.mo.staticdata.AppConstant.ak;
 import static com.xunda.mo.staticdata.AppConstant.bucketName;
@@ -73,8 +73,6 @@ import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.login.MainLogin_Register;
-import com.xunda.mo.main.me.activity.MeAndGroup_QRCode;
-import com.xunda.mo.main.me.activity.MeDetail_Edit_Label;
 import com.xunda.mo.model.UserDetail_Bean;
 import com.xunda.mo.model.UserDetail_Check_Bean;
 import com.xunda.mo.model.baseDataModel;

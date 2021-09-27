@@ -98,6 +98,8 @@ public class saveFile {
     public static String Alipay_AppPay = "aliPay/appPay";
     public static String WxPay_AppPay = "wxPay/appPay";
     public static String UserVipConfig_UserVipInfo = "userVipConfig/userVipInfo";
+    public static String Friend_Blacks = "friend/setMeBlacks";
+    public static String User_Delete = "user/delete";
 
 
 

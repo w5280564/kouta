@@ -160,12 +160,14 @@
             android:scaleType="centerCrop"
             android:src="@drawable/qrcode_share_icon"
             app:layout_constraintEnd_toEndOf="@+id/textView6"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            app:layout_constraintTop_toBottomOf="@+id/textView6"
+            android:visibility="invisible"/>
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:text="分享"
             android:textColor="@color/blacktitle"
             android:textSize="15sp"

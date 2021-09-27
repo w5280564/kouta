@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.xunda.mo.R;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.xUtils3Http;
 
 public class MainLogin_Register extends AppCompatActivity {
 
@@ -101,7 +102,8 @@ public class MainLogin_Register extends AppCompatActivity {
         ssb.setSpan(new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                String  url =  "file:///android_asset/privacy.html";
+//                String  url =  "file:///android_asset/privacy.html";
+                String url = xUtils3Http.BASE_URL+"service.html";
                 MainRegister_Agreement.actionStart(MainLogin_Register.this,url);
 //                Toast.makeText(MainLogin_Register.this, "《隐私政策》", Toast.LENGTH_SHORT).show();
             }
@@ -117,7 +119,8 @@ public class MainLogin_Register extends AppCompatActivity {
         ssb.setSpan(new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                String  url =  "file:///android_asset/service.html";
+//                String  url =  "file:///android_asset/service.html";
+                String url = xUtils3Http.BASE_URL+"privacy.html";
                 MainRegister_Agreement.actionStart(MainLogin_Register.this,url);
 //                Toast.makeText(MainLogin_Register.this, "《用户协议》", Toast.LENGTH_SHORT).show();
             }

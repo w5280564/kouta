@@ -25,10 +25,26 @@
         app:layout_constraintTop_toBottomOf="@id/title_bar"
         app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
         app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
-        app:arrowItemTitle="@string/em_set_security"
+        app:arrowItemTitle="账号"
         app:arrowItemTitleSize="@dimen/em_size_normal"
         android:foreground="@drawable/demo_ripple_click_gray"
         android:background="@color/white"/>
+
+        <com.xunda.mo.hx.common.widget.ArrowItemView
+        android:id="@+id/item_se"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/em_common_item_height"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_security"
+        app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
+        app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
+        app:arrowItemTitle="安全"
+        app:arrowItemTitleSize="@dimen/em_size_normal"
+        android:foreground="@drawable/demo_ripple_click_gray"
+        android:background="@color/white"/>
+
+
 
     <com.xunda.mo.hx.common.widget.ArrowItemView
         android:id="@+id/item_notification"
@@ -36,7 +52,7 @@
         android:layout_height="@dimen/em_common_item_height"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_security"
+        app:layout_constraintTop_toBottomOf="@id/item_se"
         app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
         app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
         app:arrowItemTitle="@string/em_set_message_set"

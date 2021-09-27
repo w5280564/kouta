@@ -22,7 +22,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
-import com.xunda.mo.main.friend.Friend_Group_Detail;
+import com.xunda.mo.main.friend.activity.Friend_Group_Detail;
 import com.xunda.mo.staticdata.GlideEnGine;
 
 import java.util.ArrayList;

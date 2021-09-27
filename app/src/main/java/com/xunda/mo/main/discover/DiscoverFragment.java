@@ -12,7 +12,7 @@ import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.discover.activity.Discover_Invite;
 import com.xunda.mo.main.discover.activity.Discover_QRCode;
 import com.xunda.mo.main.discover.activity.Discover_Welfare;
-import com.xunda.mo.main.friend.Friend_Add;
+import com.xunda.mo.main.friend.activity.Friend_Add;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 
 public class DiscoverFragment extends BaseInitFragment {

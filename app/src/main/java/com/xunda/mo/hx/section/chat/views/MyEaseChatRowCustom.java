@@ -63,7 +63,8 @@ public class MyEaseChatRowCustom extends EaseChatRow {
                 contentView.setText(txtBody.getMessage());
                 String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
                 int defaultAvatar =R.drawable.mo_icon;
-                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).error(defaultAvatar).into(userAvatarView);
+//                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).error(defaultAvatar).into(userAvatarView);
+                Glide.with(getContext()).load(headUrl).into(userAvatarView);
             } else {
                 Map<String, Object> mapExt = message.ext();
                 String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
@@ -89,16 +90,18 @@ public class MyEaseChatRowCustom extends EaseChatRow {
                         }
                     }
 
+                    int defaultAvatar = R.mipmap.adress_head_service;
+                    Glide.with(getContext()).load(defaultAvatar).into(userAvatarView);
                 } else {
                     EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
                     contentView.setText(txtBody.getMessage());
-
+                    Glide.with(getContext()).load(headUrl).into(userAvatarView);
                 }
 
-
                 usernickView.setText(sendName);
-                int defaultAvatar = R.mipmap.adress_head_service;
-                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).error(defaultAvatar).into(userAvatarView);
+//                int defaultAvatar = R.mipmap.adress_head_service;
+////                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).error(defaultAvatar).into(userAvatarView);
+//                Glide.with(getContext()).load(headUrl).placeholder(defaultAvatar).into(userAvatarView);
 
             }
         }

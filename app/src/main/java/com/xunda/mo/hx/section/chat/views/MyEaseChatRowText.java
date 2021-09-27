@@ -77,12 +77,14 @@ public class MyEaseChatRowText extends EaseChatRow {
             String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
             usernickView.setText(sendName);
             String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
+            Glide.with(getContext()).load(headUrl).into(userAvatarView);
             int  defaultAvatar = R.drawable.mo_icon;
             //没有名字是客服
             if (TextUtils.isEmpty(sendName)) {
                 defaultAvatar = R.mipmap.adress_head_service;
+                Glide.with(getContext()).load(defaultAvatar).into(userAvatarView);
             }
-            Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).error(defaultAvatar).into(userAvatarView);
+
 
             //匿名聊天
             if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {

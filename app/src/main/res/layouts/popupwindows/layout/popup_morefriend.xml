@@ -1,67 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="122dp"
-    android:layout_height="89dp"
-    android:background="@drawable/round_rectangle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginRight="10dp">
+    tools:ignore="MissingConstraints">
 
 
-    <LinearLayout
-        android:id="@+id/add_lin"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="122dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        android:background="@drawable/round_rectangle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="18dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="10dp"
-            android:src="@mipmap/adress_popup_add" />
 
-        <TextView
-            android:id="@+id/add_txt"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/add_Con"
             android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:gravity="center"
-            android:text="加好友/群"
-            android:textColor="@color/blacktitlettwo"
-            android:textSize="14sp" />
-    </LinearLayout>
+            android:layout_height="45dp"
+            android:gravity="center_vertical">
 
-    <View
-        android:layout_width="37dp"
-        android:layout_height="0.5dp"
-        android:layout_marginStart="41dp"
-        android:background="@color/greyline" />
+            <ImageView
+                android:id="@+id/imageView9"
+                android:layout_width="16dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="15dp"
+                android:src="@mipmap/adress_popup_add"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/dele_lin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/add_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:text="加好友/群"
+                android:textColor="@color/blacktitlettwo"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/imageView9" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
-            android:layout_width="13.5dp"
-            android:layout_height="18dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="10dp"
-            android:src="@mipmap/adress_popup_dele" />
+        <View
+            android:id="@+id/view10"
+            android:layout_width="40dp"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="40dp"
+            android:background="@color/greyline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/dele_txt"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/dele_Con"
             android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:gravity="center"
-            android:text="清理好友"
-            android:textColor="@color/blacktitlettwo"
-            android:textSize="14sp" />
+            android:layout_height="45dp"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/view10">
+
+            <ImageView
+                android:id="@+id/imageView10"
+                android:layout_width="13.5dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="15dp"
+                android:src="@mipmap/adress_popup_dele"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/dele_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_marginStart="13dp"
+                android:gravity="center"
+                android:text="清理好友"
+                android:textColor="@color/blacktitlettwo"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/imageView10" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </LinearLayout>
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

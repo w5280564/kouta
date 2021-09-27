@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.friend.activity.Friend_BlackMe"
+    android:background="@color/greyfive">
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <com.xunda.mo.main.baseView.MyArrowItemView
+        android:id="@+id/blackMe_ArrowItemView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:minHeight="60dp"
+        app:arrowItemContent=""
+        app:arrowItemContentColor="@color/greytwo"
+        app:arrowItemShowDivider="false"
+        app:arrowItemTip="拉黑我的好友"
+        app:arrowItemTitle="检查把自己加入黑名单的好友"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
+        app:arrowItemTitleSize="15sp"
+        app:arrowItemshowTip="true"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_Include" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

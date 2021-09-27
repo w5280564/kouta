@@ -16,8 +16,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 短信验证登陆功能需要添加次权限来自动填充验证码，用不到可以去掉 -->
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
+<!--    <uses-permission android:name="android.permission.RECEIVE_SMS" />-->
+<!--    <uses-permission android:name="android.permission.READ_SMS" />-->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission
         android:name="android.permission.MODIFY_PHONE_STATE"
@@ -62,11 +62,11 @@
             <action android:name="com.huawei.hms.core.aidlservice" />
         </intent>
     </queries>
-
-
-    <!-- 如果您的 App 的 targetSdkVersion 大于或等于 30，则需要在 AndroidManifest.xml 中提供下面的应用可见性声明，
+    <!--
+ 如果您的 App 的 targetSdkVersion 大于或等于 30，则需要在 AndroidManifest.xml 中提供下面的应用可见性声明，
      让支付宝 SDK 感知设备上是否已经安装了支付宝 App。同时，您可能还需要升级 Gradle Plugin 到最新版本。
-     关于 Android 11 的 "应用可见性" 机制，参见 https://developer.android.com/about/versions/11/privacy/package-visibility?hl=zh-cn -->
+     关于 Android 11 的 "应用可见性" 机制，参见 https://developer.android.com/about/versions/11/privacy/package-visibility?hl=zh-cn
+    -->
     <queries>
         <package android:name="com.eg.android.AlipayGphone" /> <!-- 支付宝 -->
         <package android:name="hk.alipay.wallet" /> <!-- AlipayHK -->
@@ -77,7 +77,10 @@
         android:largeScreens="true"
         android:normalScreens="true"
         android:resizeable="true"
-        android:smallScreens="true" />
+        android:smallScreens="true" /> <!-- // 在应用的AndroidManifest.xml添加如下<queries>标签 -->
+    <queries>
+        <package android:name="com.tencent.mm" /> <!-- // 指定微信包名 -->
+    </queries>
 
     <application
         android:name=".main.baseView.MyApplication"
@@ -89,6 +92,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".main.me.activity.Me_Safety"
+            android:exported="true" />
+        <activity
+            android:name=".main.friend.activity.Friend_BlackMeList"
+            android:exported="true" />
+        <activity
+            android:name=".main.friend.activity.Friend_BlackMe"
+            android:exported="true" />
         <activity
             android:name=".main.me.activity.Me_VIP"
             android:exported="true" />
@@ -126,7 +138,7 @@
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.friend.Friend_Group_AdditiveGroup"
+            android:name=".main.friend.activity.Friend_Group_AdditiveGroup"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
@@ -142,7 +154,7 @@
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.friend.Friend_Group_Detail"
+            android:name=".main.friend.activity.Friend_Group_Detail"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
@@ -194,10 +206,10 @@
             android:name=".main.group.activity.newGroup"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.chat.activity.UserDetail_Set"
+            android:name=".main.me.activity.UserDetail_Set"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.friend.Friend_NewFriends"
+            android:name=".main.friend.activity.Friend_NewFriends"
             android:screenOrientation="portrait" />
         <activity
             android:name=".main.chat.activity.ChatFriend_AddFriend"
@@ -206,7 +218,7 @@
             android:name=".main.chat.activity.ChatFriend_Detail"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.friend.MyGroup"
+            android:name=".main.friend.activity.MyGroup"
             android:screenOrientation="portrait" />
         <activity
             android:name=".main.chat.activity.ChatDetailSet"
@@ -557,22 +569,22 @@
             android:name=".hx.section.base.WebViewActivity"
             android:screenOrientation="portrait" /> <!-- 捕获屏幕service -->
         <activity
-            android:name=".main.friend.Friend_Detalis"
+            android:name=".main.friend.activity.Friend_Detalis"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.friend.Friend_Add_seekPerson_GruopList"
+            android:name=".main.friend.activity.Friend_Add_seekPerson_GruopList"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.friend.Friend_Add_SeekGroup"
+            android:name=".main.friend.activity.Friend_Add_SeekGroup"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.friend.Friend_Add_seekPerson_FriendList"
+            android:name=".main.friend.activity.Friend_Add_seekPerson_FriendList"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.friend.Friend_Add_SeekFriend"
+            android:name=".main.friend.activity.Friend_Add_SeekFriend"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.friend.Friend_Add"
+            android:name=".main.friend.activity.Friend_Add"
             android:screenOrientation="portrait" />
         <activity
             android:name=".main.login.MainLogin_ForgetPsw_ID"
@@ -618,31 +630,26 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".main.login.Main_Launch"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!--微信支付回调-->
-        <activity android:name=".wxapi.WXPayEntryActivity"
+        </activity> <!-- 微信支付回调 -->
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".wxapi.WXEntryActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:exported="true"
-            android:taskAffinity="net.sourceforge.simcpux"
+            android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
-        </activity>
-
-
-
+            android:screenOrientation="portrait"
+            android:taskAffinity="net.sourceforge.simcpux"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".hx.section.chat.activicy.MyEaseGaodeMapActivity"
             android:screenOrientation="portrait" /> <!-- 会议成员邀请 -->
@@ -666,11 +673,5 @@
             android:name="design_height_in_dp"
             android:value="667" />
     </application>
-
-    <!--// 在应用的AndroidManifest.xml添加如下<queries>标签-->
-    <queries>
-        <package android:name="com.tencent.mm" />  <!-- // 指定微信包名-->
-    </queries>
-
 
 </manifest>

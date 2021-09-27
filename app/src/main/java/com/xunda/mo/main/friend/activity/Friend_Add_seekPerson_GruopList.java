@@ -1,4 +1,4 @@
-package com.xunda.mo.main.friend;
+package com.xunda.mo.main.friend.activity;
 
 import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
@@ -21,9 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.xunda.mo.R;
-import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
-import com.xunda.mo.main.friend.myAdapter.Friend_Seek_FriendList_Adapter;
-import com.xunda.mo.model.AddFriend_FriendList_Model;
+import com.xunda.mo.main.friend.myAdapter.Friend_Seek_GroupList_Adapter;
+import com.xunda.mo.model.AddFriend_FriendGroup_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.xUtils3Http;
 import com.xunda.mo.xrecycle.XRecyclerView;
@@ -33,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implements XRecyclerView.LoadingListener {
+public class Friend_Add_seekPerson_GruopList extends AppCompatActivity implements XRecyclerView.LoadingListener {
     private View cancel_txt;
     private EditText seek_edit;
     private LinearLayout friend_lin;
@@ -58,29 +57,36 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
         seek_edit.setText(seekStr);
         seek_edit.setSelection(seekStr.length());
 
-        if (type.equals("NickNameUser")) {
-            seek_edit.setHint("搜索用户昵称");
+//        if (type.equals("NickNameUser")) {
+//            seek_edit.setHint("搜索用户昵称");
+//            type = "1";
+//        } else if (type.equals("userNumUser")) {
+//            seek_edit.setHint("搜索用户ID");
+//            type = "2";
+//        } else if (type.equals("phoneNumUser")) {
+//            seek_edit.setHint("搜索用户手机号");
+//            type = "3";
+//        } else if (type.equals("tagUser")) {
+//            seek_edit.setHint("搜索用户标签");
+//            type = "4";
+//        } else
+
+        if (type.equals("nameGroup")) {
+            seek_edit.setHint("搜索群昵称/ID");
             type = "1";
-        } else if (type.equals("userNumUser")) {
-            seek_edit.setHint("搜索用户ID");
+        } else if (type.equals("tagGroup")) {
+            seek_edit.setHint("搜索群标签");
             type = "2";
-        } else if (type.equals("phoneNumUser")) {
-            seek_edit.setHint("搜索用户手机号");
-            type = "3";
-        } else if (type.equals("tagUser")) {
-            seek_edit.setHint("搜索用户标签");
-            type = "4";
         }
         initData(type, seekStr);
     }
 
     private void initView() {
-
         cancel_txt = findViewById(R.id.cancel_txt);
         seek_edit = findViewById(R.id.seek_edit);
         friend_lin = findViewById(R.id.friend_lin);
         list_xrecycler = findViewById(R.id.list_xrecycler);
-       list_xrecycler.setLoadingListener(this);
+        list_xrecycler.setLoadingListener(this);
 
 
         cancel_txt.setOnClickListener(new cancel_txtOnclickLister());
@@ -97,7 +103,7 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
     public void onLoadMore() {
         PageIndex = PageIndex + 1;
         pageSize = 10;
-        AddFriendMethod(Friend_Add_seekPerson_FriendList.this,  saveFile.User_SearchByType_Url);
+        AddFriendMethod(Friend_Add_seekPerson_GruopList.this, saveFile.Group_SearchGroup_Url);
     }
 
     private class cancel_txtOnclickLister implements View.OnClickListener {
@@ -111,7 +117,7 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {//打开关闭软键盘
+            if (imm != null) {//打开软键盘
                 imm.hideSoftInputFromWindow(seek_edit.getWindowToken(), 0);
             }
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -129,25 +135,25 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
     private void initData(String type, String seekStr) {
         PageIndex = 1;
         pageSize = 10;
-        AddFriendMethod(Friend_Add_seekPerson_FriendList.this,  saveFile.User_SearchByType_Url);
+        AddFriendMethod(Friend_Add_seekPerson_GruopList.this, saveFile.Group_SearchGroup_Url);
     }
 
 
-    Friend_Seek_FriendList_Adapter mAdapter;
+    Friend_Seek_GroupList_Adapter mAdapter;
 
     public void initlist(final Context context) {
         LinearLayoutManager mMangaer = new LinearLayoutManager(context);
         list_xrecycler.setLayoutManager(mMangaer);
         //如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
         list_xrecycler.setHasFixedSize(true);
-        mAdapter = new Friend_Seek_FriendList_Adapter(context, baseModel, Model);
+        mAdapter = new Friend_Seek_GroupList_Adapter(context, baseModel, Model);
         list_xrecycler.setAdapter(mAdapter);
-        mAdapter.setOnItemClickLitener(new Friend_Seek_FriendList_Adapter.OnItemClickLitener() {
+        mAdapter.setOnItemClickLitener(new Friend_Seek_GroupList_Adapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-                String friendUserId = baseModel.get(position).getUserId();
-                String addType = "2";
-                ChatFriend_Detail.actionStart(context, friendUserId,  addType);
+                String GroupId = baseModel.get(position).getGroupId();
+                Friend_Group_Detail.actionStart(Friend_Add_seekPerson_GruopList.this, GroupId);
+
             }
 
             @Override
@@ -157,18 +163,19 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
     }
 
 
-    private List<AddFriend_FriendList_Model.DataDTO.ListDTO> baseModel;
-    private AddFriend_FriendList_Model Model;
+    private List<AddFriend_FriendGroup_Model.DataDTO.ListDTO> baseModel;
+    private AddFriend_FriendGroup_Model Model;
+
     public void AddFriendMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("search",seekStr);
-        map.put("type",type);
-        map.put("pageNum",PageIndex);
-        map.put("pageSize",pageSize);
+        Map<String, Object> map = new HashMap<>();
+        map.put("search", seekStr);
+        map.put("type", type);
+        map.put("pageNum", PageIndex);
+        map.put("pageSize", pageSize);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                Model = new Gson().fromJson(result, AddFriend_FriendList_Model.class);
+                Model = new Gson().fromJson(result, AddFriend_FriendGroup_Model.class);
                 if (PageIndex == 1) {
                     if (baseModel != null) {
                         baseModel.clear();
@@ -193,6 +200,7 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
                 }
 
             }
+
             @Override
             public void failed(String... args) {
 
@@ -200,7 +208,6 @@ public class Friend_Add_seekPerson_FriendList extends AppCompatActivity implemen
         });
 
     }
-
 
 
 }

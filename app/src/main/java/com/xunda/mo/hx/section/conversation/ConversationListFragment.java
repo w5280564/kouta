@@ -47,7 +47,7 @@ import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.conversation.Group_Notices;
 import com.xunda.mo.main.discover.activity.Discover_QRCode;
-import com.xunda.mo.main.friend.Friend_Add;
+import com.xunda.mo.main.friend.activity.Friend_Add;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 
@@ -199,6 +199,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         messageChange.with(DemoConstant.CONTACT_CHANGE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.CONTACT_ADD, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.CONTACT_UPDATE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
+        messageChange.with(DemoConstant.CONTACT_DELETE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.MESSAGE_CALL_SAVE, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
         messageChange.with(DemoConstant.MESSAGE_NOT_SEND, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
     }

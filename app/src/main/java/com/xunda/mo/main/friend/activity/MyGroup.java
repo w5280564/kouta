@@ -1,4 +1,4 @@
-package com.xunda.mo.main.friend;
+package com.xunda.mo.main.friend.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -45,11 +45,9 @@ public class MyGroup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_group);
 
-
         SetStatusBar.StatusBar(this);
         SetStatusBar.MIUISetStatusBarLightMode(this.getWindow(), true);
         SetStatusBar.FlymeSetStatusBarLightMode(this.getWindow(), true);
-
 
         initTitle();
         initView();

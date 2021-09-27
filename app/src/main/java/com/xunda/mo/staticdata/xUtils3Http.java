@@ -21,9 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 public class xUtils3Http {
-//    private static final String BASE_URL = "http://119.3.23.16:8088/";
-    public static String BASE_URL = "https://abc.ahxunda.com/";
-//    public static String BASE_URL = " http://abc.ahxunda.com:8088/";
+    //        public static String BASE_URL = " http://abc.ahxunda.com:8088/";
+    public static final String BASE_URL = "http://119.3.23.16:8088/";
+//    public static String BASE_URL = "https://abc.ahxunda.com/";
+
 
     public static void get(Context mContext, String url, Map<String, Object> parms, final GetDataCallback callback) {
         RequestParams params = new RequestParams(BASE_URL + url);

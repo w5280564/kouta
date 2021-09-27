@@ -172,7 +172,8 @@ public class DemoHelper {
         //设置呼叫超时时间
         callKitConfig.setCallTimeOut(30 * 1000);
         //设置声网AgoraAppId
-        callKitConfig.setAgoraAppId("15cb0d28b87b425ea613fc46f7c9f974");
+//        callKitConfig.setAgoraAppId("15cb0d28b87b425ea613fc46f7c9f974");
+        callKitConfig.setAgoraAppId("ef55bef353314f32abcec1dcccc189d0");
         callKitConfig.setEnableRTCToken(true);
         EaseCallKit.getInstance().init(context,callKitConfig);
         addCallkitListener();

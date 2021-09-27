@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/greyfive"
-    tools:context=".main.chat.activity.UserDetail_Set">
+    tools:context=".main.me.activity.UserDetail_Set">
 
     <include
         android:id="@+id/title_Include"

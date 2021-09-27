@@ -21,7 +21,7 @@
 
         <com.hyphenate.easeui.widget.EaseImageView
             android:id="@+id/iv_userhead"
-            style="@style/ease_row_sent_iv_userhead_style"/>
+            style="@style/ease_row_sent_iv_userhead_style" />
 
         <RelativeLayout
             android:id="@+id/bubble"

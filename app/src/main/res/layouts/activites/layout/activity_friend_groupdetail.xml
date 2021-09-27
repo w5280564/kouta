@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     app:layout_constraintHorizontal_chainStyle="spread"
-    tools:context=".main.friend.Friend_Group_Detail"
+    tools:context=".main.friend.activity.Friend_Group_Detail"
     tools:ignore="MissingConstraints">
 
     <include

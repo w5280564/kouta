@@ -67,7 +67,7 @@ import com.xunda.mo.hx.section.dialog.FullEditDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.chat.activity.ChatComplaint;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
-import com.xunda.mo.main.chat.activity.UserDetail_Set;
+import com.xunda.mo.main.me.activity.UserDetail_Set;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.group.activity.GroupFriend_Detail;
 import com.xunda.mo.main.info.MyInfo;
@@ -160,15 +160,10 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 sendAnonymousName(0);
             }
         });
-
         cancel_Btn.setOnClickListener(new cancel_BtnClick());
-
-        //收到的消息
-        msgListener = new EMMessageMethod();
-        EMClient.getInstance().chatManager().addMessageListener(msgListener);
-
-
     }
+
+
 
 
     //消息发送成功
@@ -304,6 +299,9 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     @Override
     public void onResume() {
         super.onResume();
+        //收到的消息
+        msgListener = new EMMessageMethod();
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
     }
 
     @Override
@@ -322,24 +320,24 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     private void resetChatExtendMenu() {
         IChatExtendMenu chatExtendMenu = chatLayout.getChatInputMenu().getChatExtendMenu();
         chatExtendMenu.clear();
-        chatExtendMenu.registerMenuItem(R.string.attach_picture, R.drawable.ease_chat_image_selector, R.id.extend_item_picture);
-        chatExtendMenu.registerMenuItem(R.string.attach_take_pic, R.drawable.ease_chat_takepic_selector, R.id.extend_item_take_picture);
-
-        if (isMOCustomer()) {
-            chatExtendMenu.registerMenuItem(R.string.chat_complaint, R.mipmap.chat_complaint_icon, R.id.chat_complaint);
-        } else {
+            chatExtendMenu.registerMenuItem(R.string.attach_picture, R.drawable.ease_chat_image_selector, R.id.extend_item_picture);
+            chatExtendMenu.registerMenuItem(R.string.attach_take_pic, R.drawable.ease_chat_takepic_selector, R.id.extend_item_take_picture);
+        if (chatType == EaseConstant.CHATTYPE_SINGLE){
             chatExtendMenu.registerMenuItem(R.string.attach_location, R.drawable.ease_chat_location_selector, R.id.extend_item_location);
-            //添加扩展槽
-            if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-//            inputMenu.registerExtendMenuItem(R.string.attach_voice_call, R.drawable.em_chat_voice_call_selector, EaseChatInputMenu.ITEM_VOICE_CALL, this);
-                chatExtendMenu.registerMenuItem(R.string.attach_media_call, R.drawable.em_chat_video_call_selector, R.id.extend_item_video_call);
-            }
+            chatExtendMenu.registerMenuItem(R.string.attach_media_call, R.drawable.em_chat_video_call_selector, R.id.extend_item_video_call);
             chatExtendMenu.registerMenuItem(R.string.attach_two_withdraw, R.mipmap.chat_two_withdraw, R.id.extend_item_two_withdraw);
-            //名片扩展
             chatExtendMenu.registerMenuItem(R.string.attach_user_card, R.drawable.em_chat_user_card_selector, R.id.extend_item_user_card);
             chatExtendMenu.registerMenuItem(R.string.attach_file, R.drawable.em_chat_file_selector, R.id.extend_item_file);
+        }else if (chatType == EaseConstant.CHATTYPE_GROUP){
+            if (isMOCustomer()) {
+                chatExtendMenu.registerMenuItem(R.string.chat_complaint, R.mipmap.chat_complaint_icon, R.id.chat_complaint);
+            }else {
+                chatExtendMenu.registerMenuItem(R.string.attach_location, R.drawable.ease_chat_location_selector, R.id.extend_item_location);
+                chatExtendMenu.registerMenuItem(R.string.attach_two_withdraw, R.mipmap.chat_two_withdraw, R.id.extend_item_two_withdraw);
+                chatExtendMenu.registerMenuItem(R.string.attach_user_card, R.drawable.em_chat_user_card_selector, R.id.extend_item_user_card);
+                chatExtendMenu.registerMenuItem(R.string.attach_file, R.drawable.em_chat_file_selector, R.id.extend_item_file);
+            }
         }
-
 //        if (chatType == EaseConstant.CHATTYPE_GROUP && EMClient.getInstance().getOptions().getRequireAck()) {
 //            chatExtendMenu.registerMenuItem(R.string.attach_video, R.drawable.em_chat_video_selector, R.id.extend_item_video);
 //        }
@@ -683,6 +681,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 } else {
                     groupRecall();
                 }
+                break;
             case R.id.chat_complaint:
 //                if (isComplaint()){
 //

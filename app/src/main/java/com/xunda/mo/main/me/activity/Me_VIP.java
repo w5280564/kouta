@@ -52,6 +52,7 @@ import com.xunda.mo.staticdata.xUtils3Http;
 
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +62,7 @@ public class Me_VIP extends BaseInitActivity {
     private Button on_Btn,return_Btn;
     private ConstraintLayout vip_Con;
     private TextView zun_Txt, couponCount_Txt, attemptCount_Txt, expCount_Txt, vip_Time, name_Txt, vip_Txt, id_Txt;
-    int pay = 0;
+    Double pay = 0.0;
     int month = 1;
     String cardId;
     List<Integer> vipData = new ArrayList<>();
@@ -91,6 +92,7 @@ public class Me_VIP extends BaseInitActivity {
 
         vip_Con = findViewById(R.id.vip_Con);
         return_Btn = findViewById(R.id.return_Btn);
+        return_Btn.setOnClickListener(new return_BtnClick());
         on_Btn = findViewById(R.id.on_Btn);
         on_Btn.setOnClickListener(new on_BtnClick());
         zun_Txt = findViewById(R.id.zun_Txt);
@@ -106,6 +108,12 @@ public class Me_VIP extends BaseInitActivity {
     }
 
 
+    private class return_BtnClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            finish();
+        }
+    }
     private class on_BtnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
@@ -184,7 +192,6 @@ public class Me_VIP extends BaseInitActivity {
 
 
     TextView coupon_type, coupon_Txt, payPrice_Txt, discount_Txt;
-
     private void showVip(final Context mContext, final View view, CardFragment_Bean.DataDTO cardData) {
         View contentView = View.inflate(mContext, R.layout.vip_top_popup, null);
         PopupWindow MorePopup = new BasePopupWindow(mContext);
@@ -234,7 +241,7 @@ public class Me_VIP extends BaseInitActivity {
             coupon_type.setText("暂未选择折扣券");
         } else {
             rules = cardData.getRules();
-            String dis = String.format("VIP%1$s折券", rules.intValue());
+            String dis = String.format("VIP%1$s折券", (int)(rules*10));
             coupon_type.setText(dis);
         }
         for (int i = 0; i < vipData.size(); i++) {
@@ -243,12 +250,20 @@ public class Me_VIP extends BaseInitActivity {
             TextView price_Txt = contentView.findViewById(R.id.price_Txt);
             TextView originalCost_Txt = contentView.findViewById(R.id.originalCost_Txt);
             TextView month_Txt = contentView.findViewById(R.id.month_Txt);
+            ImageView vip_lab = contentView.findViewById(R.id.vip_lab);
+            if (i==0){
+                vip_lab.setVisibility(View.VISIBLE);
+                vip_lab.setImageResource(R.mipmap.vip_tui_icon);
+            }else   if (i==3){
+                vip_lab.setVisibility(View.VISIBLE);
+                vip_lab.setImageResource(R.mipmap.vip_top_icon);
+            }
             originalCost_Txt.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             int priceLoop = vipData.get(i);
-            int originalCostLoop = (int) (priceLoop * rules / 10);
+            int originalCostLoop = (int) (priceLoop * rules);
             price_Txt.setText("￥" + priceLoop);
             originalCost_Txt.setText("￥" + priceLoop);
-            if (rules > 1) {
+            if (rules < 1) {
                 originalCost_Txt.setVisibility(View.VISIBLE);
                 price_Txt.setText("￥" + originalCostLoop);
             }
@@ -277,31 +292,32 @@ public class Me_VIP extends BaseInitActivity {
      * @param choicePrice 原价
      */
     private void setDisCountPrice(Double finalRules, int choicePrice, int tag) {
-        pay = choicePrice;
-        int price = choicePrice;//原价
-        int originalCost = (int) (price * finalRules / 10); //折后价
-        int priceSpread = price - originalCost;//差价
+        pay = (double) choicePrice;
+        Double price = (double) choicePrice;//原价
+        DecimalFormat df = new DecimalFormat("#.##");
+        Double originalCost = Double.parseDouble(df.format(price * finalRules)) ;; //折后价
+        Double priceSpread = Double.parseDouble(df.format(price - originalCost));//差价
         payPrice_Txt.setText("￥" + price);
-        if (finalRules > 1) {
+        if (finalRules < 1) {
             coupon_Txt.setText("-￥" + priceSpread);
             coupon_Txt.setVisibility(View.VISIBLE);
             discount_Txt.setText(String.format("VIP折扣券立减%1$s元", priceSpread + ""));
             discount_Txt.setVisibility(View.VISIBLE);
             payPrice_Txt.setText("￥" + originalCost);
             pay = originalCost;
-            if (tag == 0) {
-                month = 1;
-            } else if (tag == 1) {
-                month = 3;
-            } else if (tag == 2) {
-                month = 6;
-            } else if (tag == 3) {
-                month = 12;
-            }
+        }
+        if (tag == 0) {
+            month = 1;
+        } else if (tag == 1) {
+            month = 3;
+        } else if (tag == 2) {
+            month = 6;
+        } else if (tag == 3) {
+            month = 12;
         }
     }
 
-    private void payMore(final Context mContext, final View view, int pay) {
+    private void payMore(final Context mContext, final View view, Double pay) {
         View contentView = View.inflate(mContext, R.layout.choicepay, null);
         PopupWindow MorePopup = new BasePopupWindow(mContext);
         MorePopup.setWidth(RadioGroup.LayoutParams.MATCH_PARENT);
@@ -402,7 +418,6 @@ public class Me_VIP extends BaseInitActivity {
                 baseDataModel baseModel = new Gson().fromJson(result, baseDataModel.class);
                 String orderInfo = baseModel.getData();
                 if (TextUtils.equals(aliPayOrWechatPay, "wxPay")) {
-
                     wechatPay(orderInfo);
                 } else if (TextUtils.equals(aliPayOrWechatPay, "aliPay")) {
                     aliPay(orderInfo);
@@ -560,6 +575,7 @@ public class Me_VIP extends BaseInitActivity {
                 Log.e("get server pay params:", payOrder);
                 JSONObject json = new JSONObject(payOrder);
                 if (null != json && !json.has("retcode")) {
+//                if (null != json ) {
                     PayReq req = new PayReq();
                     //req.appId = "wxf8b4f85f3a794e77";  // 测试用appId
                     req.appId = json.getString("appid");

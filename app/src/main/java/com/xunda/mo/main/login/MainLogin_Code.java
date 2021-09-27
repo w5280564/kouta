@@ -74,28 +74,28 @@ public class MainLogin_Code extends BaseInitActivity {
     private String meid;
     private LoginViewModel loginViewModels;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_login_code);
-
-        StatusBar(this);
-        MIUISetStatusBarLightMode(this.getWindow(), true);
-        FlymeSetStatusBarLightMode(this.getWindow(), true);
-
-        equipmentName = android.os.Build.BRAND + "  " + android.os.Build.MODEL;
-        version = android.os.Build.VERSION.RELEASE;
-        meid = StaticData.getIMEI(this);
-        String smsCode;
-
-
-        LoginPhoneNume = getIntent().getStringExtra("LoginPhoneNume");
-        TitleName = getIntent().getStringExtra("TitleName");
-        userNum = getIntent().getStringExtra("userNum");
-        initTitle();
-        initView();
-        initReceiver();
-    }
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main_login_code);
+//
+//        StatusBar(this);
+//        MIUISetStatusBarLightMode(this.getWindow(), true);
+//        FlymeSetStatusBarLightMode(this.getWindow(), true);
+//
+//        equipmentName = android.os.Build.BRAND + "  " + android.os.Build.MODEL;
+//        version = android.os.Build.VERSION.RELEASE;
+//        meid = StaticData.getIMEI(this);
+//        String smsCode;
+//
+//
+//        LoginPhoneNume = getIntent().getStringExtra("LoginPhoneNume");
+//        TitleName = getIntent().getStringExtra("TitleName");
+//        userNum = getIntent().getStringExtra("userNum");
+//        initTitle();
+//        initView();
+//        initReceiver();
+//    }
 
     @Override
     protected int getLayoutId() {
@@ -132,7 +132,7 @@ public class MainLogin_Code extends BaseInitActivity {
     @Override
     protected void initData() {
         super.initData();
-        initReceiver();
+//        initReceiver();
         initViewModel();
     }
 
@@ -452,8 +452,8 @@ public class MainLogin_Code extends BaseInitActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mSMSBroadcastReceiver);
-        mSMSBroadcastReceiver = null;
+//        unregisterReceiver(mSMSBroadcastReceiver);
+//        mSMSBroadcastReceiver = null;
     }
 
     private class capt_viewChangeLister implements CaptchaInputView.TextChangeListener {

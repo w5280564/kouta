@@ -10,6 +10,9 @@ import com.xunda.mo.main.info.MyInfo;
 
 public class MyLevel {
     public static void setGrade(LinearLayout myLin, int Grade, Context mContext) {
+        if (myLin != null){
+            myLin.removeAllViews();
+        }
         MyInfo myInfo = new MyInfo(mContext);
         int grade = myInfo.getUserInfo().getGrade();
         if (Grade != 0) {

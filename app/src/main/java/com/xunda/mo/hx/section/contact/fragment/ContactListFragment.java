@@ -5,16 +5,19 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ConcatAdapter;
@@ -53,22 +56,20 @@ import com.xunda.mo.hx.section.contact.activity.GroupContactManageActivity;
 import com.xunda.mo.hx.section.contact.adapter.MyContactHead_ListAdapter;
 import com.xunda.mo.hx.section.contact.adapter.MyContactList_Adapter;
 import com.xunda.mo.hx.section.contact.viewmodels.ContactsViewModel;
-import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.search.SearchFriendsActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.MyApplication;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.constant.MyConstant;
-import com.xunda.mo.main.friend.Friend_Add;
-import com.xunda.mo.main.friend.Friend_NewFriends;
-import com.xunda.mo.main.friend.MyGroup;
+import com.xunda.mo.main.friend.activity.Friend_Add;
+import com.xunda.mo.main.friend.activity.Friend_NewFriends;
+import com.xunda.mo.main.friend.activity.MyGroup;
 import com.xunda.mo.model.adress_Model;
 import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
-import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
 
 import org.json.JSONException;
@@ -88,7 +89,8 @@ public class ContactListFragment extends EaseContactListFragment implements View
     private MyContactHead_ListAdapter myContact_Head_listAdapter;//头部适配器
     private ConcatAdapter concatAdapter;
     private EaseContactListLayout contactList;
-    private View more_img;
+    private Button more_img;
+    private TextView more_Txt;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -185,7 +187,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
     public void addMyHead() {
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_new_chat, R.mipmap.adress_head_friend, "新的朋友");
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_group_list, R.mipmap.adress_head_chat, getString(R.string.em_friends_group_chat));
-        myContact_Head_listAdapter.addItem(R.id.contact_header_item_creat_group, R.mipmap.adress_head_group, "好友分组");
+//        myContact_Head_listAdapter.addItem(R.id.contact_header_item_creat_group, R.mipmap.adress_head_group, "好友分组");
 //        myContact_Head_listAdapter.addItem(R.id.contact_header_item_head_file, R.mipmap.adress_head_file, "文件传输助手");
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_head_service, R.mipmap.adress_head_service, "Mo 客服");
     }
@@ -215,15 +217,16 @@ public class ContactListFragment extends EaseContactListFragment implements View
     private void addTitleView() {
         View head_view = LayoutInflater.from(mContext).inflate(R.layout.contactlist_head, null);
         llRoot.addView(head_view, 0);
+        ConstraintLayout more_Con = head_view.findViewById(R.id.more_Con);
+         more_Txt = head_view.findViewById(R.id.more_Txt);
         more_img = head_view.findViewById(R.id.more_img);
-        viewTouchDelegate.expandViewTouchDelegate(more_img, 50, 50, 50, 50);
-        more_img.setOnClickListener(new more_imgClick());
+        more_Con.setOnClickListener(new more_ConClick());
     }
 
-    private class more_imgClick extends NoDoubleClickListener {
+    private class more_ConClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            showMore(getActivity(), more_img, 0);
+            showMore(getActivity(), more_Txt, 0);
         }
     }
 
@@ -367,12 +370,8 @@ public class ContactListFragment extends EaseContactListFragment implements View
     private void showDeleteDialog(EaseUser user) {
         new SimpleDialogFragment.Builder((BaseActivity) mContext)
                 .setTitle(R.string.ease_friends_delete_contact_hint)
-                .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view) {
-                        mViewModel.deleteContact(user.getUsername());
-                    }
-                })
+                .setOnConfirmClickListener(
+                        view -> mViewModel.deleteContact(user.getUsername()))
                 .showCancelButton(true)
                 .show();
     }
@@ -492,17 +491,18 @@ public class ContactListFragment extends EaseContactListFragment implements View
         MorePopup.setHeight(RadioGroup.LayoutParams.WRAP_CONTENT);
         MorePopup.setTouchable(true);
         MorePopup.setContentView(contentView);
-//        MorePopup.showAtLocation(view, Gravity.TOP|Gravity.RIGHT, 20, 12);
-        MorePopup.showAsDropDown(view, 20, 12);
-        LinearLayout add_lin = contentView.findViewById(R.id.add_lin);
-        add_lin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, Friend_Add.class);
-                startActivity(intent);
-                MorePopup.dismiss();
-            }
+        MorePopup.showAsDropDown(view, 0, 0, Gravity.RIGHT);
+        ConstraintLayout add_Con = contentView.findViewById(R.id.add_Con);
+        ConstraintLayout dele_Con = contentView.findViewById(R.id.dele_Con);
+        add_Con.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, Friend_Add.class);
+            startActivity(intent);
+            MorePopup.dismiss();
         });
+        dele_Con.setOnClickListener(v -> {
+//            Friend_BlackMe.actionStart(mContext);
+        });
+
     }
 
     private void addContactList(adress_Model model) {

@@ -4,27 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.friend.activity.MyGroup">
+    tools:context=".main.friend.activity.Friend_BlackMeList"
+    tools:ignore="MissingConstraints"
+    android:background="@color/greyfive">
 
     <include
         android:id="@+id/title_Include"
         layout="@layout/base_titlebar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="wrap_content" />
 
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/group_Rv"
+    <com.xunda.mo.xrecycle.XRecyclerView
+        android:id="@+id/list_xrecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_Include"
-        tools:ignore="MissingConstraints" />
-
+        app:layout_constraintTop_toBottomOf="@id/title_Include"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

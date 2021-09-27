@@ -3,19 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="45dp"
     tools:ignore="MissingConstraints">
 
-
-
-
     <TextView
-        android:id="@+id/chat_Txt"
+        android:id="@+id/more_Txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="联系人"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:text="联系人"
         android:textColor="@color/blacktitle"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,17 +20,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/more_img"
-        android:layout_width="18dp"
-        android:layout_height="3dp"
-        android:layout_marginRight="15dp"
-        android:background="@mipmap/adress_head_more"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/more_Con"
+        android:layout_width="100dp"
+        android:layout_height="45dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <Button
+            android:id="@+id/more_img"
+            android:layout_width="18dp"
+            android:layout_height="3dp"
+            android:layout_marginEnd="15dp"
+            android:background="@mipmap/adress_head_more"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

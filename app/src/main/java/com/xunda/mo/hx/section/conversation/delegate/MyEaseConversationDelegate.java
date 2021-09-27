@@ -115,7 +115,8 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
 //        holder.avatar.setImageResource(defaultAvatar);
 //        holder.name.setText(showName);
 
-        Glide.with(context).load(HeadAvatar).error(defaultAvatar).into(holder.avatar);
+//        Glide.with(context).load(HeadAvatar).error(defaultAvatar).into(holder.avatar);
+        Glide.with(context).load(HeadAvatar).placeholder(defaultAvatar).into(holder.avatar);
         holder.name.setText(HeadName);
 
         EaseConversationInfoProvider infoProvider = EaseIM.getInstance().getConversationInfoProvider();

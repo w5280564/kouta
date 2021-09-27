@@ -1,4 +1,4 @@
-package com.xunda.mo.main.friend;
+package com.xunda.mo.main.friend.activity;
 
 import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;

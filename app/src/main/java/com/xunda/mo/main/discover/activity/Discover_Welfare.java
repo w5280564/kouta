@@ -4,11 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -29,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Discover_Welfare extends BaseInitActivity implements View.OnClickListener {
-
     private LinearLayout monday_Lin, tuesday_Lin, wednesday_Lin, thursday_Lin, friday_Lin, saturday_Lin;
     private ImageView monday_Img, tuesday_Img, wednesday_Img, thursday_Img, friday_Img, saturday_Img, sunday_Img;
     private TextView monday_Txt, tuesday_Txt, wednesday_Txt, thursday_Txt, friday_Txt, saturday_Txt, sunday_Txt, sundayCount_Txt, integral_Txt;
@@ -199,6 +202,8 @@ public class Discover_Welfare extends BaseInitActivity implements View.OnClickLi
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
+                Discover_Welfare_Bean  doModel = new Gson().fromJson(result, Discover_Welfare_Bean.class);
+                Toast.makeText(context,doModel.getMsg(),Toast.LENGTH_SHORT).show();
                 changeData();
             }
 
@@ -297,8 +302,23 @@ public class Discover_Welfare extends BaseInitActivity implements View.OnClickLi
             monday_img.setImageResource(R.mipmap.signin_success_icon);
             monday_txt.setTextColor(ContextCompat.getColor(this, R.color.yellowfive));
             monday_txt.setText("已签到");
-//            sundayCount_Txt.setTextColor(ContextCompat.getColor(this, R.color.yellowfive));
+            sundayCount_Txt.setTextColor(ContextCompat.getColor(this, R.color.yellowfive));
         }
+        String countStr = "7天";
+        int length = countStr.length() -1;
+        setName(countStr,length,sundayCount_Txt);
+    }
+
+    /**
+     * @param name       要显示的数据
+     * @param nameLength 要放大改颜色的字体长度
+     * @param viewName
+     */
+    private void setName(String name, int nameLength, TextView viewName) {
+        SpannableString spannableString = new SpannableString(name);
+        RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(2.2f);//字放大
+        spannableString.setSpan(relativeSizeSpan, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        viewName.setText(spannableString);
     }
 
 

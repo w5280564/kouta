@@ -14,7 +14,7 @@ import com.hyphenate.EMCallBack;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.main.baseView.NewLazyFragment;
-import com.xunda.mo.main.chat.activity.UserDetail_Set;
+import com.xunda.mo.main.me.activity.UserDetail_Set;
 import com.xunda.mo.main.login.MainLogin_Register;
 import com.xunda.mo.network.saveFile;
 

@@ -35,7 +35,9 @@ public class ChatRowVideoCall extends EaseChatRow {
         if (message.getChatType() == EMMessage.ChatType.GroupChat) {
             usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME, ""));
             String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
-            Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);
+            Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).into(userAvatarView);
         }
+
+
     }
 }
