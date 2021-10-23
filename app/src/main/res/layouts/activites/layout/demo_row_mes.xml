@@ -51,10 +51,10 @@
             android:id="@+id/content_Txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/chat_rowmes_bg"
             android:gravity="center"
             android:padding="2dp"
             android:textColor="@color/blacktitlettwo"
-            android:background="@drawable/chat_rowmes_bg"
             android:textSize="10sp"
             tools:text="你们已经成为好友，开始聊天吧" />
 

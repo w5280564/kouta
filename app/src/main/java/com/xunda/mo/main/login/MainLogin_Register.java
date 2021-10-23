@@ -4,8 +4,11 @@ import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.SpannableStringBuilder;
@@ -20,15 +23,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.xunda.mo.R;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.permission.PermissionManager;
 import com.xunda.mo.staticdata.xUtils3Http;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainLogin_Register extends AppCompatActivity {
 
     private Button login_Btn, regster_Btn;
+    private final static int REQUEST_READ_PHONE_STATE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,17 +59,21 @@ public class MainLogin_Register extends AppCompatActivity {
         }
 
         initView();
+        initData();
 
         if (getFirstInit()) {
             startDialog();
         }
     }
 
+    private void initData() {
+
+    }
+
+
     private void initView() {
         login_Btn = findViewById(R.id.login_Btn);
         regster_Btn = findViewById(R.id.regster_Btn);
-
-
         login_Btn.setOnClickListener(new login_Btnlister());
         regster_Btn.setOnClickListener(new regster_BtnOnClick());
     }
@@ -69,9 +82,7 @@ public class MainLogin_Register extends AppCompatActivity {
     private class login_Btnlister extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            Intent intent = new Intent(MainLogin_Register.this, MainLogin_OldUser_Psd.class);
-            startActivity(intent);
-
+            startLocation();
         }
     }
 
@@ -82,6 +93,7 @@ public class MainLogin_Register extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
     private void startDialog() {
         final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         View view = LayoutInflater.from(MainLogin_Register.this).inflate(R.layout.dialog_initmate, null);
@@ -103,8 +115,8 @@ public class MainLogin_Register extends AppCompatActivity {
             @Override
             public void onClick(@NonNull View widget) {
 //                String  url =  "file:///android_asset/privacy.html";
-                String url = xUtils3Http.BASE_URL+"service.html";
-                MainRegister_Agreement.actionStart(MainLogin_Register.this,url);
+                String url = xUtils3Http.BASE_URL + "service.html";
+                MainRegister_Agreement.actionStart(MainLogin_Register.this, url);
 //                Toast.makeText(MainLogin_Register.this, "《隐私政策》", Toast.LENGTH_SHORT).show();
             }
 
@@ -120,8 +132,8 @@ public class MainLogin_Register extends AppCompatActivity {
             @Override
             public void onClick(@NonNull View widget) {
 //                String  url =  "file:///android_asset/service.html";
-                String url = xUtils3Http.BASE_URL+"privacy.html";
-                MainRegister_Agreement.actionStart(MainLogin_Register.this,url);
+                String url = xUtils3Http.BASE_URL + "privacy.html";
+                MainRegister_Agreement.actionStart(MainLogin_Register.this, url);
 //                Toast.makeText(MainLogin_Register.this, "《用户协议》", Toast.LENGTH_SHORT).show();
             }
 
@@ -158,6 +170,93 @@ public class MainLogin_Register extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         return preferences.getBoolean("launch", true);
     }
+
+    public void startLocation() {
+
+
+
+        //监听授权
+        List<String> permissionList = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(MainLogin_Register.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {//电话权限 是获取手机状态（包括手机号码、IMEI、IMSI权限等
+            permissionList.add(Manifest.permission.READ_PHONE_STATE);
+        }
+        if (!permissionList.isEmpty()) {
+            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+//            ActivityCompat.requestPermissions(MainLogin_Register.this, permissions, REQUEST_READ_PHONE_STATE);
+            String tip = "允许使用电话权限";
+            PermissionManager.requestPermission(MainLogin_Register.this,tip,REQUEST_READ_PHONE_STATE,permissions);
+        } else {
+            startActivity();
+        }
+    }
+
+    /*高版本手动获取权限*/
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_READ_PHONE_STATE) {
+            if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                //允许权限
+                startActivity();
+            } else {
+                //2次拒绝了权限 不再询问
+//                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
+//                    Toast.makeText(this, "您阻止了app使用您的电话权限，请手动打开电话权限", Toast.LENGTH_SHORT).show();
+//                    startActivity(getAppDetailSettingIntent());
+                    startActivity();
+//                }
+            }
+        }
+    }
+
+    private void startActivity() {
+        Intent intent = new Intent(MainLogin_Register.this, MainLogin_OldUser_Psd.class);
+        startActivity(intent);
+    }
+
+    /**
+     * 获取应用详情页面intent（如果找不到要跳转的界面，也可以先把用户引导到系统设置页面）
+     * @return
+     */
+    private Intent getAppDetailSettingIntent() {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+        localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+        return localIntent;
+    }
+
+
+
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        if (requestCode ==MY_LBS_PERMISSION_REQUEST_CODE) {
+//            boolean isAllGranted =true;
+//            for (int grant : grantResults) {
+//                if (grant != PackageManager.PERMISSION_GRANTED) {
+//                    isAllGranted =false;
+//                    break;
+//                }
+//            }
+//            if (isAllGranted) {
+//                Log.e("TAG", "onRequestPermissionsResult 同意");
+//            }else {
+//                List notAsk =new ArrayList<>();
+//                for (String permission : permissions) {
+//                    Log.e("TAG", "onRequestPermissionsResult - 循环 -");
+//                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission) && ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+//                        notAsk.add(permission);
+//                    }
+//                }
+//                if (notAsk.size() >0) {//拒绝不再提醒
+//                    Log.e("TAG", "onRequestPermissionsResult 拒绝不再提醒");
+//                }else {
+//                    Log.e("TAG", "onRequestPermissionsResult 本次拒绝");
+//                }
+//            }
+//        }
+//    }
 
 
 }

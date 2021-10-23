@@ -15,13 +15,17 @@ public class FireTimerTextView extends TextView {
     public FireTimerTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
 //        getText().toString().length();
-        initTimer();
+        initTimer(10000);
+    }
+
+    public void setTimer(int millis){
+        initTimer(millis);
     }
 
 
 
-    private void initTimer() {
-        timer = new CountDownTimer(3000, 1000) {
+    private void initTimer(int millis) {
+        timer = new CountDownTimer(10000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 //                setText(millisUntilFinished / 1000 + "s");

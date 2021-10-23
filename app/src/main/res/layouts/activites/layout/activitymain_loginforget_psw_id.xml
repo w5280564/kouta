@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="12.5dp"
         android:layout_marginTop="60dp"
-        android:text="请输入您的专属id"
+        android:text="请输入您的专属ID"
         android:textColor="@color/blacktitle"
         android:textSize="18sp" />
 
@@ -29,7 +29,7 @@
         android:layout_below="@id/forget_txt"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:text="在验证之前，您需要提供您的id信息"
+        android:text="在验证之前，您需要提供您的ID信息"
         android:textColor="@color/blacktitle"
         android:textSize="12sp" />
 
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/login_phone"
             android:background="@null"
-            android:hint="请输入您的Mo id"
+            android:hint="请输入您的Mo ID"
             android:inputType="number"
             android:lines="1"
             android:textColor="@color/greytwo"

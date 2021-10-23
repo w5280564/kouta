@@ -18,13 +18,15 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
-import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.easeui.manager.EaseSystemMsgManager;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
+import com.xunda.mo.hx.common.constant.DemoConstant;
+import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
+import com.xunda.mo.hx.common.interfaceOrImplement.DemoEmCallBack;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
@@ -65,6 +67,8 @@ public class Friend_NewFriends extends BaseInitActivity {
         initTitle();
         list_xrecycler = findViewById(R.id.list_xrecycler);
         list_xrecycler.setLoadingListener(new listLoadingLister());
+
+        makeAllMsgRead();//系统消息设置为已读
     }
 
     private int PageIndex;
@@ -163,7 +167,7 @@ public class Friend_NewFriends extends BaseInitActivity {
                 String agreeType = "1";
                 String friendApplyId = baseModel.get(position).getFriendApplyId();
                 String hXUserName = baseModel.get(position).getHxUserName();
-                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId, hXUserName,position);
+                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId, hXUserName, position);
             }
 
             @Override
@@ -171,7 +175,7 @@ public class Friend_NewFriends extends BaseInitActivity {
                 String agreeType = "2";
                 String friendApplyId = baseModel.get(position).getFriendApplyId();
                 String hXUserName = baseModel.get(position).getHxUserName();
-                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId, hXUserName,position);
+                AddRemoveMethod(Friend_NewFriends.this, saveFile.Friend_Agree_Url, agreeType, friendApplyId, hXUserName, position);
             }
         });
     }
@@ -280,40 +284,30 @@ public class Friend_NewFriends extends BaseInitActivity {
      * @param agreeType     1通过2拒绝
      * @param friendApplyId 好友申请ID
      */
-    public void AddRemoveMethod(Context context, String baseUrl, String agreeType, String friendApplyId, String hXUserName,int position) {
+    public void AddRemoveMethod(Context context, String baseUrl, String agreeType, String friendApplyId, String hXUserName, int position) {
         Map<String, Object> map = new HashMap<>();
         map.put("agreeType", agreeType);
         map.put("friendApplyId", friendApplyId);
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                try {
-                    if (TextUtils.equals(agreeType, "1")) {
+                if (TextUtils.equals(agreeType, "1")) {
 //                        EMClient.getInstance().contactManager().acceptInvitation(hXUserName);
-                        DemoHelper.getInstance().getContactManager().asyncAcceptInvitation(hXUserName, new EMCallBack() {
-                            @Override
-                            public void onSuccess() {
-                                singleSendMes(hXUserName,baseModel,position);
-                            }
+                    DemoHelper.getInstance().getContactManager().asyncAcceptInvitation(hXUserName, new DemoEmCallBack() {
+                        @Override
+                        public void onSuccess() {
+                            singleSendMes(hXUserName, baseModel, position);
+                            Toast.makeText(mContext, "已通过", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    EMClient.getInstance().contactManager().asyncDeclineInvitation(hXUserName, new DemoEmCallBack() {
+                        @Override
+                        public void onSuccess() {
 
-                            @Override
-                            public void onError(int code, String error) {
-
-                            }
-
-                            @Override
-                            public void onProgress(int progress, String status) {
-
-                            }
-                        });
-
-                        Toast.makeText(mContext, "已通过", Toast.LENGTH_SHORT).show();
-                    } else {
-                        EMClient.getInstance().contactManager().declineInvitation(hXUserName);
-                        Toast.makeText(mContext, "已拒绝", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
+                        }
+                    });
+                    Toast.makeText(mContext, "已拒绝", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -347,7 +341,7 @@ public class Friend_NewFriends extends BaseInitActivity {
 
 
     //单人聊天发送扩展字段
-    private void singleSendMes(String hxUserName,List<NewFriend_Bean.DataDTO.ListDTO> listData,int position) {
+    private void singleSendMes(String hxUserName, List<NewFriend_Bean.DataDTO.ListDTO> listData, int position) {
         MyInfo myInfo = new MyInfo(mContext);
         NewFriend_Bean.DataDTO.ListDTO oneData = listData.get(position);
         EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
@@ -366,6 +360,19 @@ public class Friend_NewFriends extends BaseInitActivity {
         message.setAttribute(MyConstant.TO_LH, oneData.getLightStatus());
         message.setAttribute(MyConstant.TO_VIP, oneData.getVipType());
         DemoHelper.getInstance().getChatManager().sendMessage(message);
+    }
+
+    //查看过新朋友 把好友添加系统消息删除。 添加信息就会是空
+    public void makeAllMsgRead() {
+        List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
+        if (allMessages != null && !allMessages.isEmpty()) {
+            for (EMMessage message : allMessages) {
+                Map<String, Object> ext = message.ext();
+                if (ext != null && ext.get(DemoConstant.SYSTEM_MESSAGE_STATUS).equals(InviteMessageStatus.BEINVITEED.name())) {
+                    EaseSystemMsgManager.getInstance().removeMessage(message);
+                }
+            }
+        }
     }
 
 

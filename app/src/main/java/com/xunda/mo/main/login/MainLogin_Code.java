@@ -74,6 +74,21 @@ public class MainLogin_Code extends BaseInitActivity {
     private String meid;
     private LoginViewModel loginViewModels;
 
+    public static void actionStart(Context context, String titleName, String loginPhone) {
+        Intent intent = new Intent(context, MainLogin_Code.class);
+        intent.putExtra("TitleName", titleName);
+        intent.putExtra("LoginPhoneNume", loginPhone);
+        context.startActivity(intent);
+    }
+
+    public static void actionStart(Context context, String titleName, String loginPhone, String userNum) {
+        Intent intent = new Intent(context, MainLogin_Code.class);
+        intent.putExtra("TitleName", titleName);
+        intent.putExtra("LoginPhoneNume", loginPhone);
+        intent.putExtra("userNum", userNum);
+        context.startActivity(intent);
+    }
+
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
@@ -122,6 +137,7 @@ public class MainLogin_Code extends BaseInitActivity {
         userNum = intent.getStringExtra("userNum");
     }
 
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
@@ -153,7 +169,8 @@ public class MainLogin_Code extends BaseInitActivity {
         }));
     }
 
-    private boolean isShow=false;
+    private boolean isShow = false;
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -270,9 +287,7 @@ public class MainLogin_Code extends BaseInitActivity {
     public class nonecode_txtOnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            Intent intent = new Intent(MainLogin_Code.this, MainLogin_ForgetPsw_question.class);
-            intent.putExtra("phoneNum", LoginPhoneNume);
-            startActivity(intent);
+            MainLogin_ForgetPsw_Question.actionStart(mContext, LoginPhoneNume);
         }
     }
 
@@ -323,9 +338,11 @@ public class MainLogin_Code extends BaseInitActivity {
         xUtils3Http.get(MainLogin_Code.this, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                Intent intent = new Intent(MainLogin_Code.this, MainLogin_ForgetPsw_question.class);
-                intent.putExtra("phoneNum", LoginPhoneNume);
-                startActivity(intent);
+                if (TitleName.equals("忘记密码")) {
+                    Intent intent = new Intent(MainLogin_Code.this, MainLogin_ForgetPsw_SetPsw.class);
+                    intent.putExtra("phoneNum",LoginPhoneNume);
+                    startActivity(intent);
+                }
             }
 
             @Override
@@ -472,7 +489,7 @@ public class MainLogin_Code extends BaseInitActivity {
                     //忘记密码
                     type = "3";
                     String Code = capt_view.getText().toString();
-                    ForgetCodeMethod(saveFile.User_checkPhone_Url, Code, type);
+                    ForgetCodeMethod(saveFile.User_checkChangeCode_Url, Code, type);
                 }
 
             }
@@ -503,7 +520,7 @@ public class MainLogin_Code extends BaseInitActivity {
         mSwipeCaptchaView.setOnCaptchaMatchCallback(new SwipeCaptchaView.OnCaptchaMatchCallback() {
             @Override
             public void matchSuccess(SwipeCaptchaView swipeCaptchaView) {
-                Toast.makeText(mContext, "验证成功", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "验证成功", Toast.LENGTH_SHORT).show();
                 mSeekBar.setEnabled(false);
                 Data();
                 MorePopup.dismiss();

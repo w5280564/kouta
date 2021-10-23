@@ -6,6 +6,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,25 +21,35 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMUserInfo;
 import com.hyphenate.easecallkit.base.EaseCallType;
+import com.hyphenate.easecallkit.base.EaseCallUserInfo;
+import com.hyphenate.easecallkit.livedatas.EaseLiveDataBus;
 import com.hyphenate.easecallkit.ui.EaseMultipleVideoActivity;
 import com.hyphenate.easecallkit.ui.EaseVideoCallActivity;
+import com.hyphenate.easecallkit.utils.EaseCallKitUtils;
 import com.hyphenate.easeui.EaseIM;
 import com.hyphenate.easeui.domain.EaseAvatarOptions;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.manager.EaseSystemMsgManager;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.ui.base.EaseBaseFragment;
 import com.hyphenate.util.EMLog;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
+import com.xunda.mo.hx.common.db.DemoDbHelper;
+import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.common.manager.HMSPushHelper;
 import com.xunda.mo.hx.common.permission.PermissionsManager;
@@ -50,14 +61,26 @@ import com.xunda.mo.hx.section.chat.ChatPresenter;
 import com.xunda.mo.hx.section.contact.fragment.ContactListFragment;
 import com.xunda.mo.hx.section.contact.viewmodels.ContactsViewModel;
 import com.xunda.mo.hx.section.conversation.ConversationListFragment;
+import com.xunda.mo.main.baseView.MyApplication;
+import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.discover.DiscoverFragment;
 import com.xunda.mo.main.me.MeFragment;
 import com.xunda.mo.main.viewmodels.MainViewModel;
+import com.xunda.mo.model.adress_Model;
+import com.xunda.mo.network.saveFile;
+import com.xunda.mo.pinyin.PinyinUtils;
+import com.xunda.mo.staticdata.xUtils3Http;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 
 public class MainActivity extends BaseInitActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -119,17 +142,17 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         navView.setItemIconTintList(null);
         // 可以动态显示隐藏相应tab
         //navView.getMenu().findItem(R.id.em_main_nav_me).setVisible(false);
-        switchToFriends();
+//        switchToFriends();
         switchToHome();
         checkIfShowSavedFragment(savedInstanceState);
         addTabBadge();
-
 
         //设置头像配置属性
         EaseAvatarOptions avatarOptions = new EaseAvatarOptions();
         //设置头像形状为圆形，1代表圆形，2代表方形
         avatarOptions.setAvatarShape(2);
         EaseIM.getInstance().setAvatarOptions(avatarOptions);
+
     }
 
     @Override
@@ -138,18 +161,16 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         navView.setOnNavigationItemSelectedListener(this);
     }
 
+
     @Override
     protected void initData() {
         super.initData();
         initViewModel();
 //        requestPermissions();
-        startLocation();
-        checkUnreadMsg();
+//        startLocation();
         ChatPresenter.getInstance().init();
-
         // 获取华为 HMS 推送 token
         HMSPushHelper.getInstance().getHMSToken(this);
-
         //判断是否为来电推送
         if (PushUtils.isRtcCall) {
             if (EaseCallType.getfrom(PushUtils.type) != EaseCallType.CONFERENCE_CALL) {
@@ -182,6 +203,27 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
             }
         });
 
+
+        viewModel.messageChangeObservable().with(DemoConstant.CONTACT_CHANGE, EaseEvent.class).observe(this, new Observer<EaseEvent>() {
+            @Override
+            public void onChanged(EaseEvent easeEvent) {
+                if (easeEvent == null) {
+                    return;
+                }
+            }
+        });
+
+        viewModel.messageChangeObservable().with(MyConstant.ConstantCount, int.class).observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer count) {
+                if (count > 0) {
+                    mTvMainFriendsMsg.setVisibility(View.VISIBLE);
+                    mTvMainFriendsMsg.setText(count + "");
+                }
+            }
+        });
+
+        setFriendAdd();
         //加载联系人
         ContactsViewModel contactsViewModel = new ViewModelProvider(mContext).get(ContactsViewModel.class);
         contactsViewModel.loadContactList(true);
@@ -195,6 +237,25 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         viewModel.messageChangeObservable().with(DemoConstant.CONTACT_DELETE, EaseEvent.class).observe(this, this::checkUnReadMsg);
         viewModel.messageChangeObservable().with(DemoConstant.CONTACT_CHANGE, EaseEvent.class).observe(this, this::checkUnReadMsg);
 
+        addressData(MainActivity.this, saveFile.User_Friendlist_Url, "0");
+    }
+
+    //添加好友通知
+    private void setFriendAdd() {
+        List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
+        int friendCount = 0;
+        if (allMessages != null && !allMessages.isEmpty()) {
+            for (EMMessage message : allMessages) {
+                Map<String, Object> ext = message.ext();
+                if (ext != null && ext.get(DemoConstant.SYSTEM_MESSAGE_STATUS).equals(InviteMessageStatus.BEINVITEED.name())) {//"BEINVITEED"
+                    friendCount += 1;
+                }
+            }
+            if (friendCount != 0) {
+                mTvMainFriendsMsg.setVisibility(View.VISIBLE);
+                mTvMainFriendsMsg.setText(friendCount + "");
+            }
+        }
     }
 
     private void checkUnReadMsg(EaseEvent event) {
@@ -388,7 +449,13 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     @Override
     protected void onResume() {
         super.onResume();
+        checkUnreadMsg();
         DemoHelper.getInstance().showNotificationPermissionDialog();
+        if (mIsSupportedBade) {
+            int unReadMessCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
+            ShortcutBadger.applyCount(mContext, unReadMessCount); //for 1.1.4+
+            setBadgeNum(unReadMessCount);
+        }
     }
 
     @Override
@@ -402,26 +469,29 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     public void startLocation() {
         //监听授权
         List<String> permissionList = new ArrayList<>();
+//        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
+//                permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {//定位 高德
+//            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+//        }
+//        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
+//                permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {//录音权限 发送语音
+//            permissionList.add(Manifest.permission.RECORD_AUDIO);
+//        }
+//
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
-                permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {//定位
-            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
-                permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {//录音权限
-            permissionList.add(Manifest.permission.RECORD_AUDIO);
-        }
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
-                permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {//查看图
+                permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {//电话权限 是获取手机状态（包括手机号码、IMEI、IMSI权限等
             permissionList.add(Manifest.permission.READ_PHONE_STATE);
         }
+
 //        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
 //                permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {//文件
 //            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 //        }
-                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
-                permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {//摄像与录制
-            permissionList.add(Manifest.permission.CAMERA);
-        }
+
+//        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
+//                permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {//摄像与录制
+//            permissionList.add(Manifest.permission.CAMERA);
+//        }
 
 
         if (!permissionList.isEmpty()) {
@@ -432,6 +502,87 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
             // requestLocation();
         }
     }
+
+
+    boolean mIsSupportedBade = true;
+
+    /** set badge number*/
+    public void setBadgeNum(int num) {
+        try {
+            Bundle bunlde = new Bundle();
+            bunlde.putString("package", "com.xunda.mo"); // com.test.badge is your package name
+            bunlde.putString("class", "com.xunda.mo.main.MainActivity"); // com.test. badge.MainActivity is your apk main activity
+            bunlde.putInt("badgenumber", num);
+            this.getContentResolver().call(Uri.parse("content://com.huawei.android.launcher.settings/badge/"), "change_badge", null, bunlde);
+        } catch (Exception e) {
+            mIsSupportedBade = false;
+        }
+    }
+
+    //联系人列表
+    public void addressData(final Context context, String baseUrl, String projectId) {
+        Map<String, Object> map = new HashMap<>();
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                adress_Model model = new Gson().fromJson(result, adress_Model.class);
+                addContactList(model);
+            }
+
+            @Override
+            public void failed(String... args) {
+            }
+        });
+
+    }
+
+    private void addContactList(adress_Model model) {
+        List<EaseUser> data = new ArrayList<>();
+        for (int i = 0; i < model.getData().size(); i++) {
+            adress_Model.DataDTO dataDTO = model.getData().get(i);
+            EaseUser user = new EaseUser();
+            user.setUsername(dataDTO.getHxUserName());
+            user.setNickname(dataDTO.getNickname());
+            // 正则表达式，判断首字母是否是英文字母
+            String pinyin = PinyinUtils.getPingYin(dataDTO.getNickname());
+            String sortString = pinyin.substring(0, 1).toUpperCase();
+            if (sortString.matches("[A-Z]")) {
+//                                user.setInitialLetter(PinyinUtils.getFirstSpell(dataDTO.getNickName()));
+                user.setInitialLetter(sortString);
+            } else {
+                user.setInitialLetter("#");
+            }
+            user.setAvatar(dataDTO.getHeadImg());
+            user.setBirth("");
+            user.setContact(0);//朋友属性 4是没有预设置
+            user.setEmail("");
+            user.setGender(0);
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put(MyConstant.LIGHT_STATUS, dataDTO.getLightStatus());
+                obj.put(MyConstant.VIP_TYPE, dataDTO.getVipType());
+                obj.put(MyConstant.USER_NUM, dataDTO.getUserNum());
+                obj.put(MyConstant.ONLINE_STATUS, dataDTO.getOnlineStatus());
+                obj.put(MyConstant.USER_ID, dataDTO.getUserId());
+                obj.put(MyConstant.REMARK_NAME, dataDTO.getRemarkName());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            user.setExt(obj.toString());
+            data.add(user);
+            //通知callKit更新头像昵称
+            EaseCallUserInfo info = new EaseCallUserInfo(dataDTO.getNickname(), dataDTO.getHeadImg());
+            info.setUserId(info.getUserId());
+            EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
+        }
+        //先清空本地数据库
+        DemoDbHelper.getInstance(MyApplication.getInstance()).getUserDao().clearUsers();
+        //更新本地数据库信息
+        DemoHelper.getInstance().updateUserList(data);
+        //更新本地联系人列表
+        DemoHelper.getInstance().updateContactList();
+    }
+
 
 
 }

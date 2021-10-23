@@ -17,34 +17,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cons_Mes"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/timestamp">
 
         <com.hyphenate.easeui.widget.EaseImageView
             android:id="@+id/iv_userhead"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
             android:layout_marginStart="18dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ease_default_avatar" />
+            android:src="@drawable/mo_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <RelativeLayout
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_userid"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_chat_activity"
-            android:layout_marginTop="20dp"
-            android:layout_toRightOf="@id/iv_userhead"
+            android:layout_marginStart="@dimen/margin_chat_activity"
             android:background="@drawable/ease_chat_bubble_receive_bg"
             android:minWidth="30dp"
-            android:padding="8dp">
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_userhead"
+            app:layout_constraintTop_toBottomOf="@id/tv_userid">
 
             <com.xunda.mo.staticdata.FireTimerTextView
                 android:id="@+id/tv_chatcontent"
@@ -61,15 +61,14 @@
                 tools:text="环信" />
         </RelativeLayout>
 
-
         <ImageView
+            android:id="@+id/fi_icon"
             android:layout_width="13dp"
             android:layout_height="17dp"
-            android:layout_above="@id/bubble"
-            android:layout_alignEnd="@id/bubble"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="-17dp"
-            android:src="@mipmap/fire_icon" />
+            android:src="@mipmap/fire_icon"
+            app:layout_constraintEnd_toEndOf="@id/bubble"
+            app:layout_constraintTop_toTopOf="@id/bubble" />
+
 
         <TextView
             android:id="@+id/tv_userid"
@@ -77,23 +76,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/chat_nick_margin_left"
-            android:layout_toRightOf="@id/iv_userhead"
+            app:layout_constraintLeft_toRightOf="@id/iv_userhead"
+            app:layout_constraintTop_toTopOf="parent"
             android:textSize="@dimen/chat_nick_text_size"
-            android:visibility="gone"
-            tools:text="som" />
-    </RelativeLayout>
+            tools:text="som"
+            android:visibility="gone"/>
 
-    <ImageView
-        android:id="@+id/fire_Img"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@mipmap/fire_bg"
-        android:layout_marginStart="18dp"
-        android:background="@color/greyfive"
-        android:visibility="visible"/>
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/mes_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="bubble,tv_chatcontent,fi_icon"
+            android:visibility="gone"
+            tools:ignore="NotSibling" />
+
+
+        <ImageView
+            android:id="@+id/fire_Img"
+            android:layout_width="92dp"
+            android:layout_height="33dp"
+            android:src="@mipmap/fire_bg"
+            app:layout_constraintBottom_toBottomOf="@+id/cons_Mes"
+            app:layout_constraintEnd_toEndOf="@+id/cons_Mes"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@+id/iv_userhead"
+            app:layout_constraintTop_toTopOf="@+id/cons_Mes"
+            android:visibility="visible"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,8 +11,10 @@ import androidx.core.content.ContextCompat;
 
 import com.xunda.mo.R;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.info.MyInfo;
+import com.xunda.mo.main.me.activity.Me_VIP;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 
@@ -70,8 +72,22 @@ public class Friend_BlackMe extends BaseInitActivity {
             if (myInfo.getUserInfo().getVipType() == 1){
                 Friend_BlackMeList.actionStart(mContext);
             }else {
-
+                changeVip();
             }
         }
     }
+
+    //通知开通VIP
+    private void changeVip() {
+        new SimpleDialogFragment.Builder(mContext)
+                .setTitle("提示通知")
+                .showContent(true)
+                .setContent("该功能为会员特权功能，请开通会员后使用")
+                .setOnConfirmClickListener(view -> {
+                    Me_VIP.actionStart(mContext);
+                })
+                .showCancelButton(true)
+                .show();
+    }
+
 }

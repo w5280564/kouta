@@ -4,7 +4,6 @@ import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -49,7 +48,7 @@ public class MainLogin_ForgetPsw_ID extends AppCompatActivity {
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         return_Btn.setVisibility(View.VISIBLE);
         TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
-        cententTxt.setText("忘记密码");
+        cententTxt.setText("输入ID信息");
         right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.GONE);
 
@@ -89,9 +88,10 @@ public class MainLogin_ForgetPsw_ID extends AppCompatActivity {
                 Toast.makeText(MainLogin_ForgetPsw_ID.this, "请输入ID", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Intent intent = new Intent(MainLogin_ForgetPsw_ID.this, MainLogin_ForgetPsw.class);
-            intent.putExtra("LoginID", id_edit.getText().toString());
-            startActivity(intent);
+            String titleName = "忘记密码";
+            String LoginID = id_edit.getText().toString();
+            String type = "1";
+            MainLogin_ForgetPsw_OrQuestion.actionStart(MainLogin_ForgetPsw_ID.this, titleName,"0",LoginID,type);
         }
     }
 

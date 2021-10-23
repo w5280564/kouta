@@ -38,6 +38,8 @@ public class MyGroupUpdateMesAdapterDelegate extends EaseMessageAdapterDelegate<
                 case MyConstant.MESSAGE_TYPE_DOUBLE_RECALL:
                 case MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL:
                 case MyConstant.APPLY:
+                case MyConstant.MESSAGE_GROUP_Message:
+                case MyConstant.Message_Recall:
                     return true;
             }
 
@@ -45,10 +47,15 @@ public class MyGroupUpdateMesAdapterDelegate extends EaseMessageAdapterDelegate<
         return false;
     }
 
+
+
     @Override
-    protected EaseChatRow getEaseChatRow(ViewGroup parent, boolean isSender) {
+    public EaseChatRow getEaseChatRow(ViewGroup parent, boolean isSender) {
         return new GroupRowUpdateMes(parent.getContext(), isSender);
     }
+
+
+
 
     @Override
     protected EaseChatRowViewHolder createViewHolder(View view, MessageListItemClickListener itemClickListener) {

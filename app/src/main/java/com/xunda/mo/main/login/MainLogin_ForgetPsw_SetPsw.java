@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -21,18 +22,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.google.gson.Gson;
 import com.xunda.mo.R;
-import com.xunda.mo.model.Main_Register_Model;
+import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainLogin_ForgetPsw_SetPsw extends AppCompatActivity {
 
@@ -84,12 +82,13 @@ public class MainLogin_ForgetPsw_SetPsw extends AppCompatActivity {
     private void initView() {
         num_Btn = findViewById(R.id.num_Btn);
         psw_edit = findViewById(R.id.psw_edit);
-        choice_check = findViewById(R.id.choice_check);
-        choice_check.setChecked(false);
         pswagin_edit = findViewById(R.id.pswagin_edit);
         StaticData.changeShapColor(num_Btn, ContextCompat.getColor(this, R.color.yellow));
-        choice_check.setOnCheckedChangeListener(new choice_checkOnChackedLister());
         num_Btn.setOnClickListener(new num_BtnOnClickLister());
+        choice_check = findViewById(R.id.choice_check);
+        viewTouchDelegate.expandViewTouchDelegate(choice_check,50,50,50,50);
+        choice_check.setChecked(false);
+        choice_check.setOnCheckedChangeListener(new choice_checkOnChackedLister());
     }
 
 
@@ -111,60 +110,37 @@ public class MainLogin_ForgetPsw_SetPsw extends AppCompatActivity {
     private class num_BtnOnClickLister extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            String psw = psw_edit.getText().toString().trim();
-            String pswAgin = pswagin_edit.getText().toString().trim();
-            if (StaticData.isPasswordForm(psw) && StaticData.isPasswordForm(pswAgin) && pswAgin.equals(psw)) {
-
-
-            } else {
-                Toast.makeText(MainLogin_ForgetPsw_SetPsw.this, "密码必须包含字母和数字，长度至少8位", Toast.LENGTH_SHORT).show();
+            String newPsw = psw_edit.getText().toString().trim();
+            String pswAgain = pswagin_edit.getText().toString().trim();
+            if(!StaticData.isPasswordForm(newPsw) || !StaticData.isPasswordForm(pswAgain)){
+                Toast.makeText(MainLogin_ForgetPsw_SetPsw.this,"密码不合规",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!TextUtils.equals(pswAgain,newPsw)){
+                Toast.makeText(MainLogin_ForgetPsw_SetPsw.this,"新密码不一致",Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            ChangeMethod(MainLogin_ForgetPsw_SetPsw.this, saveFile.User_forgetPassword_Url);
         }
     }
 
-    //
     public void ChangeMethod(Context context, final String baseUrl) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("phoneNum", phoneNum);
-            obj.put("password", pswagin_edit.getText().toString().trim());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestParams params = new RequestParams(baseUrl);
-        params.setAsJsonContent(true);
-        params.setBodyContent(obj.toString());
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("phoneNum", phoneNum);
+        map.put("password", pswagin_edit.getText().toString().trim());
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
-            public void onSuccess(String resultString) {
-                if (resultString != null) {
-                    Main_Register_Model baseModel = new Gson().fromJson(resultString, Main_Register_Model.class);
-                    if (baseModel.getCode() == 200) {
-                        Intent intent = new Intent(MainLogin_ForgetPsw_SetPsw.this, MainLogin_OldUser_Psd.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(context, baseModel.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(context, "数据获取失败", Toast.LENGTH_SHORT).show();
-                }
-//                    JPushInterface.resumePush(Man_Login.this);//注册
-//                    JPushInterface.setAliasAndTags(Man_Login.this,JsonGet.getReturnValue(resultString, "userid"),null);
+            public void success(String result) {
+                Toast.makeText(context,"设置成功请重新登录",Toast.LENGTH_SHORT).show();
+                //回到账号登录页面
+                Intent intent = new Intent(MainLogin_ForgetPsw_SetPsw.this, MainLogin_OldUser_Psd.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-            }
-
-            @Override
-            public void onFinished() {
+            public void failed(String... args) {
 
             }
         });

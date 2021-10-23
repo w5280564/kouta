@@ -262,7 +262,7 @@ public class Discover_Welfare extends BaseInitActivity implements View.OnClickLi
             monday_txt.setText("今天");
             todaySign(monday_lin, monday_img, monday_txt, signIn);
             monday_lin.setEnabled(true);
-        } else if (todaySign == 6) {
+        } else if (isWeekDay == 6) {
             monday_lin.setEnabled(true);
             sundaySign(monday_lin, monday_img, monday_txt, signIn);
         }

@@ -4,4 +4,5 @@
 
     <item name="extend_item_two_withdraw" type="id"/>
     <item name="chat_complaint" type="id"/>
+    <item name="attach_item_horn" type="id"/>
 </resources>

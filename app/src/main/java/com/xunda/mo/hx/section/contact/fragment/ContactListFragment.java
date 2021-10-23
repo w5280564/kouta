@@ -19,16 +19,19 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easecallkit.base.EaseCallUserInfo;
 import com.hyphenate.easecallkit.livedatas.EaseLiveDataBus;
 import com.hyphenate.easecallkit.utils.EaseCallKitUtils;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.interfaces.OnItemClickListener;
+import com.hyphenate.easeui.manager.EaseSystemMsgManager;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.modules.contact.EaseContactListFragment;
 import com.hyphenate.easeui.modules.contact.EaseContactListLayout;
@@ -42,9 +45,9 @@ import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.db.DemoDbHelper;
+import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
 import com.xunda.mo.hx.common.enums.SearchType;
 import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
-import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.common.net.Resource;
 import com.xunda.mo.hx.common.utils.ToastUtils;
 import com.xunda.mo.hx.section.base.BaseActivity;
@@ -63,6 +66,7 @@ import com.xunda.mo.main.baseView.MyApplication;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.friend.activity.Friend_Add;
+import com.xunda.mo.main.friend.activity.Friend_BlackMe;
 import com.xunda.mo.main.friend.activity.Friend_NewFriends;
 import com.xunda.mo.main.friend.activity.MyGroup;
 import com.xunda.mo.model.adress_Model;
@@ -91,6 +95,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
     private EaseContactListLayout contactList;
     private Button more_img;
     private TextView more_Txt;
+    private TextView mTvMainFriendsMsg;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -140,7 +145,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
 
         myContactList_adapter.setOnItemClickListener(new demoContactList_adapterClick());
         myContact_Head_listAdapter.setOnItemClickListener(new myContact_listAdapterClick());
-
     }
 
     //列表条目点击
@@ -185,7 +189,15 @@ public class ContactListFragment extends EaseContactListFragment implements View
 
 
     public void addMyHead() {
-        myContact_Head_listAdapter.addItem(R.id.contact_header_item_new_chat, R.mipmap.adress_head_friend, "新的朋友");
+         mTvMainFriendsMsg = getActivity().findViewById(R.id.tv_main_friends_msg);
+        mTvMainFriendsMsg.setVisibility(View.GONE);
+        int addCount = setFriendAdd();
+        if (addCount > 0) {
+            mTvMainFriendsMsg.setVisibility(View.VISIBLE);
+            mTvMainFriendsMsg.setText(addCount + "");
+        }
+        myContact_Head_listAdapter.clearData();
+        myContact_Head_listAdapter.addItem(R.id.contact_header_item_new_chat, R.mipmap.adress_head_friend, "新朋友", addCount);
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_group_list, R.mipmap.adress_head_chat, getString(R.string.em_friends_group_chat));
 //        myContact_Head_listAdapter.addItem(R.id.contact_header_item_creat_group, R.mipmap.adress_head_group, "好友分组");
 //        myContact_Head_listAdapter.addItem(R.id.contact_header_item_head_file, R.mipmap.adress_head_file, "文件传输助手");
@@ -199,6 +211,21 @@ public class ContactListFragment extends EaseContactListFragment implements View
         menuHelper.addItemMenu(1, R.id.action_friend_delete, 1, getString(R.string.ease_friends_delete_the_contact));
     }
 
+
+    //添加好友通知
+    private int setFriendAdd() {
+        List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
+        int friendCount = 0;
+        if (allMessages != null && !allMessages.isEmpty()) {
+            for (EMMessage message : allMessages) {
+                Map<String, Object> ext = message.ext();
+                if (ext != null && ext.get(DemoConstant.SYSTEM_MESSAGE_STATUS).equals(InviteMessageStatus.BEINVITEED.name())) {//"BEINVITEED"
+                    friendCount += 1;
+                }
+            }
+        }
+        return friendCount;
+    }
 
     @Override
     public boolean onMenuItemClick(MenuItem item, int position) {
@@ -218,7 +245,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
         View head_view = LayoutInflater.from(mContext).inflate(R.layout.contactlist_head, null);
         llRoot.addView(head_view, 0);
         ConstraintLayout more_Con = head_view.findViewById(R.id.more_Con);
-         more_Txt = head_view.findViewById(R.id.more_Txt);
+        more_Txt = head_view.findViewById(R.id.more_Txt);
         more_img = head_view.findViewById(R.id.more_img);
         more_Con.setOnClickListener(new more_ConClick());
     }
@@ -348,6 +375,15 @@ public class ContactListFragment extends EaseContactListFragment implements View
             }
         });
 
+
+
+        mViewModel.messageChangeObservable().with(MyConstant.ConstantCount, int.class).observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer count) {
+                addMyHead();//未读消息
+            }
+        });
+
         mViewModel.loadContactList(true);
 
     }
@@ -356,6 +392,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
     public void onResume() {
         super.onResume();
         addressData(getActivity(), saveFile.User_Friendlist_Url, "0");
+        addMyHead();
     }
 
     @Override
@@ -428,6 +465,8 @@ public class ContactListFragment extends EaseContactListFragment implements View
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
+//                contactLayout.canUseRefresh(true);//取消刷新
+                contactLayout.onRefresh();
                 adress_Model model = new Gson().fromJson(result, adress_Model.class);
                 addContactList(model);
             }
@@ -500,7 +539,8 @@ public class ContactListFragment extends EaseContactListFragment implements View
             MorePopup.dismiss();
         });
         dele_Con.setOnClickListener(v -> {
-//            Friend_BlackMe.actionStart(mContext);
+            Friend_BlackMe.actionStart(mContext);
+            MorePopup.dismiss();
         });
 
     }
@@ -544,7 +584,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
             info.setUserId(info.getUserId());
             EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
         }
-        sortList(data);
+//        sortList(data);
         myContactList_adapter.setData(data);
         contactLayout.getSwipeRefreshLayout().setRefreshing(false);
 
@@ -554,14 +594,16 @@ public class ContactListFragment extends EaseContactListFragment implements View
         DemoHelper.getInstance().updateUserList(data);
         //更新本地联系人列表
         DemoHelper.getInstance().updateContactList();
+
         //通知UI刷新列表
-        EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_ADD, EaseEvent.TYPE.CONTACT);
-        event.message = "";
-        for (EaseUser user : data) {
-            event.message += user.getUsername() + ",";
-        }
+//        EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_ADD, EaseEvent.TYPE.CONTACT);
+//        event.message = "";
+//        for (EaseUser user : data) {
+//            event.message += user.getUsername() + ",";
+//        }
         //发送联系人更新事件
-        LiveDataBus.get().with(DemoConstant.CONTACT_ADD).postValue(event);
+//        LiveDataBus.get().with(DemoConstant.CONTACT_ADD).postValue(event);
+
     }
 
 

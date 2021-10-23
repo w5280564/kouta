@@ -138,7 +138,7 @@
                 app:arrowItemAvatarSrc="@mipmap/item_coupon_icon"
                 app:arrowItemAvatarWidth="25dp"
                 app:arrowItemShowAvatar="true"
-                app:arrowItemTitle="我的优惠券"
+                app:arrowItemTitle="我的卡券"
                 app:arrowItemTitleColor="@color/blacktitlettwo"
                 app:arrowItemTitleSize="15sp"
                 app:layout_constraintLeft_toLeftOf="parent"

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.me.activity.Me_Set_PSW"
+    tools:ignore="MissingConstraints">
+
+    <include
+        android:id="@+id/title_Include"
+        layout="@layout/base_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/moID_Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="58dp"
+        android:text="MO ID："
+        android:textColor="@color/blacktitle"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_Include" />
+
+    <TextView
+        android:id="@+id/textView35"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="请牢记并保管好你的登录密码"
+        android:textColor="@color/blacktitle"
+        android:layout_marginStart="15dp"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/moID_Txt" />
+
+    <EditText
+        android:id="@+id/old_Psw"
+        android:layout_width="0dp"
+        android:inputType="textPassword"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="44dp"
+        android:backgroundTint="@color/greyline"
+        android:hint="请输入旧密码"
+        android:textColor="@color/greytwo"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView35" />
+    <EditText
+        android:id="@+id/new_Psw"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/greyline"
+        android:inputType="textPassword"
+        android:hint="请输入新的登录密码"
+        android:textColor="@color/greytwo"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/old_Psw" />
+
+    <EditText
+        android:id="@+id/new_PswAgain"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/greyline"
+        android:inputType="textPassword"
+        android:hint="请再次输入新的登录密码"
+        android:textColor="@color/greytwo"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_Psw" />
+
+    <CheckBox
+        android:id="@+id/choice_check"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="15dp"
+        android:button="@drawable/choice_selector"
+        android:layout_marginStart="15dp"
+        android:checked="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_PswAgain" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/choice_check"
+        android:layout_toRightOf="@id/choice_check"
+        android:text="显示密码"
+        android:textColor="@color/greytwo"
+        android:layout_marginStart="10dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/choice_check"
+        app:layout_constraintStart_toEndOf="@+id/choice_check"
+        app:layout_constraintTop_toTopOf="@+id/choice_check" />
+
+
+    <Button
+        android:id="@+id/num_Btn"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_below="@id/choice_check"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/loginbtn_radius_yellow"
+        android:text="提交"
+        android:textColor="@color/white"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/choice_check" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/num_Btn"
+        android:layout_centerHorizontal="true"
+        android:text="密码必须包含字母和数字，长度至少8位"
+        android:textColor="@color/greytwo"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/num_Btn" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

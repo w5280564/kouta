@@ -6,8 +6,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView.BufferType;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Group;
+
 import com.bumptech.glide.Glide;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -15,6 +19,7 @@ import com.hyphenate.easeui.manager.EaseDingMessageHelper;
 import com.hyphenate.easeui.utils.EaseSmileUtils;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
+import com.hyphenate.exceptions.HyphenateException;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.main.constant.MyConstant;
@@ -25,6 +30,8 @@ public class MyBurnAfterReadingRowText extends EaseChatRow {
     private FireTimerTextView contentView;
     private EaseImageView iv_userhead;
     private ImageView fire_Img;
+    private ConstraintLayout cons_Mes;
+    private Group mes_group;
 
     public MyBurnAfterReadingRowText(Context context, boolean isSender) {
         super(context, isSender);
@@ -42,50 +49,37 @@ public class MyBurnAfterReadingRowText extends EaseChatRow {
 
     @Override
     protected void onFindViewById() {
+        cons_Mes = findViewById(R.id.cons_Mes);
         contentView = (FireTimerTextView) findViewById(R.id.tv_chatcontent);
         iv_userhead = (EaseImageView) findViewById(R.id.iv_userhead);
         fire_Img = (ImageView) findViewById(R.id.fire_Img);
+        mes_group = (Group) findViewById(R.id.mes_group);
     }
 
     @Override
     public void onSetUpView() {
-//            if (!showSenderType) {
 
-
-//            String ext = message.getStringAttribute(MyConstant.EXT);
-//            JSONObject jsonObject = new JSONObject(ext);
-
-//        if (message.getChatType() == EMMessage.ChatType.Chat) {
-
-            if (message.getStringAttribute("messageType", "").equals("chat")) {
-//                if (!showSenderType) {
-//                    usernickView.setText(message.getStringAttribute("toName", ""));
-//                    String headUrl = message.getStringAttribute("toHead", "");
-//                    Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(iv_userhead);
-//
-//                } else {
-//
-//                    usernickView.setText(message.getStringAttribute("sendName", ""));
-//                    String headUrl = message.getStringAttribute("sendHead", "");
-//                    Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(iv_userhead);
-//
-//                }
-
-            } else if (message.getStringAttribute("messageType", "").equals("group")) {
-                //添加群聊其他用户的名字与头像
-            } else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-                usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME, ""));
+        if (message.getChatType() == EMMessage.ChatType.Chat) {
+            if (isSender()) {
                 String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
-                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);
-
-                //匿名聊天
-                if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
-                    Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);
-                }
-
-
+                Glide.with(getContext()).load(headUrl).into(userAvatarView);
+            } else {
+//                cons_Mes.setVisibility(GONE);
+                mes_group.setVisibility(GONE);
+                iv_userhead.setVisibility(VISIBLE);
+                fire_Img.setVisibility(VISIBLE);
             }
-//        }
+            //添加群聊其他用户的名字与头像
+        } else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+            usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME, ""));
+            String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
+            Glide.with(getContext()).load(headUrl).into(userAvatarView);
+
+            //匿名聊天
+            if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
+                Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(R.drawable.mo_icon).into(userAvatarView);
+            }
+        }
 
         EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
         if (txtBody != null) {
@@ -95,11 +89,22 @@ public class MyBurnAfterReadingRowText extends EaseChatRow {
         }
 
         fire_Img.setOnClickListener(v -> {
+//            cons_Mes.setVisibility(VISIBLE);
+            mes_group.setVisibility(VISIBLE);
+            iv_userhead.setVisibility(VISIBLE);
             fire_Img.setVisibility(GONE);
-            EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.getFrom(), EMConversation.EMConversationType.Chat, true);
-            conversation.removeMessage(message.getMsgId());
+            // 当消息已读之后，发送已读回执，并删除消息
+            try {
+                EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
+//                // 消息所属会话
+                EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.getFrom(), EMConversation.EMConversationType.Chat, true);
+                conversation.removeMessage(message.getMsgId());
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
             contentView.startTimer(() -> {
                 LiveDataBus.get().with(MyConstant.FIRE_REFRESH).postValue(true);
+                sendCMDFireMess();
             });
 
         });
@@ -162,5 +167,16 @@ public class MyBurnAfterReadingRowText extends EaseChatRow {
                 ackedView.setText(String.format(getContext().getString(R.string.group_ack_read_count), count));
             }
         });
+    }
+
+
+    private void sendCMDFireMess() {
+        EMMessage cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD);
+        EMCmdMessageBody cmdBody = new EMCmdMessageBody("撤回");
+        cmdMsg.setTo(message.getFrom());
+        cmdMsg.addBody(cmdBody);
+        cmdMsg.setAttribute(MyConstant.Dele_Type, true);
+        cmdMsg.setAttribute(MyConstant.SendFireRecall_Mess_ID, message.getMsgId());
+        EMClient.getInstance().chatManager().sendMessage(cmdMsg);
     }
 }

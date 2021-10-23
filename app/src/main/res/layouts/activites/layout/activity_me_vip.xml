@@ -124,7 +124,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="VIP特权将在2022-06-03过期"
+            android:text=""
             android:textColor="#ff9e7158"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/textView28"

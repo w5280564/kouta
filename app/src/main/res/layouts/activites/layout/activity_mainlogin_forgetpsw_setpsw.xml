@@ -100,12 +100,12 @@
 
     <CheckBox
         android:id="@+id/choice_check"
-        android:button="@drawable/choice_selector"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:layout_below="@id/pswaginw_rel"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="10dp"
+        android:button="@drawable/choice_selector"
         android:checked="false" />
 
     <TextView

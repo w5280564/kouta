@@ -51,6 +51,7 @@ public class MyInfo {
         myInfo.setUserId(share.getString("userId", ""));
         myInfo.setUserNum(share.getInt("userNum", 0));
         myInfo.setVipType(share.getInt("VipType", 0));
+        myInfo.setIsQuestion(share.getInt("isQuestion", 0));
         return myInfo;
     }
 
@@ -81,6 +82,7 @@ public class MyInfo {
         editor.putString("userId", model.getUserId());
         editor.putInt("userNum", model.getUserNum());
         editor.putInt("VipType", model.getVipType());
+        editor.putInt("isQuestion", model.getIsQuestion());
         editor.apply();
     }
 
@@ -89,6 +91,19 @@ public class MyInfo {
         SharedPreferences.Editor editor = share.edit();
         editor.putString(keyStr, valueStr);
         editor.apply();
+    }
+
+    public void setOneIntData(String keyStr, int valueStr) {
+        SharedPreferences.Editor editor = share.edit();
+        editor.putInt(keyStr, valueStr);
+        editor.apply();
+    }
+
+
+    //删除本地个人数据
+    public void clearInfoData( Context context) {
+        share = context.getSharedPreferences("myInfo", Context.MODE_PRIVATE);
+        share.edit().clear().apply();
     }
 
 

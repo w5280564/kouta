@@ -10,6 +10,7 @@ import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.constants.EaseConstant;
+import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.exceptions.HyphenateException;
@@ -21,6 +22,11 @@ import com.xunda.mo.hx.common.db.entity.InviteMessage;
 import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.main.baseView.MyApplication;
+import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.info.MyInfo;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -34,32 +40,34 @@ public class PushAndMessageHelper {
 
     /**
      * 转发消息
+     *
      * @param toChatUsername
      * @param msgId
      */
-    public static void sendForwardMessage(String toChatUsername, String msgId) {
-        if(TextUtils.isEmpty(msgId)) {
+    public static void sendForwardMessage(Context context, EaseUser user, String msgId, EMMessage msg) {
+        if (TextUtils.isEmpty(msgId)) {
             return;
         }
         EMMessage message = DemoHelper.getInstance().getChatManager().getMessage(msgId);
+            MyInfo myInfo = new MyInfo(context);
         EMMessage.Type type = message.getType();
         switch (type) {
             case TXT:
-                if(message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)){
-                    sendBigExpressionMessage(toChatUsername, ((EMTextMessageBody) message.getBody()).getMessage(),
+                if (message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)) {
+                    sendBigExpressionMessage(myInfo, user, ((EMTextMessageBody) message.getBody()).getMessage(),
                             message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXPRESSION_ID, null));
-                }else{
+                } else {
                     // get the content and send it
                     String content = ((EMTextMessageBody) message.getBody()).getMessage();
-                    sendTextMessage(toChatUsername, content);
+                    sendTextMessage(myInfo, user, content);
                 }
                 break;
             case IMAGE:
                 // send image
                 Uri uri = getImageForwardUri((EMImageMessageBody) message.getBody());
-                if(uri != null) {
-                    sendImageMessage(toChatUsername, uri);
-                }else {
+                if (uri != null) {
+                    sendImageMessage(myInfo, user, uri);
+                } else {
                     LiveDataBus.get().with(DemoConstant.MESSAGE_FORWARD)
                             .postValue(new EaseEvent("不存在图片资源", EaseEvent.TYPE.MESSAGE));
                 }
@@ -67,17 +75,44 @@ public class PushAndMessageHelper {
         }
     }
 
+
+    //单人聊天发送扩展字段
+    private static void singleSendMes(EMMessage message, MyInfo myInfo, EaseUser user) {
+        message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_CHAT);
+        message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
+        message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
+        message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
+        message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
+        message.setAttribute(MyConstant.TO_HEAD, user.getAvatar());
+        try {
+            if (user == null) {
+                return;
+            }
+            String selectInfoExt = user.getExt();
+            if (!TextUtils.isEmpty(selectInfoExt)) {
+                JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                String toName = TextUtils.isEmpty(JsonObject.getString(MyConstant.REMARK_NAME)) ? user.getNickname() : JsonObject.getString(MyConstant.REMARK_NAME);
+                message.setAttribute(MyConstant.TO_NAME, toName);
+                message.setAttribute(MyConstant.TO_LH, JsonObject.getString(MyConstant.LIGHT_STATUS));
+                message.setAttribute(MyConstant.TO_VIP, JsonObject.getString(MyConstant.VIP_TYPE));
+            }
+        } catch (JSONException e) {
+
+        }
+    }
+
+
     public static Uri getImageForwardUri(EMImageMessageBody body) {
-        if(body == null) {
+        if (body == null) {
             return null;
         }
         Uri localUri = body.getLocalUri();
         Context context = MyApplication.getInstance().getApplicationContext();
-        if(UriUtils.isFileExistByUri(context, localUri)) {
+        if (UriUtils.isFileExistByUri(context, localUri)) {
             return localUri;
         }
         localUri = body.thumbnailLocalUri();
-        if(UriUtils.isFileExistByUri(context, localUri)) {
+        if (UriUtils.isFileExistByUri(context, localUri)) {
             return localUri;
         }
         return null;
@@ -85,12 +120,13 @@ public class PushAndMessageHelper {
 
     /**
      * 获取系统消息内容
+     *
      * @param msg
      * @return
      */
     public static String getSystemMessage(InviteMessage msg) {
         InviteMessageStatus status = msg.getStatusEnum();
-        if(status == null) {
+        if (status == null) {
             return "";
         }
         String messge;
@@ -146,16 +182,17 @@ public class PushAndMessageHelper {
 
     /**
      * 获取系统消息内容
+     *
      * @param msg
      * @return
      */
-    public static String getSystemMessage(EMMessage msg)  throws HyphenateException {
+    public static String getSystemMessage(EMMessage msg) throws HyphenateException {
         String messageStatus = msg.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_STATUS);
-        if(TextUtils.isEmpty(messageStatus)) {
+        if (TextUtils.isEmpty(messageStatus)) {
             return "";
         }
         InviteMessageStatus status = InviteMessageStatus.valueOf(messageStatus);
-        if(status == null) {
+        if (status == null) {
             return "";
         }
         String messge;
@@ -213,16 +250,18 @@ public class PushAndMessageHelper {
 
     /**
      * 获取系统消息内容
+     *
      * @param msg
      * @return
      */
-    public static String getSystemMessage(Map<String, Object> msg)  throws NullPointerException {
+    public static String getSystemMessage(Map<String, Object> msg) throws
+            NullPointerException {
         String messageStatus = (String) msg.get(DemoConstant.SYSTEM_MESSAGE_STATUS);
-        if(TextUtils.isEmpty(messageStatus)) {
+        if (TextUtils.isEmpty(messageStatus)) {
             return "";
         }
         InviteMessageStatus status = InviteMessageStatus.valueOf(messageStatus);
-        if(status == null) {
+        if (status == null) {
             return "";
         }
         String messge;
@@ -281,38 +320,46 @@ public class PushAndMessageHelper {
 
     /**
      * send big expression message
-     * @param toChatUsername
+     *
+     * @param
      * @param name
      * @param identityCode
      */
-    private static void sendBigExpressionMessage(String toChatUsername, String name, String identityCode){
-        EMMessage message = EaseCommonUtils.createExpressionMessage(toChatUsername, name, identityCode);
+    private static void sendBigExpressionMessage(MyInfo myInfo, EaseUser user, String name, String
+            identityCode) {
+        EMMessage message = EaseCommonUtils.createExpressionMessage(user.getUsername(), name, identityCode);
+        singleSendMes(message, myInfo, user);
         sendMessage(message);
     }
 
     /**
      * 发送文本消息
-     * @param toChatUsername
+     *
+     * @param
      * @param content
      */
-    private static void sendTextMessage(String toChatUsername, String content) {
-        EMMessage message = EMMessage.createTxtSendMessage(content, toChatUsername);
+    private static void sendTextMessage(MyInfo myInfo, EaseUser user, String content) {
+        EMMessage message = EMMessage.createTxtSendMessage(content, user.getUsername());
 //        message.setAttribute("",);
+        singleSendMes(message, myInfo, user);
         sendMessage(message);
     }
 
     /**
      * send image message
-     * @param toChatUsername
+     *
+     * @param
      * @param imageUri
      */
-    private static void sendImageMessage(String toChatUsername, Uri imageUri) {
-        EMMessage message = EMMessage.createImageSendMessage(imageUri, false, toChatUsername);
+    private static void sendImageMessage(MyInfo myInfo, EaseUser user, Uri imageUri) {
+        EMMessage message = EMMessage.createImageSendMessage(imageUri, false, user.getUsername());
+        singleSendMes(message, myInfo, user);
         sendMessage(message);
     }
 
     /**
      * send image message
+     *
      * @param toChatUsername
      * @param imagePath
      */
@@ -324,6 +371,7 @@ public class PushAndMessageHelper {
 
     /**
      * send message
+     *
      * @param message
      */
     private static void sendMessage(EMMessage message) {

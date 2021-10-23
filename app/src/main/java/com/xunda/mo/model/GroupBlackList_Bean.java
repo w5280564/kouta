@@ -28,5 +28,7 @@ public class GroupBlackList_Bean {
         private String userId;
         @JsonProperty("userNum")
         private Integer userNum;
+        @JsonProperty("hxUserName")
+        private String hxUserName;
     }
 }

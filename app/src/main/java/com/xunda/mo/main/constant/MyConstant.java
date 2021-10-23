@@ -60,6 +60,8 @@ public interface MyConstant extends DemoConstant {
     String MESSAGE_TYPE_PUSH_ON = "pushOn";
     String MESSAGE_TYPE_PUSH_OFF = "pushOff";
     String MESSAGE_GROUP_LEAVE = "groupLeave";
+    String MESSAGE_GROUP_Message = "groupMessage";
+    String Message_Recall = "messageRecall";
 
     String GROUP_CHAT_ANONYMOUS = "anonymousChat";
     String GROUP_UPDATE_GROUPDES = "updateGroupDes";
@@ -80,4 +82,10 @@ public interface MyConstant extends DemoConstant {
 
     int CHATTYPE_MO = 4;
     String MESSAGE_TYPE_APPLY = "apply";
+
+   String  ConstantCount = "ConstantCount";
+   String  SendFireRecall = "SendFireRecall";
+   String  SendFireRecall_Mess_ID = "messageId";
+   String  Dele_Type = "deletType";
+   String  MESS_TYPE_GROUP_HORN = "GroupHorn";
 }

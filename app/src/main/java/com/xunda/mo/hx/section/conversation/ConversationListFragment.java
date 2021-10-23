@@ -1,8 +1,12 @@
 package com.xunda.mo.hx.section.conversation;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,6 +18,7 @@ import android.widget.RadioGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -28,7 +33,6 @@ import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.easeui.widget.EaseRecyclerView;
 import com.hyphenate.easeui.widget.EaseSearchTextView;
 import com.xunda.mo.R;
-import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
@@ -51,6 +55,7 @@ import com.xunda.mo.main.friend.activity.Friend_Add;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -92,11 +97,9 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         //设置未读消息数展示位置，默认为左侧
         conversationListLayout.showUnreadDotPosition(EaseConversationSetStyle.UnreadDotPosition.RIGHT);
 
-        conversationListLayout.showSystemMessage(false);//是否展示系统消息
-        makeAllMsgRead();//系统消息设置为已读
-
         initViewModel();
     }
+
 
 
     @Override
@@ -143,12 +146,51 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
     @Override
     public void initData() {
         //需要两个条件，判断是否触发从服务器拉取会话列表的时机，一是第一次安装，二则本地数据库没有会话列表数据
-        if (DemoHelper.getInstance().isFirstInstall() && EMClient.getInstance().chatManager().getAllConversations().isEmpty()) {
-            mViewModel.fetchConversationsFromServer();
-        } else {
-            super.initData();
-        }
+//        if (DemoHelper.getInstance().isFirstInstall() && EMClient.getInstance().chatManager().getAllConversations().isEmpty()) {
+//            mViewModel.fetchConversationsFromServer();
+//        } else {
+//            super.initData();
+//        }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        conversationListLayout.showSystemMessage(false);//是否展示系统消息
+        makeAllMsgRead();//系统消息设置为已读
+
+//        EMClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(new EMValueCallBack<List<EMGroup>>() {
+//            @Override
+//            public void onSuccess(List<EMGroup> value) {
+//                String va = value.get(0).getExtension();
+//            }
+//
+//            @Override
+//            public void onError(int error, String errorMsg) {
+//
+//            }
+//        });
+//
+//        Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
+//        conversations.get("162845596647425").getExtField();
+//
+//        EMClient.getInstance().groupManager().asyncGetGroupFromServer("162845596647425", new EMValueCallBack<EMGroup>() {
+//            @Override
+//            public void onSuccess(EMGroup value) {
+//                String va = value.getExtension();
+//            }
+//
+//            @Override
+//            public void onError(int error, String errorMsg) {
+//
+//            }
+//        });
+//        EMClient.getInstance().groupManager().loadAllGroups();
+//        List<EMGroup> groups =   EMClient.getInstance().groupManager().getAllGroups();
+//        groups.get(0).getExtension();
+    }
+
+
 
     @Override
     public void notifyItemRemove(int position) {
@@ -221,6 +263,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
                 || change.isGroupLeave() || change.isChatRoomLeave()
                 || change.isContactChange()
                 || change.type == EaseEvent.TYPE.CHAT_ROOM || change.isGroupChange()) {
+
             conversationListLayout.loadDefaultData();
         }
     }
@@ -329,7 +372,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
             MorePopup.dismiss();
         });
 
-        QR_Constraint.setOnClickListener(v -> Discover_QRCode.actionStart(requireActivity()));
+        QR_Constraint.setOnClickListener(v -> startCamera(requireActivity()));
 
     }
 
@@ -337,5 +380,26 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(DemoConstant.DEFAULT_SYSTEM_MESSAGE_ID, EMConversation.EMConversationType.Chat, true);
         conversation.markAllMessagesAsRead();
         LiveDataBus.get().with(DemoConstant.NOTIFY_CHANGE).postValue(EaseEvent.create(DemoConstant.NOTIFY_CHANGE, EaseEvent.TYPE.NOTIFY));
+    }
+
+    public void startCamera(Activity context) {
+        //监听授权
+        List<String> permissionList = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.CAMERA);
+        }
+
+        if (!permissionList.isEmpty()) {
+            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(context, permissions, 1);
+        } else {
+            //打开相机录制视频
+            Intent captureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            //判断相机是否正常。
+            if (captureIntent.resolveActivity(context.getPackageManager()) != null) {
+                Discover_QRCode.actionStart(context);
+            }
+
+        }
     }
 }

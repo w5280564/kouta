@@ -161,10 +161,10 @@ public class ChatFriend_AddFriend extends BaseInitActivity {
     private class send_mess_TxtClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            if (TextUtils.isEmpty(apply_Edit.getText().toString())) {
-                Toast.makeText(ChatFriend_AddFriend.this, "请输入验证信息", Toast.LENGTH_SHORT).show();
-                return;
-            }
+//            if (TextUtils.isEmpty(apply_Edit.getText().toString())) {
+//                Toast.makeText(ChatFriend_AddFriend.this, "请输入验证信息", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
 
             AddFriendMethod(ChatFriend_AddFriend.this,  saveFile.User_FriendAdd_Url);
         }

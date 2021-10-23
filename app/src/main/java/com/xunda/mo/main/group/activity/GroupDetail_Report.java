@@ -67,14 +67,15 @@ public class GroupDetail_Report extends BaseInitActivity {
     private Button next_Btn;
     private EditText content_edit;
     private ObsClient obsClient;
-    private String toReportId, userOrGroup;
+    private String toReportId, userOrGroup, type;
     private com.xunda.mo.main.baseView.FlowLayout photoLayout;
     private int reportType;
 
-    public static void actionStart(Context context, String toReportId, String userOrGroup) {
+    public static void actionStart(Context context, String toReportId, String userOrGroup, String type) {
         Intent intent = new Intent(context, GroupDetail_Report.class);
         intent.putExtra("toReportId", toReportId);
         intent.putExtra("userOrGroup", userOrGroup);
+        intent.putExtra("type", type);
         context.startActivity(intent);
     }
 
@@ -88,6 +89,7 @@ public class GroupDetail_Report extends BaseInitActivity {
         super.initIntent(intent);
         toReportId = intent.getStringExtra("toReportId");
         userOrGroup = intent.getStringExtra("userOrGroup");
+        type = intent.getStringExtra("type");
     }
 
     @Override
@@ -383,18 +385,19 @@ public class GroupDetail_Report extends BaseInitActivity {
 
     String pictures = "";
 
-    //问题反馈
+    //问题举报
     public void reportMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put("picture", pictures);
         map.put("reasons", reportType);
         map.put("remark", content_edit.getText().toString());
         map.put("toReportId", toReportId);
-        if (TextUtils.equals(userOrGroup, "user")) {
-            map.put("type", "2");
-        } else {
-            map.put("type", "4");
-        }
+        map.put("type", type);
+//        if (TextUtils.equals(userOrGroup, "user")) {
+//            map.put("type", type);
+//        } else {
+//            map.put("type", "4");
+//        }
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {

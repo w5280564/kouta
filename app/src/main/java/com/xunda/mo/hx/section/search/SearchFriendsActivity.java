@@ -11,8 +11,8 @@ import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.manager.EaseThreadManager;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.common.db.DemoDbHelper;
-import com.xunda.mo.hx.section.contact.activity.ContactDetailActivity;
 import com.xunda.mo.hx.section.contact.adapter.ContactListAdapter;
+import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,10 @@ public class SearchFriendsActivity extends SearchActivity {
     @Override
     protected void onChildItemClick(View view, int position) {
         EaseUser item = ((SearchFriendAdapter)adapter).getItem(position);
-        ContactDetailActivity.actionStart(mContext, item);
+//        ContactDetailActivity.actionStart(mContext, item);
+
+        String addType = "8";
+        ChatFriend_Detail.actionStart(mContext, item.getUsername(), item, addType);
     }
 
     public class SearchFriendAdapter extends ContactListAdapter {

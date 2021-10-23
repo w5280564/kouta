@@ -10,9 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
@@ -28,6 +29,7 @@ import com.hyphenate.easeui.modules.chat.model.EaseChatSetStyle;
 import com.hyphenate.easeui.utils.EaseDateUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseImageView;
+import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 import com.hyphenate.util.EMLog;
 import com.xunda.mo.R;
 
@@ -36,7 +38,7 @@ import java.util.Date;
 /**
  * base chat row view
  */
-public abstract class MyEaseChatRow extends LinearLayout {
+public abstract class MyEaseChatRow extends EaseChatRow {
     protected static final String TAG = MyEaseChatRow.class.getSimpleName();
 
     protected LayoutInflater inflater;
@@ -107,8 +109,17 @@ public abstract class MyEaseChatRow extends LinearLayout {
     protected MessageListItemClickListener itemClickListener;
     private EaseChatRowActionCallback itemActionCallback;
 
+//    public MyEaseChatRow(Context context, boolean isSender) {
+//        super(context, isSender);
+//    }
+//
+//    public MyEaseChatRow(Context context, EMMessage message, int position, Object adapter) {
+//        super(context, message, position, adapter);
+//    }
+
+
     public MyEaseChatRow(Context context, boolean isSender) {
-        super(context);
+        super(context,isSender);
         this.context = context;
         this.isSender = isSender;
         this.inflater = LayoutInflater.from(context);
@@ -117,7 +128,7 @@ public abstract class MyEaseChatRow extends LinearLayout {
     }
 
     public MyEaseChatRow(Context context, EMMessage message, int position, Object adapter) {
-        super(context);
+        super(context,message,position,adapter);
         this.context = context;
         this.message = message;
         this.isSender = message.direct() == Direct.SEND;
@@ -168,14 +179,18 @@ public abstract class MyEaseChatRow extends LinearLayout {
             if (bubbleLayout != null) {
                 try {
                     if (isSender()) {
-                        Drawable senderBgDrawable = itemStyle.getSenderBgDrawable();
+//                        Drawable senderBgDrawable = itemStyle.getSenderBgDrawable();
+                        Drawable senderBgDrawable = ContextCompat.getDrawable(context, R.drawable.chat_rowmes_bg);
+
                         if (senderBgDrawable != null) {
-                            bubbleLayout.setBackground(senderBgDrawable.getConstantState().newDrawable());
+//                            bubbleLayout.setBackground(senderBgDrawable.getConstantState().newDrawable());
+                            bubbleLayout.setBackground(senderBgDrawable);
                         }
                     } else {
-                        Drawable receiverBgDrawable = itemStyle.getReceiverBgDrawable();
+//                        Drawable receiverBgDrawable = itemStyle.getReceiverBgDrawable();
+                        Drawable receiverBgDrawable = ContextCompat.getDrawable(context, R.drawable.chat_rowmes_bg);
                         if (receiverBgDrawable != null) {
-                            bubbleLayout.setBackground(receiverBgDrawable.getConstantState().newDrawable());
+                            bubbleLayout.setBackground(receiverBgDrawable);
                         }
                     }
                 } catch (Exception e) {

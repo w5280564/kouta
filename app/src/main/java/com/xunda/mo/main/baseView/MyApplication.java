@@ -45,7 +45,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
     public static Context mycontext;
     private UserActivityLifecycleCallbacks mLifecycleCallbacks = new UserActivityLifecycleCallbacks();
     private static MyApplication instance;
-
+    public static EMMessageListener msgListener;
 
     @Override
     public void onCreate() {
@@ -56,7 +56,8 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         initHx();
 
         if (DemoHelper.getInstance().getAutoLogin()) {
-//            DemoHelper.getInstance().getChatManager().addMessageListener(new EMMessageMethod());
+//            msgListener = new EMMessageMethod();
+//            DemoHelper.getInstance().getChatManager().addMessageListener(msgListener);
 //            DemoHelper.getInstance().getChatManager().addMessageListener(new EMMessageMethod());
         }
         registerActivityLifecycleCallbacks();
@@ -232,14 +233,14 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         public void onMessageRead(List<EMMessage> messages) {
             //收到已读回执
             Log.i("message", "回执");
-            for (EMMessage message : messages) {
-                String fireType = message.getStringAttribute(MyConstant.FIRE_TYPE, "");
-                if (TextUtils.equals(fireType, "1")) {
-                    // 消息所属会话
-                    EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.getUserName(), EMConversation.EMConversationType.Chat, true);
-                    conversation.removeMessage(message.getMsgId());
-                }
-            }
+//            for (EMMessage message : messages) {
+//                String fireType = message.getStringAttribute(MyConstant.FIRE_TYPE, "");
+//                if (TextUtils.equals(fireType, "1")) {
+//                    // 消息所属会话
+//                    EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.getUserName(), EMConversation.EMConversationType.Chat, true);
+//                    conversation.removeMessage(message.getMsgId());
+//                }
+//            }
         }
 
         @Override

@@ -18,25 +18,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_chat_activity">
+
         <com.hyphenate.easeui.widget.EaseImageView
             android:id="@+id/iv_userhead"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="18dp"
-            android:src="@drawable/ease_default_avatar"
             android:scaleType="fitXY"
-            android:layout_centerVertical="true"/>
+            android:src="@drawable/mo_icon" />
 
         <RelativeLayout
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_below="@id/tv_userid"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="@dimen/margin_chat_activity"
             android:layout_toLeftOf="@id/iv_userhead"
-            android:layout_marginTop="20dp"
             android:background="@drawable/ease_chat_bubble_send_bg"
             android:minWidth="30dp"
             android:padding="8dp">
@@ -53,8 +54,8 @@
                 android:minHeight="@dimen/ease_chat_text_min_height"
                 android:textColor="#000000"
                 android:textSize="15sp"
-                tools:text="环信"
-                tools:ignore="MissingConstraints" />
+                tools:ignore="MissingConstraints"
+                tools:text="环信" />
         </RelativeLayout>
 
         <ImageView
@@ -122,8 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/chat_nick_margin_left"
             android:layout_toLeftOf="@id/iv_userhead"
-            android:textSize="@dimen/chat_nick_text_size"
-            android:visibility="gone" />
+            android:textSize="@dimen/chat_nick_text_size" />
     </RelativeLayout>
 
     <ImageView

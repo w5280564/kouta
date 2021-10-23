@@ -60,6 +60,7 @@ public class HMSPushHelper {
                                 String appId = AGConnectServicesConfig.fromContext(activity).getString("client/app_id");
                                 // 申请华为推送token
                                 String token = HmsInstanceId.getInstance(activity).getToken(appId, "HCM");
+
                                 EMLog.d("HWHMSPush", "get huawei hms push token:" + token);
                                 if (token != null && !token.equals("")) {
                                     //没有失败回调，假定token失败时token为null

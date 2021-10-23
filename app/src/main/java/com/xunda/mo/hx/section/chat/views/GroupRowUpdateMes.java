@@ -7,6 +7,9 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 import com.xunda.mo.R;
 import com.xunda.mo.main.constant.MyConstant;
@@ -138,7 +141,31 @@ public class GroupRowUpdateMes extends EaseChatRow {
                 content = String.format("'%1$s'已同意添加好友，现在可以开始聊天了", sendName);
             }
             content_Txt.setText(content);
+        }else if (TextUtils.equals(Group, MyConstant.MESSAGE_GROUP_Message)) {
+            String contentStr = message.getStringAttribute(MyConstant.CONTENT, "");
+//                content = String.format("'%1$s'，加入群聊", sendName);
+            content_Txt.setText(contentStr);
+        }else if (TextUtils.equals(Group, MyConstant.Message_Recall)) {
+            String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
+            String messageStr = "";
+            if (message.getChatType() == EMMessage.ChatType.Chat) {
+
+                if (isSender()){
+                    messageStr = "您撤回一条消息";
+                }else {
+                    messageStr = "对方撤回一条消息";
+                }
+            }else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+                if (isSender()) {
+                    messageStr = "您撤回一条消息";
+                }else {
+                    messageStr = String.format("'%1$s'撤回了一条消息", sendName);
+                }
+            }
+            content_Txt.setText(messageStr);
         }
+        bubbleLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.chat_rowmes_bg));
+
 
     }
 

@@ -9,8 +9,8 @@ import com.hyphenate.easeui.delegate.EaseMessageAdapterDelegate;
 import com.hyphenate.easeui.interfaces.MessageListItemClickListener;
 import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.viewholder.EaseChatRowViewHolder;
-import com.hyphenate.easeui.viewholder.EaseTextViewHolder;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
+import com.xunda.mo.hx.section.chat.viewholder.MyBurnAfterReadingTextViewHolder;
 import com.xunda.mo.hx.section.chat.views.MyBurnAfterReadingRowText;
 import com.xunda.mo.main.constant.MyConstant;
 
@@ -44,7 +44,7 @@ public class BurnAfterReadingAdapterDelegate extends EaseMessageAdapterDelegate<
 
     @Override
     public EaseChatRowViewHolder createViewHolder(View view, MessageListItemClickListener itemClickListener) {
-        return new EaseTextViewHolder(view, itemClickListener);
+        return new MyBurnAfterReadingTextViewHolder(view, itemClickListener);
     }
 
 }

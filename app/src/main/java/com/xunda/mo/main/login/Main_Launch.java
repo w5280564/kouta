@@ -1,9 +1,5 @@
 package com.xunda.mo.main.login;
 
-import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
-import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -70,19 +66,20 @@ public class Main_Launch extends BaseInitActivity {
         return R.layout.activitymain_launch;
     }
 
-    @Override
-    protected void initSystemFit() {
-        StatusBar(this);
-        MIUISetStatusBarLightMode(this.getWindow(), true);
-        FlymeSetStatusBarLightMode(this.getWindow(), true);
-        //不显示系统的标题栏
-//        getWindow().setFlags(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-    }
+//    @Override
+//    protected void initSystemFit() {
+//        StatusBar(this);
+//        MIUISetStatusBarLightMode(this.getWindow(), true);
+//        FlymeSetStatusBarLightMode(this.getWindow(), true);
+//        //不显示系统的标题栏
+////        getWindow().setFlags(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+//    }
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-
+        setFitSystemForTheme(true, R.color.launch_black);
+        setStatusBarTextColor(true);
     }
 
     @Override
@@ -151,5 +148,6 @@ public class Main_Launch extends BaseInitActivity {
 
         });
     }
+
 
 }

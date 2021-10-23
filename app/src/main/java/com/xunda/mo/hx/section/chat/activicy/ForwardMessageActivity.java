@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.interfaces.OnItemClickListener;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
@@ -26,7 +27,6 @@ import com.xunda.mo.hx.common.manager.PushAndMessageHelper;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.chat.adapter.PickUserAdapter;
 import com.xunda.mo.hx.section.contact.viewmodels.ContactListViewModel;
-import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.baseView.MyApplication;
 
@@ -41,10 +41,12 @@ public class ForwardMessageActivity extends BaseInitActivity implements OnRefres
     private PickUserAdapter mAdapter;
     private ContactListViewModel mViewModel;
     private String mForwardMsgId;
+    EMMessage msg;
 
-    public static void actionStart(Context context, String forward_msg_id) {
+    public static void actionStart(Context context, String forward_msg_id, EMMessage msg) {
         Intent starter = new Intent(context, ForwardMessageActivity.class);
         starter.putExtra("forward_msg_id", forward_msg_id);
+        starter.putExtra("msg", msg);
         context.startActivity(starter);
     }
 
@@ -57,6 +59,7 @@ public class ForwardMessageActivity extends BaseInitActivity implements OnRefres
     protected void initIntent(Intent intent) {
         super.initIntent(intent);
         mForwardMsgId = getIntent().getStringExtra("forward_msg_id");
+        msg = getIntent().getParcelableExtra("msg");
     }
 
     @Override
@@ -113,12 +116,9 @@ public class ForwardMessageActivity extends BaseInitActivity implements OnRefres
         EaseUser user = mAdapter.getData().get(position);
         new SimpleDialogFragment.Builder(mContext)
                 .setTitle(getString(R.string.confirm_forward_to, user.getNickname()))
-                .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view) {
-                        PushAndMessageHelper.sendForwardMessage(user.getUsername(), mForwardMsgId);
-                        finish();
-                    }
+                .setOnConfirmClickListener(view1 -> {
+                    PushAndMessageHelper.sendForwardMessage(mContext,user, mForwardMsgId,msg);
+                    finish();
                 })
                 .showCancelButton(true)
                 .show();

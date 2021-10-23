@@ -1,7 +1,9 @@
 package com.xunda.mo.hx.section.chat.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,11 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.hyphenate.chat.EMClient;
@@ -33,13 +37,17 @@ import com.hyphenate.easeui.ui.base.EaseBaseFragment;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseCompat;
 import com.hyphenate.easeui.utils.EaseFileUtils;
+import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
 import com.hyphenate.util.VersionUtils;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.section.chat.activicy.MyEaseGaodeMapActivity;
+import com.xunda.mo.staticdata.MarqueeTextView;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayoutListener, OnMenuChangeListener, OnAddMsgAttrsBeforeSendEvent {
     protected static final int REQUEST_CODE_MAP = 1;
@@ -51,7 +59,7 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
     private static final String TAG = MyEaseChatFragment.class.getSimpleName();
     public EaseChatLayout chatLayout;
     public String conversationId;
-    public int chatType;
+    public  int chatType;
     public String historyMsgId;
     public boolean isRoam;
     public boolean isMessageInit;
@@ -61,6 +69,11 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
     public ConstraintLayout top_Constraint;
     public TextView top_Txt;
     public Button cancel_Btn;
+    public ImageView horn_icon;
+    public MarqueeTextView horn_Txt;
+    public ConstraintLayout horn_Con;
+    public EaseImageView head_Img;
+    public TextView horn_Name;
 
     @Nullable
     @Override
@@ -104,6 +117,11 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
         chatLayout = findViewById(R.id.layout_chat);
         chatLayout.getChatMessageListLayout().setItemShowType(EaseChatMessageListLayout.ShowType.NORMAL);
         chatLayout.getChatMessageListLayout().setBackgroundColor(ContextCompat.getColor(mContext, R.color.gray));
+        horn_Txt = findViewById(R.id.horn_Txt);
+        horn_icon = findViewById(R.id.horn_icon);
+        horn_Con = findViewById(R.id.horn_Con);
+        head_Img = findViewById(R.id.head_Img);
+        horn_Name = findViewById(R.id.horn_Name);
     }
 
     public void initListener() {
@@ -176,11 +194,11 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
     @Override
     public void onChatExtendMenuItemClick(View view, int itemId) {
         if(itemId == R.id.extend_item_take_picture) {
-            selectPicFromCamera();
+            startImg();
         }else if(itemId == R.id.extend_item_picture) {
             selectPicFromLocal();
         }else if(itemId == R.id.extend_item_location) {
-            startMapLocation(REQUEST_CODE_MAP);
+            startLocation();
         }else if(itemId == R.id.extend_item_video) {
             selectVideoFromLocal();
         }else if(itemId == R.id.extend_item_file) {
@@ -246,6 +264,7 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
      */
     protected void selectPicFromLocal() {
         EaseCompat.openImage(this, REQUEST_CODE_LOCAL);
+
     }
 
     /**
@@ -384,6 +403,34 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
     public void addMsgAttrsBeforeSend(EMMessage message) {
 
     }
+
+    public void startImg() {
+        //监听授权
+        List<String> permissionList = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.  permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {//摄像与录制
+            permissionList.add(Manifest.permission.CAMERA);
+        }
+        if (!permissionList.isEmpty()) {
+            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(getActivity(), permissions, 1);
+        } else {
+            selectPicFromCamera();
+        }
+    }
+    public void startLocation() {
+        //监听授权
+        List<String> permissionList = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.  permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {//摄像与录制
+            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (!permissionList.isEmpty()) {
+            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(getActivity(), permissions, 1);
+        } else {
+            startMapLocation(REQUEST_CODE_MAP);
+        }
+    }
+
 
 
 }

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="13dp"
+    tools:ignore="MissingConstraints">
+
+    <TextView
+        android:id="@+id/timestamp"
+        style="@style/chat_text_date_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cons_Mes"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/timestamp">
+
+        <com.hyphenate.easeui.widget.EaseImageView
+            android:id="@+id/iv_userhead"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="18dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/mo_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RelativeLayout
+            android:id="@+id/bubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_chat_activity"
+            android:background="@drawable/ease_chat_bubble_receive_bg"
+            android:minWidth="30dp"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_userhead"
+            app:layout_constraintTop_toBottomOf="@id/tv_userid">
+
+            <TextView
+                android:id="@+id/tv_chatcontent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:autoLink="web"
+                android:gravity="center|left"
+                android:lineSpacingExtra="2dp"
+                android:maxWidth="225.0dip"
+                android:minHeight="@dimen/ease_chat_text_min_height"
+                android:textColor="#ff000000"
+                android:textSize="15sp"
+                tools:text="环信" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_userid"
+            style="@style/chat_text_name_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/chat_nick_margin_left"
+            app:layout_constraintLeft_toRightOf="@id/iv_userhead"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="@dimen/chat_nick_text_size"
+            tools:text="som"
+            android:visibility="gone"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/fi_icon"
+        android:layout_width="13dp"
+        android:layout_height="17dp"
+        android:src="@mipmap/horn_icon"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@id/cons_Mes"
+        app:layout_constraintTop_toTopOf="@id/cons_Mes" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

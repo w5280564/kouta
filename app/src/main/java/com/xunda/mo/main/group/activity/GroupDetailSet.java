@@ -122,7 +122,6 @@ public class GroupDetailSet extends BaseInitActivity {
         group_Code_ArrowItemView.setOnClickListener(new group_Code_ArrowItemViewClick());
         group_Nick_ArrowItemView = findViewById(R.id.group_Nick_ArrowItemView);
         group_Nick_ArrowItemView.setOnClickListener(new group_Nick_ArrowItemViewClick());
-        group_Nick_ArrowItemView.setOnClickListener(new group_Nick_ArrowItemViewClick());
         group_Top_ArrowItemView = findViewById(R.id.group_Top_ArrowItemView);
         group_Top_ArrowItemView.setOnClickListener(new group_Top_ArrowItemViewClick());
         group_Management_ArrowItemView = findViewById(R.id.group_Management_ArrowItemView);
@@ -210,13 +209,14 @@ public class GroupDetailSet extends BaseInitActivity {
         TextView newregistr_txt = contentView.findViewById(R.id.newregistr_txt);
         newregistr_txt.setText("举报");
         TextView cancel_txt = contentView.findViewById(R.id.cancel_txt);
+        String group = "group";
         change_txt.setOnClickListener(v -> {
             MeAndGroup_QRCode.actionGroupStart(mContext, groupModel);
             MorePopup.dismiss();
         });
         newregistr_txt.setOnClickListener(v -> {
-            String group = "group";
-            GroupDetail_Report.actionStart(mContext, myGroupId, group);
+            String type = "4";
+            GroupDetail_Report.actionStart(mContext, myGroupId, group, type);
             MorePopup.dismiss();
         });
         cancel_txt.setOnClickListener(v -> {
@@ -597,7 +597,7 @@ public class GroupDetailSet extends BaseInitActivity {
                 int isAnonymous = groupModel.getData().getIsAnonymous();
                 int issProtect = groupModel.getData().getIsProtect();
                 if (isAnonymous == 1 || issProtect == 1) {
-                    Toast.makeText(mContext,"成员保护中",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "成员保护中", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 int tag = (int) v.getTag();
@@ -640,7 +640,7 @@ public class GroupDetailSet extends BaseInitActivity {
     private class group_member_ArrowItemViewClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            GroupAllMembers.actionStart(GroupDetailSet.this, groupListModel.getData(),groupModel);
+            GroupAllMembers.actionStart(GroupDetailSet.this, groupListModel.getData(), groupModel);
         }
     }
 
@@ -758,7 +758,7 @@ public class GroupDetailSet extends BaseInitActivity {
         MyInfo myInfo = new MyInfo(context);
         Map<String, Object> map = new HashMap<>();
         map.put("groupId", myGroupId);
-        map.put("NickName", changeNick);
+        map.put("nickname", changeNick);
         map.put("userId", myInfo.getUserInfo().getUserId());
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override

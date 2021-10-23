@@ -48,7 +48,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="60dp"
-        android:background="@drawable/loginbtn_radius"
+        android:background="@drawable/loginbtn_radius_yellow"
         android:text="注册新账号"
         android:textColor="@color/white"
         android:textStyle="bold" />
@@ -62,7 +62,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/loginbtn_radius"
+        android:background="@drawable/loginbtn_radius_yellow"
         android:text="登录"
         android:textColor="@color/white"
         android:textStyle="bold" />

@@ -66,5 +66,7 @@ public class Olduser_Model {
         private Integer userNum;
         @JsonProperty("vipType")
         private Integer vipType;
+        @JsonProperty("isQuestion")
+        private Integer isQuestion;
     }
 }

@@ -29,7 +29,7 @@ public class saveFile {
     public static String User_SmsCode_Url = "user/smsCode";
     public static String User_Register_Url = "user/register";
     public static String User_Login_Url = "user/login";
-    public static String User_UserQuestionList_Url = "securityQuestion/getUserQuestionList";
+    public static String User_SecurityQuestionList_Url = "public/getSecurityQuestionList";
     public static String User_ForgetQuestionList_Url = "public/getUserQuestionList";
     public static String User_addQuestionBack_Url = "public/addQuestionBack";
     public static String User_PublicQuestionBack_Url = "public/questionBack";
@@ -61,7 +61,7 @@ public class saveFile {
     public static String Group_Create_Url = "group/create";
     public static String Group_UserList_Url = "group/userList";
     public static String Group_UpdateInfo_Url = "group/updateInfo";
-    public static String Group_UpdateNickName_Url = "group/updateNickName";
+    public static String Group_UpdateNickName_Url = "group/updateNickname";
     public static String Group_Out_Url = "group/out";
     public static String Friend_InviteToGroup_Url = "friend/inviteToGroup";
     public static String group_MangerUser_Url = "group/mangerUser";
@@ -100,6 +100,13 @@ public class saveFile {
     public static String UserVipConfig_UserVipInfo = "userVipConfig/userVipInfo";
     public static String Friend_Blacks = "friend/setMeBlacks";
     public static String User_Delete = "user/delete";
+    public static String Question_NoLogin = "public/questionBackByNoLogin";
+    public static String Question_Login = "public/questionBackByLogin";
+    public static String User_PSW = "user/setPassword";
+    public static String Question_AddOrUpdate = "securityQuestion/addOrUpdate";
+    public static String SecurityQuestion_Check = "securityQuestion/securityQuestionCheck";
+    public static String Group_Horn = "group/horn";
+    public static String Friend_Blacks_List = "friend/blacks";
 
 
 

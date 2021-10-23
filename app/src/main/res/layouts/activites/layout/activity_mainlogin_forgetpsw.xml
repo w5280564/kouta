@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.login.MainLogin_ForgetPsw"
+    tools:context=".main.login.MainLogin_ForgetPsw_OrQuestion"
     android:focusableInTouchMode="true"
     android:focusable="true">
 
@@ -71,9 +71,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/login_phone"
-            android:inputType="phone"
             android:background="@null"
             android:hint="请输入手机号"
+            android:inputType="phone"
             android:lines="1"
             android:textColor="@color/greytwo"
             android:textColorHint="@color/greytwo"
@@ -97,15 +97,14 @@
     </RelativeLayout>
 
 
-
     <Button
         android:id="@+id/num_Btn"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_below="@id/phonerel"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
         android:layout_marginLeft="15dp"
+        android:layout_marginTop="32dp"
         android:layout_marginRight="15dp"
         android:background="@drawable/loginbtn_radius"
         android:text="下一步"

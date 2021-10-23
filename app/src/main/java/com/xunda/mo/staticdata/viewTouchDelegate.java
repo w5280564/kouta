@@ -1,17 +1,21 @@
 package com.xunda.mo.staticdata;
 
+import static android.content.ContentValues.TAG;
+
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.TouchDelegate;
 import android.view.View;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by waylen on 2017/9/29.
  */
 
 public class viewTouchDelegate {
+
+    public static void expandViewTouchDelegate(final View view,  int touch) {
+
+    }
     /**
      * 扩大View的触摸和点击响应范围,最大不超过其父View范围
      *

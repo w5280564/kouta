@@ -78,7 +78,7 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
                         v.setEnabled(false);
                         holder.refuse_Btn.setVisibility(View.GONE);
                         holder.time_Txt.setVisibility(View.VISIBLE);
-                        holder.result_Txt.setText("已通过");
+                        holder.result_Txt.setText("已同意");
                     }
                     onItemAddRemoveClickLister.onItemAddClick(v, position);
 
@@ -129,13 +129,13 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
         holder.add_Btn.setVisibility(View.INVISIBLE);
         holder.time_Txt.setVisibility(View.VISIBLE);
 //        holder.time_Txt.setText(StaticData.stampToDate(oneData.getUpdateTime()));
-        //1申请中2已通过3被拒绝4已过期
+        //1申请中2已同意3被拒绝4已过期
         if (oneData.getApplyStatus() == 1) {
             holder.refuse_Btn.setVisibility(View.VISIBLE);
             holder.add_Btn.setVisibility(View.VISIBLE);
             holder.time_Txt.setVisibility(View.INVISIBLE);
         } else if (oneData.getApplyStatus() == 2) {
-            holder.result_Txt.setText("已通过");
+            holder.result_Txt.setText("已同意");
         } else if (oneData.getApplyStatus() == 3) {
             holder.result_Txt.setText("被拒绝");
         } else if (oneData.getApplyStatus() == 4) {

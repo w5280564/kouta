@@ -44,34 +44,13 @@ public class MyEaseChatRowText extends EaseChatRow {
 
     @Override
     public void onSetUpView() {
-//            if (!showSenderType) {
-
-        if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-
-        }
-        if (message.getType() == EMMessage.Type.TXT) {
-
-        }
-
 //            String ext = message.getStringAttribute(MyConstant.EXT);
 //            JSONObject jsonObject = new JSONObject(ext);
-
         if (message.getChatType() == EMMessage.ChatType.Chat) {
-//                if (message.getStringAttribute("messageType").equals("chat")) {
-//                    if (!showSenderType){
-//                        usernickView.setText(message.getStringAttribute("toName"));
-//                        String headUrl = message.getStringAttribute("toHead");
-//                        Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(iv_userhead);
-//
-//                    }else {
-
-//                        usernickView.setText(message.getStringAttribute("sendName"));
-//                        String headUrl = message.getStringAttribute("sendHead");
-//                        Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(iv_userhead);
-
-//                    }
-
-//                }else if (message.getStringAttribute("messageType").equals("group")) {
+            if (isSender()){
+                String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
+                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).into(userAvatarView);
+            }
             //添加群聊其他用户的名字与头像
         } else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
             String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
@@ -85,15 +64,11 @@ public class MyEaseChatRowText extends EaseChatRow {
                 Glide.with(getContext()).load(defaultAvatar).into(userAvatarView);
             }
 
-
             //匿名聊天
             if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
                 Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);
             }
-
-
         }
-//            }
 
         EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
         if (txtBody != null) {

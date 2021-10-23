@@ -56,6 +56,7 @@ import com.xunda.mo.main.baseView.MySwitchItemView;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.group.activity.GroupDetail_Report;
 import com.xunda.mo.main.info.MyInfo;
+import com.xunda.mo.main.me.activity.Me_VIP;
 import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.MyLevel;
@@ -382,7 +383,7 @@ public class ChatDetailSet extends BaseInitActivity {
                 .showContent(true)
                 .setContent("该功能为会员特权功能，请开通会员后使用")
                 .setOnConfirmClickListener(view -> {
-
+                    Me_VIP.actionStart(mContext);
                 })
                 .showCancelButton(true)
                 .show();
@@ -467,17 +468,17 @@ public class ChatDetailSet extends BaseInitActivity {
         TextView change_txt = contentView.findViewById(R.id.change_txt);
         TextView newregistr_txt = contentView.findViewById(R.id.newregistr_txt);
         TextView cancel_txt = contentView.findViewById(R.id.cancel_txt);
+        String userId = model.getData().getUserId();
+        String user = "user";
         change_txt.setOnClickListener(v -> {
             String type = "2";
-//            reportMethod(mContext, saveFile.Report_CreatReportLog_Url,type);
-            String userId = model.getData().getUserId();
-            String user = "user";
-            GroupDetail_Report.actionStart(mContext, userId, user);
+            GroupDetail_Report.actionStart(mContext, userId, user,type);
             MorePopup.dismiss();
         });
         newregistr_txt.setOnClickListener(v -> {
+//            reportMethod(mContext, saveFile.Report_CreatReportLog_Url, type);
             String type = "1";
-            reportMethod(mContext, saveFile.Report_CreatReportLog_Url, type);
+            GroupDetail_Report.actionStart(mContext, userId, user,type);
             MorePopup.dismiss();
         });
         cancel_txt.setOnClickListener(v -> {
@@ -647,7 +648,7 @@ public class ChatDetailSet extends BaseInitActivity {
         });
     }
 
-    /**开启阅后即焚
+    /**开启Mo消息
      * @param context
      * @param baseUrl
      * @param

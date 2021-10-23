@@ -8,13 +8,19 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -22,6 +28,7 @@ import com.xunda.mo.R;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 
 public class MainLogin_OldUser_Phone extends AppCompatActivity {
 
@@ -30,6 +37,7 @@ public class MainLogin_OldUser_Phone extends AppCompatActivity {
     private TextView code_txt;
     private EditText phone_edit;
     private View fork_img;
+    private CheckBox agreement_choice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,13 +111,57 @@ public class MainLogin_OldUser_Phone extends AppCompatActivity {
         code_txt.setOnClickListener(new MainLogin_OldUser_Phone.code_txtOnClick());
         fork_img.setOnClickListener(new fork_imgOnClick());
         phone_edit.addTextChangedListener(new textchangerlister());
+        agreement_choice = findViewById(R.id.agreement_choice);
+        TextView login_txt = findViewById(R.id.login_txt);
+        setSe(login_txt);
     }
+
+    private void setSe(TextView login_txt){
+        String str = "登录即视为同意《用户协议》和《隐私政策》";
+        SpannableStringBuilder ssb = new SpannableStringBuilder();
+        ssb.append(str);
+        final int start = str.indexOf("《");//第一个出现的位置
+        ssb.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                String url = xUtils3Http.BASE_URL + "service.html";
+                MainRegister_Agreement.actionStart(MainLogin_OldUser_Phone.this, url);
+            }
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.blue));
+                ds.setUnderlineText(false);
+            }
+        }, start, start + 6, 0);
+        int end = str.lastIndexOf("《");
+        ssb.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                String url = xUtils3Http.BASE_URL + "privacy.html";
+                MainRegister_Agreement.actionStart(MainLogin_OldUser_Phone.this, url);
+            }
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.blue));
+                ds.setUnderlineText(false);
+            }
+        }, end, end + 6, 0);
+        login_txt.setMovementMethod(LinkMovementMethod.getInstance());
+        login_txt.setText(ssb, TextView.BufferType.SPANNABLE);
+    }
+
 
     private class num_BtnOnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
             if (!StaticData.isPhone(phone_edit.getText().toString())){
                 Toast.makeText(MainLogin_OldUser_Phone.this, "请输入正确手机号码", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!agreement_choice.isChecked()) {
+                Toast.makeText(MainLogin_OldUser_Phone.this, "请阅读并同意用户协议和隐私政策", Toast.LENGTH_SHORT).show();
                 return;
             }
             Intent intent = new Intent(MainLogin_OldUser_Phone.this, MainLogin_Code.class);

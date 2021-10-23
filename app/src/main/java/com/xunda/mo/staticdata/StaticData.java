@@ -734,7 +734,6 @@ public class StaticData {
     }
 
 
-
     // 将字符串转为时间戳
     public static Date getTime(String user_time) {
         String re_time = null;
@@ -772,7 +771,8 @@ public class StaticData {
         String sd = sdf.format(date);
         return sd;
     }
-    public static String toDateDay(String forMat,long stamp) {
+
+    public static String toDateDay(String forMat, long stamp) {
         Long ssTime = Math.round(stamp * 1.0 / 1000);//毫秒转化秒
         SimpleDateFormat sdf = new SimpleDateFormat(forMat);//这个是你要转成后的时间的格式
         Date date = new Date(ssTime * 1000);
@@ -939,6 +939,7 @@ public class StaticData {
         return pwd.matches(regex);
     }
 
+
     @SuppressLint("MissingPermission")
     public static String getIMEI(Context context) {
         String deviceId = null;
@@ -951,19 +952,19 @@ public class StaticData {
                     deviceId = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
                 }
             } else {
-                // request old storage permission
+                // request old storage permission 需要电话权限
                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                     return null;
                 }
-//                deviceId = tm.getDeviceId();
-                getDouIMEI(context);
+              deviceId =  getDouIMEI(context);
             }
-            if (deviceId == null || "".equals(deviceId)) {
+
+            if (TextUtils.isEmpty(deviceId)) {
                 return getLocalMacAddress(context);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if (deviceId == null || "".equals(deviceId)) {
+            if (TextUtils.isEmpty(deviceId)) {
                 return getLocalMacAddress(context);
             }
         }
@@ -1007,7 +1008,6 @@ public class StaticData {
         WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = wifi.getConnectionInfo();
         return info.getMacAddress();
-
     }
 
 

@@ -47,17 +47,17 @@ public class chatRowUserCard extends EaseChatRow {
         nicknameView.setText(nickname);//名片名字
 //        String headUrl = params.get(DemoConstant.USER_CARD_AVATAR);
         String headUrl = params.get(MyConstant.AVATAR);
-        Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(headImageView);
+        Glide.with(getContext()).load(headUrl).into(headImageView);
 //            String ext = message.getStringAttribute("ext");
 //            JSONObject jsonObject = new JSONObject(ext);
         usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME, ""));
         String userUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
-        Glide.with(getContext()).load(userUrl).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);
+        Glide.with(getContext()).load(userUrl).into(userAvatarView);
 
         if (message.getChatType() == EMMessage.ChatType.GroupChat) {
             //匿名聊天
             if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
-                Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);
+                Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(R.drawable.mo_icon).into(userAvatarView);
             }
         }
     }

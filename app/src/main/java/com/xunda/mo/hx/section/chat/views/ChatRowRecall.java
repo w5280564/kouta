@@ -6,6 +6,7 @@ import android.widget.TextView;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 import com.xunda.mo.R;
+import com.xunda.mo.main.constant.MyConstant;
 
 public class ChatRowRecall extends EaseChatRow {
     private TextView contentView;
@@ -28,10 +29,18 @@ public class ChatRowRecall extends EaseChatRow {
     protected void onSetUpView() {
         // 设置显示内容
         String messageStr = null;
-        if (message.direct() == EMMessage.Direct.SEND) {
-            messageStr = String.format(context.getString(R.string.msg_recall_by_self));
-        } else {
-            messageStr = String.format(context.getString(R.string.msg_recall_by_user), message.getFrom());
+        if (message.getChatType() == EMMessage.ChatType.Chat) {
+            if (isSender()) {
+                messageStr = String.format(context.getString(R.string.msg_recall_by_self));
+            } else {
+                String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
+                messageStr = String.format(context.getString(R.string.msg_recall_by_user), sendName);
+                messageStr = "对方撤回一条消息";
+            }
+
+        } else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+            String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
+            messageStr = String.format(context.getString(R.string.msg_recall_by_user), sendName);
         }
         contentView.setText(messageStr);
     }

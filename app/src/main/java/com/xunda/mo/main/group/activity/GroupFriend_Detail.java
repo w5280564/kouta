@@ -307,7 +307,7 @@ public class GroupFriend_Detail extends BaseInitActivity {
         new SimpleDialogFragment.Builder(mContext)
                 .setTitle("提示")
                 .showContent(true)
-                .setContent("加入黑名单该用户将被踢出群聊，并不能申请加入本群")
+                .setContent("将成员加入群聊黑名单，禁止聊天")
                 .setOnConfirmClickListener(view -> BlockMethod(GroupFriend_Detail.this, saveFile.Group_SetBlack_Url, black_Switch.getSwitch().isChecked(), black_Switch.getSwitch()))
                 .showCancelButton(true)
                 .show();
@@ -497,16 +497,20 @@ public class GroupFriend_Detail extends BaseInitActivity {
         TextView change_txt = contentView.findViewById(R.id.change_txt);
         TextView newregistr_txt = contentView.findViewById(R.id.newregistr_txt);
         TextView cancel_txt = contentView.findViewById(R.id.cancel_txt);
+        String user = "user";
         change_txt.setOnClickListener(new NoDoubleClickListener() {
             @Override
             protected void onNoDoubleClick(View v) {
+                String type = "2";
+                GroupDetail_Report.actionStart(mContext, userId, user,type);
                 MorePopup.dismiss();
             }
         });
         newregistr_txt.setOnClickListener(new NoDoubleClickListener() {
             @Override
             protected void onNoDoubleClick(View v) {
-                QuestionMethod(mContext, saveFile.User_PublicQuestionBack_Url);
+                String type = "1";
+                GroupDetail_Report.actionStart(mContext, userId, user,type);
                 MorePopup.dismiss();
             }
         });
@@ -533,7 +537,7 @@ public class GroupFriend_Detail extends BaseInitActivity {
     public void QuestionMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put("picture", model.getData().getUserHead());
-        map.put("toReportUserId", model.getData().getUserNum());
+        map.put("toReportId", model.getData().getUserNum());
         map.put("type", "1");
         xUtils3Http.post(GroupFriend_Detail.this, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
@@ -583,7 +587,7 @@ public class GroupFriend_Detail extends BaseInitActivity {
     public void changeGroupNameMethod(Context context, String baseUrl, String changeNick) {
         Map<String, Object> map = new HashMap<>();
         map.put("groupId", groupId);
-        map.put("NickName", changeNick);
+        map.put("nickname", changeNick);
         map.put("userId", userId);
         xUtils3Http.post(GroupFriend_Detail.this, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override

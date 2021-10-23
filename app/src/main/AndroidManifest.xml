@@ -16,8 +16,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 短信验证登陆功能需要添加次权限来自动填充验证码，用不到可以去掉 -->
-<!--    <uses-permission android:name="android.permission.RECEIVE_SMS" />-->
-<!--    <uses-permission android:name="android.permission.READ_SMS" />-->
+    <!-- <uses-permission android:name="android.permission.RECEIVE_SMS" /> -->
+    <!-- <uses-permission android:name="android.permission.READ_SMS" /> -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission
         android:name="android.permission.MODIFY_PHONE_STATE"
@@ -56,7 +56,7 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
-
+    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" /> <!-- 华为推送角标 -->
     <queries>
         <intent>
             <action android:name="com.huawei.hms.core.aidlservice" />
@@ -92,6 +92,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".main.group.activity.Group_Horn"
+            android:exported="true" />
+        <activity
+            android:name=".main.me.activity.Me_Set_CheckPhone"
+            android:exported="true" />
+        <activity
+            android:name=".main.me.activity.Me_Set_PSW"
+            android:exported="true" />
         <activity
             android:name=".main.me.activity.Me_Safety"
             android:exported="true" />
@@ -602,10 +611,10 @@
             android:name=".main.login.MainLogin_ForgetPsw_SetPsw"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.login.MainLogin_ForgetPsw_question"
+            android:name=".main.login.MainLogin_ForgetPsw_Question"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.login.MainLogin_ForgetPsw"
+            android:name=".main.login.MainLogin_ForgetPsw_OrQuestion"
             android:screenOrientation="portrait" />
         <activity
             android:name=".main.login.MainLogin_OldUser_Phone"
@@ -629,6 +638,18 @@
             android:name=".main.login.MainRegister_Agreement"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".main.login.Main_Novalidation_Code"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.me.activity.Me_Set_SecurityQuestion"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".hx.section.chat.activicy.MyEaseShowBigImageActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".main.me.activity.Me_Manage_BlackList"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name=".main.login.Main_Launch"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -641,7 +662,8 @@
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MyPayTitleStype" />
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"

@@ -16,6 +16,7 @@ import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMContactListener;
 import com.hyphenate.EMConversationListener;
 import com.hyphenate.EMError;
+import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMMultiDeviceListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
@@ -49,6 +50,7 @@ import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.hx.section.group.GroupHelper;
 import com.xunda.mo.main.MainActivity;
 import com.xunda.mo.main.baseView.MyApplication;
+import com.xunda.mo.main.constant.MyConstant;
 
 import java.util.List;
 import java.util.Map;
@@ -146,6 +148,16 @@ public class ChatPresenter extends EaseChatPresenter {
         }
     }
 
+
+    /**
+     * \~chinese
+     * 接收消息
+     * 在接收到文本，图片，视频，语音，地理位置，文件这些消息的时候，会通过此回调通知用户
+     * <p>
+     * \~english
+     * Messages received
+     * When receive the message of text, image, video, voice, location, file, call the callback to notify user
+     */
     @Override
     public void onMessageReceived(List<EMMessage> messages) {
         super.onMessageReceived(messages);
@@ -170,6 +182,12 @@ public class ChatPresenter extends EaseChatPresenter {
             }
             //notify new message
             getNotifier().vibrateAndPlayTone(message);
+
+             String messType = message.getStringAttribute(MyConstant.MESSAGE_TYPE,"");
+             if (TextUtils.equals(messType,MyConstant.MESS_TYPE_GROUP_HORN)){
+                messageChangeLiveData.with(MyConstant.MESS_TYPE_GROUP_HORN).postValue(message);
+            }
+
         }
     }
 
@@ -191,11 +209,38 @@ public class ChatPresenter extends EaseChatPresenter {
         return false;
     }
 
+    /**
+     * \~chinese
+     * 接收CMD消息
+     * 区别于{@link #onMessageReceived(List)}, 这个回调只包含命令的消息体，包含命令的消息体通常不对用户展示
+     * <p>
+     * \~english
+     * Command messages received.
+     * Difference from {@link EMMessageListener#onMessageReceived(List)}, this callback only contains command message,
+     * which normally not be displayed to user
+     */
     @Override
     public void onCmdMessageReceived(List<EMMessage> messages) {
         super.onCmdMessageReceived(messages);
+        for (EMMessage msg : messages) {
+            if (msg.getBooleanAttribute(MyConstant.Dele_Type, false)) {
+                String Recall_Mess_ID = msg.getStringAttribute(MyConstant.SendFireRecall_Mess_ID, "");
+                EMConversation conversation = EMClient.getInstance().chatManager().getConversation(msg.getFrom(), EMConversation.EMConversationType.Chat, true);
+//                // 删除消息
+                conversation.removeMessage(Recall_Mess_ID);
+                messageChangeLiveData.with(MyConstant.FIRE_REFRESH).postValue(true);
+            }
+        }
+
+
     }
 
+    /**
+     * \~chinese
+     * 接受到消息体的已读回执，消息的接收方已经阅读此消息
+     * \~english
+     * Received message read ack by recipient as message had been read
+     */
     @Override
     public void onMessageRead(List<EMMessage> messages) {
         super.onMessageRead(messages);
@@ -203,8 +248,25 @@ public class ChatPresenter extends EaseChatPresenter {
             EaseEvent event = EaseEvent.create(DemoConstant.MESSAGE_CHANGE_RECALL, EaseEvent.TYPE.MESSAGE);
             messageChangeLiveData.with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(event);
         }
+//        for (EMMessage msg : messages) {
+//            if (msg.getBooleanAttribute(MyConstant.FIRE_TYPE, false)) {
+//                messageChangeLiveData.with(MyConstant.SendFireRecall).postValue(msg);
+//                // 消息所属会话
+//                EMConversation conversation = EMClient.getInstance().chatManager().getConversation(msg.getFrom(), EMConversation.EMConversationType.Chat, true);
+//                // 删除消息
+//                conversation.removeMessage(msg.getMsgId());
+////                messageChangeLiveData.with(MyConstant.FIRE_REFRESH).postValue(true);
+//            }
+//        }
     }
 
+    /**
+     * \~chinese
+     * 收到消息体的撤回回调，消息体已经成功撤回
+     * <p>
+     * \~english
+     * Sender has recalled the messages
+     */
     @Override
     public void onMessageRecalled(List<EMMessage> messages) {
         EaseEvent event = EaseEvent.create(DemoConstant.MESSAGE_CHANGE_RECALL, EaseEvent.TYPE.MESSAGE);
@@ -213,6 +275,8 @@ public class ChatPresenter extends EaseChatPresenter {
             if (msg.getChatType() == EMMessage.ChatType.GroupChat && EaseAtMessageHelper.get().isAtMeMsg(msg)) {
                 EaseAtMessageHelper.get().removeAtMeGroup(msg.getTo());
             }
+            msg.ext();
+
             EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
             EMTextMessageBody txtBody = new EMTextMessageBody(String.format(context.getString(R.string.msg_recall_by_user), msg.getFrom()));
             msgNotification.addBody(txtBody);
@@ -222,7 +286,13 @@ public class ChatPresenter extends EaseChatPresenter {
             msgNotification.setMsgTime(msg.getMsgTime());
             msgNotification.setLocalTime(msg.getMsgTime());
             msgNotification.setChatType(msg.getChatType());
-            msgNotification.setAttribute(DemoConstant.MESSAGE_TYPE_RECALL, true);
+//            msgNotification.setAttribute(DemoConstant.MESSAGE_TYPE_RECALL, true);
+            msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.Message_Recall);
+            if (msg.getChatType() == EMMessage.ChatType.GroupChat) {
+                msgNotification.setAttribute(MyConstant.SEND_NAME, msg.getStringAttribute(MyConstant.SEND_NAME, ""));
+                msgNotification.setAttribute(MyConstant.GROUP_NAME, msg.getStringAttribute(MyConstant.GROUP_NAME, ""));
+                msgNotification.setAttribute(MyConstant.GROUP_HEAD, msg.getStringAttribute(MyConstant.GROUP_HEAD, ""));
+            }
             msgNotification.setStatus(EMMessage.Status.SUCCESS);
             EMClient.getInstance().chatManager().saveMessage(msgNotification);
         }
@@ -246,7 +316,6 @@ public class ChatPresenter extends EaseChatPresenter {
     }
 
     private class ChatConnectionListener implements EMConnectionListener {
-
         @Override
         public void onConnected() {
             EMLog.i(TAG, "onConnected");
@@ -674,25 +743,30 @@ public class ChatPresenter extends EaseChatPresenter {
         public void onContactInvited(String username, String reason) {
             EMLog.i("ChatContactListener", "onContactInvited");
             List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
+            int friendCount = 0;
+            friendCount = allMessages.size();
             if (allMessages != null && !allMessages.isEmpty()) {
                 for (EMMessage message : allMessages) {
                     Map<String, Object> ext = message.ext();
+//                    if (ext != null && ext.get(DemoConstant.SYSTEM_MESSAGE_STATUS).equals(InviteMessageStatus.BEINVITEED.name())) {//"BEINVITEED"
+//                        friendCount += 1;
+//                    }
                     if (ext != null && !ext.containsKey(DemoConstant.SYSTEM_MESSAGE_GROUP_ID)
                             && (ext.containsKey(DemoConstant.SYSTEM_MESSAGE_FROM) && TextUtils.equals(username, (String) ext.get(DemoConstant.SYSTEM_MESSAGE_FROM)))) {
                         EaseSystemMsgManager.getInstance().removeMessage(message);
                     }
                 }
             }
-
             Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
             ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, username);
             ext.put(DemoConstant.SYSTEM_MESSAGE_REASON, reason);
             ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.BEINVITEED.name());
             EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
-
             notifyNewInviteMessage(message);
-            EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
-            messageChangeLiveData.with(DemoConstant.CONTACT_CHANGE).postValue(event);
+            messageChangeLiveData.with(MyConstant.ConstantCount).postValue(friendCount);
+
+//            EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
+//            messageChangeLiveData.with(DemoConstant.CONTACT_CHANGE).postValue(event);
 
 //            showToast(context.getString(InviteMessageStatus.BEINVITEED.getMsgContent(), username));
             EMLog.i(TAG, context.getString(InviteMessageStatus.BEINVITEED.getMsgContent(), username));
@@ -717,11 +791,12 @@ public class ChatPresenter extends EaseChatPresenter {
             ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.BEAGREED.name());
             EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
 
-            notifyNewInviteMessage(message);
-            EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
-            messageChangeLiveData.with(DemoConstant.CONTACT_CHANGE).postValue(event);
+//            notifyNewInviteMessage(message);
 
-            showToast(context.getString(InviteMessageStatus.BEAGREED.getMsgContent()));
+//            EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
+//            messageChangeLiveData.with(DemoConstant.CONTACT_CHANGE).postValue(event);
+
+//            showToast(context.getString(InviteMessageStatus.BEAGREED.getMsgContent()));
             EMLog.i(TAG, context.getString(InviteMessageStatus.BEAGREED.getMsgContent()));
         }
 
@@ -735,8 +810,8 @@ public class ChatPresenter extends EaseChatPresenter {
 
             notifyNewInviteMessage(message);
 
-            EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
-            messageChangeLiveData.with(DemoConstant.CONTACT_CHANGE).postValue(event);
+//            EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
+//            messageChangeLiveData.with(DemoConstant.CONTACT_CHANGE).postValue(event);
 //            showToast(context.getString(InviteMessageStatus.BEREFUSED.getMsgContent(), username));
             EMLog.i(TAG, context.getString(InviteMessageStatus.BEREFUSED.getMsgContent(), username));
         }

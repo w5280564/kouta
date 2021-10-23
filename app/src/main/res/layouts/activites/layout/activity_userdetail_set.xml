@@ -226,6 +226,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:background="@color/white"
+        android:visibility="gone"
         android:text="退出登录"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"

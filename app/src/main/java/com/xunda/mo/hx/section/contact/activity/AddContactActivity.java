@@ -18,6 +18,7 @@ import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
 import com.xunda.mo.hx.section.contact.adapter.AddContactAdapter;
 import com.xunda.mo.hx.section.contact.viewmodels.AddContactViewModel;
 import com.xunda.mo.hx.section.search.SearchActivity;
+import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 
 import java.util.List;
 
@@ -88,7 +89,9 @@ public class AddContactActivity extends SearchActivity implements EaseTitleBar.O
         // 跳转到好友页面
         String item = (String) adapter.getItem(position);
         EaseUser user = new EaseUser(item);
-        ContactDetailActivity.actionStart(mContext, user, false);
+//        ContactDetailActivity.actionStart(mContext, user, false);
+        String addType = "8";
+        ChatFriend_Detail.actionStart(mContext, user.getUsername(), user, addType);
     }
 
     @Override

@@ -8,8 +8,8 @@ import com.hyphenate.easeui.delegate.EaseMessageAdapterDelegate;
 import com.hyphenate.easeui.interfaces.MessageListItemClickListener;
 import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.viewholder.EaseChatRowViewHolder;
-import com.hyphenate.easeui.viewholder.EaseImageViewHolder;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
+import com.xunda.mo.hx.section.chat.viewholder.MyEaseImageViewHolder;
 import com.xunda.mo.hx.section.chat.views.MyEaseChatRowImage;
 
 /**
@@ -36,6 +36,6 @@ public class MyEaseImageAdapterDelegate extends EaseMessageAdapterDelegate<EMMes
 
     @Override
     protected EaseChatRowViewHolder createViewHolder(View view, MessageListItemClickListener itemClickListener) {
-        return new EaseImageViewHolder(view, itemClickListener);
+        return new MyEaseImageViewHolder(view, itemClickListener);
     }
 }

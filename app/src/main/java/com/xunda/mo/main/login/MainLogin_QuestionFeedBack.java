@@ -91,7 +91,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
         photoPaths = new ArrayList<>();
         initTitle();
         initView();
-        checkNeedPermissions();
+//        checkNeedPermissions();
 //        verifyStoragePermissions(MainLogin_QuestionFeedBack.this);
 
         ObsConfiguration config = new ObsConfiguration();
@@ -152,7 +152,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
                 return;
             }
             if (photoPaths.isEmpty()) {
-                QuestionMethod(MainLogin_QuestionFeedBack.this,  saveFile.User_PublicQuestionBack_Url);
+                QuestionMethod(MainLogin_QuestionFeedBack.this,  saveFile.Question_NoLogin);
 
             } else {
                 AsyncTask<Void, Void, String> task = new PostObjectTask();
@@ -170,8 +170,8 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
         map.put("email", email_edit.getText().toString());
         map.put("remark", content_edit.getText().toString());
         map.put("picObsUrl", pictures);
-        map.put("loginStatus", "0");
-        map.put("equipmentVersion", "1");
+//        map.put("loginStatus", "0");
+        map.put("equipmentVersion", "2");
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
@@ -423,7 +423,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
             super.onPostExecute(s);
 //            Log.i("abc", " result.getStatusCode():" + s);
             pictures = s;
-            QuestionMethod(MainLogin_QuestionFeedBack.this,  saveFile.User_PublicQuestionBack_Url);
+            QuestionMethod(MainLogin_QuestionFeedBack.this,  saveFile.Question_NoLogin);
         }
     }
 

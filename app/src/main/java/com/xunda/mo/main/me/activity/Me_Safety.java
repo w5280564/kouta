@@ -17,8 +17,11 @@ import androidx.core.content.ContextCompat;
 import com.hyphenate.EMCallBack;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
+import com.xunda.mo.hx.common.widget.ArrowItemView;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.hx.section.me.activity.MultiDeviceActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
+import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.login.MainLogin_Register;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
@@ -28,9 +31,10 @@ import com.xunda.mo.staticdata.xUtils3Http;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Me_Safety extends BaseInitActivity {
+public class Me_Safety extends BaseInitActivity implements View.OnClickListener {
 
     private View item_se;
+    private ArrowItemView itemEquipments;
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, Me_Safety.class);
@@ -49,6 +53,13 @@ public class Me_Safety extends BaseInitActivity {
 
         item_se = findViewById(R.id.item_se);
         item_se.setOnClickListener(new item_seClick());
+        itemEquipments = findViewById(R.id.item_equipments);
+    }
+
+    @Override
+    protected void initListener() {
+        super.initListener();
+        itemEquipments.setOnClickListener(this);
     }
 
     private void initTitle() {
@@ -64,6 +75,15 @@ public class Me_Safety extends BaseInitActivity {
         right_Btn.setVisibility(View.GONE);
 
         return_Btn.setOnClickListener(new return_Btn());
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.item_equipments ://多端多设备管理
+                MultiDeviceActivity.actionStart(mContext);
+                break;
+        }
     }
 
     private class return_Btn extends NoDoubleClickListener {
@@ -131,6 +151,8 @@ public class Me_Safety extends BaseInitActivity {
                 runOnUiThread(() -> {
                     pd.dismiss();
                     // show login screen
+                    MyInfo myInfo = new MyInfo(Me_Safety.this);
+                    myInfo.clearInfoData(Me_Safety.this);
                     saveFile.clearShareData("JSESSIONID", Me_Safety.this);
                     Intent intent = new Intent(Me_Safety.this, MainLogin_Register.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

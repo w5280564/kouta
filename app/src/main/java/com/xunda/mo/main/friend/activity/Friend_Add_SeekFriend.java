@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -63,6 +65,7 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
 
         cancel_txt.setOnClickListener(new cancel_txtOnclickLister());
         seek_edit.setOnEditorActionListener(new SeekOnEditorListener());
+        seek_edit.addTextChangedListener(new seek_editTextWatcher());
     }
 
     private class cancel_txtOnclickLister implements View.OnClickListener {
@@ -105,6 +108,23 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
         }
     }
 
+    private class seek_editTextWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            initData(2);
+        }
+    }
+
 
     public void FriendList(Context context, LinearLayout myFlex, int count) {
         if (myFlex != null) {
@@ -118,7 +138,7 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
             TextView more_txt = myView.findViewById(R.id.more_txt);
             viewTouchDelegate.expandViewTouchDelegate(more_txt, 50, 50, 50, 50);
             String UserType = model.getData().get(i).getUserType();
-            if (UserType.equals("NickNameUser")) {
+            if (UserType.equals("nicknameUser")) {
                 tag_txt.setText("联系人");
             } else if (UserType.equals("userNumUser")) {
                 tag_txt.setText("MoId");
@@ -229,6 +249,7 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
             });
         }
     }
+
 
 
 }

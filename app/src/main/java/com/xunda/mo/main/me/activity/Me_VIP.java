@@ -38,16 +38,17 @@ import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.FlowLayout;
-import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.pay.alipay.AuthResult;
 import com.xunda.mo.main.pay.alipay.PayResult;
 import com.xunda.mo.model.CardFragment_Bean;
 import com.xunda.mo.model.Me_Vip_Count;
 import com.xunda.mo.model.Order_Bean;
+import com.xunda.mo.model.UserDetail_Bean;
 import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
+import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
 
 import org.json.JSONObject;
@@ -92,6 +93,7 @@ public class Me_VIP extends BaseInitActivity {
 
         vip_Con = findViewById(R.id.vip_Con);
         return_Btn = findViewById(R.id.return_Btn);
+        viewTouchDelegate.expandViewTouchDelegate(return_Btn,50,50,50,50);
         return_Btn.setOnClickListener(new return_BtnClick());
         on_Btn = findViewById(R.id.on_Btn);
         on_Btn.setOnClickListener(new on_BtnClick());
@@ -136,22 +138,20 @@ public class Me_VIP extends BaseInitActivity {
                 showVip(Me_VIP.this, zun_Txt, dataDTO);
             }
         });
-
-
     }
 
-    private void setMyData() {
-        MyInfo myInfo = new MyInfo(mContext);
-        String headUrl = myInfo.getUserInfo().getHeadImg();
+    private void setMyData(UserDetail_Bean userModel) {
+//        MyInfo myInfo = new MyInfo(mContext);
+        String headUrl = userModel.getData().getHeadImg();
         Glide.with(mContext).load(headUrl).into(head_Image);
-        String name = myInfo.getUserInfo().getNickname();
+        String name = userModel.getData().getNickname();
         name_Txt.setText(name);
-        int vipType = myInfo.getUserInfo().getVipType();
+        int vipType = userModel.getData().getVipType();
         if (vipType == 1) {
             vip_Txt.setVisibility(View.VISIBLE);
             on_Btn.setText("续费特权");
         }
-        int idStr = myInfo.getUserInfo().getUserNum();
+        int idStr = userModel.getData().getUserNum();
         id_Txt.setText("Mo ID:" + idStr);
         vipTypeList(vipType_Flow, mContext, vipType);
     }
@@ -160,11 +160,12 @@ public class Me_VIP extends BaseInitActivity {
     protected void onResume() {
         super.onResume();
         vipData(mContext, saveFile.UserVipConfig_UserVipInfo);
-        setMyData();
+        UserMethod(mContext, saveFile.User_GetUserInfo_Url);
+//        setMyData();
     }
 
     public void vipTypeList(FlowLayout label_Flow, Context mContext, int vipType) {
-        String[] vipData = new String[]{"专属铭牌", "双向撤回", "超大群聊", "升级加速", "隐藏在线状态", "超长语音", "阅后即焚", "好友上限"};
+        String[] vipData = new String[]{"专属铭牌", "双向撤回", "超大群聊", "升级加速", "隐藏在线状态", "超长语音", "Mo消息", "好友上限"};
 
         int[] vipImgData = new int[]{R.mipmap.vip_crown_yellow, R.mipmap.vip_recall_yellow, R.mipmap.vip_group_yellow, R.mipmap.vip_grade_yellow, R.mipmap.vip_clock_yellow, R.mipmap.vip_voice_yellow, R.mipmap.vip_fire_yellow, R.mipmap.vip_friend_yellow};
         int[] unVipImgData = new int[]{R.mipmap.vip_crown_gray, R.mipmap.vip_recall_gray, R.mipmap.vip_group_gray, R.mipmap.vip_grade_gray, R.mipmap.vip_clock_gray, R.mipmap.vip_voice_gray, R.mipmap.vip_fire_gray, R.mipmap.vip_friend_gray};
@@ -363,6 +364,25 @@ public class Me_VIP extends BaseInitActivity {
         wechat_Btn.setSelected(true);
     }
 
+    //是否是VIP
+    @SuppressLint("SetTextI18n")
+    public void UserMethod(Context context, String baseUrl) {
+        Map<String, Object> map = new HashMap<>();
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                UserDetail_Bean  userModel = new Gson().fromJson(result, UserDetail_Bean.class);
+                UserDetail_Bean.DataDTO dataDTO = userModel.getData();
+                setMyData(userModel);
+            }
+            @Override
+            public void failed(String... args) {
+
+            }
+        });
+    }
+
+
     @SuppressLint("SetTextI18n")
     public void vipData(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
@@ -387,7 +407,6 @@ public class Me_VIP extends BaseInitActivity {
 
 
     Order_Bean orderModel;
-
     @SuppressLint("SetTextI18n")
     public void orderData(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();

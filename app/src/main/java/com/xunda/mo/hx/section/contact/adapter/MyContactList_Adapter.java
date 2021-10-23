@@ -47,7 +47,7 @@ public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser>
     private class ContactViewHolder extends ViewHolder<EaseUser> {
         private TextView mHeader;
         private EaseImageView mAvatar;
-        private TextView mName,vipType_txt;
+        private TextView mName, vipType_txt;
         private TextView mSignature;
         private TextView mUnreadMsgNumber;
         private ConstraintLayout clUser;
@@ -143,35 +143,34 @@ public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser>
 
             try {
                 String selectInfoExt = item.getExt();
-                JSONObject jsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
-                if (jsonObject != null) {
-                    String remarkName = jsonObject.getString(MyConstant.REMARK_NAME);
-                    String name = TextUtils.isEmpty(remarkName) ? item.getNickname() : remarkName;
-                    int nameLength = name.length();
-                    String nameAndNum = name + " (" + jsonObject.getString(MyConstant.USER_NUM) + ")";
-                    setName(nameAndNum, nameLength, mName);
+                if (selectInfoExt != null) {
+                    JSONObject jsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                    if (jsonObject != null) {
+                        String remarkName = jsonObject.getString(MyConstant.REMARK_NAME);
+                        String name = TextUtils.isEmpty(remarkName) ? item.getNickname() : remarkName;
+                        int nameLength = name.length();
+                        String nameAndNum = name + " (" + jsonObject.getString(MyConstant.USER_NUM) + ")";
+                        setName(nameAndNum, nameLength, mName);
 
-                    String vipTypeString = jsonObject.getString(MyConstant.VIP_TYPE);
-                    if (TextUtils.equals(vipTypeString, "0")) {
-                        vipType_txt.setVisibility(View.GONE);
-                    } else {
-                        vipType_txt.setVisibility(View.VISIBLE);
-                        mName.setTextColor(ContextCompat.getColor(mContext,R.color.yellowfive));
+                        String vipTypeString = jsonObject.getString(MyConstant.VIP_TYPE);
+                        if (TextUtils.equals(vipTypeString, "0")) {
+                            vipType_txt.setVisibility(View.GONE);
+                        } else {
+                            vipType_txt.setVisibility(View.VISIBLE);
+                            mName.setTextColor(ContextCompat.getColor(mContext, R.color.yellowfive));
+                        }
+                        String on_LightStatus = jsonObject.getString(MyConstant.ONLINE_STATUS);
+                        mSignature.setText(on_LightStatus);
+
                     }
-                   String on_LightStatus =  jsonObject.getString(MyConstant.ONLINE_STATUS);
-                    mSignature.setText(on_LightStatus);
-
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Glide.with(mContext)
-                    .load(item.getAvatar())
+            Glide.with(mContext).load(item.getAvatar())
                     .error(contactSetModel.getAvatarDefaultSrc() != null ? contactSetModel.getAvatarDefaultSrc()
-                            : ContextCompat.getDrawable(mContext, R.drawable.ease_default_avatar))
+                            : ContextCompat.getDrawable(mContext, R.drawable.mo_icon))
                     .into(mAvatar);
-
-
 
 
         }

@@ -8,7 +8,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.adapter.EaseAdapterDelegate;
 import com.hyphenate.easeui.interfaces.MessageListItemClickListener;
 import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
-import com.xunda.mo.hx.section.chat.viewholder.MyEaseChatRowViewHolder;
+import com.hyphenate.easeui.viewholder.EaseChatRowViewHolder;
 import com.xunda.mo.hx.section.widget.chatRow.MyEaseChatRow;
 
 /**
@@ -16,7 +16,7 @@ import com.xunda.mo.hx.section.widget.chatRow.MyEaseChatRow;
  * @param <T>
  * @param <VH>
  */
-public abstract class MyEaseMessageAdapterDelegate<T, VH extends MyEaseChatRowViewHolder> extends EaseAdapterDelegate<T, VH> {
+public abstract class MyEaseMessageAdapterDelegate<T, VH extends EaseChatRowViewHolder> extends EaseAdapterDelegate<T, VH> {
     private MessageListItemClickListener mItemClickListener;
 
     public MyEaseMessageAdapterDelegate() {}

@@ -9,10 +9,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseIM;
-import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.domain.EaseEmojicon;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRowText;
+import com.xunda.mo.R;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.network.saveFile;
 
@@ -52,7 +52,6 @@ public class MyEaseChatRowBigExpression extends EaseChatRowText {
         }
         if(emojicon != null){
             if(emojicon.getBigIcon() != 0){
-
                 Glide.with(context).load(emojicon.getBigIcon())
                         .apply(RequestOptions.placeholderOf(R.drawable.ease_default_expression))
                         .into(imageView);
@@ -65,15 +64,21 @@ public class MyEaseChatRowBigExpression extends EaseChatRowText {
             }
         }
 
+
+        if (message.getChatType() == EMMessage.ChatType.Chat) {
+            if (isSender()){
+                String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
+                Glide.with(getContext()).load(headUrl).into(userAvatarView);
+            }
             //添加群聊其他用户的名字与头像
-            if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+        } if (message.getChatType() == EMMessage.ChatType.GroupChat) {
                 usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME,""));
                 String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD,"");
-                Glide.with(getContext()).load(headUrl).placeholder(com.xunda.mo.R.drawable.em_login_logo).error(com.xunda.mo.R.drawable.em_login_logo).into(userAvatarView);
+                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).into(userAvatarView);
 
                 //匿名聊天
                 if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
-                    Glide.with(getContext()).load(com.xunda.mo.R.drawable.anonymous_chat_icon).placeholder(com.xunda.mo.R.drawable.em_login_logo).error(com.xunda.mo.R.drawable.em_login_logo).into(userAvatarView);
+                    Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(R.drawable.em_login_logo).into(userAvatarView);
                 }
             }
 

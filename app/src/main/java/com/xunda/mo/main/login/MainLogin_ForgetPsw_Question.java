@@ -13,18 +13,19 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 import com.xunda.mo.R;
-import com.xunda.mo.model.FoegetPsw_QuestionList_Model;
+import com.xunda.mo.model.Security_QuestionList_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
@@ -32,14 +33,20 @@ import com.xunda.mo.staticdata.xUtils3Http;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class MainLogin_ForgetPsw_question extends AppCompatActivity {
+public class MainLogin_ForgetPsw_Question extends AppCompatActivity {
     private Button right_Btn;
     private LinearLayout question_lin;
     Boolean ischeck = true;
+    private String phoneNumber;
 
+
+    public static void actionStart(Context context,String phoneNumber) {
+        Intent intent = new Intent(context, MainLogin_ForgetPsw_Question.class);
+        intent.putExtra("phoneNumber",phoneNumber);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,8 @@ public class MainLogin_ForgetPsw_question extends AppCompatActivity {
         MIUISetStatusBarLightMode(this.getWindow(), true);
         FlymeSetStatusBarLightMode(this.getWindow(), true);
 
+        phoneNumber = getIntent().getStringExtra("phoneNumber");
+
         initTitle();
         initView();
         initData();
@@ -59,7 +68,7 @@ public class MainLogin_ForgetPsw_question extends AppCompatActivity {
     private void initTitle() {
         View title_Include = findViewById(R.id.title_Include);
 //        title_Include.setBackgroundColor(ContextCompat.getColor(this, R.color.colorFristWhite));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             title_Include.setElevation(2f);//阴影
         }
         Button return_Btn = (Button) title_Include.findViewById(R.id.return_Btn);
@@ -82,7 +91,7 @@ public class MainLogin_ForgetPsw_question extends AppCompatActivity {
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         right_Btn.setLayoutParams(layoutParams);
 
-        return_Btn.setOnClickListener(new MainLogin_ForgetPsw_question.return_Btn());
+        return_Btn.setOnClickListener(new MainLogin_ForgetPsw_Question.return_Btn());
         right_Btn.setOnClickListener(new right_BtnClickLister());
     }
 
@@ -97,33 +106,29 @@ public class MainLogin_ForgetPsw_question extends AppCompatActivity {
     private class right_BtnClickLister implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(MainLogin_ForgetPsw_question.this, MainLogin_ForgetPsw_SetPsw.class);
-            startActivity(intent);
+            questionCheck(MainLogin_ForgetPsw_Question.this, saveFile.SecurityQuestion_Check);
         }
     }
 
     private void initView() {
         question_lin = findViewById(R.id.question_lin);
-//        num_Btn = findViewById(R.id.num_Btn);
-//        nonecode_txt = findViewById(R.id.nonecode_txt);
-//        StaticData.changeShapColor(num_Btn, ContextCompat.getColor(this, R.color.yellow));
-//        num_Btn.setOnClickListener(new MainLogin_ForgetPsw.num_BtnOnClick());
-//        nonecode_txt.setOnClickListener(new MainLogin_ForgetPsw.nonecode_txtOnClick());
-        QuestionList(this, question_lin, 0);
     }
 
     private void initData() {
-        questionMethod(MainLogin_ForgetPsw_question.this,saveFile.User_UserQuestionList_Url,"0");
+        questionMethod(MainLogin_ForgetPsw_Question.this, saveFile.User_SecurityQuestionList_Url, "0");
     }
 
+    Security_QuestionList_Model baseModel;
     //问题列表
-    public void questionMethod(Context context,String baseUrl, String type) {
-        Map<String,Object> map = new HashMap<>();
+    public void questionMethod(Context context, String baseUrl, String type) {
+        Map<String, Object> map = new HashMap<>();
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                FoegetPsw_QuestionList_Model baseModel = new Gson().fromJson(result, FoegetPsw_QuestionList_Model.class);
+                baseModel = new Gson().fromJson(result, Security_QuestionList_Model.class);
+                QuestionList(context, question_lin, 0);
             }
+
             @Override
             public void failed(String... args) {
 
@@ -132,12 +137,36 @@ public class MainLogin_ForgetPsw_question extends AppCompatActivity {
 
     }
 
+    //问题检验
+    public void questionCheck(Context context, String baseUrl) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("phoneNum", phoneNumber);
+        map.put("questionOne", questiontxt_List.get(0).getText());
+        map.put("questionTwo",  questiontxt_List.get(1).getText());
+        map.put("answerOne", answerTxt_List.get(0).getText());
+        map.put("answerTwo", answerTxt_List.get(1).getText());
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                Security_QuestionList_Model baseModel = new Gson().fromJson(result, Security_QuestionList_Model.class);
+                Intent intent = new Intent(context, MainLogin_ForgetPsw_SetPsw.class);
+                intent.putExtra("phoneNum",phoneNumber);
+                startActivity(intent);
+            }
+            @Override
+            public void failed(String... args) {
+            }
+        });
+    }
 
-    //    private int[] badgeArr = {R.drawable.pk_report, R.drawable.pk_allday, R.drawable.pk_zan, R.drawable.pk_zanranking, R.drawable.pk_rule,R.drawable.pk_rete_icon};
-    private String[] nameArr = {"姓名", "地址", "明星"};
+
+
+    private String[] nameArr = {"", ""};
     ArrayList<TextView> questiontxt_List = new ArrayList<>();
     ArrayList<LinearLayout> questionlin_List = new ArrayList<>();
+    ArrayList<EditText> answerTxt_List = new ArrayList<>();
     ArrayList<ImageView> arrow_img_List = new ArrayList<>();
+    private boolean[] choiceList = {false, false};
 
     public void QuestionList(Context context, LinearLayout myFlex, int count) {
         if (myFlex != null) {
@@ -146,61 +175,42 @@ public class MainLogin_ForgetPsw_question extends AppCompatActivity {
         int size = nameArr.length;
         for (int i = 0; i < size; i++) {
             View myView = LayoutInflater.from(context).inflate(R.layout.mainlogin_forgetpsw_questionlist, null);
-            RelativeLayout qusetion_rel = myView.findViewById(R.id.qusetion_rel);
+            ConstraintLayout qusetion_Constraint = myView.findViewById(R.id.qusetion_Constraint);
             TextView questionTxt = myView.findViewById(R.id.questionone_txt);
             LinearLayout choice_lin = myView.findViewById(R.id.choice_lin);
+            EditText phone_edit = myView.findViewById(R.id.phone_edit);
             ImageView arrow_img = myView.findViewById(R.id.arrow_img);
             arrow_img.setImageResource(R.mipmap.login_forgetpsw_down);
-            questionTxt.setText(nameArr[i]);
             questiontxt_List.add(questionTxt);
             questionlin_List.add(choice_lin);
+            answerTxt_List.add(phone_edit);
             arrow_img_List.add(arrow_img);
-//            pk_img.setImageResource(badgeArr[i]);
-//            final pk_Model.DataBean oneData = model.getData().get(i);
-
-            RadioGroup.LayoutParams itemParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-//            StaticData.layoutParamsScale(itemParams, 216, 94);
-//            int pad = (int) (Float.parseFloat(saveFile.getShareData("scale", context)) * 15);
-//            itemParams.setMargins(pad, pad, pad, pad);
-//            pk_Lin.setLayoutParams(itemParams);
-            qusetion_rel.setTag(i);
+            qusetion_Constraint.setTag(i);
 
             myFlex.addView(myView);
-            List<String> list = new ArrayList<>();
-            list.add("你父亲的生日");
-            list.add("你母亲的生日");
-            list.add("你最喜欢的电影");
-            list.add("你最喜欢的城市");
-            list.add("你毕业于哪所大学");
-
-            qusetion_rel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int tag = (Integer) v.getTag();
-                    if (ischeck) {
-                        ischeck = false;
-//                        arrow_img_List.get(tag).setImageResource(R.mipmap.login_forgetpsw_up);
-                        arrow_img.setImageResource(R.mipmap.login_forgetpsw_up);
-                        qusetion_rel.invalidate();
-//                        arrow_img.postInvalidate();
-                        QuestionChoiceList(choice_lin, list, tag);
-                    } else {
-                        ischeck = true;
-                        arrow_img.setImageResource(R.mipmap.login_forgetpsw_down);
-                        choice_lin.removeAllViews();
-                    }
-
+            qusetion_Constraint.setOnClickListener(v -> {
+                int tag = (Integer) v.getTag();
+                boolean onChoice = choiceList[tag];
+                if (onChoice) {
+                    choiceList[tag] = false;
+                    arrow_img_List.get(tag).setImageResource(R.mipmap.login_forgetpsw_down);
+                    choice_lin.removeAllViews();
+                }else {
+                    choiceList[tag] = true;
+                    qusetion_Constraint.postInvalidate();
+                    QuestionChoiceList(choice_lin, baseModel, tag);
+                    arrow_img_List.get(tag).setImageResource(R.mipmap.login_forgetpsw_up);
                 }
             });
         }
     }
 
 
-    public void QuestionChoiceList(LinearLayout myFlex, List<String> model, int textTag) {
+    public void QuestionChoiceList(LinearLayout myFlex, Security_QuestionList_Model model, int textTag) {
         if (myFlex != null) {
             myFlex.removeAllViews();
         }
-        int size = model.size();
+        int size = model.getData().size();
         for (int i = 0; i < size; i++) {
             LinearLayout mylin = new LinearLayout(this);
             mylin.setOrientation(LinearLayout.VERTICAL);
@@ -223,7 +233,7 @@ public class MainLogin_ForgetPsw_question extends AppCompatActivity {
             RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, viewheight);
             myview.setLayoutParams(viewParams);
 
-            projectTxt.setText(model.get(i).toString());
+            projectTxt.setText(model.getData().get(i).getQuestion());
 
             projectTxt.setTag(i);
             mylin.addView(projectTxt);
@@ -233,11 +243,10 @@ public class MainLogin_ForgetPsw_question extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     int tag = (Integer) v.getTag();
-                    questiontxt_List.get(textTag).setText(model.get(tag));
+                    choiceList[textTag] = false;
+                    questiontxt_List.get(textTag).setText(model.getData().get(tag).getQuestion());
                     questionlin_List.get(textTag).removeAllViews();
-                    ischeck = true;
                     arrow_img_List.get(textTag).setImageResource(R.mipmap.login_forgetpsw_down);
-//                    choice_lin.removeAllViews();
                 }
             });
         }

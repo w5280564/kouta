@@ -30,6 +30,7 @@
     <string name="em_main_title_discover">发现</string>
     <string name="em_main_title_me">我</string>
     <string name="attach_user_card">名片</string>
+    <string name="attach_horn">群喇叭</string>
 
     <string name="demo_title_image_grid">拍摄及视频</string>
 
@@ -594,6 +595,12 @@
     <string name="errcode_cancel">发送取消</string>
     <string name="errcode_deny">发送被拒绝</string>
     <string name="errcode_unknown">发送返回</string>
+    <string name="Cancel">取消</string>
+    <string name="permission_call_phone_tip">为了正常使用电话功能，请开启“电话”权限!</string>
+    <string name="setting">设置</string>
+    <string name="open">打开</string>
+    <string name="permission_write_denied_call_phone">请手动打开电话权限</string>
+    <string name="permission_apply_call_phone_reason">请手动打开电话权限</string>
 
 
 </resources>

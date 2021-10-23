@@ -21,10 +21,11 @@ import com.xunda.mo.hx.section.base.BaseInitFragment;
 import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.hx.section.me.activity.SetIndexActivity;
 import com.xunda.mo.main.baseView.MyArrowItemView;
-import com.xunda.mo.main.me.activity.UserDetail_Set;
 import com.xunda.mo.main.discover.activity.Discover_Welfare_Card;
+import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.me.activity.Me_VIP;
-import com.xunda.mo.model.UserDetail_Bean;
+import com.xunda.mo.main.me.activity.UserDetail_Set;
+import com.xunda.mo.model.Olduser_Model;
 import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.MyLevel;
@@ -67,7 +68,6 @@ public class MeFragment extends BaseInitFragment {
         item_coupon_set.setOnClickListener(new item_coupon_setClick());
         item_vip_set = findViewById(R.id.item_vip_set);
         item_vip_set.setOnClickListener(new item_vip_setClick());
-
     }
 
 
@@ -121,24 +121,25 @@ public class MeFragment extends BaseInitFragment {
     }
 
 
-    UserDetail_Bean userModel;
+    Olduser_Model userModel;
     @SuppressLint("SetTextI18n")
     public void UserMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                userModel = new Gson().fromJson(result, UserDetail_Bean.class);
-                UserDetail_Bean.DataDTO dataDTO = userModel.getData();
+                userModel = new Gson().fromJson(result, Olduser_Model.class);
+                Olduser_Model.DataDTO dataDTO = userModel.getData();
 
-                Glide.with(requireContext()).load(dataDTO.getHeadImg())
-                        .transforms(new CenterCrop(), new RoundedCorners(9)).into(head_Image);
+                Glide.with(requireContext()).load(dataDTO.getHeadImg()).transforms(new CenterCrop(), new RoundedCorners(9)).into(head_Image);
                 nick_Txt.setText(dataDTO.getNickname());
                 String moIDStr = String.format("Mo ID:%s", dataDTO.getUserNum());
                 moId_Txt.setText(moIDStr);
 
-
                 isVipMethod(context,dataDTO.getVipType());
+
+                MyInfo myInfo = new MyInfo(context);
+                myInfo.setUserInfo(userModel.getData());
 
             }
 

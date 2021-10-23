@@ -4,9 +4,13 @@ import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -14,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
@@ -213,7 +219,29 @@ public class Friend_Add extends AppCompatActivity {
     private class person_qr_relClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            Discover_QRCode.actionStart(Friend_Add.this);
+           startCamera(Friend_Add.this);
+        }
+    }
+
+
+    public void startCamera(Activity context) {
+        //监听授权
+        List<String> permissionList = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.CAMERA);
+        }
+
+        if (!permissionList.isEmpty()) {
+            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(context, permissions, 1);
+        } else {
+            //打开相机录制视频
+            Intent captureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            //判断相机是否正常。
+            if (captureIntent.resolveActivity(context.getPackageManager()) != null) {
+                Discover_QRCode.actionStart(context);
+            }
+
         }
     }
 }

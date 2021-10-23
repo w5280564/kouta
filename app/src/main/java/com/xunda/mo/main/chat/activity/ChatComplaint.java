@@ -11,12 +11,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +42,9 @@ import com.obs.services.exception.ObsException;
 import com.obs.services.model.AuthTypeEnum;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.FlowLayout;
+import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.GlideEnGine;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
@@ -65,6 +71,8 @@ public class ChatComplaint extends BaseInitActivity {
     private FlowLayout photoLayout;
     private ObsClient obsClient;
     String pictures;
+    private MyArrowItemView complaint_ArrowItemView;
+    private String reasons;
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, ChatComplaint.class);
@@ -87,6 +95,8 @@ public class ChatComplaint extends BaseInitActivity {
         next_Btn.setOnClickListener(new next_BtnOnclickLister());
         add_photo_Img = findViewById(R.id.add_photo_Img);
         add_photo_Img.setOnClickListener(new add_photo_ImgOnclickLister());
+        complaint_ArrowItemView = findViewById(R.id.complaint_ArrowItemView);
+        complaint_ArrowItemView.setOnClickListener(new complaint_ArrowItemViewClick());
 
         photoPaths = new ArrayList<>();
         initObsClient();
@@ -129,6 +139,10 @@ public class ChatComplaint extends BaseInitActivity {
 //                Toast.makeText(ChatComplaint.this, "不能为空", Toast.LENGTH_SHORT).show();
 //                return;
 //            }
+            if (TextUtils.isEmpty(reasons)){
+                Toast.makeText(ChatComplaint.this, "请选择举报原因", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (photoPaths.isEmpty()) {
                 Toast.makeText(ChatComplaint.this, "举报附件必须添加", Toast.LENGTH_SHORT).show();
             } else {
@@ -337,12 +351,13 @@ public class ChatComplaint extends BaseInitActivity {
     //问题反馈
     public void QuestionMethod(Context context, String baseUrl) {
         Map<String,Object> map = new HashMap<>();
+        map.put("reasons", reasons);
         map.put("picture", pictures);
         map.put("remark", content_edit.getText().toString());
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                Toast.makeText(context, "投诉已上传", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "您的投诉已提交", Toast.LENGTH_SHORT).show();
                 finish();
             }
             @Override
@@ -352,6 +367,50 @@ public class ChatComplaint extends BaseInitActivity {
 
     }
 
+    private void showMore(final Context mContext, final View view, final int pos) {
+        View contentView = View.inflate(mContext, R.layout.complaint_popup, null);
+        PopupWindow MorePopup = new BasePopupWindow(mContext);
+        MorePopup.setWidth(RadioGroup.LayoutParams.MATCH_PARENT);
+        MorePopup.setHeight(RadioGroup.LayoutParams.WRAP_CONTENT);
+        MorePopup.setTouchable(true);
+        MorePopup.setContentView(contentView);
+        MorePopup.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+        TextView popup_one = contentView.findViewById(R.id.popup_one);
+        TextView popup_two = contentView.findViewById(R.id.popup_two);
+        TextView popup_three = contentView.findViewById(R.id.popup_three);
+        TextView popup_four = contentView.findViewById(R.id.popup_four);
+        TextView cancel_txt = contentView.findViewById(R.id.cancel_txt);
+        popup_one.setOnClickListener(v -> {
+            reasons = "9";
+            complaint_ArrowItemView.getTvContent().setText(popup_one.getText());
+            MorePopup.dismiss();
+        });
+        popup_two.setOnClickListener(v -> {
+            reasons = "10";
+            complaint_ArrowItemView.getTvContent().setText(popup_two.getText());
+            MorePopup.dismiss();
+        });
+        popup_three.setOnClickListener(v -> {
+            reasons = "11";
+            complaint_ArrowItemView.getTvContent().setText(popup_three.getText());
+            MorePopup.dismiss();
+        });
+        popup_four.setOnClickListener(v -> {
+            reasons = "12";
+            complaint_ArrowItemView.getTvContent().setText(popup_four.getText());
+            MorePopup.dismiss();
+        });
+
+        cancel_txt.setOnClickListener(v -> {
+            MorePopup.dismiss();
+        });
+    }
 
 
+    private class complaint_ArrowItemViewClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            showMore(ChatComplaint.this, complaint_ArrowItemView, 0);
+        }
+    }
 }

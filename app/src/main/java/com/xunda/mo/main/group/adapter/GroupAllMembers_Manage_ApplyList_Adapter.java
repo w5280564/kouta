@@ -80,7 +80,7 @@ public class GroupAllMembers_Manage_ApplyList_Adapter extends RecyclerView.Adapt
                         v.setEnabled(false);
                         holder.isAgree_Group.setVisibility(View.GONE);
                         holder.time_Txt.setVisibility(View.VISIBLE);
-                        holder.result_Txt.setText("已通过");
+                        holder.result_Txt.setText("已同意");
                     }
                     onItemAddRemoveClickLister.onItemAddClick(v, position);
 
@@ -145,12 +145,12 @@ public class GroupAllMembers_Manage_ApplyList_Adapter extends RecyclerView.Adapt
         holder.isAgree_Group.setVisibility(View.INVISIBLE);
         holder.time_Txt.setVisibility(View.VISIBLE);
         holder.time_Txt.setText(StaticData.stampToDate(oneData.getCreateTime()));
-        //1申请中2已通过3被拒绝4已过期
+        //1申请中2已同意3被拒绝4已过期
         if (TextUtils.equals(oneData.getApplyStatus(), "1")) {
             holder.isAgree_Group.setVisibility(View.VISIBLE);
             holder.time_Txt.setVisibility(View.INVISIBLE);
         } else if (TextUtils.equals(oneData.getApplyStatus(), "2")) {
-            holder.result_Txt.setText("已通过");
+            holder.result_Txt.setText("已同意");
         } else if (TextUtils.equals(oneData.getApplyStatus(), "3")) {
             holder.result_Txt.setText("被拒绝");
         } else if (TextUtils.equals(oneData.getApplyStatus(), "4")) {

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".main.chat.activity.ChatComplaint"
-    tools:ignore="MissingConstraints">
+    tools:ignore="MissingConstraints"
+    android:background="@color/greyfive">
 
     <include
         android:id="@+id/title_Include"
@@ -13,16 +14,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+
+    <com.xunda.mo.main.baseView.MyArrowItemView
+        android:id="@+id/complaint_ArrowItemView"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:paddingRight="15dp"
+        app:arrowItemContent="请选择"
+        app:arrowItemContentColor="@color/greytwo"
+        app:arrowItemTitle="投诉原因（必填）"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
+        app:arrowItemTitleSize="15sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_Include" />
+
+
     <TextView
         android:id="@+id/ti_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="15dp"
-        android:text="问题描述（必填）"
+        android:text="投诉说明（选填）"
+        android:layout_marginTop="10dp"
         android:textColor="@color/blacktitlettwo"
         android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/title_Include" />
+        app:layout_constraintTop_toBottomOf="@id/complaint_ArrowItemView" />
 
 
     <EditText
@@ -32,7 +52,7 @@
         android:layout_below="@id/ti_txt"
         android:background="@color/white"
         android:gravity="start"
-        android:hint="请输入描述内容"
+        android:hint="请输入投诉内容"
         android:inputType="textMultiLine"
         android:maxLength="50"
         android:padding="15dp"
@@ -51,7 +71,7 @@
         android:gravity="right"
         android:paddingRight="15dp"
         android:paddingBottom="15dp"
-        android:text="50字节以内"
+        android:text="50字以内"
         android:textColor="#ffa1a1a1"
         android:textSize="12sp"
         app:layout_constraintTop_toBottomOf="@id/content_edit" />
@@ -69,6 +89,18 @@
         app:layout_constraintTop_toBottomOf="@id/zi_txt"
         android:layout_marginTop="10dp"/>
 
+    <TextView
+        android:id="@+id/je_Txt"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:text="请上传聊天内容截图或视频"
+        android:background="@color/white"
+        android:paddingStart="15dp"
+        android:textColor="#fff9d22e"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/tu_txt"
+        />
+
 
     <com.xunda.mo.main.baseView.FlowLayout
         android:id="@+id/photoLayout"
@@ -76,7 +108,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/tu_txt">
+        app:layout_constraintTop_toBottomOf="@id/je_Txt">
 
         <ImageButton
             android:id="@+id/add_photo_Img"

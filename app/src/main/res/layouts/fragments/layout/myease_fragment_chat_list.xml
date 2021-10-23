@@ -7,24 +7,26 @@
     android:orientation="vertical"
     tools:ignore="MissingConstraints">
 
+
     <com.hyphenate.easeui.modules.chat.EaseChatLayout
         android:id="@+id/layout_chat"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="172dp"
+        tools:layout_editor_absoluteY="-39dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/top_Constraint"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/greyline"/>
+            android:background="@color/greyline" />
 
         <View
             android:id="@+id/view2"
@@ -67,6 +69,84 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/horn_Con"
+        android:layout_width="166dp"
+        android:layout_height="29dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/hron_radius_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/top_Constraint">
+
+        <com.hyphenate.easeui.widget.EaseImageView
+            android:id="@+id/head_Img"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginStart="7dp"
+            android:src="@mipmap/mo_icon"
+            app:ease_radius="9dp"
+            app:ease_shape_type="round"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/horn_Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="Audrey Hepburn"
+            android:textColor="#fff9d22e"
+            android:textSize="9sp"
+            app:layout_constraintStart_toEndOf="@+id/head_Img"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.xunda.mo.staticdata.MarqueeTextView
+            android:id="@+id/horn_Txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="none"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toStartOf="@id/horn_icon"
+            app:layout_constraintStart_toStartOf="@+id/horn_Name"
+            app:layout_constraintTop_toBottomOf="@id/horn_Name">
+            <requestFocus />
+
+        </com.xunda.mo.staticdata.MarqueeTextView>
+
+        <TextView
+            android:layout_width="19dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/horn_vip_yellow"
+            android:gravity="center"
+            android:text="VIP"
+            android:textColor="@color/yellowfive"
+            android:textSize="6sp"
+            app:layout_constraintBottom_toBottomOf="@+id/horn_Name"
+            app:layout_constraintStart_toEndOf="@+id/horn_Name"
+            app:layout_constraintTop_toTopOf="@+id/horn_Name" />
+
+        <ImageView
+            android:id="@+id/horn_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="7dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

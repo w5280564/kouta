@@ -14,9 +14,11 @@ import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.widget.ArrowItemView;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.login.MainLogin_Register;
 import com.xunda.mo.main.me.activity.Me_Safety;
 import com.xunda.mo.network.saveFile;
+import com.xunda.mo.staticdata.dialog.BaseDialogFragment;
 
 public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener, View.OnClickListener {
     private EaseTitleBar titleBar;
@@ -81,7 +83,7 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
                 PrivacyIndexActivity.actionStart(mContext);
                 break;
             case R.id.btn_logout:
-                logout();
+               quitMethod();
                 break;
             case R.id.item_se:
                 Me_Safety.actionStart(mContext);
@@ -89,6 +91,20 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
         }
     }
 
+    private void quitMethod() {
+        new BaseDialogFragment.Builder(mContext)
+                .setTitle("")
+                .showContent(true)
+                .setContent("确定退出登录吗？")
+                .setOnConfirmClickListener(new BaseDialogFragment.OnConfirmClickListener() {
+                    @Override
+                    public void onConfirmClick(View view) {
+                        logout();
+                    }
+                })
+                .showCancelButton(true)
+                .show();
+    }
 
 
     void logout() {
@@ -98,13 +114,14 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
         pd.setCanceledOnTouchOutside(false);
         pd.show();
         DemoHelper.getInstance().logout(true, new EMCallBack() {
-
             @Override
             public void onSuccess() {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         pd.dismiss();
                         // show login screen
+                        MyInfo myInfo = new MyInfo(SetIndexActivity.this);
+                        myInfo.clearInfoData(SetIndexActivity.this);
                         saveFile.clearShareData("JSESSIONID", SetIndexActivity.this);
                         Intent intent = new Intent(SetIndexActivity.this, MainLogin_Register.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -113,16 +130,13 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
                     }
                 });
             }
-
             @Override
             public void onProgress(int progress, String status) {
-
             }
 
             @Override
             public void onError(int code, String message) {
                 runOnUiThread(new Runnable() {
-
                     @Override
                     public void run() {
                         pd.dismiss();

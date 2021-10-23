@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.xunda.mo.R;
@@ -15,7 +16,7 @@ import com.xunda.mo.hx.section.base.BaseInitActivity;
 /**
  * Created by linan on 16/11/29.
  */
-public class CallOptionActivity extends BaseInitActivity implements SwitchItemView.OnCheckedChangeListener {
+public class CallOptionActivity extends BaseInitActivity implements SwitchItemView.OnCheckedChangeListener, EaseTitleBar.OnBackPressListener  {
     private EaseTitleBar titleBar;
     private SwitchItemView rlSwitchOfflineCallPush;
 
@@ -40,6 +41,7 @@ public class CallOptionActivity extends BaseInitActivity implements SwitchItemVi
     protected void initListener() {
         super.initListener();
         rlSwitchOfflineCallPush.setOnCheckedChangeListener(this);
+        titleBar.setOnBackPressListener(this);
     }
 
     @Override
@@ -59,6 +61,12 @@ public class CallOptionActivity extends BaseInitActivity implements SwitchItemVi
                 break;
         }
     }
+
+    @Override
+    public void onBackPress(View view) {
+        onBackPressed();
+    }
+
 
     private abstract class MyTextChangedListener implements TextWatcher {
 

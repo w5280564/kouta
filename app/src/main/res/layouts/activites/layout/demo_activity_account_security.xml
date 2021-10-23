@@ -1,33 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_bg"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/common_bg">
 
     <com.hyphenate.easeui.widget.EaseTitleBar
         android:id="@+id/title_bar"
         android:layout_width="0dp"
         android:layout_height="@dimen/em_common_title_bar_height"
+        android:background="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleBarTitle="@string/em_set_security"
-        android:background="@color/white"
-        app:titleBarDisplayHomeAsUpEnabled="true"/>
+        app:titleBarDisplayHomeAsUpEnabled="true"
+        app:titleBarTitle="账号" />
 
-
-    <com.xunda.mo.hx.common.widget.ArrowItemView
-        android:id="@+id/item_equipments"
+    <com.xunda.mo.main.baseView.MyArrowItemView
+        android:id="@+id/item_phone"
         android:layout_width="0dp"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        app:arrowItemShowAvatar="false"
+        app:arrowItemTitle="手机号码"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
+        app:arrowItemTitleSize="15sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_bar"
-        app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
-        app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
-        app:arrowItemTitle="@string/em_privacy_equipments"
-        android:foreground="@drawable/demo_ripple_click_gray"
-        android:background="@color/white"/>
+        app:layout_constraintTop_toBottomOf="@id/title_bar" />
+
+    <com.xunda.mo.main.baseView.MyArrowItemView
+        android:id="@+id/item_psw"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        app:arrowItemShowAvatar="false"
+        app:arrowItemTitle="登录密码"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
+        app:arrowItemTitleSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_phone" />
+
+    <com.xunda.mo.main.baseView.MyArrowItemView
+        android:id="@+id/item_question"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        app:arrowItemShowAvatar="false"
+        app:arrowItemTitle="密保问题"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
+        app:arrowItemTitleSize="15sp"
+        app:arrowItemContent="未设置"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_psw" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

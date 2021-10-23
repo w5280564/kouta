@@ -53,6 +53,7 @@ import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.baseView.MySwitchItemView;
+import com.xunda.mo.main.group.activity.GroupDetail_Report;
 import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.model.baseModel;
 import com.xunda.mo.network.saveFile;
@@ -491,17 +492,22 @@ public class ChatFriend_Detail extends BaseInitActivity {
         TextView change_txt = contentView.findViewById(R.id.change_txt);
         TextView newregistr_txt = contentView.findViewById(R.id.newregistr_txt);
         TextView cancel_txt = contentView.findViewById(R.id.cancel_txt);
+        String userId = model.getData().getUserId();
+        String user = "user";
         change_txt.setOnClickListener(new NoDoubleClickListener() {
             @Override
             protected void onNoDoubleClick(View v) {
-
+                String type = "2";
+                GroupDetail_Report.actionStart(mContext, userId, user,type);
                 MorePopup.dismiss();
             }
         });
         newregistr_txt.setOnClickListener(new NoDoubleClickListener() {
             @Override
             protected void onNoDoubleClick(View v) {
-                QuestionMethod(mContext, saveFile.User_PublicQuestionBack_Url);
+//                QuestionMethod(mContext, saveFile.Question_Login);
+                String type = "1";
+                GroupDetail_Report.actionStart(mContext, userId, user,type);
                 MorePopup.dismiss();
             }
         });
@@ -528,7 +534,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
     public void QuestionMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put("picture", model.getData().getHeadImg());
-        map.put("toReportUserId", model.getData().getUserNum());
+        map.put("toReportId", model.getData().getUserNum());
         map.put("type", "1");
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override

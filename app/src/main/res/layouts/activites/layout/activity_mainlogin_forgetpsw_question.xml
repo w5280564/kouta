@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.login.MainLogin_ForgetPsw_question">
+    tools:context=".main.login.MainLogin_ForgetPsw_Question"
+    android:orientation="vertical"
+    android:background="@color/white">
 
     <include
         android:id="@+id/title_Include"
@@ -25,12 +27,18 @@
         android:textColor="@color/greytwo"
         android:textSize="12sp" />
 
-    <LinearLayout
-        android:id="@+id/question_lin"
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ques_txt"
-        android:orientation="vertical" />
+        android:layout_height="wrap_content">
 
+        <LinearLayout
+            android:id="@+id/question_lin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ques_txt"
+            android:orientation="vertical" />
 
-</RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

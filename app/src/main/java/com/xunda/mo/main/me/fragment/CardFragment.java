@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import com.xunda.mo.hx.section.base.BaseInitFragment;
 import com.xunda.mo.main.discover.adapter.Card_Adapter;
 import com.xunda.mo.main.me.activity.Me_VIP;
 import com.xunda.mo.model.CardFragment_Bean;
+import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.xUtils3Http;
 
@@ -125,6 +127,8 @@ public class CardFragment extends BaseInitFragment {
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
+                baseDataModel model = new Gson().fromJson(result, baseDataModel.class);
+                Toast.makeText(context,model.getData(),Toast.LENGTH_SHORT).show();
             }
 
             @Override

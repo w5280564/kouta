@@ -8,7 +8,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -24,6 +29,7 @@ import com.xunda.mo.main.baseView.MyActivityManager;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 
 public class MainRegister extends AppCompatActivity {
 
@@ -103,6 +109,44 @@ public class MainRegister extends AppCompatActivity {
         num_Btn.setOnClickListener(new num_BtnOnClick());
         login_txt.setOnClickListener(new login_txtOnClick());
 //        oldusers.setOnClickListener(new oldusers_BtnOnClick());
+
+        setSe(login_txt);
+    }
+
+    private void setSe(TextView login_txt){
+        String str = "注册即视为同意《用户协议》和《隐私政策》";
+        SpannableStringBuilder ssb = new SpannableStringBuilder();
+        ssb.append(str);
+        final int start = str.indexOf("《");//第一个出现的位置
+        ssb.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                String url = xUtils3Http.BASE_URL + "service.html";
+                MainRegister_Agreement.actionStart(MainRegister.this, url);
+            }
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.blue));
+                ds.setUnderlineText(false);
+            }
+        }, start, start + 6, 0);
+        int end = str.lastIndexOf("《");
+        ssb.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                String url = xUtils3Http.BASE_URL + "privacy.html";
+                MainRegister_Agreement.actionStart(MainRegister.this, url);
+            }
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.blue));
+                ds.setUnderlineText(false);
+            }
+        }, end, end + 6, 0);
+        login_txt.setMovementMethod(LinkMovementMethod.getInstance());
+        login_txt.setText(ssb, TextView.BufferType.SPANNABLE);
     }
 
 
@@ -136,7 +180,7 @@ public class MainRegister extends AppCompatActivity {
                 Toast.makeText(MainRegister.this, "请输入正确手机号码", Toast.LENGTH_SHORT).show();
                 return;
             } else if (!agreement_choice.isChecked()) {
-                Toast.makeText(MainRegister.this, "请阅读并同意用户使用协议", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainRegister.this, "请阅读并同意用户协议和隐私政策", Toast.LENGTH_SHORT).show();
                 return;
             }
             Intent intent = new Intent(MainRegister.this, MainLogin_Code.class);
@@ -152,7 +196,7 @@ public class MainRegister extends AppCompatActivity {
         public void onClick(View v) {
 //            Intent Intent = new Intent(MainRegister.this, MainRegister_Agreement.class);
 //            startActivity(Intent);
-            String  url =  "file:///android_asset/service.html";
+            String url = xUtils3Http.BASE_URL+"service.html";
             MainRegister_Agreement.actionStart(MainRegister.this,url);
         }
     }

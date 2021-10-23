@@ -13,12 +13,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bumptech.glide.Glide;
 import com.hyphenate.easeui.adapter.EaseBaseRecyclerViewAdapter;
-import com.hyphenate.easeui.modules.contact.model.EaseContactCustomBean;
 import com.hyphenate.easeui.modules.contact.model.EaseContactSetStyle;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.xunda.mo.R;
+import com.xunda.mo.hx.section.contact.model.MyEaseContactCustomBean;
 
-public class MyContactHead_ListAdapter extends EaseBaseRecyclerViewAdapter<EaseContactCustomBean> {
+public class MyContactHead_ListAdapter extends EaseBaseRecyclerViewAdapter<MyEaseContactCustomBean> {
     private EaseContactSetStyle contactSetModel;
 
     @Override
@@ -32,26 +32,36 @@ public class MyContactHead_ListAdapter extends EaseBaseRecyclerViewAdapter<EaseC
     }
 
     public void addItem(int id, int image, String name) {
-        EaseContactCustomBean bean = new EaseContactCustomBean();
+        MyEaseContactCustomBean bean = new MyEaseContactCustomBean();
         bean.setId(id);
         bean.setResourceId(image);
         bean.setName(name);
         this.addData(bean);
     }
 
+
     public void addItem(int id, String image, String name) {
-        EaseContactCustomBean bean = new EaseContactCustomBean();
+        MyEaseContactCustomBean bean = new MyEaseContactCustomBean();
         bean.setId(id);
         bean.setImage(image);
         bean.setName(name);
         this.addData(bean);
     }
+    public void addItem(int id, int image, String name,int count) {
+        MyEaseContactCustomBean bean = new MyEaseContactCustomBean();
+        bean.setId(id);
+        bean.setResourceId(image);
+        bean.setName(name);
+        bean.setCount(count);
+        this.addData(bean);
+    }
 
-    private class CustomViewHolder extends ViewHolder<EaseContactCustomBean> {
+    private class CustomViewHolder extends ViewHolder<MyEaseContactCustomBean> {
         private TextView mHeader;
         private EaseImageView mAvatar;
         private TextView mName;
         private ConstraintLayout clUser;
+        private TextView unread_msg_number;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +73,7 @@ public class MyContactHead_ListAdapter extends EaseBaseRecyclerViewAdapter<EaseC
             mAvatar = findViewById(R.id.avatar);
             mName = findViewById(R.id.name);
             clUser = findViewById(R.id.cl_user);
+            unread_msg_number = findViewById(R.id.unread_msg_number);
             if(contactSetModel != null) {
                 float titleTextSize = contactSetModel.getTitleTextSize();
                 if(titleTextSize != 0) {
@@ -106,13 +117,18 @@ public class MyContactHead_ListAdapter extends EaseBaseRecyclerViewAdapter<EaseC
         }
 
         @Override
-        public void setData(EaseContactCustomBean item, int position) {
+        public void setData(MyEaseContactCustomBean item, int position) {
             mHeader.setVisibility(View.GONE);
             mName.setText(item.getName());
             if(item.getResourceId() != 0) {
                 mAvatar.setImageResource(item.getResourceId());
             }else if(TextUtils.isEmpty(item.getImage())) {
                 Glide.with(itemView.getContext()).load(item.getImage()).into(mAvatar);
+            }
+            unread_msg_number.setVisibility(View.GONE);
+            if (item.getCount() > 0){
+                unread_msg_number.setVisibility(View.VISIBLE);
+                unread_msg_number.setText(item.getCount()+"");
             }
         }
 

@@ -3,7 +3,6 @@ package com.xunda.mo.hx.common.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import com.hyphenate.util.EMLog;
 
@@ -23,6 +22,6 @@ public class HeadsetReceiver extends BroadcastReceiver {
         boolean mic = intent.getIntExtra("microphone", 0) == 0 ? false : true;
         String headsetChange = String.format("耳机插入: %b, 有麦克风: %b", state, mic);
         EMLog.d("HeadsetReceiver", headsetChange);
-        Toast.makeText(context, headsetChange, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, headsetChange, Toast.LENGTH_SHORT).show();
     }
 }

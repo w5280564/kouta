@@ -8,8 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
 import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -19,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.gson.Gson;
@@ -47,6 +52,7 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
     private EditText phone_edit, psw_edit;
     private CheckBox display_choice;
     private LoginViewModel loginViewModels;
+    private CheckBox agreement_choice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,12 +109,12 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             title_Include.setElevation(2f);//阴影
         }
-        Button return_Btn = (Button) title_Include.findViewById(R.id.return_Btn);
+        Button return_Btn =  title_Include.findViewById(R.id.return_Btn);
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         return_Btn.setVisibility(View.VISIBLE);
-        TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
+        TextView cententTxt = title_Include.findViewById(R.id.cententtxt);
         cententTxt.setText("登录");
-        right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
+        right_Btn =  title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.VISIBLE);
         right_Btn.setText("问题反馈");
 
@@ -146,7 +152,47 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
         fork_img.setOnClickListener(new fork_imgOnClick());
         display_choice.setOnCheckedChangeListener(new display_choiceOnChecked());
         num_Btn.setOnClickListener(new num_BtnOnClick());
+        agreement_choice = findViewById(R.id.agreement_choice);
+        TextView login_txt = findViewById(R.id.login_txt);
+        setSe(login_txt);
     }
+
+    private void setSe(TextView login_txt){
+        String str = "登录即视为同意《用户协议》和《隐私政策》";
+        SpannableStringBuilder ssb = new SpannableStringBuilder();
+        ssb.append(str);
+        final int start = str.indexOf("《");//第一个出现的位置
+        ssb.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                String url = xUtils3Http.BASE_URL + "service.html";
+                MainRegister_Agreement.actionStart(MainLogin_OldUser_Psd.this, url);
+            }
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.blue));
+                ds.setUnderlineText(false);
+            }
+        }, start, start + 6, 0);
+        int end = str.lastIndexOf("《");
+        ssb.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                String url = xUtils3Http.BASE_URL + "privacy.html";
+                MainRegister_Agreement.actionStart(MainLogin_OldUser_Psd.this, url);
+            }
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.blue));
+                ds.setUnderlineText(false);
+            }
+        }, end, end + 6, 0);
+        login_txt.setMovementMethod(LinkMovementMethod.getInstance());
+        login_txt.setText(ssb, TextView.BufferType.SPANNABLE);
+    }
+
 
     private class code_txtOnClick extends NoDoubleClickListener {
         @Override
@@ -192,6 +238,10 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
             String psw = psw_edit.getText().toString().trim();
             if (leId.isEmpty() && psw.isEmpty()) {
                 Toast.makeText(MainLogin_OldUser_Psd.this, "用户名与密码不能为空", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!agreement_choice.isChecked()) {
+                Toast.makeText(MainLogin_OldUser_Psd.this, "请阅读并同意用户协议和隐私政策", Toast.LENGTH_SHORT).show();
                 return;
             }
             Data(MainLogin_OldUser_Psd.this);

@@ -80,6 +80,7 @@ import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.GlideEnGine;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
+import com.xunda.mo.staticdata.dialog.BaseDialogFragment;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
 
@@ -244,7 +245,7 @@ public class UserDetail_Set extends BaseInitActivity {
     private class person_imgClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            isChangeHead("1", "用户头像7天内只能修改1次");
+            isChangeHead("1", "用户头像24小时内只能修改1次");
         }
     }
 
@@ -252,7 +253,7 @@ public class UserDetail_Set extends BaseInitActivity {
     private class friend_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            isChangeHead("2", "用户昵称7天内只能修改1次");
+            isChangeHead("2", "用户昵称24小时内只能修改1次");
         }
     }
 
@@ -328,7 +329,7 @@ public class UserDetail_Set extends BaseInitActivity {
     private class quit_BtnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            logout();
+            quitMethod();
         }
     }
 
@@ -428,19 +429,18 @@ public class UserDetail_Set extends BaseInitActivity {
         pd.setCanceledOnTouchOutside(false);
         pd.show();
         DemoHelper.getInstance().logout(true, new EMCallBack() {
-
             @Override
             public void onSuccess() {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        pd.dismiss();
-                        // show login screen
-                        saveFile.clearShareData("JSESSIONID", UserDetail_Set.this);
-                        Intent intent = new Intent(UserDetail_Set.this, MainLogin_Register.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
+                runOnUiThread(() -> {
+                    pd.dismiss();
+                    // show login screen
+                    MyInfo myInfo = new MyInfo(UserDetail_Set.this);
+                    myInfo.clearInfoData(UserDetail_Set.this);
+                    saveFile.clearShareData("JSESSIONID", UserDetail_Set.this);
+                    Intent intent = new Intent(UserDetail_Set.this, MainLogin_Register.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 });
             }
 
@@ -520,6 +520,9 @@ public class UserDetail_Set extends BaseInitActivity {
                 .isAndroidQTransform(true)//Android Q版本下是否需要拷贝文件至应用沙盒内
                 .isPreviewImage(true)// 是否可预览图片 true or false
                 .isCamera(true)// 是否显示拍照按钮 true or false
+                .cropImageWideHigh(200, 200)//裁剪尺寸
+                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
+                .freeStyleCropEnabled(true)//裁剪框是否可拖拽
 //                .imageFormat(PictureMimeType.PNG_Q)//拍照图片格式后缀,默认jpeg, PictureMimeType.PNG，Android Q使用PictureMimeType.PNG_Q
                 .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
                 .isCompress(true)// 是否压缩 true or false
@@ -605,15 +608,17 @@ public class UserDetail_Set extends BaseInitActivity {
             public void success(String result) {
                 baseDataModel baseModel = new Gson().fromJson(result, baseDataModel.class);
                 Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
-                if (TextUtils.equals(changType, "1")) {
-                    //修改本地存储的自己头像
                     MyInfo info = new MyInfo(UserDetail_Set.this);
+                if (TextUtils.equals(changType, "1")) {
+                    //修改环信本地存储的自己头像
                     String HxUserName = info.getUserInfo().getHxUserName();
                     DemoHelper.getInstance().getUserInfo(HxUserName).setAvatar(baseModel.getData());
+                    info.setOneData("HeadImg",baseModel.getData());
 
                     changeFileHead(baseModel.getData());
                 } else if (TextUtils.equals(changType, "2")) {
                     friend_ArrowItemView.getTvContent().setText(valueStr);
+                    info.setOneData("nickname",valueStr);
                 } else if (TextUtils.equals(changType, "3")) {
 //                            sex_ArrowItemView.getTvContent().setText(valueStr);
                 } else if (TextUtils.equals(changType, "4")) {
@@ -722,6 +727,21 @@ public class UserDetail_Set extends BaseInitActivity {
         protected void onNoDoubleClick(View v) {
             MeAndGroup_QRCode.actionUserStart(UserDetail_Set.this);
         }
+    }
+
+    private void quitMethod() {
+        new BaseDialogFragment.Builder(mContext)
+                .setTitle("")
+                .showContent(true)
+                .setContent("确定退出登录吗？")
+                .setOnConfirmClickListener(new BaseDialogFragment.OnConfirmClickListener() {
+                    @Override
+                    public void onConfirmClick(View view) {
+                        logout();
+                    }
+                })
+                .showCancelButton(true)
+                .show();
     }
 
 

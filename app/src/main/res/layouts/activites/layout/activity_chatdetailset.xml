@@ -198,9 +198,9 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/top_Switch"
-                app:switchItemHint="消息已读后自动销毁"
+                app:switchItemHint="更安全的VIP专属消息"
                 app:switchItemShowDivider="true"
-                app:switchItemTitle="阅后即焚（VIP功能"
+                app:switchItemTitle="Mo语（VIP功能）"
                 app:switchItemTitleColor="@color/blacktitlettwo"
                 app:switchItemTitleSize="15sp" />
 

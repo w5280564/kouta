@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
 
-    <RelativeLayout
-        android:id="@+id/qusetion_rel"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/qusetion_Constraint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/greythree">
+        android:background="@color/greythree"
+        tools:ignore="MissingConstraints">
 
 
         <TextView
@@ -20,38 +23,44 @@
             android:paddingLeft="15dp"
             android:text="请选择密保问题"
             android:textColor="@color/greytwo"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/arrow_img"
             android:layout_width="12dp"
             android:layout_height="7dp"
-            android:src="@mipmap/login_forgetpsw_down"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"/>
+            android:layout_marginEnd="15dp"
+            android:src="@mipmap/login_forgetpsw_down"
+            app:layout_constraintBottom_toBottomOf="@+id/questionone_txt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/questionone_txt" />
 
 
         <LinearLayout
             android:id="@+id/choice_lin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/questionone_txt"
             android:layout_below="@id/questionone_txt"
             android:orientation="vertical" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <EditText
         android:id="@+id/phone_edit"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="15dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="15dp"
         android:background="@color/greythree"
+        android:gravity="center_vertical"
         android:hint="请输入你的答案"
         android:lines="1"
+        android:paddingLeft="15dp"
         android:textColor="@color/greytwo"
         android:textColorHint="@color/greytwo"
         android:textSize="14sp" />

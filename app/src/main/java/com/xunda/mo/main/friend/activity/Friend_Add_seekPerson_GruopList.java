@@ -57,7 +57,7 @@ public class Friend_Add_seekPerson_GruopList extends AppCompatActivity implement
         seek_edit.setText(seekStr);
         seek_edit.setSelection(seekStr.length());
 
-//        if (type.equals("NickNameUser")) {
+//        if (type.equals("nicknameUser")) {
 //            seek_edit.setHint("搜索用户昵称");
 //            type = "1";
 //        } else if (type.equals("userNumUser")) {

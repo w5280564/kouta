@@ -70,6 +70,7 @@ import com.xunda.mo.hx.section.chat.delegates.ChatRecallAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.ChatUserCardAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.ChatVideoCallAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.ChatVoiceCallAdapterDelegate;
+import com.xunda.mo.hx.section.chat.delegates.HornAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.MyEaseCustomAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.MyEaseExpressionAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.MyEaseFileAdapterDelegate;
@@ -215,7 +216,8 @@ public class DemoHelper {
         EaseMessageTypeSetManager.getInstance()
                 .addMessageType(MyGroupUpdateMesAdapterDelegate.class)     //群设置更新
                 .addMessageType(MyGroupAddMesAdapterDelegate.class)     //创建群消息
-                .addMessageType(BurnAfterReadingAdapterDelegate.class)        //阅后即焚
+                .addMessageType(HornAdapterDelegate.class)        //群喇叭
+                .addMessageType(BurnAfterReadingAdapterDelegate.class)        //Mo消息
 //                .addMessageType(EaseCustomAdapterDelegate.class)           //自定义消息
                 .addMessageType(MyEaseCustomAdapterDelegate.class)           //自定义客服消息
                 .addMessageType(ChatUserCardAdapterDelegate.class)         //名片消息
