@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/em_common_title_bar_height"
         app:titleBarDisplayHomeAsUpEnabled="true"
-        app:titleBarTitle="@string/Select_the_contact"/>
+        app:titleBarTitle="@string/Select_the_contact" />
 
     <TextView
         android:id="@+id/btn_start"

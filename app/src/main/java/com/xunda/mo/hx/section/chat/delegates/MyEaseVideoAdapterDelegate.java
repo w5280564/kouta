@@ -10,7 +10,7 @@ import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.viewholder.EaseChatRowViewHolder;
 import com.hyphenate.easeui.viewholder.EaseVideoViewHolder;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
-import com.xunda.mo.hx.section.chat.views.MyEaseChatRowVoice;
+import com.xunda.mo.hx.section.chat.views.MyEaseChatRowVideo;
 
 /**
  * 视频代理类
@@ -31,7 +31,7 @@ public class MyEaseVideoAdapterDelegate extends EaseMessageAdapterDelegate<EMMes
 
     @Override
     protected EaseChatRow getEaseChatRow(ViewGroup parent, boolean isSender) {
-        return new MyEaseChatRowVoice(parent.getContext(), isSender);
+        return new MyEaseChatRowVideo(parent.getContext(), isSender);
     }
 
     @Override

@@ -124,7 +124,7 @@ public class Main_Novalidation_Code extends BaseInitActivity {
         return_Btn.setVisibility(View.VISIBLE);
         TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
 //        cententTxt.setText(TitleName);
-        cententTxt.setText("手机号验证");
+        cententTxt.setText("");
         right_Btn = title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.GONE);
         return_Btn.setOnClickListener(new return_Btn());

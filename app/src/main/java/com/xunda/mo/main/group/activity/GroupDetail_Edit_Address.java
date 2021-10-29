@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,6 +52,11 @@ public class GroupDetail_Edit_Address extends EaseBaseActivity implements AMap.O
     public static void actionStartForResult(Activity activity, int requestCode) {
         Intent intent = new Intent(activity, GroupDetail_Edit_Address.class);
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static void actionStartForResult(Fragment fragment, int requestCode) {
+        Intent intent = new Intent(fragment.getContext(), GroupDetail_Edit_Address.class);
+        fragment.startActivityForResult(intent, requestCode);
     }
 
     public static void actionStart(Context context) {
@@ -270,7 +276,7 @@ public class GroupDetail_Edit_Address extends EaseBaseActivity implements AMap.O
         mAdapter.setOnSendClickLitener(new GroupDetail_Edit_Adress_Adapter.OnSendClickLitener() {
             @Override
             public void onClick(View v, int pos) {
-                sendLocation(poiResult,pos);
+                sendLocation(poiResult, pos);
             }
         });
     }
@@ -280,15 +286,20 @@ public class GroupDetail_Edit_Address extends EaseBaseActivity implements AMap.O
         finish();
     }
 
-    private void sendLocation(PoiResult poiResult,int pos) {
+    private void sendLocation(PoiResult poiResult, int pos) {
         if (poiResult != null) {
-            double latitude = poiResult.getPois().get(pos).getLatLonPoint().getLatitude();
-            double longitude = poiResult.getPois().get(pos).getLatLonPoint().getLongitude();
-            String Address = poiResult.getPois().get(pos).toString();
+            PoiItem poiItem = poiResult.getPois().get(pos);
+            String locName = poiItem.toString();
+            String location = poiItem.getCityName() + poiItem.getAdName() + poiItem.getSnippet();
+            double latitude = poiItem.getLatLonPoint().getLatitude();
+            double longitude = poiItem.getLatLonPoint().getLongitude();
+            String Address = locName + "," + location;
             Intent intent = getIntent();
             intent.putExtra("latitude", latitude);
             intent.putExtra("longitude", longitude);
             intent.putExtra("address", Address);
+//            intent.putExtra("address", MapLocation.getAddress());
+
             this.setResult(RESULT_OK, intent);
             finish();
         }

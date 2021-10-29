@@ -649,6 +649,9 @@
         <activity android:name=".main.me.activity.Me_Manage_BlackList"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".main.chat.activity.Chat_SelectUserCard"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".main.login.Main_Launch"
             android:screenOrientation="portrait">

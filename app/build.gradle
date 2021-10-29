@@ -1,12 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.huawei.agconnect'
-
+apply plugin: 'kotlin-android'
+//apply plugin: 'kotlin-android-extensions'
 android {
-
+    //移除id 'kotlin-android-extensions'替换为
+    buildFeatures {
+        dataBinding = true
+//        viewBinding true
+    }
     //加载资源
     Properties properties = new Properties()
     InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream() ;
-    properties.load( inputStream )
+    properties.load(inputStream)
 
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -32,7 +37,6 @@ android {
             keyPassword '123456'
             keyAlias 'moyanmoyu'
         }
-
     }
 
     buildTypes {
@@ -52,15 +56,10 @@ android {
         applicationId "com.xunda.mo"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 10
-        versionName "1.0.9"
+        versionCode 12
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                includeCompileClasspath true
-            }
-        }
 
         //指定room.schemaLocation生成的文件路径  处理Room 警告 Schema export Error
         javaCompileOptions {
@@ -93,14 +92,24 @@ android {
     }
 
 
-    //自3.6.0开始需要java8的支持
+    //gradle 7.0开始需要java11的支持
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    //layout 分包配置
     sourceSets {
         main {
+//            jniLibs.srcDirs = ['libs']
+//            res.srcDirs = ['other/res']
+//            res.srcDirs = ['other/layouts']
+//            res.srcDirs = ['other/res/layouts/activites',
+//                           'other/res/layouts/adapter',
+//                           'other/res/layouts/fragments',
+//                           'other/res/layouts/popupwindows',
+//                           'other/res/layouts/xrecycler']
+//            manifest.srcFile("other/AndroidManifest.xml")
+
             res.srcDirs = [
                     'src/main/res/layouts/activites',
                     'src/main/res/layouts/adapter',
@@ -133,23 +142,24 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['.jar','.aar'])
+//    implementation fileTree(include: ['*.?ar'], dir: 'libs')//修改后样式
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
 //    implementation files('libs/pinyin4j-2.5.0.jar')
-    implementation 'androidx.work:work-runtime:2.5.0-alpha01'
+    implementation 'androidx.work:work-runtime:2.5.0'
     implementation 'androidx.room:room-runtime:2.2.6'
-    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+    implementation 'com.google.firebase:firebase-messaging:21.1.0'
     implementation 'com.android.support:multidex:1.0.3'
     implementation files('libs\\MiPush_SDK_Client_4_5_0.jar')
     implementation files('libs\\vivo_push_v2.3.1.jar')
     //oppo push
+//    implementation files('libs/oppo_push_v2.1.0.aar')
     implementation (name:'oppo_push_v2.1.0',ext:'aar')
-//    implementation 'com.google.firebase:firebase-firestore:22.1.2'
 //    implementation (name:'vivo_pushsdk-3.0.0.3_483',ext:'aar')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -157,7 +167,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'org.xutils:xutils:3.9.0'
-    implementation 'me.jessyan:autosize:1.2.1'
+    implementation 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1'//适配
 
     implementation 'com.huawei.storage:esdk-obs-android:3.1.3'
     implementation 'com.facebook.fresco:fresco:2.5.0'
@@ -166,7 +176,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'com.github.mcxtzhang:SwipeCaptcha:V1.0.0'
     annotationProcessor 'androidx.room:room-compiler:2.2.6'
-/* get set 不用写*/
+    /* get set 不用写compileOnly和annotationProcessor 两个都需要添加*/
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
@@ -193,7 +203,8 @@ dependencies {
     implementation 'com.github.bingoogolapple.BGAQRCode-Android:zxing:1.3.8'
     implementation 'org.apache.commons:commons-lang3:3.7'
     implementation 'com.huawei.hms:push:6.1.0.300'
-    compile (name: 'alipaySdk-15.8.03.210428205839', ext: 'aar')
+//    implementation files('libs/alipaySdk-15.8.03.210428205839.aar')
+    api (name: 'alipaySdk-15.8.03.210428205839', ext: 'aar')
     api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.8.0'
     // 或者直接引用最新版本
     //桌面角标
@@ -203,6 +214,8 @@ dependencies {
     //动态申请权限
     api 'pub.devrel:easypermissions:1.0.1'
     implementation 'com.blankj:utilcodex:1.30.6'
+    //java与kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
 }
 

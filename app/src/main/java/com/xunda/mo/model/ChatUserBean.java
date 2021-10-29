@@ -3,13 +3,15 @@ package com.xunda.mo.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import java.io.Serializable;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
 @JsonNaming
-public class ChatUserBean {
+public class ChatUserBean implements Serializable {
     @JsonProperty("msg")
     private String msg;
     @JsonProperty("code")
@@ -19,7 +21,7 @@ public class ChatUserBean {
 
     @NoArgsConstructor
     @Data
-    public static class DataDTO {
+    public static class DataDTO implements Serializable{
         @JsonProperty("fireType")
         private String fireType;
         @JsonProperty("grade")

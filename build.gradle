@@ -1,6 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    ext.kotlin_version="1.5.31"     //使用kotlin配置这里改成你的kotlin版本号
     ext {
+//        kotlin_version="1.5.31"     //使用kotlin配置这里改成你的kotlin版本号
         agp_version = '7.0.0'
     }
     repositories {
@@ -15,8 +17,9 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         // 增加agcp插件配置。
-//        classpath 'com.huawei.agconnect:agcp:1.4.1.300'
         classpath 'com.huawei.agconnect:agcp:1.6.0.300'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"//使用kotlin配置
+//        classpath 'me.tatarka:gradle-retrolambda:3.2.5' // 添加的这行
     }
 }
 

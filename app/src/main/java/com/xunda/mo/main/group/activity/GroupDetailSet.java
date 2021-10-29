@@ -555,9 +555,9 @@ public class GroupDetailSet extends BaseInitActivity {
         int size = imgList.size();
         //群主、管理员只展示2行10人 最后两个是添加与删除
         if (size > 8) {
-            size = 7;
+            size = 8;
             if (Identity == 3) {
-                size = 8;
+                size = 9;
             }
         }
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 45, getResources().getDisplayMetrics());

@@ -32,6 +32,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.hyphenate.easeui.ui.base.EaseBaseActivity;
@@ -103,6 +104,7 @@ public class MyEaseGaodeMapActivity extends EaseBaseActivity implements EaseTitl
         //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
         aMap.setOnMyLocationChangeListener(this);
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(17));//地图的缩放级别一共分为 17 级，从 3 到 19。数字越大，展示的图面信息越精细。
 
         titleBarMap = findViewById(R.id.title_bar_map);
 //		mapView = findViewById(R.id.bmapView);

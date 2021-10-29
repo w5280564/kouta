@@ -148,19 +148,23 @@ public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser>
                     if (jsonObject != null) {
                         String remarkName = jsonObject.getString(MyConstant.REMARK_NAME);
                         String name = TextUtils.isEmpty(remarkName) ? item.getNickname() : remarkName;
-                        int nameLength = name.length();
-                        String nameAndNum = name + " (" + jsonObject.getString(MyConstant.USER_NUM) + ")";
-                        setName(nameAndNum, nameLength, mName);
+
 
                         String vipTypeString = jsonObject.getString(MyConstant.VIP_TYPE);
                         if (TextUtils.equals(vipTypeString, "0")) {
                             vipType_txt.setVisibility(View.GONE);
+                            mName.setTextColor(ContextCompat.getColor(mContext, R.color.blacktitle));
                         } else {
                             vipType_txt.setVisibility(View.VISIBLE);
                             mName.setTextColor(ContextCompat.getColor(mContext, R.color.yellowfive));
                         }
                         String on_LightStatus = jsonObject.getString(MyConstant.ONLINE_STATUS);
                         mSignature.setText(on_LightStatus);
+
+                        int nameLength = name.length();
+                        String nameAndNum = name + " (" + jsonObject.getString(MyConstant.USER_NUM) + ")";
+//                        setName(nameAndNum, nameLength, mName);
+                        mName.setText(nameAndNum);
 
                     }
                 }

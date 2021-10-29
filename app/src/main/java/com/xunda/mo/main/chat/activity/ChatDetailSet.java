@@ -1,7 +1,5 @@
 package com.xunda.mo.main.chat.activity;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -43,7 +41,6 @@ import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.common.repositories.EMPushManagerRepository;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
-import com.xunda.mo.hx.section.chat.activicy.SelectUserCardActivity;
 import com.xunda.mo.hx.section.chat.viewmodel.ChatViewModel;
 import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
@@ -320,9 +317,7 @@ public class ChatDetailSet extends BaseInitActivity {
     private class recommend_ArrowItemOnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            Intent userCardIntent = new Intent(ChatDetailSet.this, SelectUserCardActivity.class).addFlags(FLAG_ACTIVITY_NEW_TASK);
-            userCardIntent.putExtra("toUser", conversation.conversationId());
-            startActivity(userCardIntent);
+            Chat_SelectUserCard.actionStartSingle(ChatDetailSet.this, conversation.conversationId(),"3");
         }
     }
 

@@ -41,5 +41,7 @@ public class Discover_Welfare_Bean {
         private Integer todaySign;
         @JsonProperty("userId")
         private String userId;
+        @JsonProperty("integral")
+        private Integer integral;
     }
 }

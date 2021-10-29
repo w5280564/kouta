@@ -203,6 +203,7 @@ public class Discover_Welfare extends BaseInitActivity implements View.OnClickLi
             @Override
             public void success(String result) {
                 Discover_Welfare_Bean  doModel = new Gson().fromJson(result, Discover_Welfare_Bean.class);
+                integral_Txt.setText("我的积分:" + doModel.getData().getIntegral());
                 Toast.makeText(context,doModel.getMsg(),Toast.LENGTH_SHORT).show();
                 changeData();
             }
@@ -235,9 +236,9 @@ public class Discover_Welfare extends BaseInitActivity implements View.OnClickLi
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
+                Toast.makeText(context,"已兑换",Toast.LENGTH_SHORT).show();
                cardData();
             }
-
             @Override
             public void failed(String... args) {
             }

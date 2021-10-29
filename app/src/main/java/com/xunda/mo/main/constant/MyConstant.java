@@ -13,7 +13,7 @@ public interface MyConstant extends DemoConstant {
     String TO_HEAD = "toHead";
     String TO_LH = "toLH";
     String TO_VIP = "toVIP";
-    String FIRE_TYPE = "fireType";
+    String FIRE_TYPE = "fireType"; //Mo消息
     String APPLY = "apply";
 
     String MESSAGE_TYPE_GROUP = "group";
@@ -21,7 +21,7 @@ public interface MyConstant extends DemoConstant {
     String GROUP_HEAD = "groupHead";
     String IDENTITY = "identity";
     String EXT = "ext";
-    String MO_CUSTOMER = "MOCustomer";
+    String MO_CUSTOMER = "MOCustomer"; //客服标志
     String MO_NAME = "MO客服";
     String QUESTIONS = "questions";
     String CONTENT = "content";
@@ -62,6 +62,9 @@ public interface MyConstant extends DemoConstant {
     String MESSAGE_GROUP_LEAVE = "groupLeave";
     String MESSAGE_GROUP_Message = "groupMessage";
     String Message_Recall = "messageRecall";
+    String MESSAGE_TYPE_SCREENSHORTS = "screenShots";
+    String MESSAGE_TYPE_GROUP_SCREENSHORTS = "groupScreenShots";
+    String MESSAGE_TYPE_SYSTEM_NOTICE = "systemNotice";
 
     String GROUP_CHAT_ANONYMOUS = "anonymousChat";
     String GROUP_UPDATE_GROUPDES = "updateGroupDes";
@@ -88,4 +91,5 @@ public interface MyConstant extends DemoConstant {
    String  SendFireRecall_Mess_ID = "messageId";
    String  Dele_Type = "deletType";
    String  MESS_TYPE_GROUP_HORN = "GroupHorn";
+   String  GROUP_IS_ANONYMOUS = "isAnonymous";
 }

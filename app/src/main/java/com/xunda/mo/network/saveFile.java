@@ -107,6 +107,7 @@ public class saveFile {
     public static String SecurityQuestion_Check = "securityQuestion/securityQuestionCheck";
     public static String Group_Horn = "group/horn";
     public static String Friend_Blacks_List = "friend/blacks";
+    public static String User_CheckOldPhone = "user/checkOldPhone";
 
 
 

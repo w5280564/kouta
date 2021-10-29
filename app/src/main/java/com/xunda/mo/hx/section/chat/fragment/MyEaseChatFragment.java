@@ -42,7 +42,7 @@ import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
 import com.hyphenate.util.VersionUtils;
 import com.xunda.mo.R;
-import com.xunda.mo.hx.section.chat.activicy.MyEaseGaodeMapActivity;
+import com.xunda.mo.main.group.activity.GroupDetail_Edit_Address;
 import com.xunda.mo.staticdata.MarqueeTextView;
 
 import java.io.File;
@@ -273,7 +273,9 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
      */
     protected void startMapLocation(int requestCode) {
 //        EaseBaiduMapActivity.actionStartForResult(this, requestCode);
-        MyEaseGaodeMapActivity.actionStartForResult(this, requestCode);
+//        MyEaseGaodeMapActivity.actionStartForResult(this, requestCode);
+        GroupDetail_Edit_Address.actionStartForResult(this, requestCode);
+
     }
 
     /**

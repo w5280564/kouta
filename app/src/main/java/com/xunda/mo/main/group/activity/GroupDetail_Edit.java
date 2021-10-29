@@ -70,7 +70,7 @@ import lombok.SneakyThrows;
 public class GroupDetail_Edit extends BaseInitActivity {
 
     protected static final int ADRESS_CODE = 1;
-    private ConstraintLayout head_Constraint,label_Constraint;
+    private ConstraintLayout head_Constraint, label_Constraint;
     private ObsClient obsClient;
     private int Identity;
     private GruopInfo_Bean groupModel;
@@ -115,8 +115,8 @@ public class GroupDetail_Edit extends BaseInitActivity {
 
         initObsClient();
 
-        LiveDataBus.get().with(MyConstant.MY_GROUP_LABEL,String.class).observe(this, s -> {
-            tagList(label_Lin,  GroupDetail_Edit.this,s);
+        LiveDataBus.get().with(MyConstant.MY_GROUP_LABEL, String.class).observe(this, s -> {
+            tagList(label_Lin, GroupDetail_Edit.this, s);
         });
     }
 
@@ -153,7 +153,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
             String content = dataDTO.getGroupIntroduction().isEmpty() ? "群主很懒，还没有群介绍哦~" : dataDTO.getGroupIntroduction();
             brief_ArrowItemView.getTip().setText(content);
             String tag = groupModel.getData().getTag();
-            tagList(label_Lin,  GroupDetail_Edit.this,tag);
+            tagList(label_Lin, GroupDetail_Edit.this, tag);
 
             //3是普通成员不能修改
             if (Identity == 3) {
@@ -200,18 +200,18 @@ public class GroupDetail_Edit extends BaseInitActivity {
     }
 
 
-    public void tagList(LinearLayout label_Lin, Context mContext,String tag) {
-        if (label_Lin != null){
+    public void tagList(LinearLayout label_Lin, Context mContext, String tag) {
+        if (label_Lin != null) {
             label_Lin.removeAllViews();
         }
-        if (TextUtils.isEmpty(tag)){
+        if (TextUtils.isEmpty(tag)) {
             return;
         }
         String[] tagS = tag.split(",");
         for (int i = 0; i < tagS.length; i++) {
             TextView textView = new TextView(mContext);
             textView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
-            textView.setTextColor(ContextCompat.getColor(mContext,R.color.white));
+            textView.setTextColor(ContextCompat.getColor(mContext, R.color.white));
             textView.setBackgroundResource(R.drawable.group_label_radius);
             textView.setText(tagS[i]);
             LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -330,12 +330,14 @@ public class GroupDetail_Edit extends BaseInitActivity {
             double latitude = data.getDoubleExtra("latitude", 0);
             double longitude = data.getDoubleExtra("longitude", 0);
             String locationAddress = data.getStringExtra("address");
+            String locName = locationAddress.substring(0, locationAddress.indexOf(","));
+
             if (TextUtils.isEmpty(locationAddress)) {
 
             }
             String changType = "2";
             String keyStr = "groupAddr";
-            CreateGroupMethod(GroupDetail_Edit.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, locationAddress, "", "");
+            CreateGroupMethod(GroupDetail_Edit.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, locName, "", "");
         }
     }
 

@@ -256,28 +256,14 @@ public class SelectUserCardActivity extends BaseInitActivity implements EaseTitl
         dialog.show();
 
         EaseUser toEaseUser = DemoHelper.getInstance().getUserInfo(toUser);
-
         MyInfo myInfo = new MyInfo(this);
         EMMessage message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM);
-//        JSONObject obj = new JSONObject();
         try {
-
-//            obj.put(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_USERCARD);
-//            obj.put(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickName());
-//            obj.put(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
-//            obj.put(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
-//            obj.put(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
-//            obj.put(MyConstant.TO_NAME, user.getUsername());
-//            obj.put(MyConstant.TO_HEAD, user.getAvatar());
-//            obj.put(MyConstant.TO_LH, extJsonObject.get("lightStatus"));
-//            obj.put(MyConstant.TO_VIP, extJsonObject.get("vipType"));
-//            message.setAttribute(MyConstant.EXT, obj);
             message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_USERCARD);
             message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
             message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
             message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
             message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
-
             String toExt = toEaseUser.getExt();
             JSONObject to_Ext_Json = new JSONObject(toExt);//用户资料扩展属性
             String toName = TextUtils.isEmpty(to_Ext_Json.getString("remarkName")) ? toEaseUser.getNickname() : to_Ext_Json.getString("remarkName");
@@ -285,7 +271,6 @@ public class SelectUserCardActivity extends BaseInitActivity implements EaseTitl
             message.setAttribute(MyConstant.TO_HEAD, toEaseUser.getAvatar());
             message.setAttribute(MyConstant.TO_LH, to_Ext_Json.getString("lightStatus"));
             message.setAttribute(MyConstant.TO_VIP, to_Ext_Json.getString("vipType"));
-
             String selectInfoExt = selectUser.getExt();
             JSONObject select_Ext_JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
             EMCustomMessageBody body = new EMCustomMessageBody(DemoConstant.USER_CARD_EVENT);
@@ -293,7 +278,6 @@ public class SelectUserCardActivity extends BaseInitActivity implements EaseTitl
 //            params.put(DemoConstant.USER_CARD_ID, userId);
 //            params.put(DemoConstant.USER_CARD_NICK, selectUser.getNickname());
 //            params.put(DemoConstant.USER_CARD_AVATAR, selectUser.getAvatar());
-
             params.put(MyConstant.UID, userId);
             params.put(MyConstant.USER_ID, select_Ext_JsonObject.get("userId").toString());
             params.put(MyConstant.UNUM, select_Ext_JsonObject.get("userNum").toString());
@@ -303,15 +287,11 @@ public class SelectUserCardActivity extends BaseInitActivity implements EaseTitl
             body.setParams(params);
             message.setBody(body);
             message.setTo(toUser);
-
             String MOID = select_Ext_JsonObject.get("userNum").toString();
-//            userIdView.setText("[个人名片] " + MOID);
             user_moid_Txt.setText("Mo ID：" + MOID);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         send_btn.setOnClickListener(new View.OnClickListener() {
             @Override

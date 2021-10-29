@@ -138,8 +138,6 @@ public class GroupAllMembers_Add extends BaseInitActivity {
         mAdapter = new GroupAddMember_Adapter(TextUtils.isEmpty(groupId));
         addMembers_Recycler.setAdapter(mAdapter);
 
-
-
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {

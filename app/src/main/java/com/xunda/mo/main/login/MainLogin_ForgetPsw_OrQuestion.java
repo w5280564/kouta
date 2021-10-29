@@ -98,6 +98,9 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
         return_Btn.setVisibility(View.VISIBLE);
         TextView cententTxt = title_Include.findViewById(R.id.cententtxt);
         cententTxt.setText("输入手机号");
+        if (TextUtils.equals(type, "1")) {
+            cententTxt.setText("手机号验证");
+        }
         right_Btn = title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.GONE);
         return_Btn.setOnClickListener(new return_Btn());
@@ -136,9 +139,13 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
         protected void onNoDoubleClick(View v) {
             hideSoftInput(phone_edit);
             if (TextUtils.equals(type, "1")) {
-                String phoneNumber = phone_edit.getText().toString();
+                String edit_PhoneNumber = phone_edit.getText().toString().trim();
+//                if (!TextUtils.equals(phoneNumber,edit_PhoneNumber)){
+//                    Toast.makeText(MainLogin_ForgetPsw_OrQuestion.this,"手机号不正确", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 String userNum = LoginID;
-                MainLogin_Code.actionStart(MainLogin_ForgetPsw_OrQuestion.this, "忘记密码", phoneNumber, userNum);
+                MainLogin_Code.actionStart(MainLogin_ForgetPsw_OrQuestion.this, "忘记密码", edit_PhoneNumber, userNum);
             } else if (TextUtils.equals(type, "2")) {
                 CodeMore(MainLogin_ForgetPsw_OrQuestion.this, num_Btn, 0);
             }
@@ -184,6 +191,7 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
             @Override
             public void success(String result) {
                 baseModel = new Gson().fromJson(result, Main_ForgetPsw_Model.class);
+                phoneNumber = baseModel.getData();
                 id_txt.setText("为保护您的账号安全，请您输入完整的手机号码：\n" + baseModel.getData());
             }
 

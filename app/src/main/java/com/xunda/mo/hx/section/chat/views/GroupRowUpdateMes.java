@@ -163,10 +163,26 @@ public class GroupRowUpdateMes extends EaseChatRow {
                 }
             }
             content_Txt.setText(messageStr);
+        }else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_SCREENSHORTS)|| TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS)) {
+            String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
+            String messageStr = "";
+            if (message.getChatType() == EMMessage.ChatType.Chat) {
+                if (isSender()){
+                    messageStr = "您截取了当前消息";
+                }else {
+                    messageStr = "对方进行了截屏";
+                }
+            }else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+                if (isSender()) {
+                    messageStr = "您截取了当前消息";
+                }else {
+                    messageStr = String.format("'%1$s'进行了截屏", sendName);
+                }
+            }
+            content_Txt.setText(messageStr);
         }
+
         bubbleLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.chat_rowmes_bg));
-
-
     }
 
 

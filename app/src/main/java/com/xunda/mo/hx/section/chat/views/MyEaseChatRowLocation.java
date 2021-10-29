@@ -30,8 +30,8 @@ public class MyEaseChatRowLocation extends EaseChatRow {
 
     @Override
     protected void onInflateView() {
-        inflater.inflate(!showSenderType ? R.layout.ease_row_received_location
-                : R.layout.ease_row_sent_location, this);
+        inflater.inflate(!showSenderType ? R.layout.myease_row_received_location
+                : R.layout.myease_row_sent_location, this);
     }
 
     @Override
@@ -43,7 +43,12 @@ public class MyEaseChatRowLocation extends EaseChatRow {
     @Override
     protected void onSetUpView() {
 		locBody = (EMLocationMessageBody) message.getBody();
-		locationView.setText(locBody.getAddress());
+
+		String Address = locBody.getAddress();
+        String locName = Address.substring(0, Address.indexOf(","));
+        String location = Address.substring(Address.indexOf(",")+1);
+        tvLocationName.setText(locName);
+		locationView.setText(location);
 
         if (message.getChatType() == EMMessage.ChatType.Chat) {
             if (isSender()){

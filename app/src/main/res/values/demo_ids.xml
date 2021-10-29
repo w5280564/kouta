@@ -22,6 +22,8 @@
     <item name="contact_header_item_chat_room_list" type="id"/>
     <!-- 名片 -->
     <item name="extend_item_user_card" type="id"/>
+    <!-- 群组名片 -->
+    <item name="group_item_user_card" type="id"/>
     <!-- 好友分组 -->
     <item name="contact_header_item_creat_group" type="id"/>
      <!-- 文件传输助手 -->

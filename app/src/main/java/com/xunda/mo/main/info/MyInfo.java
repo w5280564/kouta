@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Base64;
 
 import com.xunda.mo.model.Olduser_Model;
+import com.xunda.mo.model.UserDetail_Bean;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -83,6 +84,34 @@ public class MyInfo {
         editor.putInt("userNum", model.getUserNum());
         editor.putInt("VipType", model.getVipType());
         editor.putInt("isQuestion", model.getIsQuestion());
+        editor.apply();
+    }
+
+    //更新个人信息 没有token与问题isQuestion
+    public void  updateData( UserDetail_Bean.DataDTO userModel){
+        SharedPreferences.Editor editor = share.edit();
+        editor.putInt("age", userModel.getAge());
+        editor.putString("areaCode", userModel.getAreaCode());
+        editor.putString("areaName", userModel.getAreaName());
+        editor.putString("birthday", userModel.getBirthday());
+        editor.putLong("createTime", userModel.getCreateTime());
+        editor.putString("deletePassword", userModel.getDeletePassword());
+        editor.putInt("deleteStatus", userModel.getDeleteStatus());
+        editor.putInt("grade", userModel.getGrade());
+        editor.putString("HeadImg", userModel.getHeadImg());
+        editor.putString("HxUserName", userModel.getHxUserName());
+        editor.putString("inPassword", userModel.getInPassword());
+        editor.putInt("isNeedUnlock", userModel.getIsNeedUnlock());
+        editor.putInt("lightStatus", userModel.getLightStatus());
+        editor.putString("mailbox", userModel.getMailbox());
+        editor.putString("nickname", userModel.getNickname());
+        editor.putString("phoneNum", userModel.getPhoneNum());
+        editor.putInt("sex", userModel.getSex());
+        editor.putString("signature", userModel.getSignature());
+        editor.putString("tag", userModel.getTag());
+        editor.putString("userId", userModel.getUserId());
+        editor.putInt("userNum", userModel.getUserNum());
+        editor.putInt("VipType", userModel.getVipType());
         editor.apply();
     }
 

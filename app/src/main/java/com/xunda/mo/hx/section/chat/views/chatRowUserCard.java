@@ -5,6 +5,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.hyphenate.chat.EMCustomMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
@@ -41,15 +43,13 @@ public class chatRowUserCard extends EaseChatRow {
         Map<String, String> params = messageBody.getParams();
 //        String uId = params.get(DemoConstant.USER_CARD_ID);
         String uId = params.get("uNum");
-        userIdView.setText("Mo ID：    " + uId);
+        userIdView.setText("Mo ID：" + uId);
 //        String nickname = params.get(DemoConstant.USER_CARD_NICK);
         String nickname = params.get(MyConstant.NICK_NAME);
         nicknameView.setText(nickname);//名片名字
 //        String headUrl = params.get(DemoConstant.USER_CARD_AVATAR);
         String headUrl = params.get(MyConstant.AVATAR);
-        Glide.with(getContext()).load(headUrl).into(headImageView);
-//            String ext = message.getStringAttribute("ext");
-//            JSONObject jsonObject = new JSONObject(ext);
+        Glide.with(getContext()).load(headUrl).transforms(new CenterCrop(), new RoundedCorners(9)).into(headImageView);
         usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME, ""));
         String userUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
         Glide.with(getContext()).load(userUrl).into(userAvatarView);

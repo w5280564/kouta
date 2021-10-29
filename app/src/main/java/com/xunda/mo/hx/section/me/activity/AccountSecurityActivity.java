@@ -110,7 +110,7 @@ public class AccountSecurityActivity extends BaseInitActivity implements EaseTit
                     questionMethod(mContext, saveFile.User_SecurityQuestionList_Url, "0");
                 } else {
                     String titleName = "验证手机号";
-                    String type = "1";
+                    String type = "2";
                     MainLogin_ForgetPsw_OrQuestion.actionStart(mContext, titleName, baseModel.getData(), LoginID,type);
                 }
                 break;

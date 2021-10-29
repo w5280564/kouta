@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -41,11 +43,11 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         super(setModel);
     }
 
-//    @Override
-//    public ViewHolder onCreateViewHolder(ViewGroup parent, String tag) {
-//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ease_item_row_chat_history, parent, false);
-//        return new ViewHolder(view, setModel);
-//    }
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, String tag) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ease_item_row_chat_history, parent, false);
+        return new ViewHolder(view, setModel);
+    }
 
     @Override
     public boolean isForViewType(EaseConversationInfo item, int position) {
@@ -67,8 +69,10 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         String HeadName = "";
 
         Log.e("group", item.conversationId());
+        String mesType = item.getLastMessage().getStringAttribute(MyConstant.MESSAGE_TYPE, "");
 
         holder.name.setTextColor(ContextCompat.getColor(context, R.color.blacktitle));
+
         if (item.getType() == EMConversation.EMConversationType.GroupChat) {
             if (EaseAtMessageHelper.get().hasAtMeMsg(username)) {
                 holder.mentioned.setText(R.string.were_mentioned);
@@ -84,15 +88,20 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                 defaultAvatar = R.mipmap.adress_head_service;
                 holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
                 Glide.with(context).load(HeadAvatar).placeholder(defaultAvatar).into(holder.avatar);
-            } else {
-
+            }
+//            else if (mesType.equals(MyConstant.MESSAGE_TYPE_SYSTEM_NOTICE)) {
+//                defaultAvatar = R.mipmap.chat_notice;
+//                holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
+//                HeadName = item.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME, "");
+//                Glide.with(context).load(HeadAvatar).placeholder(defaultAvatar).into(holder.avatar);
+//            }
+            else {
                 if (item.getAllMsgCount() != 0) {
                     item.getLastMessage().ext();
                     HeadName = item.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME, "");
                     HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.GROUP_HEAD, "");
                     Glide.with(context).load(HeadAvatar).placeholder(R.drawable.mo_icon).into(holder.avatar);
                 }
-
 
 
 //                item.getExtField();
@@ -221,7 +230,6 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
             String content = lastMessage.getStringAttribute("content", "");
             contentView.setText(content);
         }
-
 //        if (lastMessage.getBooleanAttribute(DemoConstant.MESSAGE_TYPE_RECALL, false)) {
         String lastMessType = lastMessage.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
         String lastFireType = lastMessage.getStringAttribute(MyConstant.FIRE_TYPE, "");
@@ -246,8 +254,24 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         } else if (TextUtils.equals(lastFireType, "1")) {
             String messageStr = "[Mo 语]";
             contentView.setText(messageStr);
-        }
+        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_SCREENSHORTS) || TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS)) {
+            String sendName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
+            if (lastMessage.getChatType() == EMMessage.ChatType.Chat) {
+                if (lastMessage.direct() == EMMessage.Direct.RECEIVE) {
+                    String messageStr = "对方进行了截屏";
+                    contentView.setText(messageStr);
+                }
+            } else if (lastMessage.getChatType() == EMMessage.ChatType.GroupChat) {
+                if (lastMessage.direct() == EMMessage.Direct.RECEIVE) {
+                    String messageStr = String.format("'%1$s'进行了截屏", sendName);
+                    contentView.setText(messageStr);
+                }
+            }
 
+        }else if (item.getLastMessage().getType() == EMMessage.Type.LOCATION){
+            String messageStr = "[位置]";
+            contentView.setText(messageStr);
+        }
     }
 
 

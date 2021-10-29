@@ -4,7 +4,6 @@ import com.hyphenate.easeui.domain.EaseEmojicon;
 import com.hyphenate.easeui.domain.EaseEmojicon.Type;
 import com.hyphenate.easeui.domain.EaseEmojiconGroupEntity;
 import com.xunda.mo.R;
-import com.xunda.mo.main.baseView.MyApplication;
 
 import java.util.Arrays;
 
@@ -47,6 +46,25 @@ public class EmojiconExampleGroupData {
         R.drawable.icon_035,
         R.drawable.icon_040,
     };
+
+    private static String[] icons_name = new String[]{
+            "哭",
+            "嘚瑟",
+            "跳舞",
+            "耸肩",
+            "bye",
+            "升天",
+            "痴迷",
+            "晚安",
+            "爱你",
+            "拜托",
+            "no",
+            "生日快乐",
+            "哼",
+            "抓狂",
+            "扭一扭",
+            "尬舞",
+    };
     
     
     private static final EaseEmojiconGroupEntity DATA = createData();
@@ -58,7 +76,8 @@ public class EmojiconExampleGroupData {
             datas[i] = new EaseEmojicon(icons[i], null, Type.BIG_EXPRESSION);
             datas[i].setBigIcon(bigIcons[i]);
             //you can replace this to any you want
-            datas[i].setName(MyApplication.getInstance().getApplicationContext().getString(R.string.emojicon_test_name)+ (i+1));
+//            datas[i].setName(MyApplication.getInstance().getApplicationContext().getString(R.string.emojicon_test_name)+ (i+1));
+            datas[i].setName(icons_name[i]);
             datas[i].setIdentityCode("em"+ (1000+i+1));
         }
         emojiconGroupEntity.setEmojiconList(Arrays.asList(datas));

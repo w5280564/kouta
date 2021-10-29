@@ -183,8 +183,8 @@ public class ChatPresenter extends EaseChatPresenter {
             //notify new message
             getNotifier().vibrateAndPlayTone(message);
 
-             String messType = message.getStringAttribute(MyConstant.MESSAGE_TYPE,"");
-             if (TextUtils.equals(messType,MyConstant.MESS_TYPE_GROUP_HORN)){
+            String messType = message.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
+            if (TextUtils.equals(messType, MyConstant.MESS_TYPE_GROUP_HORN)) {
                 messageChangeLiveData.with(MyConstant.MESS_TYPE_GROUP_HORN).postValue(message);
             }
 
@@ -229,7 +229,12 @@ public class ChatPresenter extends EaseChatPresenter {
 //                // 删除消息
                 conversation.removeMessage(Recall_Mess_ID);
                 messageChangeLiveData.with(MyConstant.FIRE_REFRESH).postValue(true);
+            } else if (msg.getBooleanAttribute(MyConstant.MESSAGE_TYPE_SCREENSHORTS, false)) {
+                screenShorts(msg);
+            } else if (msg.getBooleanAttribute(MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS, false)) {
+                screenShorts(msg);
             }
+
         }
 
 
@@ -259,6 +264,7 @@ public class ChatPresenter extends EaseChatPresenter {
 //            }
 //        }
     }
+
 
     /**
      * \~chinese
@@ -1270,6 +1276,33 @@ public class ChatPresenter extends EaseChatPresenter {
             content = "您";
         }
         return content;
+    }
+
+
+    private void screenShorts(EMMessage msg) {
+        EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        EMTextMessageBody txtBody = new EMTextMessageBody(String.format(context.getString(R.string.msg_recall_by_user), msg.getFrom()));
+        msgNotification.addBody(txtBody);
+        msgNotification.setFrom(msg.getFrom());
+        msgNotification.setTo(msg.getTo());
+        msgNotification.setUnread(false);
+        msgNotification.setMsgTime(msg.getMsgTime());
+        msgNotification.setLocalTime(msg.getMsgTime());
+        msgNotification.setChatType(msg.getChatType());
+        if (msg.getChatType() == EMMessage.ChatType.Chat) {
+            msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_SCREENSHORTS);
+            msgNotification.setAttribute(MyConstant.MESSAGE_TYPE_SCREENSHORTS, true);
+        } else if (msg.getChatType() == EMMessage.ChatType.GroupChat) {
+            msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS);
+            msgNotification.setAttribute(MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS, true);
+            msgNotification.setAttribute(MyConstant.SEND_NAME, msg.getStringAttribute(MyConstant.SEND_NAME, ""));
+            msgNotification.setAttribute(MyConstant.GROUP_NAME, msg.getStringAttribute(MyConstant.GROUP_NAME, ""));
+            msgNotification.setAttribute(MyConstant.GROUP_HEAD, msg.getStringAttribute(MyConstant.GROUP_HEAD, ""));
+        }
+        msgNotification.setStatus(EMMessage.Status.SUCCESS);
+        EMClient.getInstance().chatManager().saveMessage(msgNotification);
+        EaseEvent event = EaseEvent.create(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE);
+        messageChangeLiveData.with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(event);
     }
 
 

@@ -38,6 +38,7 @@ import com.google.gson.Gson;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
@@ -68,14 +69,15 @@ import com.xunda.mo.hx.section.base.BaseActivity;
 import com.xunda.mo.hx.section.chat.activicy.ForwardMessageActivity;
 import com.xunda.mo.hx.section.chat.activicy.ImageGridActivity;
 import com.xunda.mo.hx.section.chat.activicy.PickAtUserActivity;
-import com.xunda.mo.hx.section.chat.activicy.SelectUserCardActivity;
 import com.xunda.mo.hx.section.chat.viewmodel.MessageViewModel;
 import com.xunda.mo.hx.section.conference.ConferenceInviteActivity;
 import com.xunda.mo.hx.section.dialog.DemoListDialogFragment;
 import com.xunda.mo.hx.section.dialog.FullEditDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
+import com.xunda.mo.main.baseView.MyApplication;
 import com.xunda.mo.main.chat.activity.ChatComplaint;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
+import com.xunda.mo.main.chat.activity.Chat_SelectUserCard;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.group.activity.GroupFriend_Detail;
 import com.xunda.mo.main.group.activity.Group_Horn;
@@ -89,6 +91,8 @@ import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.MarqueeTextView;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.kotlin.ScreenShotViewModel;
+import com.xunda.mo.staticdata.kotlin.ScreentShotInfo;
 import com.xunda.mo.staticdata.xUtils3Http;
 
 import org.json.JSONException;
@@ -200,6 +204,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
         });
         cancel_Btn.setOnClickListener(new cancel_BtnClick());
+        screenShot();
     }
 
 
@@ -219,13 +224,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 }
                 serviceAnswerData(mContext, saveFile.Receptionist_Answer, sendTxt);
             }
-//            else {
-//                String messType = message.getStringAttribute(MyConstant.MESSAGE_TYPE,"");
-//                if (TextUtils.equals(messType,MyConstant.MESS_TYPE_GROUP_HORN)){
-//                    LiveDataBus.get().with(MyConstant.MESS_TYPE_GROUP_HORN).postValue(message);
-//                }
-//            }
-
         }
     }
 
@@ -315,6 +313,9 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         message.setAttribute(MyConstant.GROUP_NAME, groupModel.getData().getGroupName());
         message.setAttribute(MyConstant.GROUP_HEAD, groupModel.getData().getGroupHeadImg());
         message.setAttribute(MyConstant.IDENTITY, groupModel.getData().getIdentity());
+        if (groupModel.getData().getIsAnonymous() == 1) {
+            message.setAttribute(MyConstant.GROUP_IS_ANONYMOUS, "1");
+        }
     }
 
     //单人聊天 Mo消息扩展字段
@@ -362,6 +363,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 //        msgListener = MyApplication.getInstance().msgListener;
         msgListener = new EMMessageMethod();
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
+
     }
 
     @Override
@@ -383,6 +385,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         chatExtendMenu.registerMenuItem(R.string.attach_picture, R.drawable.ease_chat_image_selector, R.id.extend_item_picture);
         chatExtendMenu.registerMenuItem(R.string.attach_take_pic, R.drawable.ease_chat_takepic_selector, R.id.extend_item_take_picture);
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
+            chatExtendMenu.registerMenuItem(R.string.attach_video, R.mipmap.chat_location_video, R.id.extend_item_video);
             chatExtendMenu.registerMenuItem(R.string.attach_location, R.drawable.ease_chat_location_selector, R.id.extend_item_location);
             chatExtendMenu.registerMenuItem(R.string.attach_media_call, R.drawable.em_chat_video_call_selector, R.id.extend_item_video_call);
             chatExtendMenu.registerMenuItem(R.string.attach_two_withdraw, R.mipmap.chat_two_withdraw, R.id.extend_item_two_withdraw);
@@ -392,10 +395,11 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             if (isMOCustomer()) {
                 chatExtendMenu.registerMenuItem(R.string.chat_complaint, R.mipmap.chat_complaint_icon, R.id.chat_complaint);
             } else {
+                chatExtendMenu.registerMenuItem(R.string.attach_video, R.mipmap.chat_location_video, R.id.extend_item_video);
                 chatExtendMenu.registerMenuItem(R.string.attach_location, R.drawable.ease_chat_location_selector, R.id.extend_item_location);
                 chatExtendMenu.registerMenuItem(R.string.attach_two_withdraw, R.mipmap.chat_two_withdraw, R.id.extend_item_two_withdraw);
-                chatExtendMenu.registerMenuItem(R.string.attach_user_card, R.drawable.em_chat_user_card_selector, R.id.extend_item_user_card);
-                chatExtendMenu.registerMenuItem(R.string.attach_horn, R.mipmap.chat_visitingcard, R.id.attach_item_horn);
+                chatExtendMenu.registerMenuItem(R.string.attach_user_card, R.drawable.em_chat_user_card_selector, R.id.group_item_user_card);
+                chatExtendMenu.registerMenuItem(R.string.attach_horn, R.mipmap.chat_horn, R.id.attach_item_horn);
                 chatExtendMenu.registerMenuItem(R.string.attach_file, R.drawable.em_chat_file_selector, R.id.extend_item_file);
             }
         }
@@ -787,11 +791,15 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             case R.id.extend_item_delivery://群消息回执
                 showDeliveryDialog();
                 break;
-            case R.id.extend_item_user_card:
+            case R.id.extend_item_user_card://单人发名片
                 EMLog.d(TAG, "select user card");
-                Intent userCardIntent = new Intent(this.getContext(), SelectUserCardActivity.class).addFlags(FLAG_ACTIVITY_NEW_TASK);
-                userCardIntent.putExtra("toUser", conversationId);
-                this.requireContext().startActivity(userCardIntent);
+//                Intent userCardIntent = new Intent(this.getContext(), SelectUserCardActivity.class).addFlags(FLAG_ACTIVITY_NEW_TASK);
+//                userCardIntent.putExtra("toUser", conversationId);
+//                this.requireContext().startActivity(userCardIntent);
+                Chat_SelectUserCard.actionStartSingle(requireActivity(), conversationId, "1");
+                break;
+            case R.id.group_item_user_card://群发名片
+                Chat_SelectUserCard.actionStartGroup(requireActivity(), conversationId, "2", groupModel);
                 break;
             case R.id.extend_item_two_withdraw:
                 if (chatType == EaseConstant.CHATTYPE_SINGLE) {
@@ -820,7 +828,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         if (vipType == 0) {
             changeVip();
         } else if (vipType == 1) {
-            Group_Horn.actionStart(requireActivity(),groupModel);
+            Group_Horn.actionStart(requireActivity(), groupModel);
         }
     }
 
@@ -995,27 +1003,18 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     //两分钟内撤回发送消息
     private void chatOrGroupRecallMess(EMMessage message) {
-//        DemoHelper.getInstance().getChatManager().aysncRecallMessage(message, new DemoEmCallBack() {
-//            @Override
-//            public void onSuccess() {
-//
+//        MyInfo myInfo = new MyInfo(requireActivity());
+//        if (chatType == EaseConstant.CHATTYPE_SINGLE) {
+//            singleRecallSendMes(message, myInfo, model);
+//        } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
+//            if (isMOCustomer()) {
+//                return;
+//            } else {
+//                groupRecallSendMes(message, myInfo);
 //            }
-//        });
-
-        MyInfo myInfo = new MyInfo(requireActivity());
-        if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-            singleRecallSendMes(message, myInfo, model);
-        } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-            if (isMOCustomer()) {
-                return;
-            } else {
-                groupRecallSendMes(message, myInfo);
-            }
-        }
+//        }
         //        showProgressBar();
-//        chatLayout.recallMessage(message);//不使用环信方法
-
-
+        chatLayout.recallMessage(message);//不使用环信方法
     }
 
     private void showProgressBar() {
@@ -1249,7 +1248,8 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     //发送单聊撤回消息
     private void doubleRecall() {
         removeMes();
-        sendMes(model);
+        String mes_type = MyConstant.MESSAGE_TYPE_DOUBLE_RECALL;
+        sendMes(model, mes_type);
         messageListLayout.refreshToLatest();
     }
 
@@ -1263,7 +1263,8 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     //发送群里撤回消息
     private void doubleGroupRecall() {
         removeMes();
-        sendGroupMes(groupModel);
+        String mes_type = MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL;
+        sendGroupMes(groupModel, mes_type);
         messageListLayout.refreshToLatest();
     }
 
@@ -1280,8 +1281,8 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         conversation.clearAllMessages();
     }
 
-    //发送消息
-    private void sendMes(ChatUserBean Model) {
+    //发送消息通用 注意消息type
+    private void sendMes(ChatUserBean Model, String Mes_Type) {
         MyInfo myInfo = new MyInfo(mContext);
         String conversationId = Model.getData().getHxUserName();
         EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
@@ -1289,7 +1290,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         message.addBody(txtBody);
         message.setTo(conversationId);
         message.setChatType(EMMessage.ChatType.Chat);
-        message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL);
+        message.setAttribute(MyConstant.MESSAGE_TYPE, Mes_Type);
         message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
         message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
         message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
@@ -1311,8 +1312,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         msgNotification.setFrom(conversationId);
         msgNotification.setTo(conversationId);
         msgNotification.setUnread(false);
-//        msgNotification.setMsgTime(conMsg.getMsgTime());
-//        msgNotification.setLocalTime(conMsg.getMsgTime());
         msgNotification.setChatType(EMMessage.ChatType.Chat);
         msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL);
         msgNotification.setStatus(EMMessage.Status.SUCCESS);
@@ -1320,7 +1319,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
     //发送群撤回消息
-    private void sendGroupMes(GruopInfo_Bean groupModel) {
+    private void sendGroupMes(GruopInfo_Bean groupModel, String mes_Type) {
         if (groupModel == null) {
             return;
         }
@@ -1331,7 +1330,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         message.addBody(txtBody);
         message.setTo(conversationId);
         message.setChatType(EMMessage.ChatType.GroupChat);
-        message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL);
+        message.setAttribute(MyConstant.MESSAGE_TYPE, mes_Type);
         message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
         message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
         message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
@@ -1349,8 +1348,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         msgNotification.setFrom(conversationId);
         msgNotification.setTo(conversationId);
         msgNotification.setUnread(false);
-//        msgNotification.setMsgTime(conMsg.getMsgTime());
-//        msgNotification.setLocalTime(conMsg.getMsgTime());
         msgNotification.setChatType(EMMessage.ChatType.GroupChat);
         msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL);
 //        msgNotification.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
@@ -1383,7 +1380,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         //删除要撤回的消息 发送一条消息
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(recallMessage.getUserName(), EMConversation.EMConversationType.Chat, true);
         conversation.removeMessage(recallMessage.getMsgId());
-
         EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
         EMTextMessageBody txtBody = new EMTextMessageBody("");
         message.addBody(txtBody);
@@ -1412,7 +1408,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         //删除要撤回的消息 发送一条消息
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(recallMessage.getUserName(), EMConversation.EMConversationType.Chat, true);
         conversation.removeMessage(recallMessage.getMsgId());
-//        MyInfo myInfo = new MyInfo(mContext);
         EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
         EMTextMessageBody txtBody = new EMTextMessageBody("");
         message.addBody(txtBody);
@@ -1429,5 +1424,54 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         chatLayout.getChatMessageListLayout().refreshToLatest();
     }
 
+    private void screenShot() {
+        ScreenShotViewModel screenShotViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(MyApplication.getInstance())).get(ScreenShotViewModel.class);
+        screenShotViewModel.registerContentObserver();
+        screenShotViewModel.getDataChanged().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    screenShotViewModel.onCleared();//收到观察消息就注销 不然会收到多条通知
+//                    ScreentShotInfo screentShotInfo = new ScreentShotInfo();
+//                    screenShotViewModel.getLatestImage(screentShotInfo.getPath());
+                    if (chatType == EaseConstant.CHATTYPE_SINGLE) {
+                        sendScreenShot();
+                    }if (chatType == EaseConstant.CHATTYPE_GROUP) {
+                        sendScreenShot();
+                    }
+                }
+            }
+        });
+
+        //接收到截屏通知后 主动获取截屏照片
+        screenShotViewModel.getScreentShotInfoData().observe(this, new Observer<ScreentShotInfo>() {
+            @Override
+            public void onChanged(ScreentShotInfo screentShotInfo) {
+//                Toast.makeText(mContext, "截屏成功了", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    //发送截屏CMD消息
+    private void sendScreenShot() {
+        EMMessage cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD);
+        String action = "发送截屏CMD消息";//action可以自定义
+        EMCmdMessageBody cmdBody = new EMCmdMessageBody(action);
+//        String toUsername = "test1";//发送给某个人
+        cmdMsg.setTo(conversationId);
+        cmdMsg.addBody(cmdBody);
+        if (chatType == EaseConstant.CHATTYPE_SINGLE) {
+            cmdMsg.setChatType(EMMessage.ChatType.Chat);
+            cmdMsg.setAttribute(MyConstant.MESSAGE_TYPE_SCREENSHORTS, true);
+        }else if (chatType == EaseConstant.CHATTYPE_GROUP){
+            cmdMsg.setChatType(EMMessage.ChatType.GroupChat);
+            cmdMsg.setAttribute(MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS, true);
+        }
+        addMsgAttrsBeforeSend(cmdMsg);
+        EMClient.getInstance().chatManager().sendMessage(cmdMsg);
+    }
+
 
 }
+
+

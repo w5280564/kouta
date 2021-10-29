@@ -40,8 +40,14 @@ public class MyGroupUpdateMesAdapterDelegate extends EaseMessageAdapterDelegate<
                 case MyConstant.APPLY:
                 case MyConstant.MESSAGE_GROUP_Message:
                 case MyConstant.Message_Recall:
+                case MyConstant.MESSAGE_TYPE_SCREENSHORTS:
+                case MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS:
                     return true;
             }
+//            boolean screenShorts = item.getBooleanAttribute(MyConstant.MESSAGE_TYPE_SCREENSHORTS, true);
+//            if (screenShorts){
+//                return true;
+//            }
 
         }
         return false;

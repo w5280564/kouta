@@ -22,8 +22,8 @@ import java.util.Map;
 
 public class xUtils3Http {
     //        public static String BASE_URL = " http://abc.ahxunda.com:8088/";
-//    public static final String BASE_URL = "http://119.3.23.16:8088/";
-    public static String BASE_URL = "https://abc.ahxunda.com/";
+    public static final String BASE_URL = "http://139.9.121.19:8088/";
+//    public static String BASE_URL = "https://abc.ahxunda.com/";
 //
 
     public static void get(Context mContext, String url, Map<String, Object> parms, final GetDataCallback callback) {
@@ -86,18 +86,17 @@ public class xUtils3Http {
                 e.printStackTrace();
             }
         }
-//        String aesKey = AESEncrypt.getAesKey();
-//        String contentStr = AESEncrypt.encrypt(obj.toString(), aesKey);
-//        String rsaKey = RsaEncodeMethod.rsaEncode(aesKey);
-
-        String rsaCode = RsaEncodeMethod.rsaEncode(obj.toString());
+        String aesKey = AESEncrypt.getAesKey();
+        String contentStr = AESEncrypt.encrypt(obj.toString(), aesKey);
+        String rsaKey = RsaEncodeMethod.rsaEncode(aesKey);
+//        String rsaCode = RsaEncodeMethod.rsaEncode(obj.toString());
         MyInfo myInfo = new MyInfo(mContext);
         if (!TextUtils.isEmpty(myInfo.getUserInfo().getToken())) {
             params.setHeader("Authorization", myInfo.getUserInfo().getToken());
         }
-        params.setBodyContent(rsaCode);
-//        params.addBodyParameter("key", rsaKey);
-//        params.addBodyParameter("content", contentStr);
+//        params.setBodyContent(rsaCode);
+        params.addBodyParameter("key", rsaKey);
+        params.addBodyParameter("content", contentStr);
         params.setAsJsonContent(true);
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override

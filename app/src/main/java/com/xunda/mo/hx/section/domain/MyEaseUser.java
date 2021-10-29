@@ -51,6 +51,7 @@ public class MyEaseUser extends EaseUser implements Serializable {
      */
     private long modifyInitialLetterTimestamp;
 
+
     /**
      * user's email;
      */
