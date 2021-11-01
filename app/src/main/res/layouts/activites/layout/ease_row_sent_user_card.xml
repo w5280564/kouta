@@ -38,7 +38,6 @@
                 android:id="@+id/head_Image_view"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:background="@mipmap/mo_icon"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 app:layout_constraintStart_toStartOf="parent"

@@ -62,7 +62,9 @@ public interface MyConstant extends DemoConstant {
     String MESSAGE_GROUP_LEAVE = "groupLeave";
     String MESSAGE_GROUP_Message = "groupMessage";
     String Message_Recall = "messageRecall";
-    String MESSAGE_TYPE_SCREENSHORTS = "screenShots";
+    String CMD_MESSAGE_TYPE_ISSCREENSHORTS = "isScreenShots";
+    String CMD_MESSAGE_TYPE_GROUPISSCREENSHORTS = "GroupisScreenShots";
+    String MESSAGE_TYPE_SCREENSHORTS = "ScreenShots";
     String MESSAGE_TYPE_GROUP_SCREENSHORTS = "groupScreenShots";
     String MESSAGE_TYPE_SYSTEM_NOTICE = "systemNotice";
 

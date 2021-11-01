@@ -36,16 +36,16 @@ public class GroupRowUpdateMes extends EaseChatRow {
 //        EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
 //        contentView.setText(txtBody.getMessage());
         String content = "";
-        String Group = message.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
+        String mess_Type = message.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
 
-        if (TextUtils.equals(Group, MyConstant.UPDATE_GROUP_NAME)) {
-            if (TextUtils.equals(Group, MyConstant.UPDATE_GROUP_NAME) && isSender) {
+        if (TextUtils.equals(mess_Type, MyConstant.UPDATE_GROUP_NAME)) {
+            if (TextUtils.equals(mess_Type, MyConstant.UPDATE_GROUP_NAME) && isSender) {
                 content = "您修改了群聊名称";
             } else {
                 content = "群主修改了群聊名称";
             }
             content_Txt.setText(content);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_DELETUSER)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_DELETUSER)) {
             String name = message.getStringAttribute(MyConstant.SEND_NAME, "");
             String invitationStr = message.getStringAttribute(MyConstant.USER_NAME, "");
             content = String.format("'%1$s'将 '%2$s'移出群聊", name, invitationStr);
@@ -53,7 +53,7 @@ public class GroupRowUpdateMes extends EaseChatRow {
             int startLength = content.length() - invitationStr.length() - groupStr.length();
             int endLength = content.length() - groupStr.length();
             setName(content, name.length(), startLength, endLength, content_Txt);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_ADDUSER)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_ADDUSER)) {
             String name = message.getStringAttribute(MyConstant.SEND_NAME, "");
             String invitationStr = message.getStringAttribute(MyConstant.USER_NAME, "");
             content = String.format("'%1$s'邀请 '%2$s'加入群聊", name, invitationStr);
@@ -61,33 +61,33 @@ public class GroupRowUpdateMes extends EaseChatRow {
             int startLength = content.length() - invitationStr.length() - groupStr.length();
             int endLength = content.length() - groupStr.length();
             setName(content, name.length(), startLength, endLength, content_Txt);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_ADDADMIN)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_ADDADMIN)) {
             String invitationStr = message.getStringAttribute(MyConstant.USER_NAME, "");
             content = String.format("'%1$s'被添加为管理员", invitationStr);
             setName(content, invitationStr.length(), content_Txt);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_DELETADMIN)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_DELETADMIN)) {
             String invitationStr = message.getStringAttribute(MyConstant.USER_NAME, "");
             content = String.format("'%1$s'被取消了管理员", invitationStr);
             setName(content, invitationStr.length(), content_Txt);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
             content = "群主开启了匿名聊天";
             content_Txt.setText(content);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
             content = "群主关闭了匿名聊天";
             content_Txt.setText(content);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_MUTE_ON)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_MUTE_ON)) {
             content = "群主开启了群员禁言";
             content_Txt.setText(content);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_MUTE_OFF)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_MUTE_OFF)) {
             content = "群主关闭了群员禁言";
             content_Txt.setText(content);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_PROTECT_ON)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_PROTECT_ON)) {
             content = "群主开启了群员保护";
             content_Txt.setText(content);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_PROTECT_OFF)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_PROTECT_OFF)) {
             content = "群主关闭了群员保护";
             content_Txt.setText(content);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_UPDATE_MASTER)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_UPDATE_MASTER)) {
             String userName = message.getStringAttribute(MyConstant.USER_NAME, "");
             if (isSender()) {
                 content = String.format("您将群主转让给'%1$s'", userName);
@@ -97,43 +97,43 @@ public class GroupRowUpdateMes extends EaseChatRow {
             int startLength = content.length() - 1 - userName.length();
             int endLength = content.length() - 1;
             setName(content, startLength, endLength, content_Txt);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_PUSH_ON)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_PUSH_ON)) {
             String invitationStr = message.getStringAttribute(MyConstant.SEND_NAME, "");
             content = String.format("'%1$s'开启了成员加群/退群通知", invitationStr);
             setName(content, invitationStr.length(), content_Txt);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_PUSH_OFF)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_PUSH_OFF)) {
             String invitationStr = message.getStringAttribute(MyConstant.SEND_NAME, "");
             content = String.format("'%1$s'关闭了成员加群/退群通知", invitationStr);
             setName(content, invitationStr.length(), content_Txt);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_GROUP_LEAVE)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_GROUP_LEAVE)) {
             String invitationStr = message.getStringAttribute(MyConstant.SEND_NAME, "");
             content = String.format("'%1$s'离开了群组", invitationStr);
             setName(content, invitationStr.length(), content_Txt);
-        } else if (TextUtils.equals(Group, MyConstant.GROUP_UPDATE_GROUPDES)) {
-            if (TextUtils.equals(Group, MyConstant.GROUP_UPDATE_GROUPDES) && isSender) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.GROUP_UPDATE_GROUPDES)) {
+            if (TextUtils.equals(mess_Type, MyConstant.GROUP_UPDATE_GROUPDES) && isSender) {
                 content = "您修改了群简介";
             } else {
                 content = "群主修改了群简介";
             }
             content_Txt.setText(content);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
             String SEND_NAME = message.getStringAttribute(MyConstant.SEND_NAME, "");
-            if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL) && isSender) {
+            if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL) && isSender) {
 //            if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL) && !TextUtils.isEmpty(SEND_NAME)) {
                 content = "您撤回了所有消息";
             } else {
                 content = "对方撤回了所有消息";
             }
             content_Txt.setText(content);
-        } else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
             String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
-            if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL) && isSender) {
+            if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL) && isSender) {
                 content = "您撤回了所有消息";
             } else {
                 content = String.format("'%1$s'撤回了所有消息", sendName);
             }
             content_Txt.setText(content);
-        } else if (TextUtils.equals(Group, MyConstant.APPLY)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.APPLY)) {
             String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
             if (isSender()) {
                 content = String.format("您已同意添加'%1$s'，现在可以开始聊天了", sendName);
@@ -141,15 +141,14 @@ public class GroupRowUpdateMes extends EaseChatRow {
                 content = String.format("'%1$s'已同意添加好友，现在可以开始聊天了", sendName);
             }
             content_Txt.setText(content);
-        }else if (TextUtils.equals(Group, MyConstant.MESSAGE_GROUP_Message)) {
+        }else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_GROUP_Message)) {
             String contentStr = message.getStringAttribute(MyConstant.CONTENT, "");
 //                content = String.format("'%1$s'，加入群聊", sendName);
             content_Txt.setText(contentStr);
-        }else if (TextUtils.equals(Group, MyConstant.Message_Recall)) {
+        }else if (TextUtils.equals(mess_Type, MyConstant.Message_Recall)) {
             String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
             String messageStr = "";
             if (message.getChatType() == EMMessage.ChatType.Chat) {
-
                 if (isSender()){
                     messageStr = "您撤回一条消息";
                 }else {
@@ -163,19 +162,15 @@ public class GroupRowUpdateMes extends EaseChatRow {
                 }
             }
             content_Txt.setText(messageStr);
-        }else if (TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_SCREENSHORTS)|| TextUtils.equals(Group, MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS)) {
+        }else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_SCREENSHORTS)|| TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS)) {
             String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
             String messageStr = "";
             if (message.getChatType() == EMMessage.ChatType.Chat) {
-                if (isSender()){
-                    messageStr = "您截取了当前消息";
-                }else {
+                if (!isSender()){
                     messageStr = "对方进行了截屏";
                 }
             }else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-                if (isSender()) {
-                    messageStr = "您截取了当前消息";
-                }else {
+                if (!isSender()) {
                     messageStr = String.format("'%1$s'进行了截屏", sendName);
                 }
             }

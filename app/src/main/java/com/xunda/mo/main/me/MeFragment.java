@@ -23,6 +23,7 @@ import com.xunda.mo.hx.section.me.activity.SetIndexActivity;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.discover.activity.Discover_Welfare_Card;
 import com.xunda.mo.main.info.MyInfo;
+import com.xunda.mo.main.me.activity.Me_About;
 import com.xunda.mo.main.me.activity.Me_VIP;
 import com.xunda.mo.main.me.activity.UserDetail_Set;
 import com.xunda.mo.model.UserDetail_Bean;
@@ -30,7 +31,6 @@ import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.MyLevel;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
-import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.xUtils3Http;
 
 import java.util.HashMap;
@@ -57,6 +57,7 @@ public class MeFragment extends BaseInitFragment {
         item_set = findViewById(R.id.item_set);
         item_set.setOnClickListener(new item_setClick());
         version_set = findViewById(R.id.version_set);
+        version_set.setOnClickListener(new version_setClick());
         garde_Lin = findViewById(R.id.garde_Lin);
         head_Image = findViewById(R.id.head_Image);
         nick_Txt = findViewById(R.id.nick_Txt);
@@ -74,9 +75,8 @@ public class MeFragment extends BaseInitFragment {
     @Override
     protected void initData() {
         super.initData();
-        String versionName = "版本" + StaticData.getversionName(requireContext());
-        version_set.getTvContent().setText(versionName);
-
+//        String versionName = "版本" + StaticData.getversionName(requireContext());
+//        version_set.getTvContent().setText(versionName);
     }
 
     @Override
@@ -175,5 +175,11 @@ public class MeFragment extends BaseInitFragment {
             }
         });
     }
-
+    //关于我们
+    private class version_setClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            Me_About.actionStart(mContext);
+        }
+    }
 }

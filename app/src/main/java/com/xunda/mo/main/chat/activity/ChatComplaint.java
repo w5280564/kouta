@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -205,8 +206,11 @@ public class ChatComplaint extends BaseInitActivity {
                     }
                     int size = selectList.size();
                     for (int i = 0; i < size; i++) {
-//                        pathList.add(selectList.get(i).getRealPath());
-                        pathList.add(selectList.get(i).getAndroidQToPath());
+                        if (isQ()){
+                            pathList.add(selectList.get(i).getAndroidQToPath());
+                        }else {
+                            pathList.add(selectList.get(i).getRealPath());
+                        }
                         pathNameList.add(selectList.get(i).getFileName());
                     }
 
@@ -218,6 +222,12 @@ public class ChatComplaint extends BaseInitActivity {
                     break;
             }
         }
+    }
+    private boolean isQ() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return true;
+        }
+        return false;
     }
 
     //图片选择器

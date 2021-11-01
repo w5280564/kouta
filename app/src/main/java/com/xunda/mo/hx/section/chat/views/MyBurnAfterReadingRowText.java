@@ -93,6 +93,7 @@ public class MyBurnAfterReadingRowText extends EaseChatRow {
             mes_group.setVisibility(VISIBLE);
             iv_userhead.setVisibility(VISIBLE);
             fire_Img.setVisibility(GONE);
+            sendCMDFireMess();
             // 当消息已读之后，发送已读回执，并删除消息
             try {
                 EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
@@ -104,7 +105,6 @@ public class MyBurnAfterReadingRowText extends EaseChatRow {
             }
             contentView.startTimer(() -> {
                 LiveDataBus.get().with(MyConstant.FIRE_REFRESH).postValue(true);
-                sendCMDFireMess();
             });
 
         });

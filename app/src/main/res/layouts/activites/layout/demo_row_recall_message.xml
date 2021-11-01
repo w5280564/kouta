@@ -33,9 +33,12 @@
                 android:id="@+id/text_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="@dimen/recall_dimen_256"
+                android:padding="2dp"
+                android:background="@drawable/chat_rowmes_bg"
                 android:textColor="@color/blacktitlettwo"
-                android:textSize="@dimen/recall_size_12" />
+                android:textSize="10sp" />
+
+
 
         </LinearLayout>
 

@@ -30,6 +30,7 @@ import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseDateUtils;
 import com.hyphenate.easeui.utils.EaseSmileUtils;
 import com.xunda.mo.R;
+import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.main.constant.MyConstant;
 
 import org.json.JSONException;
@@ -234,7 +235,8 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         String lastMessType = lastMessage.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
         String lastFireType = lastMessage.getStringAttribute(MyConstant.FIRE_TYPE, "");
         boolean isRecall = lastMessType.equals(MyConstant.Message_Recall);
-        if (isRecall) {
+        boolean isHxRecall = lastMessType.equals(DemoConstant.MESSAGE_TYPE_RECALL);
+        if (isRecall || isHxRecall) {
             String messageStr = "";
             if (lastMessage.getChatType() == EMMessage.ChatType.Chat) {
                 if (lastMessage.direct() == EMMessage.Direct.SEND) {
@@ -271,7 +273,11 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         }else if (item.getLastMessage().getType() == EMMessage.Type.LOCATION){
             String messageStr = "[位置]";
             contentView.setText(messageStr);
+        }else if (TextUtils.equals(lastMessType,MyConstant.MESSAGE_TYPE_USERCARD)){
+            String messageStr = "[名片]";
+            contentView.setText(messageStr);
         }
+
     }
 
 

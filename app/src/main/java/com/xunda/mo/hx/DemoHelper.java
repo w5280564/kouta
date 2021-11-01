@@ -529,7 +529,7 @@ public class DemoHelper {
         if(fetchUserTread != null && fetchUserRunnable != null){
             fetchUserRunnable.setStop(true);
         }
-        EMClient.getInstance().logout(unbindDeviceToken, new EMCallBack() {
+        EMClient.getInstance().logout(true, new EMCallBack() {
 
             @Override
             public void onSuccess() {

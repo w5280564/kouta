@@ -1,64 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/common_bg">
 
     <com.hyphenate.easeui.widget.EaseTitleBar
         android:id="@+id/title_bar"
         android:layout_width="0dp"
         android:layout_height="@dimen/em_common_title_bar_height"
-        app:titleBarTitle="@string/em_set_privacy"
-        app:titleBarDisplayHomeAsUpEnabled="true"
+        android:background="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/white"/>
-    
+        app:titleBarDisplayHomeAsUpEnabled="true"
+        app:titleBarTitle="@string/em_set_privacy" />
+
     <com.xunda.mo.hx.common.widget.ArrowItemView
         android:id="@+id/item_black_manager"
         android:layout_width="0dp"
         android:layout_height="@dimen/em_common_item_height"
+        android:background="@color/white"
+        android:foreground="@drawable/demo_ripple_click_gray"
+        app:arrowItemTitle="@string/em_privacy_black"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_bar"
-        app:arrowItemTitle="@string/em_privacy_black"
-        android:foreground="@drawable/demo_ripple_click_gray"
-        android:background="@color/white"/>
+        app:layout_constraintTop_toBottomOf="@id/title_bar" />
 
     <com.xunda.mo.hx.common.widget.ArrowItemView
         android:id="@+id/item_equipment_manager"
         android:layout_width="0dp"
         android:layout_height="@dimen/em_common_item_height"
+        android:foreground="@drawable/demo_ripple_click_gray"
         android:visibility="gone"
+        app:arrowItemTitle="@string/em_privacy_equipments"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_black_manager"
-        app:arrowItemTitle="@string/em_privacy_equipments"
-        android:foreground="@drawable/demo_ripple_click_gray"/>
+        app:layout_constraintTop_toBottomOf="@id/item_black_manager" />
 
-   <com.xunda.mo.hx.common.widget.ArrowItemView
+    <com.xunda.mo.hx.common.widget.ArrowItemView
         android:id="@+id/item_privacy_manager"
         android:layout_width="0dp"
         android:layout_height="@dimen/em_common_item_height"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:arrowItemTitle="用户协议"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_black_manager"
-        app:arrowItemTitle="用户协议"
-        android:background="@color/white"/>
+        app:layout_constraintTop_toBottomOf="@id/item_black_manager" />
 
- <com.xunda.mo.hx.common.widget.ArrowItemView
+    <com.xunda.mo.hx.common.widget.ArrowItemView
         android:id="@+id/item_manager"
         android:layout_width="0dp"
         android:layout_height="@dimen/em_common_item_height"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:arrowItemTitle="隐私政策"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_privacy_manager"
-        app:arrowItemTitle="隐私政策"
-        android:background="@color/white"/>
-
+        app:layout_constraintTop_toBottomOf="@id/item_privacy_manager" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

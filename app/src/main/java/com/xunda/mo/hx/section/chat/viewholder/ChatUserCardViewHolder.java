@@ -17,6 +17,7 @@ import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.section.chat.views.chatRowUserCard;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.me.activity.UserDetail_Set;
 
 import java.util.Map;
 
@@ -39,10 +40,6 @@ public class ChatUserCardViewHolder extends EaseChatRowViewHolder {
             String event = messageBody.event();
             if(event.equals(DemoConstant.USER_CARD_EVENT)){
                 Map<String,String> params = messageBody.getParams();
-//                String uId = params.get(DemoConstant.USER_CARD_ID);
-//                String avatar = params.get(DemoConstant.USER_CARD_AVATAR);
-//                String nickname = params.get(DemoConstant.USER_CARD_NICK);
-
                 String uId = params.get(MyConstant.UID);
                 String avatar = params.get(MyConstant.AVATAR);
                 String nickname = params.get(MyConstant.NICK_NAME);
@@ -50,6 +47,7 @@ public class ChatUserCardViewHolder extends EaseChatRowViewHolder {
                 if(uId != null && uId.length() > 0){
                     if(uId.equals(EMClient.getInstance().getCurrentUser())){
 //                        UserDetailActivity.actionStart(getContext(),nickname,avatar);
+                        UserDetail_Set.actionStart(getContext());
                     }else{
                         EaseUser user = DemoHelper.getInstance().getUserInfo(uId);
                         if(user == null){

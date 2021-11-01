@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -189,7 +190,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
 
 
     public void addMyHead() {
-         mTvMainFriendsMsg = getActivity().findViewById(R.id.tv_main_friends_msg);
+        mTvMainFriendsMsg = getActivity().findViewById(R.id.tv_main_friends_msg);
         mTvMainFriendsMsg.setVisibility(View.GONE);
         int addCount = setFriendAdd();
         if (addCount > 0) {
@@ -376,7 +377,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
         });
 
 
-
         mViewModel.messageChangeObservable().with(MyConstant.ConstantCount, int.class).observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer count) {
@@ -551,9 +551,10 @@ public class ContactListFragment extends EaseContactListFragment implements View
             adress_Model.DataDTO dataDTO = model.getData().get(i);
             EaseUser user = new EaseUser();
             user.setUsername(dataDTO.getHxUserName());
-            user.setNickname(dataDTO.getNickname());
+            String nickName = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
+            user.setNickname(nickName);
             // 正则表达式，判断首字母是否是英文字母
-            String pinyin = PinyinUtils.getPingYin(dataDTO.getNickname());
+            String pinyin = PinyinUtils.getPingYin(nickName);
             String sortString = pinyin.substring(0, 1).toUpperCase();
             if (sortString.matches("[A-Z]")) {
 //                                user.setInitialLetter(PinyinUtils.getFirstSpell(dataDTO.getNickName()));

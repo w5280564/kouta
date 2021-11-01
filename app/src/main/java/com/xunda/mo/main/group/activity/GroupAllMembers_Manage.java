@@ -320,7 +320,7 @@ public class GroupAllMembers_Manage extends BaseInitActivity {
                         unmuteAllMembers();
                     }
                 } else if (TextUtils.equals(agreeType, "2")) {
-                    LiveDataBus.get().with(MyConstant.GROUP_CHAT_ANONYMOUS).setValue(isBlock);
+                    LiveDataBus.get().with(MyConstant.GROUP_CHAT_ANONYMOUS).postValue(isBlock);
                 } else if (TextUtils.equals(agreeType, "3")) {
 
                 }

@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -76,7 +77,19 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
 
     private ObsClient obsClient;
     private FlowLayout photoLayout;
+    private String type;
 //    private String userId;
+
+    /**
+     * @param context
+     * @param type    type是2已经登录
+     */
+    public static void actionStart(Context context, String type) {
+        Intent intent = new Intent(context, MainLogin_QuestionFeedBack.class);
+        intent.putExtra("type", type);
+        context.startActivity(intent);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +114,8 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
         config.setAuthType(AuthTypeEnum.OBS);
         // 创建ObsClient实例
         obsClient = new ObsClient(ak, sk, config);
+
+        type = getIntent().getStringExtra("type");
     }
 
     private void initTitle() {
@@ -133,7 +148,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
         phone_edit = findViewById(R.id.phone_edit);
         email_edit = findViewById(R.id.email_edit);
         content_edit = findViewById(R.id.content_edit);
-        photoLayout =  findViewById(R.id.photoLayout);
+        photoLayout = findViewById(R.id.photoLayout);
         add_photo_Img = (ImageButton) findViewById(R.id.add_photo_Img);
         next_Btn = findViewById(R.id.next_Btn);
 
@@ -152,8 +167,13 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
                 return;
             }
             if (photoPaths.isEmpty()) {
-                QuestionMethod(MainLogin_QuestionFeedBack.this,  saveFile.Question_NoLogin);
-
+//                Toast.makeText(MainLogin_QuestionFeedBack.this, "请上传图片", Toast.LENGTH_SHORT).show();
+//                return;
+                if (!TextUtils.isEmpty(type) && TextUtils.equals(type, "2")) {
+                    QuestionMethod(MainLogin_QuestionFeedBack.this, saveFile.Question_Login);
+                } else {
+                    QuestionMethod(MainLogin_QuestionFeedBack.this, saveFile.Question_NoLogin);
+                }
             } else {
                 AsyncTask<Void, Void, String> task = new PostObjectTask();
                 task.execute();
@@ -161,11 +181,11 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
         }
     }
 
-    String pictures;
+    String pictures="";
 
     //问题反馈
     public void QuestionMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("phoneNum", phone_edit.getText().toString());
         map.put("email", email_edit.getText().toString());
         map.put("remark", content_edit.getText().toString());
@@ -178,6 +198,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
                 Toast.makeText(context, "反馈已上传", Toast.LENGTH_SHORT).show();
                 finish();
             }
+
             @Override
             public void failed(String... args) {
             }
@@ -237,7 +258,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
      * 检查并切换增加图片的图标
      */
     private void ChangeAddPhotoImage() {
-        if (photoPaths.size() >= 3) {
+        if (photoPaths.size() >= photoAllCount) {
             add_photo_Img.setVisibility(View.GONE);
         } else {
             add_photo_Img.setVisibility(View.VISIBLE);
@@ -284,8 +305,11 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
                     }
                     int size = selectList.size();
                     for (int i = 0; i < size; i++) {
-//                        pathList.add(selectList.get(i).getRealPath());
-                        pathList.add(selectList.get(i).getAndroidQToPath());
+                        if (isQ()) {
+                            pathList.add(selectList.get(i).getAndroidQToPath());
+                        } else {
+                            pathList.add(selectList.get(i).getRealPath());
+                        }
                         pathNameList.add(selectList.get(i).getFileName());
                     }
 
@@ -299,8 +323,17 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
         }
     }
 
+    private boolean isQ() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return true;
+        }
+        return false;
+    }
+
+    int photoAllCount = 3;
+
     private void setPhotoMetod(Context context) {
-        int choice = 3 - photoPaths.size();
+        int choice = photoAllCount - photoPaths.size();
         PictureSelector.create((Activity) context)
                 .openGallery(PictureConfig.TYPE_IMAGE)
                 .imageEngine(GlideEnGine.createGlideEngine()) //图片加载空白 加入Glide加载图片
@@ -382,7 +415,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
                 for (int i = 0; i < size; i++) {
 //                objectName = "user/" + userId + "/" + pathNameList.get(i);//对应上传之后的文件名称
                     objectName = "question_back/" + pathNameList.get(i);//对应上传之后的文件名称
-                    FileInputStream fis = new FileInputStream(new File(photoPaths.get(i)));
+                    FileInputStream fis = new FileInputStream(photoPaths.get(i));
                     obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
 //                    addAcl(obsClient,bucketName,objectName,photoPaths.get(i));
                     sbf.append(objectName).append(",");
@@ -423,7 +456,11 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
             super.onPostExecute(s);
 //            Log.i("abc", " result.getStatusCode():" + s);
             pictures = s;
-            QuestionMethod(MainLogin_QuestionFeedBack.this,  saveFile.Question_NoLogin);
+            if (!TextUtils.isEmpty(type) && TextUtils.equals(type, "2")) {
+                QuestionMethod(MainLogin_QuestionFeedBack.this, saveFile.Question_Login);
+            } else {
+                QuestionMethod(MainLogin_QuestionFeedBack.this, saveFile.Question_NoLogin);
+            }
         }
     }
 

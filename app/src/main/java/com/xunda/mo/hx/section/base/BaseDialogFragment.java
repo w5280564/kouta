@@ -106,7 +106,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
     public void setDialogFullParams() {
         int dialogHeight = getContextRect(mContext);
         int height = dialogHeight == 0? ViewGroup.LayoutParams.MATCH_PARENT:dialogHeight;
-        setDialogParams(ViewGroup.LayoutParams.MATCH_PARENT, height, 0.0f);
+        setDialogParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 0.0f);
     }
 
     public void setDialogParams(int width, int height, float dimAmount) {

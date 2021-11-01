@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.MediaStore;
@@ -175,11 +176,23 @@ public class Discover_QRCode extends BaseInitActivity implements QRCodeView.Dele
                     // 结果回调
                     selectList = PictureSelector.obtainMultipleResult(data);
                     if (!selectList.isEmpty()) {
-                        mZXingView.decodeQRCode(selectList.get(0).getAndroidQToPath());
+                        if (isQ()) {
+                            mZXingView.decodeQRCode(selectList.get(0).getAndroidQToPath());
+                        } else {
+                            mZXingView.decodeQRCode(selectList.get(0).getRealPath());
+                        }
                     }
                     break;
             }
         }
+    }
+
+
+    private boolean isQ() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return true;
+        }
+        return false;
     }
 
 

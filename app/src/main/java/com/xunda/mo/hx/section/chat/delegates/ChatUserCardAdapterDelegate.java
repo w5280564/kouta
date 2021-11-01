@@ -17,7 +17,7 @@ import com.xunda.mo.hx.section.chat.views.chatRowUserCard;
 public class ChatUserCardAdapterDelegate extends EaseMessageAdapterDelegate<EMMessage, EaseChatRowViewHolder> {
     @Override
     public boolean isForViewType(EMMessage item, int position) {
-        if(item.getType() == EMMessage.Type.CUSTOM ){
+        if(item.getType() == EMMessage.Type.CUSTOM){
 //            && TextUtils.equals(item.getStringAttribute(MyConstant.MESSAGE_TYPE_USERCARD,""),MyConstant.MESSAGE_TYPE_USERCARD)
             EMCustomMessageBody messageBody = (EMCustomMessageBody) item.getBody();
             String event = messageBody.event();

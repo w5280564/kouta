@@ -236,7 +236,6 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         viewModel.messageChangeObservable().with(DemoConstant.CONVERSATION_READ, EaseEvent.class).observe(this, this::checkUnReadMsg);
         viewModel.messageChangeObservable().with(DemoConstant.CONTACT_DELETE, EaseEvent.class).observe(this, this::checkUnReadMsg);
         viewModel.messageChangeObservable().with(DemoConstant.CONTACT_CHANGE, EaseEvent.class).observe(this, this::checkUnReadMsg);
-
         addressData(MainActivity.this, saveFile.User_Friendlist_Url, "0");
     }
 
@@ -536,15 +535,17 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
 
     }
 
+
     private void addContactList(adress_Model model) {
         List<EaseUser> data = new ArrayList<>();
         for (int i = 0; i < model.getData().size(); i++) {
             adress_Model.DataDTO dataDTO = model.getData().get(i);
             EaseUser user = new EaseUser();
             user.setUsername(dataDTO.getHxUserName());
-            user.setNickname(dataDTO.getNickname());
+            String nickName = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
+            user.setNickname(nickName);
             // 正则表达式，判断首字母是否是英文字母
-            String pinyin = PinyinUtils.getPingYin(dataDTO.getNickname());
+            String pinyin = PinyinUtils.getPingYin(nickName);
             String sortString = pinyin.substring(0, 1).toUpperCase();
             if (sortString.matches("[A-Z]")) {
 //                                user.setInitialLetter(PinyinUtils.getFirstSpell(dataDTO.getNickName()));
@@ -582,6 +583,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         //更新本地联系人列表
         DemoHelper.getInstance().updateContactList();
     }
+
 
 
 

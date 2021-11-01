@@ -188,6 +188,15 @@ public class ChatPresenter extends EaseChatPresenter {
                 messageChangeLiveData.with(MyConstant.MESS_TYPE_GROUP_HORN).postValue(message);
             }
 
+            if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+                String isAnonymousOn = message.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
+                if (TextUtils.equals(isAnonymousOn, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
+                    LiveDataBus.get().with(MyConstant.GROUP_CHAT_ANONYMOUS).postValue(true);
+                } else if (TextUtils.equals(isAnonymousOn, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
+                    LiveDataBus.get().with(MyConstant.GROUP_CHAT_ANONYMOUS).postValue(false);
+                }
+            }
+
         }
     }
 
@@ -229,9 +238,9 @@ public class ChatPresenter extends EaseChatPresenter {
 //                // 删除消息
                 conversation.removeMessage(Recall_Mess_ID);
                 messageChangeLiveData.with(MyConstant.FIRE_REFRESH).postValue(true);
-            } else if (msg.getBooleanAttribute(MyConstant.MESSAGE_TYPE_SCREENSHORTS, false)) {
+            } else if (msg.getBooleanAttribute(MyConstant.CMD_MESSAGE_TYPE_ISSCREENSHORTS, false)) {
                 screenShorts(msg);
-            } else if (msg.getBooleanAttribute(MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS, false)) {
+            } else if (msg.getBooleanAttribute(MyConstant.CMD_MESSAGE_TYPE_GROUPISSCREENSHORTS, false)) {
                 screenShorts(msg);
             }
 
@@ -275,19 +284,15 @@ public class ChatPresenter extends EaseChatPresenter {
      */
     @Override
     public void onMessageRecalled(List<EMMessage> messages) {
-        EaseEvent event = EaseEvent.create(DemoConstant.MESSAGE_CHANGE_RECALL, EaseEvent.TYPE.MESSAGE);
-        messageChangeLiveData.with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(event);
         for (EMMessage msg : messages) {
             if (msg.getChatType() == EMMessage.ChatType.GroupChat && EaseAtMessageHelper.get().isAtMeMsg(msg)) {
                 EaseAtMessageHelper.get().removeAtMeGroup(msg.getTo());
             }
-            msg.ext();
-
             EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
             EMTextMessageBody txtBody = new EMTextMessageBody(String.format(context.getString(R.string.msg_recall_by_user), msg.getFrom()));
             msgNotification.addBody(txtBody);
-            msgNotification.setFrom(msg.getFrom());
-            msgNotification.setTo(msg.getTo());
+            msgNotification.setFrom(msg.conversationId());
+            msgNotification.setTo(msg.conversationId());
             msgNotification.setUnread(false);
             msgNotification.setMsgTime(msg.getMsgTime());
             msgNotification.setLocalTime(msg.getMsgTime());
@@ -301,7 +306,12 @@ public class ChatPresenter extends EaseChatPresenter {
             }
             msgNotification.setStatus(EMMessage.Status.SUCCESS);
             EMClient.getInstance().chatManager().saveMessage(msgNotification);
+//            EMConversation conv = EMClient.getInstance().chatManager().getConversation(msg.conversationId());
+//            conv.insertMessage(msgNotification);
         }
+
+//        EaseEvent event = EaseEvent.create(DemoConstant.MESSAGE_CHANGE_RECALL, EaseEvent.TYPE.MESSAGE);
+//        messageChangeLiveData.with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(event);
     }
 
 
@@ -1082,7 +1092,8 @@ public class ChatPresenter extends EaseChatPresenter {
      *
      * @param target1
      */
-    private void removeTargetSystemMessage(String target1, String params1, String target2, String params2) {
+    private void removeTargetSystemMessage(String target1, String params1, String
+            target2, String params2) {
         EMConversation conversation = EaseSystemMsgManager.getInstance().getConversation();
         List<EMMessage> messages = conversation.getAllMessages();
         if (messages != null && !messages.isEmpty()) {
@@ -1108,7 +1119,8 @@ public class ChatPresenter extends EaseChatPresenter {
         getNotifier().vibrateAndPlayTone(null);
     }
 
-    private void updateContactNotificationStatus(String from, String reason, InviteMessageStatus status) {
+    private void updateContactNotificationStatus(String from, String
+            reason, InviteMessageStatus status) {
         EMMessage msg = null;
         EMConversation conversation = EaseSystemMsgManager.getInstance().getConversation();
         List<EMMessage> allMessages = conversation.getAllMessages();
@@ -1136,7 +1148,8 @@ public class ChatPresenter extends EaseChatPresenter {
         }
     }
 
-    private void saveGroupNotification(String groupId, String groupName, String inviter, String reason, InviteMessageStatus status) {
+    private void saveGroupNotification(String groupId, String groupName, String inviter, String
+            reason, InviteMessageStatus status) {
         Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
         ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, groupId);
         ext.put(DemoConstant.SYSTEM_MESSAGE_GROUP_ID, groupId);

@@ -56,8 +56,8 @@ android {
         applicationId "com.xunda.mo"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 12
-        versionName "1.1.0"
+        versionCode 13
+        versionName "1.1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

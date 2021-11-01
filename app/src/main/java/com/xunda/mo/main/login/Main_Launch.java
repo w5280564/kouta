@@ -24,43 +24,6 @@ public class Main_Launch extends BaseInitActivity {
     private String FIRSTINIT = "firstinit";
     private SharedPreferences preferences = null;
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        StatusBar(this);
-//        MIUISetStatusBarLightMode(this.getWindow(), true);
-//        FlymeSetStatusBarLightMode(this.getWindow(), true);
-//        //不显示系统的标题栏
-//        getWindow().setFlags(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        setContentView(R.layout.activitymain_launch);
-//        DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
-
-//		JPushInterface.resumePush(getApplicationContext());//推送注册
-//        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-//        x.view().inject(this);
-//        model = new ViewModelProvider(this).get(SplashViewModel.class);
-
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (getFirstInit()) {
-//                    saveFirstInit(false);
-////                    Intent i = new Intent(Main_Launch.this, WelcomeNew.class);
-////                    startActivity(i);
-////                    finish();
-//                    Intent intent = new Intent(Main_Launch.this, MainLogin_Register.class);
-//                    startActivity(intent);
-//                    finish();
-//                } else {
-//                    loginSDK();
-//
-//                }
-//            }
-//
-//        }, 500);
-//    }
-
     @Override
     protected int getLayoutId() {
         return R.layout.activitymain_launch;
@@ -88,6 +51,7 @@ public class Main_Launch extends BaseInitActivity {
         x.view().inject(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         model = new ViewModelProvider(this).get(SplashViewModel.class);
+
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -148,6 +112,8 @@ public class Main_Launch extends BaseInitActivity {
 
         });
     }
+
+
 
 
 }

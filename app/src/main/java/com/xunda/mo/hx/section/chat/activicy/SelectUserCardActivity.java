@@ -550,7 +550,8 @@ public class SelectUserCardActivity extends BaseInitActivity implements EaseTitl
                     user.setUsername(dataDTO.getHxUserName());
                     user.setNickname(dataDTO.getNickname());
                     // 正则表达式，判断首字母是否是英文字母
-                    String pinyin = PinyinUtils.getPingYin(dataDTO.getNickname());
+                    String  nickName = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
+                    String pinyin = PinyinUtils.getPingYin(nickName);
                     String sortString = pinyin.substring(0, 1).toUpperCase();
                     if (sortString.matches("[A-Z]")) {
                         user.setInitialLetter(PinyinUtils.getFirstSpell(sortString));

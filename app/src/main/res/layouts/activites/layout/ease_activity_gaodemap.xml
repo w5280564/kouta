@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -24,5 +25,85 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="MissingConstraints"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/map_Img"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:src="@mipmap/map_location_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/yellow" />
+
+        <TextView
+            android:id="@+id/tv_location_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:ellipsize="end"
+            android:text="乐烤吧（古秦淮河店）"
+            android:lines="1"
+            android:textColor="@color/blacktitlettwo"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/view14"
+            app:layout_constraintStart_toEndOf="@+id/map_Img"
+            app:layout_constraintTop_toTopOf="@+id/map_Img" />
+
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="江苏省南京市蓬莱西路14..."
+            android:textColor="@color/greytwo"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_location_name"
+            app:layout_constraintStart_toStartOf="@+id/tv_location_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_location_name" />
+
+        <ImageView
+            android:id="@+id/map_nav"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:src="@mipmap/map_nav"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView40"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="导航"
+            android:textColor="#ff2886f0"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/map_nav"
+            app:layout_constraintStart_toStartOf="@+id/map_nav"
+            app:layout_constraintTop_toBottomOf="@+id/map_nav" />
+
+        <View
+            android:id="@+id/view14"
+            android:layout_width="1dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:background="@color/greyline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/textView40"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

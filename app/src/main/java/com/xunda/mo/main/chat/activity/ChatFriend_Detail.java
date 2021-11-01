@@ -78,6 +78,8 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private ProgressBar site_progressbar;
     private MyArrowItemView nick_ArrowItemView;
     private LinearLayout grade_Lin, label_Lin;
+    private String nickName;
+    String remarkName;
 //    private Switch switch_item;
 
     /**
@@ -250,11 +252,12 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 .setConfirmClickListener(new EditTextDialogFragment.ConfirmClickListener() {
                     @Override
                     public void onConfirmClick(View view, String content) {
-                        if (!TextUtils.isEmpty(content)) {
+//                        if (!TextUtils.isEmpty(content)) {
 //                            itemGroupName.getTvContent().setText(content);
                             String changType = "2";
-                            ChangeUserMethod(ChatFriend_Detail.this, saveFile.Friend_UpdateRemarkName_Url, content);
-                        }
+                            remarkName = content;
+                            ChangeUserMethod(ChatFriend_Detail.this, saveFile.Friend_UpdateRemarkName_Url);
+//                        }
                     }
                 })
                 .setTitle("备注昵称")
@@ -362,10 +365,10 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 Uri uri = Uri.parse(model.getData().getHeadImg());
                 person_img.setImageURI(uri);
 
-                String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
-                nick_nameTxt.setText("昵称：" + name);
-                cententTxt.setText(name);
-                nick_tv_content.setText(name);
+                 nickName = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
+                nick_nameTxt.setText("昵称：" + nickName);
+                cententTxt.setText(nickName);
+                nick_tv_content.setText(nickName);
                 leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
                 String signature = dataDTO.getSignature();
                 if (!TextUtils.isEmpty(signature)) {
@@ -606,14 +609,16 @@ public class ChatFriend_Detail extends BaseInitActivity {
     /**
      * 修改用户信息
      */
-    public void ChangeUserMethod(Context context, String baseUrl, String remarkName) {
+    public void ChangeUserMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put("friendUserId", model.getData().getUserId());
         map.put("remarkName", remarkName);
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                //                        String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickName() : dataDTO.getRemarkName();
+                if (TextUtils.isEmpty(remarkName)){
+                    remarkName = nickName;
+                }
                 nick_nameTxt.setText("昵称：" + remarkName);
                 cententTxt.setText(remarkName);
                 nick_tv_content.setText(remarkName);

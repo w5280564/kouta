@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputFilter;
@@ -84,7 +85,6 @@ import com.xunda.mo.staticdata.dialog.BaseDialogFragment;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -608,17 +608,17 @@ public class UserDetail_Set extends BaseInitActivity {
             public void success(String result) {
                 baseDataModel baseModel = new Gson().fromJson(result, baseDataModel.class);
                 Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
-                    MyInfo info = new MyInfo(UserDetail_Set.this);
+                MyInfo info = new MyInfo(UserDetail_Set.this);
                 if (TextUtils.equals(changType, "1")) {
                     //修改环信本地存储的自己头像
                     String HxUserName = info.getUserInfo().getHxUserName();
                     DemoHelper.getInstance().getUserInfo(HxUserName).setAvatar(baseModel.getData());
-                    info.setOneData("HeadImg",baseModel.getData());
+                    info.setOneData("HeadImg", baseModel.getData());
 
                     changeFileHead(baseModel.getData());
                 } else if (TextUtils.equals(changType, "2")) {
                     friend_ArrowItemView.getTvContent().setText(valueStr);
-                    info.setOneData("nickname",valueStr);
+                    info.setOneData("nickname", valueStr);
                 } else if (TextUtils.equals(changType, "3")) {
 //                            sex_ArrowItemView.getTvContent().setText(valueStr);
                 } else if (TextUtils.equals(changType, "4")) {
@@ -637,6 +637,7 @@ public class UserDetail_Set extends BaseInitActivity {
     }
 
     String objectName = "";
+    String fileName;
 
     class PostObjectTask extends AsyncTask<Void, Void, String> {
         @SneakyThrows
@@ -644,10 +645,12 @@ public class UserDetail_Set extends BaseInitActivity {
         protected String doInBackground(Void... voids) {
             StringBuffer sbf = new StringBuffer();
             try {
-                MyInfo myInfo = new MyInfo(mContext);
-
+                fileName = selectList.get(0).getRealPath();
+                if (isQ()) {
+                    fileName = selectList.get(0).getAndroidQToPath();
+                }
                 objectName = "user/" + userModel.getData().getUserId() + "/headImg/" + selectList.get(0).getFileName();//对应上传之后的文件名称
-                FileInputStream fis = new FileInputStream(new File(selectList.get(0).getAndroidQToPath()));
+                FileInputStream fis = new FileInputStream(fileName);
                 obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
                 sbf.append(objectName);
                 return sbf.toString();
@@ -679,12 +682,20 @@ public class UserDetail_Set extends BaseInitActivity {
             super.onPostExecute(pictures);
 //            Log.i("abc", " result.getStatusCode():" + s);
             person_img.setEnabled(false);
-            Uri uri = Uri.parse("file:///" + selectList.get(0).getAndroidQToPath());
+            Uri uri = Uri.parse("file:///" + fileName);
             person_img.setImageURI(uri);
             String changType = "1";
             ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "headImg", pictures, "", "");
         }
     }
+
+    private boolean isQ() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return true;
+        }
+        return false;
+    }
+
 
     private void changeFileHead(String HeadUrl) {
         MyInfo myInfo = new MyInfo(UserDetail_Set.this);

@@ -33,14 +33,16 @@ public class ChatRowRecall extends EaseChatRow {
             if (isSender()) {
                 messageStr = String.format(context.getString(R.string.msg_recall_by_self));
             } else {
-                String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
-                messageStr = String.format(context.getString(R.string.msg_recall_by_user), sendName);
                 messageStr = "对方撤回一条消息";
             }
 
         } else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
             String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
-            messageStr = String.format(context.getString(R.string.msg_recall_by_user), sendName);
+            if (isSender()) {
+                messageStr = "您撤回一条消息";
+            } else {
+                messageStr = String.format("'%1$s'撤回了一条消息", sendName);
+            }
         }
         contentView.setText(messageStr);
     }

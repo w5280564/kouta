@@ -17,10 +17,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -39,6 +45,10 @@ import com.hyphenate.easeui.ui.base.EaseBaseActivity;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.xunda.mo.R;
+import com.xunda.mo.main.baseView.BasePopupWindow;
+import com.xunda.mo.staticdata.gpslocation.GPS;
+import com.xunda.mo.staticdata.gpslocation.GPSConverterUtils;
+import com.xunda.mo.staticdata.viewTouchDelegate;
 
 //LocationSource, AMapLocationListener
 public class MyEaseGaodeMapActivity extends EaseBaseActivity implements EaseTitleBar.OnBackPressListener,
@@ -49,6 +59,7 @@ public class MyEaseGaodeMapActivity extends EaseBaseActivity implements EaseTitl
     protected String address;
     private MapView mMapView;
     AMap aMap;
+    private TextView tv_location_name;
 
     public static void actionStartForResult(Fragment fragment, int requestCode) {
         Intent intent = new Intent(fragment.getContext(), MyEaseGaodeMapActivity.class);
@@ -86,6 +97,12 @@ public class MyEaseGaodeMapActivity extends EaseBaseActivity implements EaseTitl
     }
 
     private void initView(Bundle savedInstanceState) {
+        tv_location_name = findViewById(R.id.tv_location_name);
+        TextView tv_location = findViewById(R.id.tv_location);
+        ImageView map_nav = findViewById(R.id.map_nav);
+        map_nav.setOnClickListener(new map_navClick());
+        viewTouchDelegate.expandViewTouchDelegate(map_nav, 50, 50, 50, 50);
+
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.bmapView);
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
@@ -105,6 +122,7 @@ public class MyEaseGaodeMapActivity extends EaseBaseActivity implements EaseTitl
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
         aMap.setOnMyLocationChangeListener(this);
         aMap.moveCamera(CameraUpdateFactory.zoomTo(17));//地图的缩放级别一共分为 17 级，从 3 到 19。数字越大，展示的图面信息越精细。
+        aMap.getUiSettings().setZoomControlsEnabled(false);//+ — 缩放按钮是否显示
 
         titleBarMap = findViewById(R.id.title_bar_map);
 //		mapView = findViewById(R.id.bmapView);
@@ -112,6 +130,11 @@ public class MyEaseGaodeMapActivity extends EaseBaseActivity implements EaseTitl
         double latitude = getIntent().getDoubleExtra("latitude", 0);
         if (latitude != 0) {
             titleBarMap.getRightLayout().setVisibility(View.GONE);
+            String Address = address;
+            String locName = Address.substring(0, Address.indexOf(","));
+            String location = Address.substring(Address.indexOf(",") + 1);
+            tv_location_name.setText(locName);
+            tv_location.setText(location);
         } else {
             titleBarMap.getRightLayout().setVisibility(View.VISIBLE);
 //            titleBarMap.getRightLayout().setClickable(false);
@@ -147,6 +170,8 @@ public class MyEaseGaodeMapActivity extends EaseBaseActivity implements EaseTitl
         mLocationClient.setLocationOption(mLocationOption);
         //启动定位
         mLocationClient.startLocation();
+
+
     }
 
     //声明AMapLocationClientOption对象
@@ -155,7 +180,7 @@ public class MyEaseGaodeMapActivity extends EaseBaseActivity implements EaseTitl
     public AMapLocationClient mLocationClient = null;
     private AMapLocation MapLocation;
     public AMapLocationListener mLocationListener = new AMapLocationListener() {
-    //声明定位回调监听器
+        //声明定位回调监听器
 
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
@@ -271,7 +296,6 @@ public class MyEaseGaodeMapActivity extends EaseBaseActivity implements EaseTitl
     }
 
 
-
 //	public class BaiduSDKReceiver extends BroadcastReceiver {
 //
 //		@Override
@@ -338,10 +362,82 @@ public class MyEaseGaodeMapActivity extends EaseBaseActivity implements EaseTitl
     @Override
     public void onMyLocationChange(Location location) {
         //从location对象中获取经纬度信息，地址描述信息，建议拿到位置之后调用逆地理编码接口获取（获取地址描述数据章节有介绍）
-
 //        Log.e("location", location.toString());
     }
 
+    private class map_navClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            showMore(MyEaseGaodeMapActivity.this, mMapView);
+        }
+    }
+
+    private void showMore(final Context mContext, final View view) {
+        View contentView = View.inflate(mContext, R.layout.map_nav_popup, null);
+        PopupWindow MorePopup = new BasePopupWindow(mContext);
+        MorePopup.setWidth(RadioGroup.LayoutParams.MATCH_PARENT);
+        MorePopup.setHeight(RadioGroup.LayoutParams.WRAP_CONTENT);
+        MorePopup.setTouchable(true);
+        MorePopup.setContentView(contentView);
+        MorePopup.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+        TextView gaode_txt = contentView.findViewById(R.id.gaode_txt);
+        TextView baidu_txt = contentView.findViewById(R.id.baidu_txt);
+        TextView cancel_txt = contentView.findViewById(R.id.cancel_txt);
+        gaode_txt.setOnClickListener(v -> {
+            gaodeMap();
+            MorePopup.dismiss();
+        });
+        baidu_txt.setOnClickListener(v -> {
+            baiduMap();
+            MorePopup.dismiss();
+        });
+        cancel_txt.setOnClickListener(v -> {
+            MorePopup.dismiss();
+        });
+    }
+
+
+    //pixel3包名无法判断是否安装了高德
+    private void gaodeMap() {
+        Intent gdNav = new Intent();
+        String pkg = "com.autonavi.minimap";
+        String actView = Intent.ACTION_VIEW;
+        String cat = Intent.CATEGORY_DEFAULT;
+        String gbNavName = tv_location_name.getText().toString();// 终点的显示名称 必要参数
+        gdNav.setAction(actView);
+        gdNav.addCategory(cat);
+        try {
+            Uri gdUri = Uri.parse("amapuri://route/plan/?dlat=" + latitude + "&dlon=" + longtitude + "&dname=" + gbNavName + "&dev=0&t=0");
+//            Uri gdUri = Uri.parse("dat=amapuri://route/plan/?sid=&slat=39.92848272&slon=116.39560823&sname=A&did=&dlat=" + latitude + "&dlon=" + longtitude + "&dname=" + gbNavName + "&dev=0&t=0");
+            gdNav.setData(gdUri);
+            startActivity(gdNav);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //网页版不支持路径规划
+            Toast.makeText(this, "请安装高德地图", Toast.LENGTH_SHORT).show();
+            Uri uri = Uri.parse("market://details?id=" + pkg);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }
+
+    }
+
+
+    private void baiduMap() {
+        Intent bdNav = new Intent();
+        try {
+           GPS gps =  GPSConverterUtils.gcj02_To_Bd09(latitude,longtitude);
+            bdNav.setData(Uri.parse("baidumap://map/direction?destination=" + "latlng:"+ gps.getLat() + "," + gps.getLon() +"|addr:"+tv_location_name.getContext().toString() + "&coord_type=bd09ll&mode=driving&src=andr.baidu.openAPIdemo"));
+            startActivity(bdNav);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "请安装百度地图", Toast.LENGTH_SHORT).show();
+            Uri uri = Uri.parse("market://details?id=com.baidu.BaiduMap");
+            bdNav = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(bdNav);
+        }
+
+    }
 
 
 }

@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,11 +21,13 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCustomMessageBody;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.hx.section.domain.MyEaseUser;
 import com.xunda.mo.main.chat.adapter.Chat_SelectUserCard_Adapter;
 import com.xunda.mo.main.constant.MyConstant;
@@ -65,10 +66,9 @@ public class Chat_SelectUserCard extends BaseInitActivity {
     }
 
     /**
-     *
      * @param context
      * @param conversationId 会话ID
-     * @param sendType 1 把好友发给会话 2把好友发入群 3把Ta推给朋友
+     * @param sendType       1 把好友发给会话 2把好友发入群 3把Ta推给朋友
      */
     public static void actionStartSingle(Context context, String conversationId, String sendType) {
         Intent intent = new Intent(context, Chat_SelectUserCard.class);
@@ -78,7 +78,7 @@ public class Chat_SelectUserCard extends BaseInitActivity {
         context.startActivity(intent);
     }
 
-    public static void actionStartGroup(Context context, String conversationId, String sendType,GruopInfo_Bean groupModel) {
+    public static void actionStartGroup(Context context, String conversationId, String sendType, GruopInfo_Bean groupModel) {
         Intent intent = new Intent(context, Chat_SelectUserCard.class);
         intent.putExtra("conversationId", conversationId);
         intent.putExtra("sendType", sendType);
@@ -155,17 +155,18 @@ public class Chat_SelectUserCard extends BaseInitActivity {
         addMembers_Recycler.setAdapter(mAdapter);
         mAdapter.setItemOnClickListener((v, position) -> {
             if (TextUtils.equals(sendType, "1")) {
-                sendSingleCard(dataList.get(position),sendType);
+                sendSingleCard(dataList.get(position), sendType);
             } else if (TextUtils.equals(sendType, "2")) {
                 sendGroupCard(dataList.get(position));
-            }else if (TextUtils.equals(sendType, "3")) {
-                sendToFriendCard(dataList.get(position),sendType);
+            } else if (TextUtils.equals(sendType, "3")) {
+                sendToFriendCard(dataList.get(position), sendType);
             }
         });
 
     }
 
     adress_Model friendListModel;
+
     public void friendMemberListMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
@@ -174,6 +175,7 @@ public class Chat_SelectUserCard extends BaseInitActivity {
                 friendListModel = new Gson().fromJson(result, adress_Model.class);
                 sortList();
             }
+
             @Override
             public void failed(String... args) {
             }
@@ -181,6 +183,7 @@ public class Chat_SelectUserCard extends BaseInitActivity {
     }
 
     List<MyEaseUser> dataList;
+
     private void sortList() {
         dataList = new ArrayList<>();
         for (int i = 0; i < friendListModel.getData().size(); i++) {
@@ -279,14 +282,13 @@ public class Chat_SelectUserCard extends BaseInitActivity {
     }
 
 
-
     @SuppressLint("NewApi")
     private MyEaseUser getMyEaseUser(String userID) {
         MyEaseUser myEaseUser = new MyEaseUser();
 //        List<EaseUser> selectMembers = mAdapter.getUserList();
         List<String> userListStr = new ArrayList<>();
         for (int i = 0; i < dataList.size(); i++) {
-            if (TextUtils.equals(dataList.get(i).getUsername(),userID)){
+            if (TextUtils.equals(dataList.get(i).getUsername(), userID)) {
                 myEaseUser = dataList.get(i);
             }
         }
@@ -296,7 +298,7 @@ public class Chat_SelectUserCard extends BaseInitActivity {
 
 
     //发送单人名片
-    private void sendSingleCard(MyEaseUser data,String sendType) {
+    private void sendSingleCard(MyEaseUser data, String sendType) {
         MyInfo myInfo = new MyInfo(mContext);
         String msgID = conversationId;
         EMMessage message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM);
@@ -314,7 +316,7 @@ public class Chat_SelectUserCard extends BaseInitActivity {
         message.setAttribute(MyConstant.TO_VIP, data.getVipType());
         EMCustomMessageBody body = new EMCustomMessageBody(DemoConstant.USER_CARD_EVENT);
         Map<String, String> params = new HashMap<>();
-        params.put(MyConstant.UID, msgID);
+        params.put(MyConstant.UID, data.getUsername());
         params.put(MyConstant.USER_ID, data.getUserId());
         params.put(MyConstant.UNUM, data.getUserNum() + "");
         params.put(MyConstant.AVATAR, data.getAvatar());
@@ -322,15 +324,15 @@ public class Chat_SelectUserCard extends BaseInitActivity {
         params.put(MyConstant.HX_NAME, data.getUsername());
         body.setParams(params);
         message.setBody(body);
-        messageBack(message);
+        messageBack(message,msgID);
         EMClient.getInstance().chatManager().sendMessage(message);
     }
 
     //把Ta推荐给好友
-    private void sendToFriendCard(MyEaseUser data,String sendType) {
-        MyEaseUser toEaseUser =  getMyEaseUser(conversationId);//要发送的名片
+    private void sendToFriendCard(MyEaseUser data, String sendType) {
+        MyEaseUser toEaseUser = getMyEaseUser(conversationId);//要发送的名片
         MyInfo myInfo = new MyInfo(mContext);
-        String msgID =  data.getUsername();
+        String msgID = data.getUsername();
         EMMessage message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM);
         message.setTo(msgID);
         message.setChatType(EMMessage.ChatType.Chat);
@@ -346,7 +348,7 @@ public class Chat_SelectUserCard extends BaseInitActivity {
         message.setAttribute(MyConstant.TO_VIP, data.getVipType());
         EMCustomMessageBody body = new EMCustomMessageBody(DemoConstant.USER_CARD_EVENT);
         Map<String, String> params = new HashMap<>();
-        params.put(MyConstant.UID, msgID);
+        params.put(MyConstant.UID, toEaseUser.getUsername());
         params.put(MyConstant.USER_ID, toEaseUser.getUserId());
         params.put(MyConstant.UNUM, toEaseUser.getUserNum() + "");
         params.put(MyConstant.AVATAR, toEaseUser.getAvatar());
@@ -354,10 +356,9 @@ public class Chat_SelectUserCard extends BaseInitActivity {
         params.put(MyConstant.HX_NAME, toEaseUser.getUsername());
         body.setParams(params);
         message.setBody(body);
-        messageBack(message);
+        messageBack(message,data.getUsername());
         EMClient.getInstance().chatManager().sendMessage(message);
     }
-
 
 
     //把名片发送到群内
@@ -366,7 +367,7 @@ public class Chat_SelectUserCard extends BaseInitActivity {
 //        String conversationId = data.getUsername();
         EMMessage message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM);
         message.setTo(conversationId);
-        message.setChatType(EMMessage.ChatType.Chat);
+        message.setChatType(EMMessage.ChatType.GroupChat);
         message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_USERCARD);
         message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
         message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
@@ -376,7 +377,7 @@ public class Chat_SelectUserCard extends BaseInitActivity {
         message.setAttribute(MyConstant.GROUP_HEAD, groupModel.getData().getGroupHeadImg());
         EMCustomMessageBody body = new EMCustomMessageBody(DemoConstant.USER_CARD_EVENT);
         Map<String, String> params = new HashMap<>();
-        params.put(MyConstant.UID, conversationId);
+        params.put(MyConstant.UID, data.getUsername());
         params.put(MyConstant.USER_ID, data.getUserId());
         params.put(MyConstant.UNUM, data.getUserNum() + "");
         params.put(MyConstant.AVATAR, data.getAvatar());
@@ -384,23 +385,30 @@ public class Chat_SelectUserCard extends BaseInitActivity {
         params.put(MyConstant.HX_NAME, data.getUsername());
         body.setParams(params);
         message.setBody(body);
-        messageBack(message);
         EMClient.getInstance().chatManager().sendMessage(message);
+        messageBack(message,conversationId);
     }
 
-    private void messageBack(EMMessage msg){
+    private void messageBack(EMMessage msg,String toID) {
         msg.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
-                showToast("发送用户名片成功");
-                Toast.makeText(mContext,"发送用户名片成功",Toast.LENGTH_SHORT).show();
+//                showToast("发送用户名片成功");
                 LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
-                finish();
+//                Chat_SelectUserCard.this.finish();
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra(EaseConstant.EXTRA_CONVERSATION_ID, toID);
+                if (msg.getChatType() == EMMessage.ChatType.Chat) {
+                    intent.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
+                } else {
+                    intent.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_GROUP);
+                }
+                startActivity(intent);
             }
-
             @Override
             public void onError(int code, String error) {
-                showToast("发送用户名片失败");
+//                showToast("发送用户名片失败");
                 LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
             }
 
