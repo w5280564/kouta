@@ -26,7 +26,6 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.manager.EaseDingMessageHelper;
-import com.hyphenate.easeui.modules.chat.EaseChatLayout;
 import com.hyphenate.easeui.modules.chat.EaseChatMessageListLayout;
 import com.hyphenate.easeui.modules.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import com.hyphenate.easeui.modules.chat.interfaces.OnChatLayoutListener;
@@ -42,6 +41,7 @@ import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
 import com.hyphenate.util.VersionUtils;
 import com.xunda.mo.R;
+import com.xunda.mo.hx.section.base.MyEaseChatLayout;
 import com.xunda.mo.main.group.activity.GroupDetail_Edit_Address;
 import com.xunda.mo.staticdata.MarqueeTextView;
 
@@ -57,7 +57,7 @@ public class MyEaseChatFragment extends EaseBaseFragment implements OnChatLayout
     protected static final int REQUEST_CODE_SELECT_VIDEO = 11;
     protected static final int REQUEST_CODE_SELECT_FILE = 12;
     private static final String TAG = MyEaseChatFragment.class.getSimpleName();
-    public EaseChatLayout chatLayout;
+    public MyEaseChatLayout chatLayout;
     public String conversationId;
     public  int chatType;
     public String historyMsgId;

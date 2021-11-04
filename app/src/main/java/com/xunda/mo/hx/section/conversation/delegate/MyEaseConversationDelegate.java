@@ -119,6 +119,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
 //                    }
 //                }).start();
 
+
                 //根据群组ID从服务器获取群组基本信息
 //                EMClient.getInstance().groupManager().asyncGetGroupFromServer(username, new EMValueCallBack<EMGroup>() {
 //                    @Override
@@ -150,7 +151,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                 holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
             } else {
                 if (item.getAllMsgCount() != 0) {
-//                    HeadName = item.getLastMessage().getStringAttribute(MyConstant.SEND_NAME, "");
+                    HeadName = item.getLastMessage().getStringAttribute(MyConstant.SEND_NAME, "");
 //                    HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.SEND_HEAD, "");
                 }
             }
@@ -179,7 +180,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                         String selectInfoExt = user.getExt();
                         if (!TextUtils.isEmpty(selectInfoExt)) {
                             JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
-                            String name = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
+                            String name = TextUtils.isEmpty(JsonObject.getString(MyConstant.REMARK_NAME)) ? user.getNickname() : JsonObject.getString(MyConstant.REMARK_NAME);
                             if (!TextUtils.isEmpty(name)) {
                                 holder.name.setText(name);
                             }
@@ -270,10 +271,10 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                 }
             }
 
-        }else if (item.getLastMessage().getType() == EMMessage.Type.LOCATION){
+        } else if (item.getLastMessage().getType() == EMMessage.Type.LOCATION) {
             String messageStr = "[位置]";
             contentView.setText(messageStr);
-        }else if (TextUtils.equals(lastMessType,MyConstant.MESSAGE_TYPE_USERCARD)){
+        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_USERCARD)) {
             String messageStr = "[名片]";
             contentView.setText(messageStr);
         }

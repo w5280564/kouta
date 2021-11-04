@@ -13,26 +13,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.xunda.mo.hx.common.widget.ArrowItemView
+    <com.xunda.mo.main.baseView.MyArrowItemView
         android:id="@+id/item_equipments"
         android:layout_width="0dp"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="44dp"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_Include"
         android:layout_marginTop="10dp"
         app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
         app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
-        app:arrowItemTitle="@string/em_privacy_equipments"
+        app:arrowItemTitle="设备管理"
         android:foreground="@drawable/demo_ripple_click_gray"
         android:background="@color/white"/>
 
 
 
-    <com.xunda.mo.hx.common.widget.ArrowItemView
+    <com.xunda.mo.main.baseView.MyArrowItemView
         android:id="@+id/item_se"
         android:layout_width="0dp"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="44dp"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
         android:background="@color/white"
         android:foreground="@drawable/demo_ripple_click_gray"
         app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"

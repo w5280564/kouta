@@ -12,8 +12,8 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
-import com.xunda.mo.hx.common.widget.ArrowItemView;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.login.MainLogin_Register;
 import com.xunda.mo.main.me.activity.Me_Safety;
@@ -22,10 +22,10 @@ import com.xunda.mo.staticdata.dialog.BaseDialogFragment;
 
 public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener, View.OnClickListener {
     private EaseTitleBar titleBar;
-    private ArrowItemView itemSecurity;
-    private ArrowItemView itemNotification;
-    private ArrowItemView itemCommonSet;
-    private ArrowItemView itemPrivacy, item_se;
+    private MyArrowItemView itemSecurity;
+    private MyArrowItemView itemNotification;
+    private MyArrowItemView itemCommonSet;
+    private MyArrowItemView itemPrivacy, item_se;
     private Button btnLogout;
 
     public static void actionStart(Context context) {

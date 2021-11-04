@@ -20,13 +20,12 @@
         android:layout_width="0dp"
         android:layout_height="36dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/em_margin_20"
-        android:layout_marginRight="@dimen/em_margin_20"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/search_bg"
         android:drawableLeft="@drawable/ease_search_icon"
         app:layout_constraintTop_toBottomOf="@id/title_Include"
-        android:drawablePadding="@dimen/em_margin_10"
         android:hint="@string/search"
         android:imeOptions="actionSearch"
         android:paddingLeft="15dp"
@@ -53,13 +52,14 @@
         android:visibility="invisible" />
 
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/addMembers_Recycler"
+<!--    com.hyphenate.easeui.modules.contact.EaseContactLayout-->
+    <com.hyphenate.easeui.modules.contact.EaseContactLayout
+        android:id="@+id/contact_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/query_Edit" />
+        app:layout_constraintTop_toBottomOf="@+id/query_Edit"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

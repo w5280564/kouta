@@ -94,4 +94,9 @@ public interface MyConstant extends DemoConstant {
    String  Dele_Type = "deletType";
    String  MESS_TYPE_GROUP_HORN = "GroupHorn";
    String  GROUP_IS_ANONYMOUS = "isAnonymous";
+
+    //群艾特
+    String MESSAGE_TXT_TYPE_AT_GROUP = "isAT";
+    String AT_NAME = "atName";
+    String AT_ID = "atID";
 }

@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/greyfive"
     tools:context=".main.chat.activity.ChatComplaint"
-    tools:ignore="MissingConstraints"
-    android:background="@color/greyfive">
+    tools:ignore="MissingConstraints">
 
     <include
         android:id="@+id/title_Include"
@@ -19,6 +19,7 @@
         android:id="@+id/complaint_ArrowItemView"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        android:layout_marginTop="10dp"
         android:background="@color/white"
         android:paddingRight="15dp"
         app:arrowItemContent="请选择"
@@ -26,7 +27,6 @@
         app:arrowItemTitle="投诉原因（必填）"
         app:arrowItemTitleColor="@color/blacktitlettwo"
         app:arrowItemTitleSize="15sp"
-        android:layout_marginTop="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_Include" />
@@ -36,10 +36,10 @@
         android:id="@+id/ti_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="@color/white"
         android:padding="15dp"
         android:text="投诉说明（选填）"
-        android:layout_marginTop="10dp"
         android:textColor="@color/blacktitlettwo"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/complaint_ArrowItemView" />
@@ -81,25 +81,26 @@
         android:id="@+id/tu_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="@color/white"
-        android:padding="15dp"
+        android:paddingStart="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:text="举报附件（必填）"
         android:textColor="@color/blacktitlettwo"
         android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/zi_txt"
-        android:layout_marginTop="10dp"/>
+        app:layout_constraintTop_toBottomOf="@id/zi_txt" />
 
     <TextView
         android:id="@+id/je_Txt"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:text="请上传聊天内容截图或视频"
         android:background="@color/white"
         android:paddingStart="15dp"
+        android:text="请上传聊天内容截图或视频"
         android:textColor="#fff9d22e"
         android:textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@id/tu_txt"
-        />
+        app:layout_constraintTop_toBottomOf="@id/tu_txt" />
 
 
     <com.xunda.mo.main.baseView.FlowLayout
@@ -124,7 +125,6 @@
         android:id="@+id/next_Btn"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        app:layout_constraintTop_toBottomOf="@id/photoLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
@@ -132,8 +132,8 @@
         android:background="@drawable/loginbtn_radius_yellow"
         android:text="提交"
         android:textColor="@color/white"
-        android:textStyle="bold" />
-
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/photoLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,7 +39,8 @@
     <com.xunda.mo.hx.common.widget.SwitchItemView
         android:id="@+id/switch_push_no_disturb"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="44dp"
+        app:switchItemTitleColor="@color/blacktitlettwo"
         app:switchItemTitle="@string/offline_push_no_disturb"
         app:switchItemTitleSize="14sp"
         app:switchItemClickable="false"
@@ -48,8 +49,9 @@
     <com.xunda.mo.hx.common.widget.ArrowItemView
         android:id="@+id/item_push_time_range"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="44dp"
         app:arrowItemTitle="@string/demo_no_disturb_time"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
         app:arrowItemContent="@string/offline_default_time_range"
         app:arrowItemTitleSize="14sp"
         android:visibility="gone"
@@ -58,7 +60,8 @@
     <com.xunda.mo.hx.common.widget.SwitchItemView
         android:id="@+id/rl_custom_server"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="44dp"
+        app:switchItemTitleColor="@color/blacktitlettwo"
         app:switchItemTitle="@string/push_use_fcm"
         app:switchItemTitleSize="14sp"
         android:visibility="gone"

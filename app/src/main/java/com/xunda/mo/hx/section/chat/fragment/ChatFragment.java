@@ -2,6 +2,8 @@
 package com.xunda.mo.hx.section.chat.fragment;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.xunda.mo.hx.section.base.MyEaseChatLayout.AT_PREFIX;
+import static com.xunda.mo.hx.section.base.MyEaseChatLayout.AT_SUFFIX;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -15,10 +17,13 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -51,6 +56,7 @@ import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.modules.chat.EaseChatInputMenu;
 import com.hyphenate.easeui.modules.chat.EaseChatMessageListLayout;
+import com.hyphenate.easeui.modules.chat.EaseInputEditText;
 import com.hyphenate.easeui.modules.chat.interfaces.IChatExtendMenu;
 import com.hyphenate.easeui.modules.chat.interfaces.IChatPrimaryMenu;
 import com.hyphenate.easeui.modules.chat.interfaces.OnRecallMessageResultListener;
@@ -68,7 +74,6 @@ import com.xunda.mo.hx.common.model.EmojiconExampleGroupData;
 import com.xunda.mo.hx.section.base.BaseActivity;
 import com.xunda.mo.hx.section.chat.activicy.ForwardMessageActivity;
 import com.xunda.mo.hx.section.chat.activicy.ImageGridActivity;
-import com.xunda.mo.hx.section.chat.activicy.PickAtUserActivity;
 import com.xunda.mo.hx.section.chat.viewmodel.MessageViewModel;
 import com.xunda.mo.hx.section.conference.ConferenceInviteActivity;
 import com.xunda.mo.hx.section.dialog.DemoListDialogFragment;
@@ -99,7 +104,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -118,6 +125,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     EaseChatMessageListLayout messageListLayout;
     private IChatPrimaryMenu primaryMenu;
     private EaseTitleBar titleBarMessage;
+    private EaseInputEditText et_sendmessage;
 
     @Override
     public void initView() {
@@ -167,9 +175,11 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         //获取到菜单输入控件
         primaryMenu = chatInputMenu.getPrimaryMenu();
         ImageView voiceBtn = chatInputMenu.findViewById(R.id.btn_set_mode_voice);
+        et_sendmessage = chatInputMenu.findViewById(R.id.et_sendmessage);
+        et_sendmessage.addTextChangedListener(new etTextChange_Listener());
+        Button btn_send = chatInputMenu.findViewById(R.id.btn_send);
+
         voiceBtn.setOnClickListener(v -> startAudio());
-
-
         LiveDataBus.get().with(MyConstant.Chat_BG, String.class).observe(requireActivity(), filePath ->
                 Glide.with(requireActivity()).asBitmap().load(filePath).into(new SimpleTarget<Bitmap>() {
                     public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
@@ -205,6 +215,36 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         });
         cancel_Btn.setOnClickListener(new cancel_BtnClick());
         screenShot();
+
+        btn_send.setOnClickListener(view -> {
+            String content = et_sendmessage.getText().toString();
+//                String filterContent = forbidSensitiveWord(content);
+            String filterContent = content;
+            if (chatType == EaseConstant.CHATTYPE_GROUP) {
+                if (!isMOCustomer()) {
+                    et_sendmessage.setText("");
+                    if (isAtMes(filterContent)) {
+                        sendATMes(filterContent);
+                    } else {
+                        chatInputMenu.onSendBtnClicked(filterContent);
+                    }
+                } else {
+//                        sendCustomerMes(filterContent);
+                    if (!isMOCustomer()) {//没在人工服务时才请求答案
+//                        serviceAnswerData(filterContent);
+                        chatInputMenu.onSendBtnClicked(filterContent);
+                    }
+                    chatInputMenu.onSendBtnClicked(filterContent);
+                    et_sendmessage.setText("");
+                }
+            } else {
+                chatInputMenu.onSendBtnClicked(filterContent);
+                et_sendmessage.setText("");
+            }
+
+        });
+
+//        isATMes("content");
     }
 
 
@@ -226,6 +266,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
         }
     }
+
 
     @SneakyThrows
     @Override
@@ -425,6 +466,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     @Override
     public void initListener() {
         super.initListener();
+        chatLayout.setOnChatLayoutListener(this);
         chatLayout.setOnRecallMessageResultListener(this);
     }
 
@@ -550,8 +592,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 onMarquee(msgs);
             }
         }
-//        for (EMMessage msg:msgs){
-//        }
     }
 
     private void onMarquee(List<EMMessage> msgs) {
@@ -705,60 +745,73 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     @Override
     public void onUserAvatarLongClick(String username) {
-        EditText editText = chatLayout.getChatInputMenu().getPrimaryMenu().getEditText();
-        editText.setText("");
-
-//        EMGroup emGroup = null;
-//        try {
-//            emGroup = DemoHelper.getInstance().getGroupManager().getGroupFromServer(username,true);
-//        } catch (HyphenateException e) {
-//            e.printStackTrace();
-//        }
-//        editText.setText(emGroup.getMembers().get(0));
-
-//        EMConversation emMessage = DemoHelper.getInstance().getChatManager().getConversation(username);
-//        String name = emMessage.getLastMessage().getStringAttribute(MyConstant.SEND_NAME,"");
-//        editText.setText(name);
-        //        if (user != null){
-//            username = user.getNickname();
-//        }
-//        String name = emConversation.getLastMessage().getStringAttribute(MyConstant.SEND_NAME,"");
-//        editText.getText().insert(editText.getSelectionStart(),name);
-//        if (true)
-//            insertText(editText, AT_PREFIX + username + AT_SUFFIX);
-//        else
-//            insertText(editText, username + AT_SUFFIX);
+        if (chatType == EaseConstant.CHATTYPE_GROUP) {
+            if (!TextUtils.equals(username, DemoHelper.getInstance().getCurrentUser())) {
+                EditText editText = chatLayout.getChatInputMenu().getPrimaryMenu().getEditText();
+                editText.setText("");
+                chatLayout.inputAtUsername(username, true);
+//                getMyGroupNicknameByHxIdOrGroupId(username,groupModel.getData().getGroupId());
+            }
+        }
 
     }
 
+    private class etTextChange_Listener implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            if (!TextUtils.isEmpty(s.toString())) {
 
-    /**
-     * insert text to EditText
-     *
-     * @param edit
-     * @param text
-     */
-    private void insertText(EditText edit, String text) {
-        if (edit.isFocused()) {
-            edit.getText().insert(edit.getSelectionStart(), text);
-        } else {
-            edit.getText().insert(edit.getText().length() - 1, text);
+            }
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (!TextUtils.isEmpty(s.toString())) {
+
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+//            if (!TextUtils.isEmpty(s.toString())) {
+////              String atStr = s.toString().substring(s.length() - 1);
+//                String atStr = String.valueOf(s.charAt(s.length() - 1));
+//                if (TextUtils.equals(atStr, "@")) {
+//                    if (!isMOCustomer() && groupModel != null) {
+//                        GroupAllMembers_At.actionStartForResult(ChatFragment.this, groupModel, REQUEST_CODE_SELECT_AT_USER);
+//                    }
+//                }
+//            }
         }
     }
+
 
     @Override
     public boolean onBubbleLongClick(View v, EMMessage message) {
         return false;
     }
 
+
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (!messageListLayout.isGroupChat()) {
             return;
         }
-        if (count == 1 && "@".equals(String.valueOf(s.charAt(start)))) {
-            PickAtUserActivity.actionStartForResult(ChatFragment.this, conversationId, REQUEST_CODE_SELECT_AT_USER);
+        if (TextUtils.isEmpty(s)) {
+            return;
         }
+//        if (count == 1 && "@".equals(String.valueOf(s.charAt(before)))) {
+
+//        if (!TextUtils.isEmpty(s)) {
+//            String atStr = s.toString().substring(s.length() - 1);
+//            if (count == 1 && TextUtils.equals(atStr, "@")) {
+//                if (!isMOCustomer() && groupModel != null) {
+////                PickAtUserActivity.actionStartForResult(ChatFragment.this, conversationId, REQUEST_CODE_SELECT_AT_USER);
+//                    GroupAllMembers_At.actionStartForResult(this, groupModel, REQUEST_CODE_SELECT_AT_USER);
+//                }
+//            }
+//        }
+
     }
 
 
@@ -885,6 +938,8 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         }
     }
 
+    HashMap<String, Object> userMap = new HashMap<>();
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -892,8 +947,9 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             switch (requestCode) {
                 case REQUEST_CODE_SELECT_AT_USER:
                     if (data != null) {
-                        String username = data.getStringExtra("username");
-                        chatLayout.inputAtUsername(username, false);
+                        HashMap<String, Object> backMap = (HashMap<String, Object>) data.getSerializableExtra("username");
+//                        String username = data.getStringExtra("username");
+                        editAtMes(backMap);
                     }
                     break;
                 case REQUEST_CODE_SELECT_VIDEO: //send the video
@@ -1003,17 +1059,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     //两分钟内撤回发送消息
     private void chatOrGroupRecallMess(EMMessage message) {
-//        MyInfo myInfo = new MyInfo(requireActivity());
-//        if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-//            singleRecallSendMes(message, myInfo, model);
-//        } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-//            if (isMOCustomer()) {
-//                return;
-//            } else {
-//                groupRecallSendMes(message, myInfo);
-//            }
-//        }
-//        showProgressBar();
         chatLayout.recallMessage(message);
     }
 
@@ -1428,6 +1473,193 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         addMsgAttrsBeforeSend(cmdMsg);
         EMClient.getInstance().chatManager().sendMessage(cmdMsg);
     }
+
+
+    //发送@消息
+    @SuppressLint("RestrictedApi")
+    private void sendATMes(String content) {
+        MyInfo myInfo = new MyInfo(mContext);
+        String nickName = myInfo.getUserInfo().getNickname();
+//        List<String> iconList = Arrays.asList(nickName.split(","));
+//        HashMap<String, Object> myMapName = isATMes(content);
+        EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+        EMTextMessageBody txtBody = new EMTextMessageBody(content);
+        message.addBody(txtBody);
+        message.setTo(conversationId);
+        message.setChatType(EMMessage.ChatType.GroupChat);
+        message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TXT_TYPE_AT_GROUP);
+        message.setAttribute(MyConstant.SEND_NAME, groupModel.getData().getMyNickname());
+        message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
+        String atName = aTMesKeyName(aTMesMap(content));
+        message.setAttribute(MyConstant.AT_NAME, atName);
+        String atValue = aTMesValueName(aTMesMap(content));
+        message.setAttribute(MyConstant.AT_ID, atValue);
+        message.setAttribute(MyConstant.GROUP_NAME, groupModel.getData().getGroupName());
+        message.setAttribute(MyConstant.GROUP_HEAD, groupModel.getData().getGroupHeadImg());
+        DemoHelper.getInstance().getChatManager().sendMessage(message);
+        LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));//加了这个发出的消息才会实时刷新
+//        at_name_list.clear();
+//        at_id_list.clear();
+//        isATMessage = false;
+    }
+
+
+    //at用户ID
+    private HashMap<String, Object> aTMes(String atStr) {
+        //        List<String> atNameList = new ArrayList<>();
+//        List<String> atIDList = new ArrayList<>();
+//        if (atNameList == null || atIDList == null) {
+//            return false;
+//        }
+//        // 大小比较
+//        if (atNameList.size() != atIDList.size()) {
+//            return false;
+//        }
+//        String[] arr1 = atNameList.toArray(new String[]{});
+//        String[] arr2 = atIDList.toArray(new String[]{});
+//        Arrays.sort(arr1);
+//        Arrays.sort(arr2);
+//        return true;
+
+
+        HashMap<String, Object> mapEditName = new HashMap();
+        mapEditName.put("海豹一号", "123");
+        mapEditName.put("云", "567");
+        mapEditName.put("很润", "110");
+        HashMap<String, Object> mapName = new HashMap();
+        mapName.put("海豹一号", "123");
+        mapName.put("云", "567");
+        mapName.put("很润", "110");
+        mapName.put("加钱哥", "8910");
+
+        HashMap<String, Object> myMapName = new HashMap();
+        Iterator<String> it_user = mapEditName.keySet().iterator();
+        while (it_user.hasNext()) {
+            String userKey = it_user.next();
+            if (mapName.containsKey(userKey)) {
+                myMapName.put(userKey, mapEditName.get(userKey));
+            }
+        }
+        return myMapName;
+    }
+
+    //at页面返回的用户Map
+    private void editAtMes(HashMap<String, Object> atMap) {
+        userMap.putAll(atMap);
+        et_sendmessage.setTextColor(getContext().getColor(R.color.yellowfive));
+        Iterator<String> at_user = atMap.keySet().iterator();
+        String userFristKey = at_user.next();
+        inputAtUserName(et_sendmessage, userFristKey, false);
+//        insertText(et_sendmessage, userFristKey);
+//        if (at_user.hasNext()) {
+//            at_user.next();
+//        }
+        while (at_user.hasNext()) {
+//            String userKey = "@" + at_user.next();
+//            insertText(et_sendmessage, userKey);
+            String userKey = at_user.next();
+            inputAtUserName(et_sendmessage, userKey, true);
+        }
+    }
+
+    //是否加@
+    private void inputAtUserName(EditText editText, String nick, boolean autoAddAtSymbol) {
+        if (autoAddAtSymbol)
+            insertText(editText, AT_PREFIX + nick + AT_SUFFIX);
+        else
+            insertText(editText, nick + AT_SUFFIX);
+    }
+
+    // 插入at数据到String后面
+    private void insertText(@NonNull EditText edit, String text) {
+        if (edit.isFocused()) {
+            edit.getText().insert(edit.getSelectionStart(), text);
+        } else {
+            edit.getText().insert(edit.getText().length(), text);
+        }
+    }
+
+    //发送时候判断是否是at消息
+    private boolean isAtMes(@NonNull String atStr) {
+        if (atStr.contains("@")) {
+            String notAt = atStr.replace("@", "");
+            List<String> atList = Arrays.asList(notAt.split(" "));
+            HashMap<String, Object> atMap = new HashMap<>();
+            for (String s : atList) {
+                atMap.put(s, "");
+            }
+            Iterator<String> it_user = atMap.keySet().iterator();
+            while (it_user.hasNext()) {
+                String atKey = it_user.next();
+                if (userMap.containsKey(atKey)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    //发送at时的ATMap数据
+    private HashMap<String, Object> aTMesMap(String atStr) {
+        String notAt = "";
+        if (atStr.contains("@")) {
+            notAt = atStr.replace("@", "");
+        }
+        List<String> atList = Arrays.asList(notAt.split(" "));
+        HashMap<String, Object> atMap = new HashMap<>();
+        for (String s : atList) {
+            atMap.put(s, "");
+        }
+        HashMap<String, Object> NewMap = new HashMap();
+        Iterator<String> it_user = atMap.keySet().iterator();
+        while (it_user.hasNext()) {
+            String userKey = it_user.next();
+            if (userMap.containsKey(userKey)) {
+                NewMap.put(userKey, userMap.get(userKey));
+            }
+        }
+        return NewMap;
+    }
+
+    private String aTMesKeyName(Map atMap) {
+        String atNameStr = "";
+        Iterator<String> it_user = atMap.keySet().iterator();
+        while (it_user.hasNext()) {
+            String userKey = it_user.next();
+            atNameStr += userKey + ",";
+        }
+        return atNameStr;
+    }
+
+    private String aTMesValueName(Map atMap) {
+        String atNameStr = "";
+        Iterator<String> it_user = atMap.values().iterator();
+        while (it_user.hasNext()) {
+            String userKey = it_user.next();
+            atNameStr += userKey + ",";
+        }
+        return atNameStr;
+    }
+
+
+
+    //    /**
+//     * 屏蔽敏感词汇
+//     * @param sendBeforeMessage
+//     */
+//    private String forbidSensitiveWord(String sendBeforeMessage) {
+//        if (!ListUtils.isEmpty(mSensitiveWordList)) {
+//            for (int i = 0; i < mSensitiveWordList.size(); i++) {
+//                if (sendBeforeMessage.contains(mSensitiveWordList.get(i))) {
+//                    sendBeforeMessage = sendBeforeMessage.replaceAll(mSensitiveWordList.get(i), "***");
+//                }
+//            }
+//            return sendBeforeMessage;
+//
+//        }
+//        return "";
+//    }
 
 
 }

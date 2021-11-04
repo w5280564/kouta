@@ -15,17 +15,17 @@ import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
 import com.xunda.mo.hx.common.model.DemoModel;
-import com.xunda.mo.hx.common.widget.ArrowItemView;
 import com.xunda.mo.hx.common.widget.SwitchItemView;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.me.viewmodels.OfflinePushSetViewModel;
+import com.xunda.mo.main.baseView.MyArrowItemView;
 
 public class MessageReceiveSetActivity extends BaseInitActivity implements SwitchItemView.OnCheckedChangeListener, EaseTitleBar.OnBackPressListener, View.OnClickListener {
     private EaseTitleBar titleBar;
     private SwitchItemView rlSwitchNotification;
     private SwitchItemView rlSwitchSound;
     private SwitchItemView rlSwitchVibrate;
-    private ArrowItemView itemPushMessageStyle;
+    private MyArrowItemView itemPushMessageStyle;
     private DemoModel model;
     private EMPushManager.DisplayStyle displayStyle;
     private OfflinePushSetViewModel viewModel;

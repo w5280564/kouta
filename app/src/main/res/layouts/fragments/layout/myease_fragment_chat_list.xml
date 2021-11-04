@@ -8,7 +8,7 @@
     tools:ignore="MissingConstraints">
 
 
-    <com.hyphenate.easeui.modules.chat.EaseChatLayout
+    <com.xunda.mo.hx.section.base.MyEaseChatLayout
         android:id="@+id/layout_chat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_bg"
+    android:background="@color/greyfive"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.hyphenate.easeui.widget.EaseTitleBar
@@ -16,10 +16,12 @@
         android:background="@color/white"
         app:titleBarDisplayHomeAsUpEnabled="true"/>
 
-    <com.xunda.mo.hx.common.widget.ArrowItemView
+    <com.xunda.mo.main.baseView.MyArrowItemView
         android:id="@+id/item_security"
         android:layout_width="0dp"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="44dp"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
+        android:layout_marginTop="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_bar"
@@ -30,15 +32,15 @@
         android:foreground="@drawable/demo_ripple_click_gray"
         android:background="@color/white"/>
 
-        <com.xunda.mo.hx.common.widget.ArrowItemView
+        <com.xunda.mo.main.baseView.MyArrowItemView
         android:id="@+id/item_se"
         android:layout_width="0dp"
-        android:layout_height="@dimen/em_common_item_height"
+            android:layout_height="44dp"
+            app:arrowItemTitleColor="@color/blacktitlettwo"
+            android:layout_marginTop="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/item_security"
-        app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
-        app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
         app:arrowItemTitle="安全"
         app:arrowItemTitleSize="@dimen/em_size_normal"
         android:foreground="@drawable/demo_ripple_click_gray"
@@ -46,42 +48,30 @@
 
 
 
-    <com.xunda.mo.hx.common.widget.ArrowItemView
+    <com.xunda.mo.main.baseView.MyArrowItemView
         android:id="@+id/item_notification"
         android:layout_width="0dp"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="44dp"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/item_se"
-        app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
-        app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
         app:arrowItemTitle="@string/em_set_message_set"
         app:arrowItemTitleSize="@dimen/em_size_normal"
         android:foreground="@drawable/demo_ripple_click_gray"
         android:background="@color/white"/>
 
-    <com.xunda.mo.hx.common.widget.ArrowItemView
-        android:id="@+id/item_common_set"
+
+
+    <com.xunda.mo.main.baseView.MyArrowItemView
+        android:id="@+id/item_privacy"
         android:layout_width="0dp"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/item_notification"
-        android:layout_marginTop="@dimen/em_margin_20"
-        app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
-        app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
-        app:arrowItemTitle="@string/em_set_common_set"
-        app:arrowItemTitleSize="@dimen/em_size_normal"
-        android:foreground="@drawable/demo_ripple_click_gray"
-        android:background="@color/white"/>
-
-    <com.xunda.mo.hx.common.widget.ArrowItemView
-        android:id="@+id/item_privacy"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/em_common_item_height"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_common_set"
         app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
         app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
         app:arrowItemTitle="@string/em_set_privacy"
@@ -89,17 +79,32 @@
         android:foreground="@drawable/demo_ripple_click_gray"
         android:background="@color/white"/>
 
-    <Button
-        android:id="@+id/btn_logout"
+    <com.xunda.mo.main.baseView.MyArrowItemView
+        android:id="@+id/item_common_set"
         android:layout_width="0dp"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="44dp"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/item_privacy"
+        app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
+        app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
+        app:arrowItemTitle="@string/em_set_common_set"
+        app:arrowItemTitleSize="@dimen/em_size_normal"
+        android:foreground="@drawable/demo_ripple_click_gray"
+        android:background="@color/white"/>
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_common_set"
         android:layout_marginTop="12dp"
         android:background="@color/white"
         android:text="@string/button_logout"
-        android:textColor="@color/em_color_common_text_black"
-        android:textSize="@dimen/em_size_normal" />
+        android:textColor="@color/blacktitlettwo"
+        android:textSize="16sp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

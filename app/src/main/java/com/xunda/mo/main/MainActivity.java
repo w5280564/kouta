@@ -143,7 +143,9 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         // 可以动态显示隐藏相应tab
         //navView.getMenu().findItem(R.id.em_main_nav_me).setVisible(false);
 //        switchToFriends();
-        switchToHome();
+
+//        switchToHome();
+        addToHone();
         checkIfShowSavedFragment(savedInstanceState);
         addTabBadge();
 
@@ -152,13 +154,16 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         //设置头像形状为圆形，1代表圆形，2代表方形
         avatarOptions.setAvatarShape(2);
         EaseIM.getInstance().setAvatarOptions(avatarOptions);
-
     }
 
     @Override
     protected void initListener() {
         super.initListener();
         navView.setOnNavigationItemSelectedListener(this);
+    }
+
+    private void addToHone(){
+        switchToHome();
     }
 
 
@@ -582,6 +587,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         DemoHelper.getInstance().updateUserList(data);
         //更新本地联系人列表
         DemoHelper.getInstance().updateContactList();
+//        addToHone();
     }
 
 

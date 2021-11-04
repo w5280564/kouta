@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/em_common_item_height"
+    android:layout_height="44dp"
     android:gravity="center_vertical">
 
     <TextView
@@ -15,7 +15,7 @@
         android:layout_marginLeft="@dimen/em_margin_20"
         android:layout_marginStart="@dimen/em_margin_20"
         android:textSize="@dimen/em_size_normal"
-        android:textColor="@color/black"/>
+        android:textColor="@color/blacktitlettwo"/>
 
     <CheckBox
         android:id="@+id/cb_style"

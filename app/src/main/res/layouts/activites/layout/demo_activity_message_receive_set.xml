@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_bg">
+    android:background="@color/greyfive">
 
     <com.hyphenate.easeui.widget.EaseTitleBar
         android:id="@+id/title_bar"
@@ -16,25 +16,40 @@
     
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="wrap_content"
         android:text="@string/new_message_notify"
-        android:textSize="@dimen/em_size_normal"
-        android:paddingLeft="20dp"
-        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/greytwo"
         android:gravity="center_vertical"/>
 
     <com.xunda.mo.hx.common.widget.SwitchItemView
         android:id="@+id/rl_switch_notification"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="44dp"
+        app:switchItemTitleColor="@color/blacktitlettwo"
+        android:layout_marginTop="10dp"
         app:switchItemTitle="@string/newnotify"
         app:switchItemShowDivider="true"
+        android:background="@color/white"/>
+
+    <com.xunda.mo.main.baseView.MyArrowItemView
+        android:id="@+id/item_push_message_style"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
+        app:arrowItemTitleSize="14sp"
+        app:arrowItemTitle="@string/push_message_show_detail"
+        app:arrowItemContentColor="@color/greytwo"
         android:background="@color/white"/>
 
     <com.xunda.mo.hx.common.widget.SwitchItemView
         android:id="@+id/rl_switch_sound"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_marginTop="10dp"
+        android:layout_height="44dp"
+        app:switchItemTitleColor="@color/blacktitlettwo"
         app:switchItemTitle="@string/voice"
         app:switchItemShowDivider="true"
         android:background="@color/white"/>
@@ -42,16 +57,12 @@
     <com.xunda.mo.hx.common.widget.SwitchItemView
         android:id="@+id/rl_switch_vibrate"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="44dp"
+        app:switchItemTitleColor="@color/blacktitlettwo"
         app:switchItemTitle="@string/shake"
         app:switchItemShowDivider="true"
         android:background="@color/white"/>
     
-    <com.xunda.mo.hx.common.widget.ArrowItemView
-        android:id="@+id/item_push_message_style"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/em_common_item_height"
-        app:arrowItemTitle="@string/push_message_show_detail"
-        android:background="@color/white"/>
+
 
 </LinearLayout>

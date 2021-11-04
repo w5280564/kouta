@@ -256,7 +256,7 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
 
     @Override
     public void onChatError(int code, String errorMsg) {
-        showToast(errorMsg);
+//        showToast(errorMsg);
     }
 
     @Override

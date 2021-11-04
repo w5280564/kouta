@@ -17,10 +17,10 @@ import androidx.core.content.ContextCompat;
 import com.hyphenate.EMCallBack;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
-import com.xunda.mo.hx.common.widget.ArrowItemView;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.me.activity.MultiDeviceActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
+import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.login.MainLogin_Register;
 import com.xunda.mo.network.saveFile;
@@ -33,8 +33,8 @@ import java.util.Map;
 
 public class Me_Safety extends BaseInitActivity implements View.OnClickListener {
 
-    private View item_se;
-    private ArrowItemView itemEquipments;
+    private MyArrowItemView item_se;
+    private MyArrowItemView itemEquipments;
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, Me_Safety.class);

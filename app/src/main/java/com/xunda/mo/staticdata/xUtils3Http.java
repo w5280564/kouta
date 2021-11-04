@@ -59,9 +59,15 @@ public class xUtils3Http {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+               // Failed to connect to /139.9.121.19:8088
+                String errorMes = "Failed to connect to /139.9.121.19:8088";
+                if (TextUtils.equals(errorMes,ex.getMessage())){
+                    Toast.makeText(mContext, "服务维护中，请稍后再试...", Toast.LENGTH_LONG).show();
+                }
                 if (callback != null) {
                     callback.failed();
                 }
+
             }
 
             @Override
@@ -74,7 +80,8 @@ public class xUtils3Http {
         });
     }
 
-    public static void post(Context mContext, String url, Map<String, Object> parms, final GetDataCallback callback) {
+    public static void post(Context mContext, String url, Map<String, Object> parms,
+                            final GetDataCallback callback) {
         RequestParams params = new RequestParams(BASE_URL + url);
         JSONObject obj = new JSONObject();
         if (parms != null) {
@@ -120,9 +127,14 @@ public class xUtils3Http {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                String errorMes = "Failed to connect to /139.9.121.19:8088";
+                if (TextUtils.equals(errorMes,ex.getMessage())){
+                    Toast.makeText(mContext, "服务维护中，请稍后再试...", Toast.LENGTH_LONG).show();
+                }
                 if (callback != null) {
                     callback.failed();
                 }
+
             }
 
             @Override
@@ -135,7 +147,8 @@ public class xUtils3Http {
         });
     }
 
-    public static void postRsa(Context mContext, String url, Map<String, Object> parms, final GetDataCallback callback) {
+    public static void postRsa(Context mContext, String url, Map<String, Object> parms,
+                               final GetDataCallback callback) {
         RequestParams params = new RequestParams(BASE_URL + url);
         JSONObject obj = new JSONObject();
         if (parms != null) {
@@ -190,7 +203,8 @@ public class xUtils3Http {
     }
 
 
-    public static void uploadFile(Context mContext, List<String> path, Map<String, Object> map, final GetDataCallback callback) {
+    public static void uploadFile(Context
+                                          mContext, List<String> path, Map<String, Object> map, final GetDataCallback callback) {
         RequestParams params = new RequestParams(BASE_URL + "upload");
         params.setMultipart(true);
         for (String key : map.keySet()) {
@@ -226,6 +240,7 @@ public class xUtils3Http {
                 if (callback != null) {
                     callback.failed();
                 }
+                callback.failed();
             }
 
             @Override

@@ -188,6 +188,8 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
 //        EMClient.getInstance().groupManager().loadAllGroups();
 //        List<EMGroup> groups =   EMClient.getInstance().groupManager().getAllGroups();
 //        groups.get(0).getExtension();
+
+
     }
 
 
@@ -322,6 +324,8 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
                 ChatActivity.actionStart(mContext, ((EMConversation) item).conversationId(), EaseCommonUtils.getChatType((EMConversation) item));
             }
 
+//            EMConversation conversation = EMClient.getInstance().chatManager().getConversation(((EMConversation) item).conversationId(), EMConversation.EMConversationType.Chat, true);
+//            conversation.setExtField();
 
         }
     }

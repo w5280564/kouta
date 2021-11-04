@@ -9,7 +9,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +37,6 @@ public class Me_Manage_BlackList extends BaseInitActivity {
     private RecyclerView base_Recycler;
     private String groupId;
     private EditText query_Edit;
-    private ImageButton search_clear;
     private String friendUserId;
 
     public static void actionStart(Context context) {
@@ -57,8 +55,6 @@ public class Me_Manage_BlackList extends BaseInitActivity {
 
         query_Edit = findViewById(R.id.query_Edit);
         query_Edit.addTextChangedListener(new query_EditChangeListener());
-        search_clear = findViewById(R.id.search_clear);
-        search_clear.setOnClickListener(new search_clearClick());
 
         base_Recycler = findViewById(R.id.base_Recycler);
         initTitle();
@@ -109,10 +105,8 @@ public class Me_Manage_BlackList extends BaseInitActivity {
         public void afterTextChanged(Editable s) {
             String keyword = s.toString();
             if (!TextUtils.isEmpty(keyword)) {
-                search_clear.setVisibility(View.VISIBLE);
                 SearchGroupMember(keyword);
             } else {
-                search_clear.setVisibility(View.INVISIBLE);
 //                getGroupList();
                 initlist(Me_Manage_BlackList.this);
             }

@@ -646,7 +646,6 @@ public class GroupDetailSet extends BaseInitActivity {
 
 
     GroupMember_Bean groupListModel;
-
     public void GroupMemberListMethod(Context context, String baseUrl, int Identity) {
         Map<String, Object> map = new HashMap<>();
         map.put("groupId", myGroupId);

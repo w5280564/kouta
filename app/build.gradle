@@ -181,10 +181,10 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
 //    implementation 'io.hyphenate:hyphenate-sdk:3.8.2' //完整版本，包含音视频功能
-    implementation 'io.hyphenate:hyphenate-chat:3.8.5'
-    implementation 'io.hyphenate:ease-im-kit:3.8.5'
+    implementation 'io.hyphenate:hyphenate-chat:3.8.7'
+    implementation 'io.hyphenate:ease-im-kit:3.8.7'
     //EaseCallKit依赖，必须添加环信IM SDK
-    implementation 'io.hyphenate:ease-call-kit:3.8.5'
+    implementation 'io.hyphenate:ease-call-kit:3.8.7'
     // fresh and load more
     api 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
     // parse

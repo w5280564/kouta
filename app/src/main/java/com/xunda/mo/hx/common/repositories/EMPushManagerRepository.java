@@ -1,5 +1,8 @@
 package com.xunda.mo.hx.common.repositories;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMPushConfigs;
@@ -8,9 +11,6 @@ import com.hyphenate.easeui.manager.EaseThreadManager;
 import com.hyphenate.exceptions.HyphenateException;
 import com.xunda.mo.hx.common.interfaceOrImplement.ResultCallBack;
 import com.xunda.mo.hx.common.net.Resource;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 
 public class EMPushManagerRepository extends BaseEMRepository {
 

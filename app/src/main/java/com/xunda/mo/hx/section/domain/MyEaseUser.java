@@ -27,6 +27,16 @@ public class MyEaseUser extends EaseUser implements Serializable {
     @NonNull
     private String username;
     private String nickname;
+
+    public String getRemarkName() {
+        return remarkName;
+    }
+
+    public void setRemarkName(String remarkName) {
+        this.remarkName = remarkName;
+    }
+
+    private String remarkName;
     /**
      * initial letter from nickname
      */

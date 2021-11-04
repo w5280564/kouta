@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_bg">
+    android:background="@color/greyfive">
 
     <com.hyphenate.easeui.widget.EaseTitleBar
         android:id="@+id/title_bar"
@@ -26,20 +26,50 @@
             <com.xunda.mo.hx.common.widget.ArrowItemView
                 android:id="@+id/item_notification"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/em_common_item_height"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:foreground="@drawable/demo_ripple_click_gray"
                 app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
                 app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
                 app:arrowItemTitle="@string/push_settings"
+                android:visibility="gone"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
                 app:arrowItemTitleSize="@dimen/em_size_normal"
-                android:foreground="@drawable/demo_ripple_click_gray"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+
+
+
+            <com.xunda.mo.hx.common.widget.SwitchItemView
+                android:id="@+id/switch_push_no_disturb"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
+                app:switchItemTitleColor="@color/blacktitlettwo"
+                app:switchItemTitle="@string/offline_push_no_disturb"
+                app:switchItemTitleSize="14sp"
+                app:switchItemClickable="false"
                 android:background="@color/white"/>
+
+            <com.xunda.mo.main.baseView.MyArrowItemView
+                android:id="@+id/item_push_time_range"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                app:arrowItemTitle="@string/demo_no_disturb_time"
+                app:arrowItemTitleColor="@color/blacktitlettwo"
+                app:arrowItemContent="@string/offline_default_time_range"
+                app:arrowItemTitleSize="14sp"
+                android:visibility="gone"
+                android:background="@color/white"/>
+
 
             <com.xunda.mo.hx.common.widget.ArrowItemView
                 android:id="@+id/item_call_option"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/em_common_item_height"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
@@ -52,16 +82,19 @@
             <com.xunda.mo.hx.common.widget.SwitchItemView
                 android:id="@+id/item_switch_typing"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/em_common_item_height"
-                app:switchItemTitle="@string/title_msg_typing"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                app:switchItemTitleColor="@color/blacktitlettwo"
                 app:switchItemShowDivider="true"
-                app:switchItemTitleSize="@dimen/em_size_normal"
-                android:background="@color/white"/>
+                app:switchItemTitle="@string/title_msg_typing"
+                app:switchItemTitleSize="@dimen/em_size_normal" />
 
             <com.xunda.mo.hx.common.widget.SwitchItemView
                 android:id="@+id/item_switch_speaker"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/em_common_item_height"
+                android:visibility="gone"
                 app:switchItemTitle="@string/yangshengqi"
                 app:switchItemShowDivider="true"
                 app:switchItemTitleSize="@dimen/em_size_normal"
@@ -70,17 +103,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
                 android:text="@string/em_common_set_group_set"
                 android:layout_marginLeft="20dp"
-                android:textSize="14sp"
-                android:textColor="@color/gray_normal"/>
+                android:textSize="12sp"
+                android:textColor="@color/greytwo"/>
 
             <com.xunda.mo.hx.common.widget.SwitchItemView
                 android:id="@+id/item_switch_delete_msg"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/em_common_item_height"
+                android:layout_height="44dp"
+                app:switchItemTitleColor="@color/blacktitlettwo"
                 app:switchItemTitle="@string/delete_msg_when_exit_group"
                 app:switchItemShowDivider="true"
                 app:switchItemTitleSize="@dimen/em_size_normal"
@@ -90,6 +124,7 @@
                 android:id="@+id/item_switch_auto_accept_group"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/em_common_item_height"
+                android:visibility="gone"
                 app:switchItemTitle="@string/auto_accept_group_invitation"
                 app:switchItemShowDivider="true"
                 app:switchItemTitleSize="@dimen/em_size_normal"

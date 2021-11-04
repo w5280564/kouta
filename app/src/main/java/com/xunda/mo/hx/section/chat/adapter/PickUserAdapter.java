@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.hyphenate.easeui.EaseIM;
 import com.hyphenate.easeui.adapter.EaseBaseRecyclerViewAdapter;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.provider.EaseUserProfileProvider;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseImageView;
@@ -55,8 +57,33 @@ public class PickUserAdapter extends EaseBaseRecyclerViewAdapter<EaseUser> {
                     mHeader.setText(header);
                 }
             }
-            mName.setText(item.getNickname());
+//            mName.setText(item.getNickname());
+            setUserNick(item.getUsername(),mName);
             EaseUserUtils.setUserAvatar(mContext, item.getUsername(), mAvatar);
         }
     }
+
+    /**
+     * set user's nickname
+     */
+    public static void setUserNick(String username,TextView textView){
+        if(textView != null){
+            EaseUser user = getUserInfo(username);
+            if(user != null && user.getNickname() != null){
+                textView.setText(user.getNickname());
+            }
+        }
+    }
+
+    /**
+     * get EaseUser according username
+     * @param username
+     * @return
+     */
+    public static EaseUser getUserInfo(String username){
+        EaseUserProfileProvider provider = EaseIM.getInstance().getUserProvider();
+        return provider == null ? null : provider.getUser(username);
+    }
+
+
 }

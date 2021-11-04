@@ -38,10 +38,10 @@ import java.util.Map;
 
 public class MeFragment extends BaseInitFragment {
     private ConstraintLayout head_Constraint;
-    private MyArrowItemView item_set, version_set,item_service_set,item_coupon_set,item_vip_set;
+    private MyArrowItemView item_set, version_set, item_service_set, item_coupon_set, item_vip_set;
     private LinearLayout garde_Lin;
     private ImageView head_Image;
-    private TextView nick_Txt, moId_Txt,vipType_txt;
+    private TextView nick_Txt, moId_Txt, vipType_txt;
 
     @Override
     protected int getLayoutId() {
@@ -99,6 +99,7 @@ public class MeFragment extends BaseInitFragment {
             SetIndexActivity.actionStart(mContext);
         }
     }
+
     private class item_service_setClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
@@ -122,6 +123,7 @@ public class MeFragment extends BaseInitFragment {
 
 
     UserDetail_Bean userModel;
+
     @SuppressLint("SetTextI18n")
     public void UserMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
@@ -135,7 +137,7 @@ public class MeFragment extends BaseInitFragment {
                 String moIDStr = String.format("Mo ID:%s", dataDTO.getUserNum());
                 moId_Txt.setText(moIDStr);
 
-                isVipMethod(context,dataDTO.getVipType());
+                isVipMethod(context, dataDTO.getVipType());
 
                 MyInfo myInfo = new MyInfo(context);
                 myInfo.updateData(userModel.getData());
@@ -148,13 +150,13 @@ public class MeFragment extends BaseInitFragment {
         });
     }
 
-    private void isVipMethod(Context context,Integer vipType) {
-        nick_Txt.setTextColor(ContextCompat.getColor(context,R.color.blacktitlettwo));
-        moId_Txt.setTextColor(ContextCompat.getColor(context,R.color.blacktitlettwo));
+    private void isVipMethod(Context context, Integer vipType) {
+        nick_Txt.setTextColor(ContextCompat.getColor(context, R.color.blacktitlettwo));
+        moId_Txt.setTextColor(ContextCompat.getColor(context, R.color.blacktitlettwo));
         vipType_txt.setVisibility(View.GONE);
         if (vipType == 1) {
-            nick_Txt.setTextColor(ContextCompat.getColor(context,R.color.yellowfive));
-            moId_Txt.setTextColor(ContextCompat.getColor(context,R.color.yellowfive));
+            nick_Txt.setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
+            moId_Txt.setTextColor(ContextCompat.getColor(context, R.color.yellowfive));
             vipType_txt.setVisibility(View.VISIBLE);
         }
     }
@@ -175,6 +177,7 @@ public class MeFragment extends BaseInitFragment {
             }
         });
     }
+
     //关于我们
     private class version_setClick implements View.OnClickListener {
         @Override

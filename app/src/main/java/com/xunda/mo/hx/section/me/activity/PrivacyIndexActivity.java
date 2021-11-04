@@ -10,13 +10,14 @@ import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.common.widget.ArrowItemView;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.login.MainRegister_Agreement;
 import com.xunda.mo.main.me.activity.Me_Manage_BlackList;
 import com.xunda.mo.staticdata.xUtils3Http;
 
 public class PrivacyIndexActivity extends BaseInitActivity implements View.OnClickListener, EaseTitleBar.OnBackPressListener {
     private EaseTitleBar titleBar;
-    private ArrowItemView itemBlackManager;
+    private MyArrowItemView itemBlackManager;
     private ArrowItemView itemEquipmentManager,item_privacy_manager,item_manager;
     private TextView privacy_txt;
 

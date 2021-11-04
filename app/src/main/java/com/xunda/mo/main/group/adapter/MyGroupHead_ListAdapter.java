@@ -158,5 +158,6 @@ public class MyGroupHead_ListAdapter extends EaseBaseRecyclerViewAdapter<MyEaseU
         spannableString.setSpan(relativeSizeSpan, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         viewName.setText(spannableString);
     }
+
 }
 

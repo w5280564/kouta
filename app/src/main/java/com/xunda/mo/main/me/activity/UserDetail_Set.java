@@ -98,7 +98,7 @@ import lombok.SneakyThrows;
 
 public class UserDetail_Set extends BaseInitActivity {
 
-    private TextView cententTxt;
+    private TextView cententTxt,label_Txt;
     private SimpleDraweeView person_img;
     private MyArrowItemView friend_ArrowItemView, sex_ArrowItemView, birthday_ArrowItemView, adress_ArrowItemView, signature_ArrowItemView,
             ID_ArrowItemView, QRcode_ArrowItemView;
@@ -127,6 +127,7 @@ public class UserDetail_Set extends BaseInitActivity {
         super.initView(savedInstanceState);
         initTitle();
 
+       ConstraintLayout head_Constraint = findViewById(R.id.head_Constraint);
         person_img = findViewById(R.id.person_img);
         person_img.setOnClickListener(new person_imgClick());
         friend_ArrowItemView = findViewById(R.id.friend_ArrowItemView);
@@ -146,6 +147,7 @@ public class UserDetail_Set extends BaseInitActivity {
         label_Constraint = findViewById(R.id.label_Constraint);
         label_Constraint.setOnClickListener(new label_ConstraintClick());
         label_Lin = findViewById(R.id.label_Lin);
+        label_Txt = findViewById(R.id.label_Txt);
 
         quit_Btn = findViewById(R.id.quit_Btn);
         quit_Btn.setOnClickListener(new quit_BtnClick());
@@ -242,9 +244,9 @@ public class UserDetail_Set extends BaseInitActivity {
 
 
     //修改头像
-    private class person_imgClick extends NoDoubleClickListener {
+    private class person_imgClick implements View.OnClickListener {
         @Override
-        protected void onNoDoubleClick(View v) {
+        public void onClick(View v) {
             isChangeHead("1", "用户头像24小时内只能修改1次");
         }
     }
@@ -373,19 +375,34 @@ public class UserDetail_Set extends BaseInitActivity {
                 person_img.setImageURI(uri);
 
                 friend_ArrowItemView.getTvContent().setText(dataDTO.getNickname());
+                if (TextUtils.isEmpty(dataDTO.getNickname())){
+                    friend_ArrowItemView.getTvContent().setText("未设置");
+                }
                 if (dataDTO.getSex() == 0) {
                     sex_ArrowItemView.getTvContent().setText("男");
                 } else {
                     sex_ArrowItemView.getTvContent().setText("女");
                 }
                 birthday_ArrowItemView.getTvContent().setText(dataDTO.getBirthday());
+                if (TextUtils.isEmpty(dataDTO.getBirthday())){
+                    birthday_ArrowItemView.getTvContent().setText("未设置");
+                }
                 adress_ArrowItemView.getTvContent().setText(dataDTO.getAreaName());
+                if (TextUtils.isEmpty(dataDTO.getAreaName())){
+                    adress_ArrowItemView.getTvContent().setText("未设置");
+                }
                 signature_ArrowItemView.getTvContent().setText(dataDTO.getSignature());
-                ID_ArrowItemView.getTvContent().setText(dataDTO.getUserNum().intValue() + "");
+                if (TextUtils.isEmpty(dataDTO.getSignature())){
+                    signature_ArrowItemView.getTvContent().setText("未设置");
+                }
+                ID_ArrowItemView.getTvContent().setText(dataDTO.getUserNum() + "");
                 String tag = userModel.getData().getTag();
                 tagString = tag;
-                tagList(label_Lin, context, tag);
-
+                if (TextUtils.isEmpty(tag)){
+                    label_Txt.setVisibility(View.VISIBLE);
+                }else {
+                    tagList(label_Lin, context, tag);
+                }
             }
 
             @Override
@@ -511,7 +528,7 @@ public class UserDetail_Set extends BaseInitActivity {
     private void setPhotoMetod(Context context) {
         int choice = 1;
         PictureSelector.create((Activity) context)
-                .openGallery(PictureConfig.TYPE_ALL)
+                .openGallery(PictureConfig.TYPE_IMAGE)
                 .imageEngine(GlideEnGine.createGlideEngine()) //图片加载空白 加入Glide加载图片
                 .imageSpanCount(4)// 每行显示个数 int
                 .maxSelectNum(choice)

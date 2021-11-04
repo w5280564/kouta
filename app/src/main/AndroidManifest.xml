@@ -655,6 +655,11 @@
         <activity
             android:name=".main.chat.activity.Chat_SelectUserCard"
             android:screenOrientation="portrait" />
+
+
+        <activity android:name=".main.group.activity.GroupAllMembers_At"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".main.login.Main_Launch"
             android:screenOrientation="portrait">

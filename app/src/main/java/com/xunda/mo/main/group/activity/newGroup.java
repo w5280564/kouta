@@ -260,7 +260,7 @@ public class newGroup extends BaseInitActivity {
     private void setPhotoMetod(Context context) {
         int choice = 1;
         PictureSelector.create((Activity) context)
-                .openGallery(PictureConfig.TYPE_ALL)
+                .openGallery(PictureConfig.TYPE_IMAGE)
                 .imageEngine(GlideEnGine.createGlideEngine()) //图片加载空白 加入Glide加载图片
                 .imageSpanCount(4)// 每行显示个数 int
                 .maxSelectNum(choice)

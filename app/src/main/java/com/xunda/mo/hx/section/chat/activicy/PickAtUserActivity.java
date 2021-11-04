@@ -1,5 +1,6 @@
 package com.xunda.mo.hx.section.chat.activicy;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -99,10 +100,12 @@ public class PickAtUserActivity extends BaseInitActivity implements OnRefreshLis
                 checkIfAddHeader();
             }
             parseResource(response, new OnResourceParseCallback<List<EaseUser>>() {
+                @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onSuccess(List<EaseUser> data) {
                     removeSelf(data);
                     mAdapter.setData(data);
+                    mAdapter.notifyDataSetChanged();
                 }
 
                 @Override

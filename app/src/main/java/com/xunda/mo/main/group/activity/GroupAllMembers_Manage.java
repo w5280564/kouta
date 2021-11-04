@@ -313,6 +313,7 @@ public class GroupAllMembers_Manage extends BaseInitActivity {
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
+                switchView.setEnabled(true);
                 if (TextUtils.equals(agreeType, "1")) {
                     if (isBlock) {
                         muteAllMembers();
