@@ -32,7 +32,7 @@ android {
 //        }
 
         config {
-            storeFile file('D:/waylen/jkalias/xd.jks')
+            storeFile file('E:/XundaWorkBase/Kouta_keystore/xd.jks')
             storePassword '123456'
             keyPassword '123456'
             keyAlias 'moyanmoyu'
