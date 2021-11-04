@@ -30,6 +30,7 @@ import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.group.adapter.GroupAddMember_Adapter;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.GroupMemberAdd_Bean;
+import com.xunda.mo.model.GruopAddOrRemove_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
@@ -86,7 +87,7 @@ public class GroupAllMembers_Add extends BaseInitActivity {
         return_Btn.setVisibility(View.VISIBLE);
         TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
         cententTxt.setText("邀请群成员");
-         right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
+        right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.VISIBLE);
         right_Btn.setText("完成");
         viewTouchDelegate.expandViewTouchDelegate(right_Btn, 50, 50, 50, 50);
@@ -105,12 +106,13 @@ public class GroupAllMembers_Add extends BaseInitActivity {
     private class right_Btn extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            List<String>  SelectedMembers =  mAdapter.getSelectedMembers();
+            List<String> SelectedMembers = mAdapter.getSelectedMembers();
             if (SelectedMembers == null || SelectedMembers.size() < 1) {
                 Toast.makeText(GroupAllMembers_Add.this, "请添加邀请人", Toast.LENGTH_SHORT).show();
                 return;
             }
-            AddGroupMemberMethod(GroupAllMembers_Add.this,  saveFile.group_MangerUser_Url);
+            v.setEnabled(false);
+            AddGroupMemberMethod(GroupAllMembers_Add.this, saveFile.group_MangerUser_Url);
         }
     }
 
@@ -124,7 +126,7 @@ public class GroupAllMembers_Add extends BaseInitActivity {
     protected void initData() {
         super.initData();
         GroupMemberListMethod(GroupAllMembers_Add.this, saveFile.Friend_InviteToGroup_Url);
-        GroupMethod(GroupAllMembers_Add.this, saveFile.Group_MyGroupInfo_Url );
+//        GroupMethod(GroupAllMembers_Add.this, saveFile.Group_MyGroupInfo_Url );
     }
 
     GroupAddMember_Adapter mAdapter;
@@ -148,22 +150,24 @@ public class GroupAllMembers_Add extends BaseInitActivity {
         mAdapter.setOnSelectListener(new GroupAddMember_Adapter.OnSelectListener() {
             @Override
             public void onSelected(View v, List<String> selectedMembers) {
-                right_Btn.setText(getString(R.string.finish) + "(" + selectedMembers.size() +")");
+                right_Btn.setText(getString(R.string.finish) + "(" + selectedMembers.size() + ")");
             }
         });
 
     }
 
     GroupMemberAdd_Bean groupListModel;
+
     public void GroupMemberListMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("groupId",groupId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", groupId);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 groupListModel = new Gson().fromJson(result, GroupMemberAdd_Bean.class);
                 sortList();
             }
+
             @Override
             public void failed(String... args) {
 
@@ -269,14 +273,16 @@ public class GroupAllMembers_Add extends BaseInitActivity {
     }
 
     GruopInfo_Bean groupModel;
+
     public void GroupMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("groupId",groupId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", groupId);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 groupModel = new Gson().fromJson(result, GruopInfo_Bean.class);
             }
+
             @Override
             public void failed(String... args) {
 
@@ -286,13 +292,11 @@ public class GroupAllMembers_Add extends BaseInitActivity {
     }
 
 
-
-
     @SuppressLint("NewApi")
     public void AddGroupMemberMethod(Context context, String baseUrl) {
-        List<String>  SelectedMembers =  mAdapter.getSelectedMembers();
-        String userIds = String.join(",",SelectedMembers);
-        Map<String,Object> map = new HashMap<>();
+        List<String> SelectedMembers = mAdapter.getSelectedMembers();
+        String userIds = String.join(",", SelectedMembers);
+        Map<String, Object> map = new HashMap<>();
         map.put("groupId", groupId);
         map.put("type", "1");
         map.put("userIds", userIds);
@@ -300,10 +304,12 @@ public class GroupAllMembers_Add extends BaseInitActivity {
             @Override
             public void success(String result) {
                 Toast.makeText(context, "添加成功", Toast.LENGTH_SHORT).show();
-                sendMes(groupModel);
+                GruopAddOrRemove_Bean groupBean = new Gson().fromJson(result, GruopAddOrRemove_Bean.class);
+                sendMes(groupBean);
                 finish();
                 right_Btn.setEnabled(true);
             }
+
             @Override
             public void failed(String... args) {
                 right_Btn.setEnabled(true);
@@ -312,7 +318,7 @@ public class GroupAllMembers_Add extends BaseInitActivity {
     }
 
     //发送消息
-    private void sendMes(GruopInfo_Bean Model) {
+    private void sendMes(GruopAddOrRemove_Bean Model) {
         MyInfo myInfo = new MyInfo(mContext);
         String conversationId = Model.getData().getGroupHxId();
 //        EMMessage message = EMMessage.createTxtSendMessage(mContext.getString(R.string.CREATE_GROUP_CONTENT), conversationId);
@@ -342,8 +348,6 @@ public class GroupAllMembers_Add extends BaseInitActivity {
         String userName = String.join(",", userListStr);
         return userName;
     }
-
-
 
 
 }

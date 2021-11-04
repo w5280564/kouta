@@ -108,6 +108,7 @@ public class saveFile {
     public static String Group_Horn = "group/horn";
     public static String Friend_Blacks_List = "friend/blacks";
     public static String User_CheckOldPhone = "user/checkOldPhone";
+    public static String Group_myGroupNicknameByHx = "group/myGroupNicknameByHxIdOrGroupId";
 
 
 

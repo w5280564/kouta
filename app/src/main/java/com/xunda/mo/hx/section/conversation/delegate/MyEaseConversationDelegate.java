@@ -32,6 +32,7 @@ import com.hyphenate.easeui.utils.EaseSmileUtils;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.info.MyInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,6 +84,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
             defaultAvatar = R.drawable.mo_icon;
             EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
             showName = group != null ? group.getGroupName() : username;
+
 
             if (showName.equals(MyConstant.MO_NAME)) {
                 HeadName = showName;
@@ -205,7 +207,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
             EMMessage lastMessage = item.getLastMessage();
             holder.message.setText(EaseSmileUtils.getSmiledText(context, EaseCommonUtils.getMessageDigest(lastMessage, context)));
 
-            setContent(holder.message, item);
+            setContent(holder.mentioned, holder.message, item);
 
             holder.time.setText(EaseDateUtils.getTimestampString(context, new Date(lastMessage.getMsgTime())));
             if (lastMessage.direct() == EMMessage.Direct.SEND && lastMessage.status() == EMMessage.Status.FAIL) {
@@ -226,7 +228,8 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
     }
 
     //会话列表最后一条消息内容
-    private void setContent(TextView contentView, EMConversation item) {
+    private void setContent(TextView mentioned, TextView contentView, EMConversation item) {
+        MyInfo myInfo = new MyInfo(contentView.getContext());
         EMMessage lastMessage = item.getLastMessage();
         if (TextUtils.equals(lastMessage.getFrom(), MyConstant.ADMIN)) {
             String content = lastMessage.getStringAttribute("content", "");
@@ -274,9 +277,14 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         } else if (item.getLastMessage().getType() == EMMessage.Type.LOCATION) {
             String messageStr = "[位置]";
             contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_USERCARD)) {
-            String messageStr = "[名片]";
-            contentView.setText(messageStr);
+        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TXT_TYPE_AT_GROUP)) {
+            String AT_NAME = lastMessage.getStringAttribute(MyConstant.AT_NAME, "");
+            String atID = lastMessage.getStringAttribute(MyConstant.AT_ID, "");
+            if (AT_NAME.contains("All") && lastMessage.isUnread()) {
+                mentioned.setVisibility(View.VISIBLE);
+            }else if (atID.contains(myInfo.getUserInfo().getHxUserName()) && lastMessage.isUnread()) {
+                mentioned.setVisibility(View.VISIBLE);
+            }
         }
 
     }

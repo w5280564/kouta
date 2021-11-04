@@ -808,7 +808,7 @@ public class MyEaseChatLayout extends RelativeLayout implements IChatLayout, IHa
     @Override
     public void onUserAvatarLongClick(String username) {
         EMLog.i(TAG, "onUserAvatarLongClick");
-        inputAtUsername(username, true);
+//        inputAtUsername(username, true);
         if(listener != null) {
             listener.onUserAvatarLongClick(username);
         }

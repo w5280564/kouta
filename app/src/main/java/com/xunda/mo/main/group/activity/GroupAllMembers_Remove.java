@@ -30,6 +30,7 @@ import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.group.adapter.GroupAddMember_Adapter;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.GroupMember_Bean;
+import com.xunda.mo.model.GruopAddOrRemove_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
@@ -112,6 +113,7 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
                 Toast.makeText(GroupAllMembers_Remove.this, "请添加要删除的人", Toast.LENGTH_SHORT).show();
                 return;
             }
+            v.setEnabled(false);
             AddGroupMemberMethod(GroupAllMembers_Remove.this,  saveFile.group_MangerUser_Url);
 
         }
@@ -127,7 +129,7 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
     protected void initData() {
         super.initData();
         GroupMemberListMethod(GroupAllMembers_Remove.this,  saveFile.Group_UserList_Url );
-        GroupMethod(GroupAllMembers_Remove.this,  saveFile.Group_MyGroupInfo_Url );
+//        GroupMethod(GroupAllMembers_Remove.this,  saveFile.Group_MyGroupInfo_Url );
     }
 
     GroupAddMember_Adapter mAdapter;
@@ -314,8 +316,9 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
             @Override
             public void success(String result) {
                 Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
+                GruopAddOrRemove_Bean groupBean = new Gson().fromJson(result,GruopAddOrRemove_Bean.class);
 
-                sendMes(groupModel);
+                sendMes(groupBean);
                 finish();
                 right_Btn.setEnabled(true);
             }
@@ -328,7 +331,7 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
 
 
     //发送消息
-    private void sendMes(GruopInfo_Bean Model) {
+    private void sendMes(GruopAddOrRemove_Bean Model) {
         MyInfo myInfo = new MyInfo(mContext);
         String conversationId = Model.getData().getGroupHxId();
 //        EMMessage message = EMMessage.createTxtSendMessage(mContext.getString(R.string.CREATE_GROUP_CONTENT), conversationId);

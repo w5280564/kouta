@@ -120,13 +120,6 @@ public class GroupAllMembers_At extends BaseInitActivity {
     private class right_Btn extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-//            List<String>  SelectedMembers =  mAdapter.getSelectedMembers();
-//            if (SelectedMembers == null || SelectedMembers.size() < 1) {
-//                Toast.makeText(GroupAllMembers_At.this, "请添加邀请人", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//            AddGroupMemberMethod(GroupAllMembers_At.this,  saveFile.group_MangerUser_Url);
-
             Intent intent = getIntent();
             intent.putExtra("username", getUserName());
             setResult(RESULT_OK, intent);
@@ -166,11 +159,11 @@ public class GroupAllMembers_At extends BaseInitActivity {
         contactList.setAdapter(concatAdapter);
 
 
-        group_At_Adapter.setOnSelectListener(new GroupAt_Adapter.OnSelectListener() {
-            @Override
-            public void onSelected(int pos, List<String> selectedMembers) {
-
-            }
+        group_At_Adapter.setOnSelectListener((pos, selectedMembers) -> {
+            Intent intent = getIntent();
+            intent.putExtra("username", getAtAll());
+            setResult(RESULT_OK, intent);
+            finish();
         });
 
         List<String> selectHeadList = new ArrayList<>();
@@ -372,51 +365,6 @@ public class GroupAllMembers_At extends BaseInitActivity {
     }
 
 
-//    @SuppressLint("NewApi")
-//    public void AddGroupMemberMethod(Context context, String baseUrl) {
-//        List<String> SelectedMembers = List_adapter.getSelectedMembers();
-//        String userIds = String.join(",", SelectedMembers);
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("groupId", groupId);
-//        map.put("type", "1");
-//        map.put("userIds", userIds);
-//        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
-//            @Override
-//            public void success(String result) {
-//                Toast.makeText(context, "添加成功", Toast.LENGTH_SHORT).show();
-//                sendMes(groupModel);
-//                finish();
-//                right_Btn.setEnabled(true);
-//            }
-//
-//            @Override
-//            public void failed(String... args) {
-//                right_Btn.setEnabled(true);
-//            }
-//        });
-//    }
-
-    //发送消息
-//    private void sendMes(GruopInfo_Bean Model) {
-//        MyInfo myInfo = new MyInfo(mContext);
-//        String conversationId = Model.getData().getGroupHxId();
-////        EMMessage message = EMMessage.createTxtSendMessage(mContext.getString(R.string.CREATE_GROUP_CONTENT), conversationId);
-//        EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
-//        EMTextMessageBody txtBody = new EMTextMessageBody("");
-//        message.addBody(txtBody);
-//        message.setTo(conversationId);
-//        message.setChatType(EMMessage.ChatType.GroupChat);
-//        message.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_ADDUSER);
-//        message.setAttribute(MyConstant.USER_NAME, getUserName());
-//        message.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
-//        message.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
-//        message.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
-//        message.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
-//        message.setAttribute(MyConstant.GROUP_NAME, Model.getData().getGroupName());
-//        message.setAttribute(MyConstant.GROUP_HEAD, Model.getData().getGroupHeadImg());
-//        DemoHelper.getInstance().getChatManager().sendMessage(message);
-//    }
-
     @SuppressLint("NewApi")
     private HashMap<String, Object> getUserName() {
         List<MyEaseUser> selectMembers = List_adapter.getUserList();
@@ -433,6 +381,13 @@ public class GroupAllMembers_At extends BaseInitActivity {
             String userID = selectMembers.get(i).getUsername();
             userMap.put(nickName,userID);
         }
+    }
+
+
+    private HashMap<String, Object> getAtAll() {
+        HashMap<String,Object> userMap = new HashMap<>();
+        userMap.put("All","123456789");
+        return userMap;
     }
 
 

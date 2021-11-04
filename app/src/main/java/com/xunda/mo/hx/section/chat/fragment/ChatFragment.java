@@ -17,10 +17,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -84,6 +83,7 @@ import com.xunda.mo.main.chat.activity.ChatComplaint;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.chat.activity.Chat_SelectUserCard;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.group.activity.GroupAllMembers_At;
 import com.xunda.mo.main.group.activity.GroupFriend_Detail;
 import com.xunda.mo.main.group.activity.Group_Horn;
 import com.xunda.mo.main.info.MyInfo;
@@ -176,7 +176,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         primaryMenu = chatInputMenu.getPrimaryMenu();
         ImageView voiceBtn = chatInputMenu.findViewById(R.id.btn_set_mode_voice);
         et_sendmessage = chatInputMenu.findViewById(R.id.et_sendmessage);
-        et_sendmessage.addTextChangedListener(new etTextChange_Listener());
+        et_sendmessage.setOnKeyListener(new etOnKey_Listener());
         Button btn_send = chatInputMenu.findViewById(R.id.btn_send);
 
         voiceBtn.setOnClickListener(v -> startAudio());
@@ -747,41 +747,24 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     public void onUserAvatarLongClick(String username) {
         if (chatType == EaseConstant.CHATTYPE_GROUP) {
             if (!TextUtils.equals(username, DemoHelper.getInstance().getCurrentUser())) {
-                EditText editText = chatLayout.getChatInputMenu().getPrimaryMenu().getEditText();
-                editText.setText("");
-                chatLayout.inputAtUsername(username, true);
 //                getMyGroupNicknameByHxIdOrGroupId(username,groupModel.getData().getGroupId());
+                if (groupModel == null){
+                    return;
+                }
+                GroupAtName(mContext, saveFile.Group_myGroupNicknameByHx,groupModel.getData().getGroupId(),username);
             }
         }
 
     }
 
-    private class etTextChange_Listener implements TextWatcher {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            if (!TextUtils.isEmpty(s.toString())) {
 
+    private class etOnKey_Listener implements View.OnKeyListener {
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
+                deleAtMes(et_sendmessage.getText().toString(),et_sendmessage);
             }
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (!TextUtils.isEmpty(s.toString())) {
-
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-//            if (!TextUtils.isEmpty(s.toString())) {
-////              String atStr = s.toString().substring(s.length() - 1);
-//                String atStr = String.valueOf(s.charAt(s.length() - 1));
-//                if (TextUtils.equals(atStr, "@")) {
-//                    if (!isMOCustomer() && groupModel != null) {
-//                        GroupAllMembers_At.actionStartForResult(ChatFragment.this, groupModel, REQUEST_CODE_SELECT_AT_USER);
-//                    }
-//                }
-//            }
+            return false;
         }
     }
 
@@ -801,16 +784,16 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             return;
         }
 //        if (count == 1 && "@".equals(String.valueOf(s.charAt(before)))) {
+        if ((start+count) >= s.length() && !TextUtils.isEmpty(s.toString())) {
+            String atStr = s.toString().substring(s.length() - 1);
+            if (TextUtils.equals(atStr, "@")) {
+                if (!isMOCustomer() && groupModel != null) {
+                    GroupAllMembers_At.actionStartForResult(ChatFragment.this, groupModel, REQUEST_CODE_SELECT_AT_USER);
+//                    PickAtUserActivity.actionStartForResult(ChatFragment.this, conversationId, REQUEST_CODE_SELECT_AT_USER);
+                }
+            }
+        }
 
-//        if (!TextUtils.isEmpty(s)) {
-//            String atStr = s.toString().substring(s.length() - 1);
-//            if (count == 1 && TextUtils.equals(atStr, "@")) {
-//                if (!isMOCustomer() && groupModel != null) {
-////                PickAtUserActivity.actionStartForResult(ChatFragment.this, conversationId, REQUEST_CODE_SELECT_AT_USER);
-//                    GroupAllMembers_At.actionStartForResult(this, groupModel, REQUEST_CODE_SELECT_AT_USER);
-//                }
-//            }
-//        }
 
     }
 
@@ -1479,9 +1462,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     @SuppressLint("RestrictedApi")
     private void sendATMes(String content) {
         MyInfo myInfo = new MyInfo(mContext);
-        String nickName = myInfo.getUserInfo().getNickname();
-//        List<String> iconList = Arrays.asList(nickName.split(","));
-//        HashMap<String, Object> myMapName = isATMes(content);
         EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
         EMTextMessageBody txtBody = new EMTextMessageBody(content);
         message.addBody(txtBody);
@@ -1498,30 +1478,11 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         message.setAttribute(MyConstant.GROUP_HEAD, groupModel.getData().getGroupHeadImg());
         DemoHelper.getInstance().getChatManager().sendMessage(message);
         LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));//加了这个发出的消息才会实时刷新
-//        at_name_list.clear();
-//        at_id_list.clear();
-//        isATMessage = false;
     }
 
 
     //at用户ID
     private HashMap<String, Object> aTMes(String atStr) {
-        //        List<String> atNameList = new ArrayList<>();
-//        List<String> atIDList = new ArrayList<>();
-//        if (atNameList == null || atIDList == null) {
-//            return false;
-//        }
-//        // 大小比较
-//        if (atNameList.size() != atIDList.size()) {
-//            return false;
-//        }
-//        String[] arr1 = atNameList.toArray(new String[]{});
-//        String[] arr2 = atIDList.toArray(new String[]{});
-//        Arrays.sort(arr1);
-//        Arrays.sort(arr2);
-//        return true;
-
-
         HashMap<String, Object> mapEditName = new HashMap();
         mapEditName.put("海豹一号", "123");
         mapEditName.put("云", "567");
@@ -1545,18 +1506,15 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     //at页面返回的用户Map
     private void editAtMes(HashMap<String, Object> atMap) {
+        if (atMap.isEmpty()){
+            return;
+        }
         userMap.putAll(atMap);
         et_sendmessage.setTextColor(getContext().getColor(R.color.yellowfive));
         Iterator<String> at_user = atMap.keySet().iterator();
         String userFristKey = at_user.next();
         inputAtUserName(et_sendmessage, userFristKey, false);
-//        insertText(et_sendmessage, userFristKey);
-//        if (at_user.hasNext()) {
-//            at_user.next();
-//        }
         while (at_user.hasNext()) {
-//            String userKey = "@" + at_user.next();
-//            insertText(et_sendmessage, userKey);
             String userKey = at_user.next();
             inputAtUserName(et_sendmessage, userKey, true);
         }
@@ -1642,6 +1600,18 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         return atNameStr;
     }
 
+    private void deleAtMes(String atStr,EditText etText){
+        StringBuilder stringBuilder = new StringBuilder(atStr);
+        if (atStr.contains("@")) {
+            int atDex = atStr.lastIndexOf("@");
+            int lastDex = atStr.length()-1;
+            stringBuilder.replace(atDex,lastDex,"");
+            etText.setText(stringBuilder.toString());
+            etText.setSelection(stringBuilder.length());
+        }
+    }
+
+
 
 
     //    /**
@@ -1660,6 +1630,30 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 //        }
 //        return "";
 //    }
+
+
+    public void GroupAtName(Context context, String baseUrl,String groupID,String hxId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("hxId", hxId);
+        map.put("groupId", groupID);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                baseDataModel  baseData = new Gson().fromJson(result, baseDataModel.class);
+
+                inputAtUserName(et_sendmessage, baseData.getData(), true);
+                userMap.put(baseData.getData(),hxId);
+            }
+
+            @Override
+            public void failed(String... args) {
+
+            }
+        });
+
+    }
+
+
 
 
 }
