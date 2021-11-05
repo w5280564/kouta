@@ -386,7 +386,7 @@ public class GroupAllMembers_At extends BaseInitActivity {
 
     private HashMap<String, Object> getAtAll() {
         HashMap<String,Object> userMap = new HashMap<>();
-        userMap.put("All","123456789");
+        userMap.put("All","All");
         return userMap;
     }
 

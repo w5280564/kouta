@@ -30,7 +30,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseEvent;
@@ -50,6 +52,7 @@ import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.baseView.MySwitchItemView;
+import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.group.activity.GroupDetail_Report;
 import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.model.baseModel;
@@ -590,6 +593,9 @@ public class ChatFriend_Detail extends BaseInitActivity {
             public void success(String result) {
                 if (isBlock) {
                     model.getData().setFriendStatus("3");
+                    String HxUserName = model.getData().getHxUserName();
+//                    sendCMDFireMess(HxUserName);
+//                    DemoHelper.getInstance().getChatManager().deleteConversation(HxUserName, false);
                 } else {
                     model.getData().setFriendStatus("1");
                 }
@@ -605,6 +611,16 @@ public class ChatFriend_Detail extends BaseInitActivity {
             }
         });
     }
+
+    private void sendCMDFireMess(String HxUserName) {
+        EMMessage cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD);
+        EMCmdMessageBody cmdBody = new EMCmdMessageBody("拉黑");
+        cmdMsg.setTo(HxUserName);
+        cmdMsg.addBody(cmdBody);
+        cmdMsg.setAttribute(MyConstant.Black_Friend, "1");
+        EMClient.getInstance().chatManager().sendMessage(cmdMsg);
+    }
+
 
     /**
      * 修改用户信息

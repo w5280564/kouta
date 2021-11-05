@@ -19,12 +19,16 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -78,6 +82,7 @@ import com.xunda.mo.hx.section.conference.ConferenceInviteActivity;
 import com.xunda.mo.hx.section.dialog.DemoListDialogFragment;
 import com.xunda.mo.hx.section.dialog.FullEditDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
+import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.MyApplication;
 import com.xunda.mo.main.chat.activity.ChatComplaint;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
@@ -562,6 +567,15 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
         });
 
+        //删除好友会话
+        LiveDataBus.get().with(MyConstant.Dele_Friend, String.class).observe(requireActivity(), conversationId -> {
+            if (TextUtils.isEmpty(conversationId)) {
+                DemoHelper.getInstance().getChatManager().deleteConversation(conversationId, true);
+//                messageListLayout.refreshToLatest();
+            }
+        });
+
+
         //
         LiveDataBus.get().with(MyConstant.MESS_TYPE_GROUP_HORN, EMMessage.class).observe(requireActivity(), new Observer<EMMessage>() {
             @Override
@@ -706,6 +720,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     @Override
     public void onUserAvatarClick(String username) {
+        MyInfo myInfo = new MyInfo(mContext);
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             if (!TextUtils.equals(username, DemoHelper.getInstance().getCurrentUser())) {
                 EaseUser user = DemoHelper.getInstance().getUserInfo(username);
@@ -738,7 +753,11 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             String myGroupId = groupModel.getData().getGroupId();
             String userID = "";
             String hxUserName = username;
-            GroupFriend_Detail.actionStart(mContext, userID, hxUserName, groupModel);
+            if (TextUtils.equals(hxUserName, username)) {
+                UserDetail_Set.actionStart(mContext);
+            } else {
+                GroupFriend_Detail.actionStart(mContext, userID, hxUserName, groupModel);
+            }
         }
 
     }
@@ -748,10 +767,10 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         if (chatType == EaseConstant.CHATTYPE_GROUP) {
             if (!TextUtils.equals(username, DemoHelper.getInstance().getCurrentUser())) {
 //                getMyGroupNicknameByHxIdOrGroupId(username,groupModel.getData().getGroupId());
-                if (groupModel == null){
+                if (groupModel == null) {
                     return;
                 }
-                GroupAtName(mContext, saveFile.Group_myGroupNicknameByHx,groupModel.getData().getGroupId(),username);
+                showMore(mContext, et_sendmessage,username);
             }
         }
 
@@ -762,7 +781,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-                deleAtMes(et_sendmessage.getText().toString(),et_sendmessage);
+                deleAtMes(et_sendmessage.getText().toString(), et_sendmessage);
             }
             return false;
         }
@@ -784,7 +803,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             return;
         }
 //        if (count == 1 && "@".equals(String.valueOf(s.charAt(before)))) {
-        if ((start+count) >= s.length() && !TextUtils.isEmpty(s.toString())) {
+        if ((start + count) >= s.length() && !TextUtils.isEmpty(s.toString())) {
             String atStr = s.toString().substring(s.length() - 1);
             if (TextUtils.equals(atStr, "@")) {
                 if (!isMOCustomer() && groupModel != null) {
@@ -1492,7 +1511,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         mapName.put("云", "567");
         mapName.put("很润", "110");
         mapName.put("加钱哥", "8910");
-
         HashMap<String, Object> myMapName = new HashMap();
         Iterator<String> it_user = mapEditName.keySet().iterator();
         while (it_user.hasNext()) {
@@ -1506,7 +1524,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     //at页面返回的用户Map
     private void editAtMes(HashMap<String, Object> atMap) {
-        if (atMap.isEmpty()){
+        if (atMap.isEmpty()) {
             return;
         }
         userMap.putAll(atMap);
@@ -1595,23 +1613,22 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         Iterator<String> it_user = atMap.values().iterator();
         while (it_user.hasNext()) {
             String userKey = it_user.next();
+//            EaseAtMessageHelper.get().addAtUser(userKey);
             atNameStr += userKey + ",";
         }
         return atNameStr;
     }
 
-    private void deleAtMes(String atStr,EditText etText){
+    private void deleAtMes(String atStr, EditText etText) {
         StringBuilder stringBuilder = new StringBuilder(atStr);
         if (atStr.contains("@")) {
             int atDex = atStr.lastIndexOf("@");
-            int lastDex = atStr.length()-1;
-            stringBuilder.replace(atDex,lastDex,"");
+            int lastDex = atStr.length() - 1;
+            stringBuilder.replace(atDex, lastDex, "");
             etText.setText(stringBuilder.toString());
             etText.setSelection(stringBuilder.length());
         }
     }
-
-
 
 
     //    /**
@@ -1631,18 +1648,39 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 //        return "";
 //    }
 
+    private void showMore(final Context mContext,  View view,String username) {
+        View contentView = View.inflate(mContext, R.layout.at_mes_popup, null);
+        PopupWindow MorePopup = new BasePopupWindow(mContext);
+        MorePopup.setWidth(RadioGroup.LayoutParams.MATCH_PARENT);
+        MorePopup.setHeight(RadioGroup.LayoutParams.WRAP_CONTENT);
+        MorePopup.setTouchable(true);
+        MorePopup.setContentView(contentView);
+        MorePopup.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+        TextView at_Txt = contentView.findViewById(R.id.at_Txt);
+        TextView cancel_txt = contentView.findViewById(R.id.cancel_txt);
+        at_Txt.setOnClickListener(v -> {
+            MorePopup.dismiss();
+            GroupAtName(mContext, saveFile.Group_myGroupNicknameByHx, groupModel.getData().getGroupId(), username);
+        });
 
-    public void GroupAtName(Context context, String baseUrl,String groupID,String hxId) {
+        cancel_txt.setOnClickListener(v -> {
+            MorePopup.dismiss();
+        });
+    }
+
+
+
+    public void GroupAtName(Context context, String baseUrl, String groupID, String hxId) {
         Map<String, Object> map = new HashMap<>();
         map.put("hxId", hxId);
         map.put("groupId", groupID);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                baseDataModel  baseData = new Gson().fromJson(result, baseDataModel.class);
-
+                baseDataModel baseData = new Gson().fromJson(result, baseDataModel.class);
+                et_sendmessage.setTextColor(context.getColor(R.color.yellowfive));
                 inputAtUserName(et_sendmessage, baseData.getData(), true);
-                userMap.put(baseData.getData(),hxId);
+                userMap.put(baseData.getData(), hxId);
             }
 
             @Override
@@ -1652,8 +1690,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         });
 
     }
-
-
 
 
 }

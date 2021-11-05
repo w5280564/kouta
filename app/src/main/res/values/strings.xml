@@ -601,6 +601,7 @@
     <string name="open">打开</string>
     <string name="permission_write_denied_call_phone">请手动打开电话权限</string>
     <string name="permission_apply_call_phone_reason">请手动打开电话权限</string>
+    <string name="at_mes">"@TA"</string>
 
 
 </resources>

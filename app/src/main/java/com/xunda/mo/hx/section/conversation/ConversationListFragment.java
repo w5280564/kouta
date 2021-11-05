@@ -232,6 +232,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
             });
         });
 
+
         MessageViewModel messageViewModel = new ViewModelProvider(this).get(MessageViewModel.class);
         LiveDataBus messageChange = messageViewModel.getMessageChange();
         messageChange.with(DemoConstant.NOTIFY_CHANGE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
@@ -304,6 +305,9 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
     @Override
     public void onItemClick(View view, int position) {
         super.onItemClick(view, position);
+        if (conversationListLayout.getItem(position) == null){
+            return;
+        }
         Object item = conversationListLayout.getItem(position).getInfo();
         if (item instanceof EMConversation) {
             if (TextUtils.equals(((EMConversation) item).getLastMessage().getFrom(), MyConstant.ADMIN)) {

@@ -57,7 +57,7 @@ import java.util.List;
  * 会话列表
  */
 public class MyEaseConversationListLayout extends EaseBaseLayout implements IConversationListLayout, IConversationStyle
-                                                                        , IEaseConversationListView, IPopupMenu {
+        , IEaseConversationListView, IPopupMenu {
     private EaseRecyclerView rvConversationList;
 
     private ConcatAdapter adapter;
@@ -90,7 +90,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
         setModel = new EaseConversationSetStyle();
         LayoutInflater.from(context).inflate(R.layout.ease_conversation_list, this);
         presenter = new EaseConversationPresenterImpl();
-        if(context instanceof AppCompatActivity) {
+        if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).getLifecycle().addObserver(presenter);
         }
         initAttrs(context, attrs);
@@ -98,16 +98,16 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
-        if(attrs != null) {
+        if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EaseConversationListLayout);
             float titleTextSize = a.getDimension(R.styleable.EaseConversationListLayout_ease_con_item_title_text_size
                     , sp2px(context, 16));
             setModel.setTitleTextSize(titleTextSize);
             int titleTextColorRes = a.getResourceId(R.styleable.EaseConversationListLayout_ease_con_item_title_text_color, -1);
             int titleTextColor;
-            if(titleTextColorRes != -1) {
+            if (titleTextColorRes != -1) {
                 titleTextColor = ContextCompat.getColor(context, titleTextColorRes);
-            }else {
+            } else {
                 titleTextColor = a.getColor(R.styleable.EaseConversationListLayout_ease_con_item_title_text_color
                         , ContextCompat.getColor(context, R.color.ease_conversation_color_item_name));
             }
@@ -118,9 +118,9 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
             setModel.setContentTextSize(contentTextSize);
             int contentTextColorRes = a.getResourceId(R.styleable.EaseConversationListLayout_ease_con_item_content_text_color, -1);
             int contentTextColor;
-            if(contentTextColorRes != -1) {
+            if (contentTextColorRes != -1) {
                 contentTextColor = ContextCompat.getColor(context, contentTextColorRes);
-            }else {
+            } else {
                 contentTextColor = a.getColor(R.styleable.EaseConversationListLayout_ease_con_item_content_text_color
                         , ContextCompat.getColor(context, R.color.ease_conversation_color_item_message));
             }
@@ -131,9 +131,9 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
             setModel.setDateTextSize(dateTextSize);
             int dateTextColorRes = a.getResourceId(R.styleable.EaseConversationListLayout_ease_con_item_date_text_color, -1);
             int dateTextColor;
-            if(dateTextColorRes != -1) {
+            if (dateTextColorRes != -1) {
                 dateTextColor = ContextCompat.getColor(context, dateTextColorRes);
-            }else {
+            } else {
                 dateTextColor = a.getColor(R.styleable.EaseConversationListLayout_ease_con_item_date_text_color
                         , ContextCompat.getColor(context, R.color.ease_conversation_color_item_time));
             }
@@ -144,9 +144,9 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
             setModel.setMentionTextSize(mentionTextSize);
             int mentionTextColorRes = a.getResourceId(R.styleable.EaseConversationListLayout_ease_con_item_mention_text_color, -1);
             int mentionTextColor;
-            if(mentionTextColorRes != -1) {
+            if (mentionTextColorRes != -1) {
                 mentionTextColor = ContextCompat.getColor(context, mentionTextColorRes);
-            }else {
+            } else {
                 mentionTextColor = a.getColor(R.styleable.EaseConversationListLayout_ease_con_item_mention_text_color
                         , ContextCompat.getColor(context, R.color.ease_conversation_color_item_mention));
             }
@@ -158,9 +158,9 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
             float borderWidth = a.getDimension(R.styleable.EaseConversationListLayout_ease_con_item_avatar_border_width, 0);
             int borderColorRes = a.getResourceId(R.styleable.EaseConversationListLayout_ease_con_item_avatar_border_color, -1);
             int borderColor;
-            if(borderColorRes != -1) {
+            if (borderColorRes != -1) {
                 borderColor = ContextCompat.getColor(context, borderColorRes);
-            }else {
+            } else {
                 borderColor = a.getColor(R.styleable.EaseConversationListLayout_ease_con_item_avatar_border_color, Color.TRANSPARENT);
             }
             setModel.setAvatarSize(avatarSize);
@@ -205,7 +205,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
         listAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if(itemListener != null) {
+                if (itemListener != null) {
                     itemListener.onItemClick(view, position);
                 }
             }
@@ -215,10 +215,10 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
             @Override
             public boolean onItemLongClick(View view, int position) {
                 listAdapter.getItem(position).setSelected(true);
-                if(itemLongListener != null) {
+                if (itemLongListener != null) {
                     return itemLongListener.onItemLongClick(view, position);
                 }
-                if(showDefaultMenu) {
+                if (showDefaultMenu) {
                     showDefaultMenu(view, position, listAdapter.getItem(position));
                     return true;
                 }
@@ -246,6 +246,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
 
     /**
      * 设置数据
+     *
      * @param data
      */
     public void setData(List<EaseConversationInfo> data) {
@@ -254,10 +255,11 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
 
     /**
      * 添加数据
+     *
      * @param data
      */
     public void addData(List<EaseConversationInfo> data) {
-        if(data != null) {
+        if (data != null) {
             List<EaseConversationInfo> infos = listAdapter.getData();
             infos.addAll(data);
             presenter.sortData(infos);
@@ -268,10 +270,10 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
      * 刷新数据
      */
     public void notifyDataSetChanged() {
-        if(listAdapter != null) {
+        if (listAdapter != null) {
             List<EaseAdapterDelegate<Object, EaseBaseRecyclerViewAdapter.ViewHolder>> delegates = listAdapter.getAllDelegate();
             if (delegates != null && !delegates.isEmpty()) {
-                for(int i = 0; i < delegates.size(); i++) {
+                for (int i = 0; i < delegates.size(); i++) {
                     EaseBaseConversationDelegate delegate = (EaseBaseConversationDelegate) delegates.get(i);
                     delegate.setSetModel(setModel);
                 }
@@ -282,6 +284,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
 
     /**
      * 返回触摸点的x坐标
+     *
      * @return
      */
     public float getTouchX() {
@@ -290,6 +293,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
 
     /**
      * 返回触摸点的y坐标
+     *
      * @return
      */
     public float getTouchY() {
@@ -308,30 +312,30 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
         menuHelper.findItemVisible(R.id.action_con_make_top, !info.isTop());
         menuHelper.findItemVisible(R.id.action_con_cancel_top, info.isTop());
         //检查已读配置
-        if(info.getInfo() instanceof EMConversation) {
+        if (info.getInfo() instanceof EMConversation) {
             menuHelper.findItemVisible(R.id.action_con_make_read, ((EMConversation) info.getInfo()).getUnreadMsgCount() > 0);
         }
         menuHelper.findItemVisible(R.id.action_con_make_read, false);
-        if(menuPreShowListener != null) {
+        if (menuPreShowListener != null) {
             menuPreShowListener.onMenuPreShow(menuHelper, position);
         }
         menuHelper.setOnPopupMenuItemClickListener(new OnPopupMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item, int menuPos) {
-                if(popupMenuItemClickListener != null && popupMenuItemClickListener.onMenuItemClick(item, position)) {
+                if (popupMenuItemClickListener != null && popupMenuItemClickListener.onMenuItemClick(item, position)) {
                     return true;
                 }
                 int itemId = item.getItemId();
-                if(itemId == R.id.action_con_make_read) {
+                if (itemId == R.id.action_con_make_read) {
                     presenter.makeConversionRead(position, info);
                     return true;
-                }else if(itemId == R.id.action_con_make_top) {
+                } else if (itemId == R.id.action_con_make_top) {
                     presenter.makeConversationTop(position, info);
                     return true;
-                }else if(itemId == R.id.action_con_cancel_top) {
+                } else if (itemId == R.id.action_con_cancel_top) {
                     presenter.cancelConversationTop(position, info);
                     return true;
-                }else if(itemId == R.id.action_con_delete) {
+                } else if (itemId == R.id.action_con_delete) {
                     presenter.deleteConversation(position, info);
                     return true;
                 }
@@ -343,7 +347,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
             @Override
             public void onDismiss(PopupMenu menu) {
                 info.setSelected(false);
-                if(dismissListener != null) {
+                if (dismissListener != null) {
                     dismissListener.onDismiss(menu);
                 }
             }
@@ -386,7 +390,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
     @Override
     public void setPresenter(EaseConversationPresenter presenter) {
         this.presenter = presenter;
-        if(getContext() instanceof AppCompatActivity) {
+        if (getContext() instanceof AppCompatActivity) {
             ((AppCompatActivity) getContext()).getLifecycle().addObserver(presenter);
         }
         this.presenter.setShowSystemMessage(setModel.isShowSystemMessage());
@@ -512,7 +516,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
 
     @Override
     public void loadConversationListNoData() {
-        if(loadListener != null) {
+        if (loadListener != null) {
             loadListener.loadDataFinish(new ArrayList<>());
         }
         listAdapter.setData(new ArrayList<>());
@@ -520,14 +524,14 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
 
     @Override
     public void loadConversationListFail(String message) {
-        if(loadListener != null) {
+        if (loadListener != null) {
             loadListener.loadDataFail(message);
         }
     }
 
     @Override
     public void sortConversationListSuccess(List<EaseConversationInfo> data) {
-        if(loadListener != null) {
+        if (loadListener != null) {
             loadListener.loadDataFinish(data);
         }
         listAdapter.setData(data);
@@ -535,7 +539,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
 
     @Override
     public void refreshList() {
-        if(conversationChangeListener != null) {
+        if (conversationChangeListener != null) {
             conversationChangeListener.notifyAllChange();
         }
         presenter.sortData(listAdapter.getData());
@@ -543,7 +547,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
 
     @Override
     public void refreshList(int position) {
-        if(conversationChangeListener != null) {
+        if (conversationChangeListener != null) {
             conversationChangeListener.notifyItemChange(position);
         }
         listAdapter.notifyItemChanged(position);
@@ -551,10 +555,10 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
 
     @Override
     public void deleteItem(int position) {
-        if(listAdapter.getData() == null) {
+        if (listAdapter.getData() == null) {
             return;
         }
-        if(conversationChangeListener != null) {
+        if (conversationChangeListener != null) {
             conversationChangeListener.notifyItemRemove(position);
         }
         try {
@@ -577,7 +581,10 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
 
     @Override
     public EaseConversationInfo getItem(int position) {
-        if(position >= listAdapter.getData().size()) {
+        if (position < 0) {
+            return listAdapter.getItem(listAdapter.getData().size()-1);
+        }
+        if (position >= listAdapter.getData().size()) {
             throw new ArrayIndexOutOfBoundsException(position);
         }
         return listAdapter.getItem(position);

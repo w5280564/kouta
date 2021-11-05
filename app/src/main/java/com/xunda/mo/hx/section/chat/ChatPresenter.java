@@ -232,13 +232,25 @@ public class ChatPresenter extends EaseChatPresenter {
     public void onCmdMessageReceived(List<EMMessage> messages) {
         super.onCmdMessageReceived(messages);
         for (EMMessage msg : messages) {
+            Map<String, Object> msgExt = msg.ext();
+//           if (msgExt != null){
+//
+//           }
             if (msg.getBooleanAttribute(MyConstant.Dele_Type, false)) {
                 String Recall_Mess_ID = msg.getStringAttribute(MyConstant.SendFireRecall_Mess_ID, "");
                 EMConversation conversation = EMClient.getInstance().chatManager().getConversation(msg.getFrom(), EMConversation.EMConversationType.Chat, true);
 //                // 删除消息
                 conversation.removeMessage(Recall_Mess_ID);
                 messageChangeLiveData.with(MyConstant.FIRE_REFRESH).postValue(true);
-            } else if (msg.getBooleanAttribute(MyConstant.CMD_MESSAGE_TYPE_ISSCREENSHORTS, false)) {
+            }
+            if (TextUtils.equals(msg.getStringAttribute(MyConstant.Dele_Friend, ""), "1")) {
+                messageChangeLiveData.with(MyConstant.Dele_Friend).postValue(msg.conversationId());
+            }
+//            if (TextUtils.equals(msg.getStringAttribute(MyConstant.Black_Friend, ""),"1")) {
+//
+//                messageChangeLiveData.with(MyConstant.MESSAGE_CHANGE_CHANGE).postValue(true);
+//            } else
+            if (msg.getBooleanAttribute(MyConstant.CMD_MESSAGE_TYPE_ISSCREENSHORTS, false)) {
                 screenShorts(msg);
             } else if (msg.getBooleanAttribute(MyConstant.CMD_MESSAGE_TYPE_GROUPISSCREENSHORTS, false)) {
                 screenShorts(msg);

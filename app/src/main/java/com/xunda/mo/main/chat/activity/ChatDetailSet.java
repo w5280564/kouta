@@ -28,7 +28,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
@@ -526,9 +528,18 @@ public class ChatDetailSet extends BaseInitActivity {
             @Override
             public void success(String result) {
 
-                DemoHelper.getInstance().getContactManager().deleteContact(model.getData().getHxUserName(), false);
-                DemoHelper.getInstance().getChatManager().deleteConversation(model.getData().getHxUserName(), true);
+                String HxUserName = model.getData().getHxUserName();
+                sendCMDFireMess(HxUserName);
+                DemoHelper.getInstance().getContactManager().deleteContact(HxUserName, false);
+//                DemoHelper.getInstance().getChatManager().deleteConversation(HxUserName, true);
                 finish();
+//                DemoHelper.getInstance().getContactManager().aysncDeleteContact(HxUserName, new DemoEmCallBack() {
+//                    @Override
+//                    public void onSuccess() {
+//                        DemoHelper.getInstance().getChatManager().deleteConversation(HxUserName, true);
+//                        finish();
+//                    }
+//                });
             }
 
             @Override
@@ -536,6 +547,16 @@ public class ChatDetailSet extends BaseInitActivity {
             }
         });
     }
+
+    private void sendCMDFireMess(String HxUserName) {
+        EMMessage cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD);
+        EMCmdMessageBody cmdBody = new EMCmdMessageBody("删除好友");
+        cmdMsg.setTo(HxUserName);
+        cmdMsg.addBody(cmdBody);
+        cmdMsg.setAttribute(MyConstant.Dele_Friend, "1");
+        EMClient.getInstance().chatManager().sendMessage(cmdMsg);
+    }
+
 
 
     protected static final int REQUEST_CODE_LOCAL = 3;

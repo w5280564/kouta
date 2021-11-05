@@ -274,7 +274,7 @@ public class GroupDetailSet extends BaseInitActivity {
                 .setConfirmClickListener((view, content) -> {
                     if (!TextUtils.isEmpty(content)) {
 //                            itemGroupName.getTvContent().setText(content);
-                        String changType = "4";
+                        String changType = "3";
                         String keyStr = "groupName";
                         CreateGroupMethod(GroupDetailSet.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, content, "", "");
                     }
