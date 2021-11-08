@@ -22,8 +22,8 @@ import java.util.Map;
 
 public class xUtils3Http {
     //        public static String BASE_URL = " http://abc.ahxunda.com:8088/";
-//    public static final String BASE_URL = "http://139.9.121.19:8088/";
-    public static String BASE_URL = "https://abc.ahxunda.com/";
+    public static final String BASE_URL = "http://139.9.121.19:8088/";
+//    public static String BASE_URL = "https://abc.ahxunda.com/";
 //
 
     public static void get(Context mContext, String url, Map<String, Object> parms, final GetDataCallback callback) {
@@ -62,7 +62,7 @@ public class xUtils3Http {
                // Failed to connect to /139.9.121.19:8088
                 String errorMes = "Failed to connect to /139.9.121.19:8088";
                 if (TextUtils.equals(errorMes,ex.getMessage())){
-                    Toast.makeText(mContext, "服务维护中，请稍后再试...", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "无法连接到服务器，请检查网络连接", Toast.LENGTH_LONG).show();
                 }
                 if (callback != null) {
                     callback.failed();
@@ -129,7 +129,7 @@ public class xUtils3Http {
             public void onError(Throwable ex, boolean isOnCallback) {
                 String errorMes = "Failed to connect to /139.9.121.19:8088";
                 if (TextUtils.equals(errorMes,ex.getMessage())){
-                    Toast.makeText(mContext, "服务维护中，请稍后再试...", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "无法连接到服务器，请检查网络连接", Toast.LENGTH_LONG).show();
                 }
                 if (callback != null) {
                     callback.failed();

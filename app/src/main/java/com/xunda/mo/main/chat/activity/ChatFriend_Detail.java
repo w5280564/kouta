@@ -566,8 +566,9 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 baseModel baseBean = new Gson().fromJson(result, baseModel.class);
                 Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
 
-                DemoHelper.getInstance().getContactManager().deleteContact(model.getData().getHxUserName(), false);
-                DemoHelper.getInstance().getChatManager().deleteConversation(model.getData().getHxUserName(), true);
+                String HxUserName = model.getData().getHxUserName();
+                sendCMDFireMess(HxUserName);
+                DemoHelper.getInstance().getContactManager().deleteContact(HxUserName, false);
                 finish();
 
             }
@@ -577,6 +578,16 @@ public class ChatFriend_Detail extends BaseInitActivity {
             }
         });
     }
+
+    private void sendCMDFireMess(String HxUserName) {
+        EMMessage cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD);
+        EMCmdMessageBody cmdBody = new EMCmdMessageBody("删除好友");
+        cmdMsg.setTo(HxUserName);
+        cmdMsg.addBody(cmdBody);
+        cmdMsg.setAttribute(MyConstant.Dele_Friend, "1");
+        EMClient.getInstance().chatManager().sendMessage(cmdMsg);
+    }
+
 
     /**
      * 拉人移除黑名单
@@ -594,7 +605,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 if (isBlock) {
                     model.getData().setFriendStatus("3");
                     String HxUserName = model.getData().getHxUserName();
-//                    sendCMDFireMess(HxUserName);
+//                    sendCMDBlackMess(HxUserName);
 //                    DemoHelper.getInstance().getChatManager().deleteConversation(HxUserName, false);
                 } else {
                     model.getData().setFriendStatus("1");
@@ -612,7 +623,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
         });
     }
 
-    private void sendCMDFireMess(String HxUserName) {
+    private void sendCMDBlackMess(String HxUserName) {
         EMMessage cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD);
         EMCmdMessageBody cmdBody = new EMCmdMessageBody("拉黑");
         cmdMsg.setTo(HxUserName);

@@ -69,7 +69,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         
         checkBtn = (Button) findViewById(R.id.check_timeline_supported_btn);
         checkBtn.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				int wxSdkVersion = api.getWXAppSupportAPI();

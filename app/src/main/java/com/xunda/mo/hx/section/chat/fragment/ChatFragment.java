@@ -753,9 +753,16 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             String myGroupId = groupModel.getData().getGroupId();
             String userID = "";
             String hxUserName = username;
-            if (TextUtils.equals(hxUserName, username)) {
+            String myUsername = myInfo.getUserInfo().getHxUserName();
+            if (TextUtils.equals(hxUserName, myUsername)) {
+                if (TextUtils.isEmpty(myUsername)){
+                    return;
+                }
                 UserDetail_Set.actionStart(mContext);
             } else {
+                if (TextUtils.isEmpty(hxUserName) || groupModel == null){
+                    return;
+                }
                 GroupFriend_Detail.actionStart(mContext, userID, hxUserName, groupModel);
             }
         }

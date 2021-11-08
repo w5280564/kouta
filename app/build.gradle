@@ -72,8 +72,8 @@ android {
         }
 
         manifestPlaceholders = [ VIVO_PUSH_APPKEY: properties.getProperty("VIVO_PUSH_APPKEY", "db0f1a3ac9a43c57793b48feb475b35e"),
-                                VIVO_PUSH_APPID: properties.getProperty("VIVO_PUSH_APPID", "105505641")
-
+                                VIVO_PUSH_APPID: properties.getProperty("VIVO_PUSH_APPID", "105505641"),
+                                 qqappid: "101968658"
         ]
 
         ndk {
@@ -216,6 +216,18 @@ dependencies {
     implementation 'com.blankj:utilcodex:1.30.6'
     //java与kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    // 友盟基础组件库（所有友盟业务SDK都依赖基础组件库）
+    implementation  'com.umeng.umsdk:common:9.4.4'// (必选)
+    implementation  'com.umeng.umsdk:share-board:7.1.6'//分享面板功能，可选
+
+    implementation  'com.umeng.umsdk:asms:1.4.1'// asms包依赖必选
+    implementation  'com.umeng.umsdk:share-core:7.1.6'//分享核心库，必选
+    implementation 'com.umeng.umsdk:share-wx:7.1.6' //微信完整版
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.7.9'//微信官方依赖库，必选
+//
+    implementation 'com.umeng.umsdk:share-qq:7.1.6'//QQ完整版
+    implementation 'com.tencent.tauth:qqopensdk:3.53.0'//QQ官方依赖库，必选
+    implementation 'com.squareup.okhttp3:okhttp:3.12.12'//QQ SDK在3.53.0版本及以上时需要集成okhttp官方依赖库，必选
 
 }
 
