@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
+    android:background="@color/greyfive">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="请选择分享平台"
+        android:textColor="@color/blacktitle"
+        android:textSize="15sp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/share_qr_wechat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/share_qr_wechat"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintEnd_toStartOf="@id/share_qr_timeline"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/share_qr_timeline"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/share_qr_timeline"
+            app:layout_constraintStart_toEndOf="@+id/share_qr_wechat"
+            app:layout_constraintEnd_toStartOf="@id/share_qr_qq"/>
+
+        <ImageView
+            android:id="@+id/share_qr_qq"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/share_qr_qq"
+            app:layout_constraintStart_toEndOf="@+id/share_qr_timeline"
+            app:layout_constraintEnd_toStartOf="@id/share_qr_qzone"/>
+
+        <ImageView
+            android:id="@+id/share_qr_qzone"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/share_qr_qzone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/share_qr_qq" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="微信"
+            android:textColor="@color/blacktitle"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/share_qr_wechat"
+            app:layout_constraintStart_toStartOf="@+id/share_qr_wechat"
+            app:layout_constraintTop_toBottomOf="@+id/share_qr_wechat" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="微信朋友圈"
+            android:textColor="@color/blacktitle"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/share_qr_timeline"
+            app:layout_constraintStart_toStartOf="@+id/share_qr_timeline"
+            app:layout_constraintTop_toBottomOf="@+id/share_qr_timeline" />
+
+        <TextView
+            android:id="@+id/textView42"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="QQ"
+            android:textColor="@color/blacktitle"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/share_qr_qq"
+            app:layout_constraintStart_toStartOf="@+id/share_qr_qq"
+            app:layout_constraintTop_toBottomOf="@+id/share_qr_qq" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="QQ空间"
+            android:textColor="@color/blacktitle"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/share_qr_qzone"
+            app:layout_constraintStart_toStartOf="@+id/share_qr_qzone"
+            app:layout_constraintTop_toBottomOf="@+id/share_qr_qzone" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/cancel_txt"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/round_rectangle"
+        android:gravity="center"
+        android:text="取消分享"
+        android:textColor="@color/blacktitle"
+        android:textSize="14sp" />
+
+</LinearLayout>

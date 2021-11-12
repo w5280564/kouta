@@ -117,11 +117,12 @@
             tools:ignore="NotSibling" />
 
 
-        <com.xunda.mo.staticdata.TimerImgView
+        <ImageView
             android:id="@+id/fire_Img"
             android:layout_width="92dp"
             android:layout_height="33dp"
             android:layout_marginStart="10dp"
+            android:enabled="true"
             android:src="@mipmap/fire_bg"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/cons_Mes"

@@ -36,7 +36,6 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -77,7 +76,6 @@ import com.xunda.mo.hx.common.model.EmojiconExampleGroupData;
 import com.xunda.mo.hx.section.base.BaseActivity;
 import com.xunda.mo.hx.section.chat.activicy.ForwardMessageActivity;
 import com.xunda.mo.hx.section.chat.activicy.ImageGridActivity;
-import com.xunda.mo.hx.section.chat.viewmodel.MessageViewModel;
 import com.xunda.mo.hx.section.conference.ConferenceInviteActivity;
 import com.xunda.mo.hx.section.dialog.DemoListDialogFragment;
 import com.xunda.mo.hx.section.dialog.FullEditDialogFragment;
@@ -99,28 +97,25 @@ import com.xunda.mo.model.ChatUserBean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
-import com.xunda.mo.staticdata.MarqueeTextView;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.kotlin.ScreenShotViewModel;
-import com.xunda.mo.staticdata.kotlin.ScreentShotInfo;
 import com.xunda.mo.staticdata.xUtils3Http;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import lombok.SneakyThrows;
 
 
 public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageResultListener {
     private static final String TAG = ChatFragment.class.getSimpleName();
-    private MessageViewModel viewModel;
     protected ClipboardManager clipboard;
 
     private static final int REQUEST_CODE_SELECT_AT_USER = 15;
@@ -136,7 +131,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     public void initView() {
         super.initView();
         clipboard = (ClipboardManager) requireActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-        viewModel = new ViewModelProvider(this).get(MessageViewModel.class);
         //获取到聊天列表控件
         messageListLayout = chatLayout.getChatMessageListLayout();
         //设置聊天列表背景
@@ -164,14 +158,8 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
         horn_Con.setVisibility(View.GONE);
 
-        titleBarMessage = getActivity().findViewById(R.id.title_bar_message);
+        titleBarMessage = requireActivity().findViewById(R.id.title_bar_message);
         horn_Txt.setMarqueeVelocity(1);
-//        horn_Txt.setOnMarqueeCompleteListener(new MarqueeTextView.OnMarqueeCompleteListener() {
-//            @Override
-//            public void onMarqueeComplete() {
-//                horn_Con.setVisibility(View.GONE);
-//            }
-//        });
 
         Glide.with(mContext).load(R.mipmap.horn_gif_icon).into(horn_icon);
 
@@ -222,7 +210,8 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         screenShot();
 
         btn_send.setOnClickListener(view -> {
-            String content = et_sendmessage.getText().toString();
+            String content;
+            content = et_sendmessage.getText().toString();
 //                String filterContent = forbidSensitiveWord(content);
             String filterContent = content;
             if (chatType == EaseConstant.CHATTYPE_GROUP) {
@@ -288,11 +277,11 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
         }
 
-        huweiBadge(message);
+        huaweiBadge(message);
     }
 
     // 设置自定义推送提示
-    private void huweiBadge(EMMessage message) {
+    private void huaweiBadge(EMMessage message) {
         JSONObject extObject = new JSONObject();
         try {
             extObject.put("em_huawei_push_badge_class", "com.xunda.mo.main.MainActivity");
@@ -312,11 +301,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         Map<String, Object> mapExt = conMsg.ext();
         if (mapExt != null && !mapExt.isEmpty()) {
             String messType = (String) mapExt.get(MyConstant.MESSAGE_TYPE);
-            if (!TextUtils.isEmpty(messType) && messType.equals(MyConstant.MO_CUSTOMER)) {
-                return true;
-            } else {
-                return false;
-            }
+            return !TextUtils.isEmpty(messType) && Objects.equals(messType, MyConstant.MO_CUSTOMER);
         }
         return false;
     }
@@ -391,13 +376,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         return nameStr;
     }
 
-    private String sendAnonymousType(int IsAnonymous) {
-        String type = MyConstant.MESSAGE_TYPE_GROUP;
-        if (IsAnonymous == 1) {
-            type = MyConstant.MESSAGE_TYPE_ANONYMOUS_ON;
-        }
-        return type;
-    }
 
 
     public EMMessageListener msgListener;
@@ -406,7 +384,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     public void onResume() {
         super.onResume();
         //收到的消息
-//        msgListener = MyApplication.getInstance().msgListener;
         msgListener = new EMMessageMethod();
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
 
@@ -416,7 +393,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     public void onDestroy() {
         super.onDestroy();
         //记得在不需要的时候移除listener，如在activity的onDestroy()时
-//        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 
     private void addItemMenuAction() {
@@ -526,18 +503,14 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             if (event == null) {
                 return;
             }
-            if (event != null) {
-                chatLayout.getChatMessageListLayout().refreshMessages();
-            }
+            chatLayout.getChatMessageListLayout().refreshMessages();
         });
 
         LiveDataBus.get().with(DemoConstant.CONTACT_UPDATE, EaseEvent.class).observe(getViewLifecycleOwner(), event -> {
             if (event == null) {
                 return;
             }
-            if (event != null) {
-                chatLayout.getChatMessageListLayout().refreshMessages();
-            }
+            chatLayout.getChatMessageListLayout().refreshMessages();
         });
 
 
@@ -577,21 +550,16 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
 
         //
-        LiveDataBus.get().with(MyConstant.MESS_TYPE_GROUP_HORN, EMMessage.class).observe(requireActivity(), new Observer<EMMessage>() {
-            @Override
-            public void onChanged(EMMessage message) {
-                List<EMMessage> msgs = new ArrayList<>();
-                msgs.add(message);
-                onMarquee(msgs);
-            }
+        LiveDataBus.get().with(MyConstant.MESS_TYPE_GROUP_HORN, EMMessage.class).observe(requireActivity(), message -> {
+            List<EMMessage> msgs = new ArrayList<>();
+            msgs.add(message);
+            onMarquee(msgs);
         });
 
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             AddFriendMethod(getActivity(), saveFile.Friend_info_Url);
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-            if (isMOCustomer()) {
-
-            } else {
+            if (!isMOCustomer()) {
                 GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url);
             }
         }
@@ -621,23 +589,14 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         horn_Txt.setMarqueeVelocity(1);
         horn_Txt.setSelected(true);
         horn_Txt.setText(hornStr.getMessage());
-        horn_Txt.setOnMarqueeCompleteListener(new MarqueeTextView.OnMarqueeCompleteListener() {
-            @Override
-            public void onMarqueeComplete() {
-                removeHornMes(msgs, horn_Con);
-            }
-        });
+        horn_Txt.setOnMarqueeCompleteListener(() ->
+                removeHornMes(msgs, horn_Con));
     }
 
     private void showDeliveryDialog() {
         new FullEditDialogFragment.Builder((BaseActivity) mContext)
                 .setTitle(R.string.em_chat_group_read_ack)
-                .setOnConfirmClickListener(R.string.em_chat_group_read_ack_send, new FullEditDialogFragment.OnSaveClickListener() {
-                    @Override
-                    public void onSaveClick(View view, String content) {
-                        chatLayout.sendTextMessage(content, true);
-                    }
-                })
+                .setOnConfirmClickListener(R.string.em_chat_group_read_ack_send, (view, content) -> chatLayout.sendTextMessage(content, true))
                 .setConfirmColor(R.color.em_color_brand)
                 .setHint(R.string.em_chat_group_read_ack_hint)
                 .show();
@@ -685,9 +644,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 .setTitle("提示通知")
                 .showContent(true)
                 .setContent("该功能为会员特权功能，请开通会员后使用")
-                .setOnConfirmClickListener(view -> {
-                    Me_VIP.actionStart(mContext);
-                })
+                .setOnConfirmClickListener(view -> Me_VIP.actionStart(mContext))
                 .showCancelButton(true)
                 .show();
     }
@@ -698,9 +655,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 .setTitle("双向撤回")
                 .showContent(true)
                 .setContent("聊天记录一键双向撤回，同时删除你和对方设备上的所有聊天记录，撤回数据多次覆盖删除，不可恢复")
-                .setOnConfirmClickListener(view -> {
-                    doubleRecall();
-                })
+                .setOnConfirmClickListener(view -> doubleRecall())
                 .showCancelButton(true)
                 .show();
     }
@@ -711,9 +666,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 .setTitle("双向撤回")
                 .showContent(true)
                 .setContent("聊天记录一键双向撤回，同时删除你和对方设备上的所有聊天记录，撤回数据多次覆盖删除，不可恢复")
-                .setOnConfirmClickListener(view -> {
-                    doubleGroupRecall();
-                })
+                .setOnConfirmClickListener(view -> doubleGroupRecall())
                 .showCancelButton(true)
                 .show();
     }
@@ -749,21 +702,18 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             if (isAnonymous == 1 || issProtect == 1) {
                 return;
             }
-            int myIdentity = groupModel.getData().getIdentity();
-            String myGroupId = groupModel.getData().getGroupId();
             String userID = "";
-            String hxUserName = username;
             String myUsername = myInfo.getUserInfo().getHxUserName();
-            if (TextUtils.equals(hxUserName, myUsername)) {
+            if (TextUtils.equals(username, myUsername)) {
                 if (TextUtils.isEmpty(myUsername)){
                     return;
                 }
                 UserDetail_Set.actionStart(mContext);
             } else {
-                if (TextUtils.isEmpty(hxUserName) || groupModel == null){
+                if (TextUtils.isEmpty(username) || groupModel == null){
                     return;
                 }
-                GroupFriend_Detail.actionStart(mContext, userID, hxUserName, groupModel);
+                GroupFriend_Detail.actionStart(mContext, userID, username, groupModel);
             }
         }
 
@@ -855,9 +805,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 break;
             case R.id.extend_item_user_card://单人发名片
                 EMLog.d(TAG, "select user card");
-//                Intent userCardIntent = new Intent(this.getContext(), SelectUserCardActivity.class).addFlags(FLAG_ACTIVITY_NEW_TASK);
-//                userCardIntent.putExtra("toUser", conversationId);
-//                this.requireContext().startActivity(userCardIntent);
                 Chat_SelectUserCard.actionStartSingle(requireActivity(), conversationId, "1");
                 break;
             case R.id.group_item_user_card://群发名片
@@ -901,10 +848,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             return false;
         }
         String sendName = conMsg.getStringAttribute(MyConstant.SEND_NAME, "");
-        if (!TextUtils.isEmpty(sendName)) {
-            return true;
-        }
-        return false;
+        return !TextUtils.isEmpty(sendName);
     }
 
     private void singleRecall() {
@@ -956,7 +900,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             switch (requestCode) {
                 case REQUEST_CODE_SELECT_AT_USER:
                     if (data != null) {
-                        HashMap<String, Object> backMap = (HashMap<String, Object>) data.getSerializableExtra("username");
+                        HashMap backMap = (HashMap) data.getSerializableExtra("username");
 //                        String username = data.getStringExtra("username");
                         editAtMes(backMap);
                     }
@@ -996,11 +940,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     //================================== for video and voice start ====================================
 
-    /**
-     * 保存未发送的文本消息内容
-     *
-     * @param content
-     */
+    // 保存未发送的文本消息内容
     private void saveUnSendMsg(String content) {
         DemoHelper.getInstance().getModel().saveUnSendMsg(conversationId, content);
     }
@@ -1034,6 +974,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onMenuItemClick(MenuItemBean item, EMMessage message) {
         switch (item.getItemId()) {
@@ -1188,11 +1129,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         }
     }
 
-    /**
-     * 是否有置顶消息
-     *
-     * @param topStr
-     */
+     //是否有置顶消息
     private void setTopView(String topStr) {
         if (!TextUtils.isEmpty(topStr)) {
             top_Constraint.setVisibility(View.VISIBLE);
@@ -1208,7 +1145,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                baseDataModel model = new Gson().fromJson(result, baseDataModel.class);
             }
 
             @Override
@@ -1251,8 +1187,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                     String isDouble_Recall = msg.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
                     if (TextUtils.equals(isDouble_Recall, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
                         // 删除消息
-//                        conversation.clearAllMessages();
-//                        saveGroupMes(conversation.conversationId());
                         recallGroupTo();
                     }
 
@@ -1271,15 +1205,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         public void onMessageRead(List<EMMessage> messages) {
             //收到已读回执
             Log.i("message", messages.toString());
-//            for (EMMessage message : messages) {
-//                //收到回执删除消息
-//                String fireType = message.getStringAttribute(MyConstant.FIRE_TYPE, "");
-//                if (TextUtils.equals(fireType, "1")) {
-//                    EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.getUserName(), EMConversation.EMConversationType.Chat, true);
-//                    conversation.removeMessage(message.getMsgId());
-//                    chatLayout.getChatMessageListLayout().refreshToLatest();
-//                }
-//            }
         }
 
         @Override
@@ -1420,13 +1345,13 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     public void startAudio() {
         //监听授权
         List<String> permissionList = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {//录音权限
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {//录音权限
             permissionList.add(Manifest.permission.RECORD_AUDIO);
         }
 
         if (!permissionList.isEmpty()) {
-            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
-            ActivityCompat.requestPermissions(getActivity(), permissions, 1);
+            String[] permissions = permissionList.toArray(new String[0]);
+            ActivityCompat.requestPermissions(requireActivity(), permissions, 1);
         } else {
             primaryMenu.showVoiceStatus();
         }
@@ -1436,29 +1361,20 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     private void screenShot() {
         ScreenShotViewModel screenShotViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(MyApplication.getInstance())).get(ScreenShotViewModel.class);
         screenShotViewModel.registerContentObserver();
-        screenShotViewModel.getDataChanged().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    screenShotViewModel.onCleared();//收到观察消息就注销 不然会收到多条通知
-//                    ScreentShotInfo screentShotInfo = new ScreentShotInfo();
-//                    screenShotViewModel.getLatestImage(screentShotInfo.getPath());
-                    if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-                        sendScreenShot();
-                    }
-                    if (chatType == EaseConstant.CHATTYPE_GROUP) {
-                        sendScreenShot();
-                    }
+        screenShotViewModel.getDataChanged().observe(this, aBoolean -> {
+            if (aBoolean) {
+                screenShotViewModel.onCleared();//收到观察消息就注销 不然会收到多条通知
+                if (chatType == EaseConstant.CHATTYPE_SINGLE) {
+                    sendScreenShot();
+                }
+                if (chatType == EaseConstant.CHATTYPE_GROUP) {
+                    sendScreenShot();
                 }
             }
         });
 
         //接收到截屏通知后 主动获取截屏照片
-        screenShotViewModel.getScreentShotInfoData().observe(this, new Observer<ScreentShotInfo>() {
-            @Override
-            public void onChanged(ScreentShotInfo screentShotInfo) {
-//                Toast.makeText(mContext, "截屏成功了", Toast.LENGTH_LONG).show();
-            }
+        screenShotViewModel.getScreentShotInfoData().observe(this, screentShotInfo -> {
         });
     }
 
@@ -1467,17 +1383,14 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         EMMessage cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD);
         String action = "发送截屏CMD消息";//action可以自定义
         EMCmdMessageBody cmdBody = new EMCmdMessageBody(action);
-//        String toUsername = "test1";//发送给某个人
         cmdMsg.setTo(conversationId);
         cmdMsg.addBody(cmdBody);
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             cmdMsg.setChatType(EMMessage.ChatType.Chat);
             cmdMsg.setAttribute(MyConstant.CMD_MESSAGE_TYPE_ISSCREENSHORTS, true);
-//            cmdMsg.setAttribute(MyConstant.MESSAGE_TYPE_SCREENSHORTS, true);
         } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
             cmdMsg.setChatType(EMMessage.ChatType.GroupChat);
             cmdMsg.setAttribute(MyConstant.CMD_MESSAGE_TYPE_GROUPISSCREENSHORTS, true);
-//            cmdMsg.setAttribute(MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS, true);
         }
         addMsgAttrsBeforeSend(cmdMsg);
         EMClient.getInstance().chatManager().sendMessage(cmdMsg);
@@ -1507,40 +1420,19 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
 
-    //at用户ID
-    private HashMap<String, Object> aTMes(String atStr) {
-        HashMap<String, Object> mapEditName = new HashMap();
-        mapEditName.put("海豹一号", "123");
-        mapEditName.put("云", "567");
-        mapEditName.put("很润", "110");
-        HashMap<String, Object> mapName = new HashMap();
-        mapName.put("海豹一号", "123");
-        mapName.put("云", "567");
-        mapName.put("很润", "110");
-        mapName.put("加钱哥", "8910");
-        HashMap<String, Object> myMapName = new HashMap();
-        Iterator<String> it_user = mapEditName.keySet().iterator();
-        while (it_user.hasNext()) {
-            String userKey = it_user.next();
-            if (mapName.containsKey(userKey)) {
-                myMapName.put(userKey, mapEditName.get(userKey));
-            }
-        }
-        return myMapName;
-    }
 
     //at页面返回的用户Map
-    private void editAtMes(HashMap<String, Object> atMap) {
+    private void editAtMes(HashMap atMap) {
         if (atMap.isEmpty()) {
             return;
         }
         userMap.putAll(atMap);
-        et_sendmessage.setTextColor(getContext().getColor(R.color.yellowfive));
-        Iterator<String> at_user = atMap.keySet().iterator();
-        String userFristKey = at_user.next();
+        et_sendmessage.setTextColor(requireContext().getColor(R.color.yellowfive));
+        Iterator at_user = atMap.keySet().iterator();
+        String userFristKey = (String) at_user.next();
         inputAtUserName(et_sendmessage, userFristKey, false);
         while (at_user.hasNext()) {
-            String userKey = at_user.next();
+            String userKey = (String) at_user.next();
             inputAtUserName(et_sendmessage, userKey, true);
         }
     }
@@ -1566,14 +1458,12 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     private boolean isAtMes(@NonNull String atStr) {
         if (atStr.contains("@")) {
             String notAt = atStr.replace("@", "");
-            List<String> atList = Arrays.asList(notAt.split(" "));
+            String[] atList = notAt.split(" ");
             HashMap<String, Object> atMap = new HashMap<>();
             for (String s : atList) {
                 atMap.put(s, "");
             }
-            Iterator<String> it_user = atMap.keySet().iterator();
-            while (it_user.hasNext()) {
-                String atKey = it_user.next();
+            for (String atKey : atMap.keySet()) {
                 if (userMap.containsKey(atKey)) {
                     return true;
                 }
@@ -1584,46 +1474,43 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
 
     //发送at时的ATMap数据
-    private HashMap<String, Object> aTMesMap(String atStr) {
+    private HashMap aTMesMap(String atStr) {
         String notAt = "";
         if (atStr.contains("@")) {
             notAt = atStr.replace("@", "");
         }
-        List<String> atList = Arrays.asList(notAt.split(" "));
+        String[] atList = notAt.split(" ");
         HashMap<String, Object> atMap = new HashMap<>();
         for (String s : atList) {
             atMap.put(s, "");
         }
-        HashMap<String, Object> NewMap = new HashMap();
-        Iterator<String> it_user = atMap.keySet().iterator();
-        while (it_user.hasNext()) {
-            String userKey = it_user.next();
+        HashMap newMap = new HashMap();
+        for (String userKey : atMap.keySet()) {
             if (userMap.containsKey(userKey)) {
-                NewMap.put(userKey, userMap.get(userKey));
+                newMap.put(userKey, userMap.get(userKey));
             }
         }
-        return NewMap;
+        return newMap;
     }
 
-    private String aTMesKeyName(Map atMap) {
-        String atNameStr = "";
-        Iterator<String> it_user = atMap.keySet().iterator();
-        while (it_user.hasNext()) {
-            String userKey = it_user.next();
-            atNameStr += userKey + ",";
+    private String aTMesKeyName(HashMap atMap) {
+        StringBuilder atNameStr = new StringBuilder();
+        for (Object o : atMap.keySet()) {
+            String userKey = (String) o;
+            atNameStr.append(userKey).append(",");
         }
-        return atNameStr;
+        return atNameStr.toString();
     }
 
-    private String aTMesValueName(Map atMap) {
-        String atNameStr = "";
-        Iterator<String> it_user = atMap.values().iterator();
-        while (it_user.hasNext()) {
-            String userKey = it_user.next();
+    private String aTMesValueName(HashMap atMap) {
+        StringBuilder atNameStr = new StringBuilder();
+
+        for (Object o : atMap.values()) {
+            String userKey = (String) o;
 //            EaseAtMessageHelper.get().addAtUser(userKey);
-            atNameStr += userKey + ",";
+            atNameStr.append(userKey).append(",");
         }
-        return atNameStr;
+        return atNameStr.toString();
     }
 
     private void deleAtMes(String atStr, EditText etText) {
@@ -1670,9 +1557,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             GroupAtName(mContext, saveFile.Group_myGroupNicknameByHx, groupModel.getData().getGroupId(), username);
         });
 
-        cancel_txt.setOnClickListener(v -> {
-            MorePopup.dismiss();
-        });
+        cancel_txt.setOnClickListener(v -> MorePopup.dismiss());
     }
 
 

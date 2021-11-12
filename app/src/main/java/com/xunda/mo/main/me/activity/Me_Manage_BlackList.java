@@ -35,7 +35,6 @@ import java.util.Map;
 public class Me_Manage_BlackList extends BaseInitActivity {
 
     private RecyclerView base_Recycler;
-    private String groupId;
     private EditText query_Edit;
     private String friendUserId;
 

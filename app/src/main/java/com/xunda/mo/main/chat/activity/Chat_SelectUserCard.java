@@ -32,7 +32,6 @@ import com.xunda.mo.hx.section.domain.MyEaseUser;
 import com.xunda.mo.main.chat.adapter.Chat_SelectUserCard_Adapter;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
-import com.xunda.mo.model.ChatUserBean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.model.adress_Model;
 import com.xunda.mo.network.saveFile;
@@ -55,7 +54,6 @@ public class Chat_SelectUserCard extends BaseInitActivity {
     private String keyword = "";
     private String[] newmembers;
     Button right_Btn;
-    private ChatUserBean model;
     private GruopInfo_Bean groupModel;
     private String sendType;
 

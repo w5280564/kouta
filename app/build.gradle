@@ -45,7 +45,7 @@ android {
         }
         release {
             signingConfig signingConfigs.config
-            minifyEnabled false
+            minifyEnabled true      // 混淆
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
@@ -170,8 +170,9 @@ dependencies {
     implementation 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1'//适配
 
     implementation 'com.huawei.storage:esdk-obs-android:3.1.3'
-    implementation 'com.facebook.fresco:fresco:2.5.0'
-    implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc02'
+    implementation 'com.facebook.fresco:fresco:0.12.0'
+
+implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc02'
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'com.github.mcxtzhang:SwipeCaptcha:V1.0.0'
@@ -206,6 +207,7 @@ dependencies {
 //    implementation files('libs/alipaySdk-15.8.03.210428205839.aar')
     api (name: 'alipaySdk-15.8.03.210428205839', ext: 'aar')
     api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.8.0'
+//    api 'com.tencent.mm.opensdk:wechat-sdk-android:+'
     // 或者直接引用最新版本
     //桌面角标
     api 'me.leolin:ShortcutBadger:1.1.22@aar'
@@ -217,17 +219,21 @@ dependencies {
     //java与kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     // 友盟基础组件库（所有友盟业务SDK都依赖基础组件库）
-    implementation  'com.umeng.umsdk:common:9.4.4'// (必选)
-    implementation  'com.umeng.umsdk:share-board:7.1.6'//分享面板功能，可选
+//    implementation  'com.umeng.umsdk:common:9.4.4'// (必选)
+//    implementation  'com.umeng.umsdk:asms:1.4.1'// asms包依赖必选
 
-    implementation  'com.umeng.umsdk:asms:1.4.1'// asms包依赖必选
-    implementation  'com.umeng.umsdk:share-core:7.1.6'//分享核心库，必选
-    implementation 'com.umeng.umsdk:share-wx:7.1.6' //微信完整版
-    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.7.9'//微信官方依赖库，必选
+//    implementation  'com.umeng.umsdk:share-core:7.1.6'//分享核心库，必选
+//    implementation  'com.umeng.umsdk:share-board:7.1.6'//分享面板功能，可选
+
+//    implementation 'com.umeng.umsdk:share-wx:7.1.6' //微信完整版
+//    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.7.9'//微信官方依赖库，必选
 //
-    implementation 'com.umeng.umsdk:share-qq:7.1.6'//QQ完整版
+//    implementation 'com.umeng.umsdk:share-qq:7.1.6'//QQ完整版
     implementation 'com.tencent.tauth:qqopensdk:3.53.0'//QQ官方依赖库，必选
     implementation 'com.squareup.okhttp3:okhttp:3.12.12'//QQ SDK在3.53.0版本及以上时需要集成okhttp官方依赖库，必选
+    implementation 'androidx.documentfile:documentfile:1.0.1'
+
+//
 
 }
 

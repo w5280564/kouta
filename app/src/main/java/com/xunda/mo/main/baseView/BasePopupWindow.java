@@ -33,7 +33,7 @@ public class BasePopupWindow extends PopupWindow {
         super.setOutsideTouchable(touchable);
         if(touchable) {
             if(mBackgroundDrawable == null) {
-                mBackgroundDrawable = new ColorDrawable(0x00000000);
+                mBackgroundDrawable = new ColorDrawable(00000000);
             }
             super.setBackgroundDrawable(mBackgroundDrawable);
         } else {

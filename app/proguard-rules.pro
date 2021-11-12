@@ -164,3 +164,14 @@
 #jar包
 -libraryjars libs/mi_push_v4.5.0.jar
 -libraryjars libs/vivo_push_v2.3.1.jar
+
+#微信
+-keep class com.tencent.mm.opensdk.** {
+    *;
+}
+-keep class com.tencent.wxop.** {
+    *;
+}
+-keep class com.tencent.mm.sdk.** {
+    *;
+}

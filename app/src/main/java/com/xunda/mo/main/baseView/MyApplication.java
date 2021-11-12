@@ -25,12 +25,10 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.umeng.commonsdk.UMConfigure;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.interfaceOrImplement.UserActivityLifecycleCallbacks;
 import com.xunda.mo.hx.common.utils.PreferenceManager;
 import com.xunda.mo.main.constant.MyConstant;
-import com.xunda.mo.staticdata.um.UmInitConfig;
 
 import org.xutils.x;
 
@@ -55,10 +53,10 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         mycontext = this;
         instance = this;
 
-        UMConfigure.preInit(this,"611215983451547e6843863f","Umeng");
+//        UMConfigure.preInit(getApplicationContext(),"611215983451547e6843863f","Umeng");
         //友盟正式初始化
-        UmInitConfig umInitConfig=new UmInitConfig();
-        umInitConfig.UMinit(getApplicationContext());
+//        UmInitConfig umInitConfig = new UmInitConfig();
+//        umInitConfig.UMinit(this);
 
         initThrowableHandler();
         initHx();
@@ -188,7 +186,7 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
     }
 
 
-    public  class EMMessageMethod implements EMMessageListener {
+    public class EMMessageMethod implements EMMessageListener {
         @SneakyThrows
         @Override
         public void onMessageReceived(List<EMMessage> messages) {

@@ -230,7 +230,7 @@ public class GroupAllMembers_Manage extends BaseInitActivity {
     //只设置一组数据就好
     private void setAddGroup() {
         final List<String> mOptionsItems = new ArrayList<>();
-        mOptionsItems.add("不允许任何人加群");
+//        mOptionsItems.add("不允许任何人加群");
         mOptionsItems.add("允许任何人加群");
         mOptionsItems.add("需要身份验证，由管理员审核");
         mOptionsItems.add("只允许群成员邀请");
@@ -239,7 +239,7 @@ public class GroupAllMembers_Manage extends BaseInitActivity {
         OptionsPickerView pvOptions = new OptionsPickerBuilder(GroupAllMembers_Manage.this, (options1, option2, options3, v) -> {
             groupManage_AddGroup_ArrowItemView.getTvContent().setText(mOptionsItems.get(options1));
             String changType = "1";
-            int valueStr = options1 + 1;
+            int valueStr = options1 + 2; // +1  1是不允许任何人加群
             ChangeGroupSetMethod(GroupAllMembers_Manage.this,  saveFile.Group_Way_Url, changType, valueStr);
         }).build();
         pvOptions.setNPicker(mOptionsItems, null, null);

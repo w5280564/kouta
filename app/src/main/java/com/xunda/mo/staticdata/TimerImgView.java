@@ -6,6 +6,8 @@ import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+
 @SuppressLint("AppCompatCustomView")
 public class TimerImgView extends ImageView {
     private CountDownTimer timer;
@@ -17,6 +19,10 @@ public class TimerImgView extends ImageView {
         setTimer(10000);
     }
 
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener l) {
+        super.setOnClickListener(l);
+    }
 
     public void setTimer(int millis){
         initTimer(millis);

@@ -109,6 +109,16 @@
             android:textSize="@dimen/chat_nick_text_size"
             android:layout_toLeftOf="@id/iv_userhead"
             android:visibility="gone" />
+
+        <com.xunda.mo.staticdata.TimerImgView
+            android:id="@+id/fire_Img"
+            android:layout_width="92dp"
+            android:layout_height="33dp"
+            android:layout_marginStart="10dp"
+            android:enabled="true"
+            android:src="@mipmap/fire_bg"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/iv_userhead"/>
     </RelativeLayout>
 
 </LinearLayout>

@@ -83,7 +83,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private LinearLayout grade_Lin, label_Lin;
     private String nickName;
     String remarkName;
-//    private Switch switch_item;
 
     /**
      * @param context

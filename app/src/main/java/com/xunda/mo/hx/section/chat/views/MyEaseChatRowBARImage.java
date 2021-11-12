@@ -16,7 +16,6 @@ import com.hyphenate.easeui.widget.chatrow.EaseChatRowFile;
 import com.xunda.mo.R;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.network.saveFile;
-import com.xunda.mo.staticdata.TimerImgView;
 
 /**
  * image for row
@@ -24,8 +23,9 @@ import com.xunda.mo.staticdata.TimerImgView;
 public class MyEaseChatRowBARImage extends EaseChatRowFile {
     protected ImageView imageView;
     private EMImageMessageBody imgBody;
-    private TimerImgView fire_Img;
+    private ImageView fire_Img;
     private View mes_group;
+    private View cons_Mes;
 
     public MyEaseChatRowBARImage(Context context, boolean isSender) {
         super(context, isSender);
@@ -47,6 +47,7 @@ public class MyEaseChatRowBARImage extends EaseChatRowFile {
         imageView = (ImageView) findViewById(R.id.image);
         mes_group =  findViewById(R.id.mes_group);
         fire_Img =  findViewById(R.id.fire_Img);
+        cons_Mes =  findViewById(R.id.cons_Mes);
     }
 
     
@@ -64,7 +65,8 @@ public class MyEaseChatRowBARImage extends EaseChatRowFile {
                 mes_group.setVisibility(GONE);
                 fire_Img.setVisibility(VISIBLE);
             }
-            fire_Img.setTimer(10000);
+//            fire_Img.setTimer(10000);
+//            fire_Img.setEnabled(true);
             //添加群聊其他用户的名字与头像
         }else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
             usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME,""));
@@ -86,9 +88,26 @@ public class MyEaseChatRowBARImage extends EaseChatRowFile {
         }
         showImageView(message);
 
+
+
         fire_Img.setOnClickListener(v -> {
             fire_Img.setVisibility(GONE);
             mes_group.setVisibility(VISIBLE);
+            // 当消息已读之后，发送已读回执，并删除消息
+//            try {
+//                EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
+////                // 消息所属会话
+//                EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.getFrom(), EMConversation.EMConversationType.Chat, true);
+//                conversation.removeMessage(message.getMsgId());
+//            } catch (HyphenateException e) {
+//                e.printStackTrace();
+//            }
+//            fire_Img.startTimer(new TimerImgView.TimerListener() {
+//                @Override
+//                public void onFinish() {
+//
+//                }
+//            });
         });
 
     }

@@ -259,16 +259,20 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
-        </receiver> <!-- 适配Android 7.0, 需要将下方的com.hyphenate.easeim替换为你的app包名 -->
+        </receiver>
+        <!-- 适配Android 7.0, 需要将下方的com.hyphenate.easeim替换为你的app包名 -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileProvider"
+            android:authorities="com.xunda.mo.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider> <!-- 华为 HMS Config -->
+                android:resource="@xml/file_paths"/>
+        </provider>
+
+        <!-- 华为 HMS Config -->
         <service
             android:name=".hx.common.service.MyPushService"
             android:exported="false">
@@ -636,7 +640,16 @@
         <activity
             android:name=".main.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="611215983451547e6843863f" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".main.login.MainRegister_Agreement"
             android:screenOrientation="portrait" />
@@ -657,8 +670,9 @@
             android:screenOrientation="portrait" />
 
 
-        <activity android:name=".main.group.activity.GroupAllMembers_At"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".main.group.activity.GroupAllMembers_At"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".main.login.Main_Launch"
@@ -681,11 +695,55 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:taskAffinity="net.sourceforge.simcpux"
+            android:taskAffinity="com.xunda.mo"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity
             android:name=".hx.section.chat.activicy.MyEaseGaodeMapActivity"
             android:screenOrientation="portrait" /> <!-- 会议成员邀请 -->
+
+
+        <!--友盟分享 -->
+<!--        <activity-->
+<!--            android:name="com.tencent.tauth.AuthActivity"-->
+<!--            android:launchMode="singleTask"-->
+<!--            android:noHistory="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+<!--                <data android:scheme="tencent101968658" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+
+<!--        <activity-->
+<!--            android:name="com.tencent.connect.common.AssistActivity"-->
+<!--            android:theme="@android:style/Theme.Translucent.NoTitleBar" />-->
+
+
+
+<!--qq 分享-->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:noHistory="true"
+            android:launchMode="singleTask" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tencent101968658" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+
 
         <!-- 定位需要的服务 适配Android Q需要加上android:foregroundServiceType="location" -->
         <service
