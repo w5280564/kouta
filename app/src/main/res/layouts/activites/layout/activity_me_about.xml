@@ -51,65 +51,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView38" />
 
 
-<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="60dp"-->
-<!--        android:layout_marginTop="180dp"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        app:layout_constraintRight_toRightOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/title_Include">-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/textView6"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="15dp"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:text="官方网站"-->
-<!--            android:textColor="@color/blacktitlettwo"-->
-<!--            android:textSize="14sp"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="www.ahxunda.com"-->
-<!--            android:textColor="#ffa1a1a1"-->
-<!--            android:textSize="12sp"-->
-<!--            app:layout_constraintStart_toStartOf="@+id/textView6"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/textView6" />-->
-
-
-<!--        <ImageView-->
-<!--            android:id="@+id/iv_arrow"-->
-<!--            android:layout_width="7dp"-->
-<!--            android:layout_height="12dp"-->
-<!--            android:layout_marginEnd="15dp"-->
-<!--            android:src="@mipmap/person_arrow"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintRight_toRightOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            tools:ignore="UseAppTint" />-->
-
-<!--        <View-->
-<!--            android:id="@+id/view_divider"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="1dp"-->
-<!--            android:background="@color/greyfive"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintLeft_toLeftOf="parent"-->
-<!--            app:layout_constraintRight_toRightOf="parent" />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/copy_Img"-->
-<!--            android:layout_width="11dp"-->
-<!--            android:layout_height="12dp"-->
-<!--            android:src="@mipmap/copy_icon"-->
-<!--            android:layout_marginStart="10dp"-->
-<!--            android:visibility="gone" />-->
-
-<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 
     <com.xunda.mo.main.baseView.MyArrowItemView

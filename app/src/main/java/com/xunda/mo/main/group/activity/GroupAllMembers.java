@@ -37,11 +37,7 @@ public class GroupAllMembers extends BaseInitActivity {
     List<GroupMember_Bean.DataDTO> groupMember;
     private MyGroupMembersList_Adapter myGroupList_adapter;// 列表适配器
     private MyGroupHead_ListAdapter myContact_Head_listAdapter;//头部适配器
-    private ConcatAdapter concatAdapter;
     private EaseContactListLayout contactList;
-    private Button return_Btn;
-    private TextView group_add_Txt, group_remove_Txt;
-    private EaseSearchTextView query_Edit;
     private String groupId;
     private int Identity;
     private GruopInfo_Bean groupModel;
@@ -75,14 +71,14 @@ public class GroupAllMembers extends BaseInitActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-        return_Btn = findViewById(R.id.return_Btn);
+        Button return_Btn = findViewById(R.id.return_Btn);
         return_Btn.setOnClickListener(new return_BtnClick());
-        group_add_Txt = findViewById(R.id.group_add_Txt);
+        TextView group_add_Txt = findViewById(R.id.group_add_Txt);
         group_add_Txt.setOnClickListener(new group_add_TxtClick());
-        group_remove_Txt = findViewById(R.id.group_remove_Txt);
+        TextView group_remove_Txt = findViewById(R.id.group_remove_Txt);
         group_remove_Txt.setOnClickListener(new group_remove_TxtClick());
 
-        query_Edit = findViewById(R.id.query_Edit);
+        EaseSearchTextView query_Edit = findViewById(R.id.query_Edit);
         query_Edit.setOnClickListener(new query_EditClick());
         contact_layout = findViewById(R.id.contact_layout);
         contactList = contact_layout.getContactList();
@@ -109,7 +105,7 @@ public class GroupAllMembers extends BaseInitActivity {
     private void addAdapter() {
         EaseContactSetStyle contactSetModel = new EaseContactSetStyle();
         contactSetModel.setShowItemHeader(true);
-        concatAdapter = new ConcatAdapter();
+        ConcatAdapter concatAdapter = new ConcatAdapter();
         myGroupList_adapter = new MyGroupMembersList_Adapter();
         myGroupList_adapter.setSettingModel(contactSetModel);
         myContact_Head_listAdapter = new MyGroupHead_ListAdapter();
@@ -117,9 +113,6 @@ public class GroupAllMembers extends BaseInitActivity {
         concatAdapter.addAdapter(myContact_Head_listAdapter);
         concatAdapter.addAdapter(myGroupList_adapter);
         contactList.setAdapter(concatAdapter);
-
-//        myContactList_adapter.setOnItemClickListener(new demoContactList_adapterClick());
-//        myContact_Head_listAdapter.setOnItemClickListener(new myContact_listAdapterClick());
     }
 
     private void getGroupList() {

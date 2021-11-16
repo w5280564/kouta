@@ -70,7 +70,7 @@ public class GroupAllMembers_Manage_SetupManage extends BaseInitActivity {
         return_Btn.setVisibility(View.VISIBLE);
         TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
         cententTxt.setText("设置管理员");
-        right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
+        right_Btn = title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.VISIBLE);
         right_Btn.setText("添加");
         viewTouchDelegate.expandViewTouchDelegate(right_Btn, 50, 50, 50, 50);

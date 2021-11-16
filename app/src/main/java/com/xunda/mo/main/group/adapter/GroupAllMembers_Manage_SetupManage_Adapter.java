@@ -40,10 +40,10 @@ public class GroupAllMembers_Manage_SetupManage_Adapter extends RecyclerView.Ada
         notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void removeData(int position) {
         otherList.remove(position);
         notifyItemRemoved(position);
-        notifyDataSetChanged();
     }
 
     @Override
@@ -61,21 +61,15 @@ public class GroupAllMembers_Manage_SetupManage_Adapter extends RecyclerView.Ada
     public void onBindViewHolder(@NotNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = holder.getLayoutPosition();
-                    mOnItemClickLitener.onItemClick(holder.itemView, position);
-                }
+            holder.itemView.setOnClickListener(v -> {
+                int pos = holder.getLayoutPosition();
+                mOnItemClickLitener.onItemClick(holder.itemView, position);
             });
 
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    int pos = holder.getLayoutPosition();
-                    mOnItemClickLitener.onItemLongClick(holder.itemView, position);
-                    return false;
-                }
+            holder.itemView.setOnLongClickListener(v -> {
+                int pos = holder.getLayoutPosition();
+                mOnItemClickLitener.onItemLongClick(holder.itemView, position);
+                return false;
             });
 
         }
@@ -86,7 +80,7 @@ public class GroupAllMembers_Manage_SetupManage_Adapter extends RecyclerView.Ada
                 protected void onNoDoubleClick(View v) {
                     int pos = holder.getLayoutPosition();
                     if (v instanceof Button) {
-                        v.setVisibility(View.GONE);
+//                        v.setVisibility(View.GONE);
                         v.setEnabled(false);
                     }
                     onItemAddRemoveClickLister.onItemRemoveClick(v, position);

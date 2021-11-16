@@ -87,8 +87,9 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
         return_Btn.setVisibility(View.VISIBLE);
         TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
         cententTxt.setText("添加管理员");
-        right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
+        right_Btn = title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.VISIBLE);
+        right_Btn.setTextColor(ContextCompat.getColor(this, R.color.yellowfive));
         right_Btn.setText("确定");
         viewTouchDelegate.expandViewTouchDelegate(right_Btn, 50, 50, 50, 50);
 
@@ -139,18 +140,12 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
 //        mAdapter = new GroupAddMember_Adapter(context, data);
         mAdapter = new GroupAddMember_Adapter(TextUtils.isEmpty(groupId));
         addMembers_Recycler.setAdapter(mAdapter);
-
-
         mAdapter.setOnItemClickListener((view, position) -> {
-
         });
 
         mAdapter.setOnSelectListener((v, selectedMembers) -> right_Btn.setText("确定" + "(" + selectedMembers.size() + ")"));
-
     }
-
     GroupMember_Bean groupListModel;
-
     public void GroupMemberListMethod(Context context, String baseUrl) {
         Map<String,Object> map = new HashMap<>();
         map.put("groupId",groupId);
