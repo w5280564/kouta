@@ -10,6 +10,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ public class Me_About extends BaseInitActivity {
 
     private TextView version_Txt, login_txt;
     private MyArrowItemView email_ArrowItemView;
+    private MyArrowItemView official_Website_ArrowItemView;
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, Me_About.class);
@@ -46,12 +48,15 @@ public class Me_About extends BaseInitActivity {
         super.initView(savedInstanceState);
         initTitle();
         version_Txt = findViewById(R.id.version_Txt);
-        MyArrowItemView official_Website_ArrowItemView = findViewById(R.id.official_Website_ArrowItemView);
+         official_Website_ArrowItemView = findViewById(R.id.official_Website_ArrowItemView);
         official_Website_ArrowItemView.setOnClickListener(new officaialClick());
+        ImageView tipCopyImg = official_Website_ArrowItemView.getTipCopy();
+        viewTouchDelegate.expandViewTouchDelegate(tipCopyImg, 50, 50, 50, 50);
+        tipCopyImg.setOnClickListener(new tipCopyImgClick());
         email_ArrowItemView = findViewById(R.id.email_ArrowItemView);
         email_ArrowItemView.setOnClickListener(new emailClick());
         login_txt = findViewById(R.id.login_txt);
-       MyArrowItemView feedBook_ArrowItemView = findViewById(R.id.feedBook_ArrowItemView);
+        MyArrowItemView feedBook_ArrowItemView = findViewById(R.id.feedBook_ArrowItemView);
         feedBook_ArrowItemView.setOnClickListener(new feedBook_Click());
     }
 
@@ -95,10 +100,18 @@ public class Me_About extends BaseInitActivity {
         }
     }
 
+    private class tipCopyImgClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            StaticData.copy(official_Website_ArrowItemView.getTip().getText().toString(), mContext);
+            Toast.makeText(mContext, "已复制到剪切板", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private class emailClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            StaticData.copy(email_ArrowItemView.getTvContent().toString(), mContext);
+            StaticData.copy(email_ArrowItemView.getTip().getText().toString(), mContext);
             Toast.makeText(mContext, "已复制到剪切板", Toast.LENGTH_SHORT).show();
         }
     }
@@ -106,7 +119,7 @@ public class Me_About extends BaseInitActivity {
     private class feedBook_Click implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            MainLogin_QuestionFeedBack.actionStart(mContext,"2");
+            MainLogin_QuestionFeedBack.actionStart(mContext, "2");
         }
     }
 
@@ -147,7 +160,6 @@ public class Me_About extends BaseInitActivity {
         login_txt.setMovementMethod(LinkMovementMethod.getInstance());
         login_txt.setText(ssb, TextView.BufferType.SPANNABLE);
     }
-
 
 
 }

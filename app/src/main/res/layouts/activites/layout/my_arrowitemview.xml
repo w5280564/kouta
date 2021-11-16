@@ -31,16 +31,16 @@
 
     <TextView
         android:id="@+id/tv_tip"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
         android:ellipsize="end"
         android:maxLength="80"
         android:textColor="@color/greytwo"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/tv_content"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/tv_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        android:visibility="gone"
         tools:text="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容" />
 
 
@@ -107,5 +107,17 @@
         app:layout_constraintBottom_toBottomOf="@+id/tv_title"
         app:layout_constraintStart_toEndOf="@+id/tv_title"
         app:layout_constraintTop_toTopOf="@+id/tv_title" />
+
+
+    <ImageView
+        android:id="@+id/tip_copy_Img"
+        android:layout_width="11dp"
+        android:layout_height="12dp"
+        android:src="@mipmap/copy_icon"
+        android:layout_marginStart="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_tip"
+        app:layout_constraintStart_toEndOf="@+id/tv_tip"
+        app:layout_constraintTop_toTopOf="@+id/tv_tip" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

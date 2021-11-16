@@ -18,6 +18,7 @@
         <attr name="arrowItemShowArrow" format="boolean"/>
         <attr name="arrowItemShowtvImg" format="boolean"/>
         <attr name="arrowItemCopyShow" format="boolean"/>
+        <attr name="arrowItemTipCopyShow" format="boolean"/>
 <!--        <attr name="tvImgItemSrc" format="reference"/>-->
 <!--        <attr name="arrowHeight" format="dimension|reference"/>-->
 <!--        <attr name="arrowWidth" format="dimension|reference"/>-->

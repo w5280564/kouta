@@ -1,7 +1,10 @@
 package com.xunda.mo.staticdata;
 
+import static android.content.Context.CLIPBOARD_SERVICE;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -837,9 +840,9 @@ public class StaticData {
      * @param content
      */
     public static void copy(String content, Context context) {
-        // 得到剪贴板管理器
-        ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        cmb.setText(content.trim());
+        ClipboardManager manager = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("text", content);
+        manager.setPrimaryClip(clipData);
     }
 
     /*

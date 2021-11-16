@@ -30,8 +30,7 @@ public class MyArrowItemView extends ConstraintLayout {
     private int contentColor;
     private float titleSize;
     private float contentSize;
-    private View root;
-    private ImageView tv_img,copy_Img;
+    private ImageView tv_img,copy_Img,tip_copy_Img;
 
     public MyArrowItemView(Context context) {
         this(context, null);
@@ -47,7 +46,7 @@ public class MyArrowItemView extends ConstraintLayout {
     }
 
     public void init(Context context, AttributeSet attrs) {
-        root = LayoutInflater.from(context).inflate(R.layout.my_arrowitemview, this);
+       View root = LayoutInflater.from(context).inflate(R.layout.my_arrowitemview, this);
         avatar = findViewById(R.id.avatar);
         tvTitle = findViewById(R.id.tv_title);
         tv_tip = findViewById(R.id.tv_tip);
@@ -56,6 +55,7 @@ public class MyArrowItemView extends ConstraintLayout {
         viewDivider = findViewById(R.id.view_divider);
         tv_img = findViewById(R.id.tv_img);
         copy_Img = findViewById(R.id.copy_Img);
+        tip_copy_Img = findViewById(R.id.tip_copy_Img);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ArrowItemView);
         int titleResourceId = a.getResourceId(R.styleable.ArrowItemView_arrowItemTitle, -1);
@@ -123,6 +123,8 @@ public class MyArrowItemView extends ConstraintLayout {
         tv_img.setVisibility(showTvImg ? VISIBLE : GONE);
         boolean isCopy = a.getBoolean(R.styleable.ArrowItemView_arrowItemCopyShow, false);
         copy_Img.setVisibility(isCopy ? VISIBLE : GONE);
+        boolean isTipCopy = a.getBoolean(R.styleable.ArrowItemView_arrowItemTipCopyShow, false);
+        tip_copy_Img.setVisibility(isTipCopy ? VISIBLE : GONE);
 
 //        int tv_imgSrcResourceId = a.getResourceId(R.styleable.ArrowItemView_tvImgItemSrc, -1);
 //        if(tv_imgSrcResourceId != -1) {
@@ -174,6 +176,9 @@ public class MyArrowItemView extends ConstraintLayout {
 
     public TextView getTvTitle() {
         return tvTitle;
+    }
+    public ImageView getTipCopy() {
+        return tip_copy_Img;
     }
 
     public EaseImageView getAvatar() {
