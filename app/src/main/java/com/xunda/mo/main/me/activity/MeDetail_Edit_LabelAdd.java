@@ -112,7 +112,7 @@ public class MeDetail_Edit_LabelAdd extends BaseInitActivity {
         @Override
         public void onClick(View v) {
             if (tagS.size() >= 3) {
-                Toast.makeText(MeDetail_Edit_LabelAdd.this, "标签只能有三个", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MeDetail_Edit_LabelAdd.this, "标签不能超过3个", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (TextUtils.isEmpty(query.getText().toString())) {
@@ -159,7 +159,7 @@ public class MeDetail_Edit_LabelAdd extends BaseInitActivity {
      * 提示dialog
      */
     private void showToastDialog(LinearLayout myFlow,View view ) {
-        TwoButtonDialog dialog = new TwoButtonDialog(this, "您确定要删除该标签吗", "取消", "确定",
+        TwoButtonDialog dialog = new TwoButtonDialog(this, "您确定要删除该标签吗？", "取消", "确定",
                 new TwoButtonDialog.ConfirmListener() {
 
                     @Override

@@ -30,7 +30,7 @@
             android:background="@color/white"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="请输入新标签（标签栏最多可输入3个）"
+            android:hint="标签栏最多可输入3个"
             android:lines="1"
             android:maxLength="8"
             android:paddingStart="15dp"

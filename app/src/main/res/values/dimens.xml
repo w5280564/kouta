@@ -35,7 +35,8 @@
     <dimen name="circleRadius">24dp</dimen>
 
 
-
+    <!-- 标题高度 -->
+    <dimen name="title_height">44dp</dimen>
 
     <!--尺寸 dp 从小到大-->
     <dimen name="dp_0">0dp</dimen>

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,7 +67,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
 
     private ConversationListViewModel mViewModel;
     private EaseRecyclerView rv_conversation_list;
-    private ImageView add_img;
+    private TextView tv_title;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -74,9 +75,8 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
 
         View head_view = LayoutInflater.from(mContext).inflate(R.layout.conversationlist_head, null);
         llRoot.addView(head_view, 0);
-        add_img = head_view.findViewById(R.id.add_img);
-        viewTouchDelegate.expandViewTouchDelegate(add_img, 50, 50, 50, 50);
-        add_img.setOnClickListener(new add_imgClick());
+        tv_title = head_view.findViewById(R.id.tv_title);
+        head_view.findViewById(R.id.cl_add_img).setOnClickListener(new add_imgClick());
         //添加搜索会话布局
         View view = LayoutInflater.from(mContext).inflate(R.layout.demo_layout_search, null);
         llRoot.addView(view, 1);
@@ -352,23 +352,19 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
     private class add_imgClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            showMore(getActivity(), add_img, 0);
+            showMore(getActivity());
         }
     }
 
     //更多
-    private void showMore(final Context mContext, final View view, final int pos) {
+    private void showMore(final Context mContext) {
         View contentView = View.inflate(mContext, R.layout.popup_more_convers, null);
         PopupWindow MorePopup = new BasePopupWindow(mContext);
-//        if (MorePopup.isShowing()){
-//            return;
-//        }
         MorePopup.setWidth(RadioGroup.LayoutParams.WRAP_CONTENT);
         MorePopup.setHeight(RadioGroup.LayoutParams.WRAP_CONTENT);
         MorePopup.setTouchable(true);
         MorePopup.setContentView(contentView);
-//        MorePopup.showAtLocation(view, Gravity.TOP|Gravity.RIGHT, 20, 12);
-        MorePopup.showAsDropDown(view, 20, 12);
+        MorePopup.showAsDropDown(tv_title, 0, 0, Gravity.RIGHT);
         ConstraintLayout add_Constraint = contentView.findViewById(R.id.add_Constraint);
         ConstraintLayout setUp_Constraint = contentView.findViewById(R.id.setUp_Constraint);
         ConstraintLayout QR_Constraint = contentView.findViewById(R.id.QR_Constraint);

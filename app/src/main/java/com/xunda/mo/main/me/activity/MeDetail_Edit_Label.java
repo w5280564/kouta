@@ -64,7 +64,7 @@ public class MeDetail_Edit_Label extends BaseInitActivity {
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         return_Btn.setVisibility(View.VISIBLE);
         TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
-        cententTxt.setText("编辑个人标签");
+        cententTxt.setText("个人标签");
         Button right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
         viewTouchDelegate.expandViewTouchDelegate(right_Btn, 50, 50, 50, 50);
         right_Btn.setVisibility(View.VISIBLE);

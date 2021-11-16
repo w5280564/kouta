@@ -72,7 +72,7 @@ public class TwoButtonDialog extends Dialog implements
 		TextView tv_content = findViewById(R.id.tv_content);
 		tv_right.setText(right);
 		tv_left.setText(left);
-		tv_title.setText(TextUtils.isEmpty(title)?"温馨提示":title);
+		tv_title.setText(TextUtils.isEmpty(title)?"提示":title);
 		tv_content.setText(content);
 	}
 

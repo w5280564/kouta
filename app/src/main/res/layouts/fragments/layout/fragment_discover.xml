@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/discover_Txt"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/title_height"
         android:background="@color/white"
         android:gravity="center"
         android:text="发现"

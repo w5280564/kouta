@@ -95,7 +95,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
     private MyContactHead_ListAdapter myContact_Head_listAdapter;//头部适配器
     private ConcatAdapter concatAdapter;
     private EaseContactListLayout contactList;
-    private TextView more_Txt;
+    private TextView tv_title;
     private TextView mTvMainFriendsMsg;
 
     @Override
@@ -201,7 +201,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_new_chat, R.mipmap.adress_head_friend, "新朋友", addCount);
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_group_list, R.mipmap.adress_head_chat, getString(R.string.em_friends_group_chat));
 //        myContact_Head_listAdapter.addItem(R.id.contact_header_item_creat_group, R.mipmap.adress_head_group, "好友分组");
-//        myContact_Head_listAdapter.addItem(R.id.contact_header_item_head_file, R.mipmap.adress_head_file, "文件传输助手");
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_head_service, R.mipmap.adress_head_service, "Mo 客服");
     }
 
@@ -246,14 +245,14 @@ public class ContactListFragment extends EaseContactListFragment implements View
         View head_view = LayoutInflater.from(mContext).inflate(R.layout.contactlist_head, null);
         llRoot.addView(head_view, 0);
         ConstraintLayout more_Con = head_view.findViewById(R.id.more_Con);
-        more_Txt = head_view.findViewById(R.id.more_Txt);
+        tv_title = head_view.findViewById(R.id.tv_title);
         more_Con.setOnClickListener(new more_ConClick());
     }
 
     private class more_ConClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            showMore(getActivity(), more_Txt, 0);
+            showMore(getActivity());
         }
     }
 
@@ -523,14 +522,14 @@ public class ContactListFragment extends EaseContactListFragment implements View
     }
 
     //更多
-    private void showMore(final Context mContext, final View view, final int pos) {
+    private void showMore(final Context mContext) {
         View contentView = View.inflate(mContext, R.layout.popup_morefriend, null);
         PopupWindow MorePopup = new BasePopupWindow(mContext);
         MorePopup.setWidth(RadioGroup.LayoutParams.WRAP_CONTENT);
         MorePopup.setHeight(RadioGroup.LayoutParams.WRAP_CONTENT);
         MorePopup.setTouchable(true);
         MorePopup.setContentView(contentView);
-        MorePopup.showAsDropDown(view, 0, 0, Gravity.RIGHT);
+        MorePopup.showAsDropDown(tv_title, 0, 0, Gravity.RIGHT);
         ConstraintLayout add_Con = contentView.findViewById(R.id.add_Con);
         ConstraintLayout dele_Con = contentView.findViewById(R.id.dele_Con);
         add_Con.setOnClickListener(v -> {

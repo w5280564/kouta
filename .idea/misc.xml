@@ -10,11 +10,16 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_main.xml" value="0.17806484295845998" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_main_login_code.xml" value="0.36614583333333334" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/base_titlebar.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/fragment_contacts.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/gropudetail_edit_label.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/groupdetail_edit_labeladd.xml" value="0.17198581560283688" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/fragments/layout/activity_friend_add.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/fragments/layout/demo_badge_friends.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/fragments/layout/demo_layout_search.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/fragments/layout/fragment_discover.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/fragments/layout/mefragment.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/contactlist_head.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/conversationlist_head.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/dialog_two_button.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/group_label_add.xml" value="0.3536458333333333" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/32246fbe39018eda991bd63abf46f795/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_layout_chat.xml" value="0.31157407407407406" />
@@ -176,7 +181,7 @@
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activitymain_login_register.xml" value="0.22" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/activitymain_loginforget_psw_id.xml" value="0.5" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/adress_headview.xml" value="0.31157407407407406" />
-        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/base_titlebar.xml" value="0.25" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/base_titlebar.xml" value="0.1519873532068654" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/demo_activity_account_security.xml" value="0.32546296296296295" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/demo_activity_appkey_manage.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/demo_activity_call_option.xml" value="0.31157407407407406" />
