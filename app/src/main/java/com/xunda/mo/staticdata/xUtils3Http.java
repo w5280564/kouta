@@ -203,8 +203,7 @@ public class xUtils3Http {
     }
 
 
-    public static void uploadFile(Context
-                                          mContext, List<String> path, Map<String, Object> map, final GetDataCallback callback) {
+    public static void uploadFile(Context mContext, List<String> path, Map<String, Object> map, final GetDataCallback callback) {
         RequestParams params = new RequestParams(BASE_URL + "upload");
         params.setMultipart(true);
         for (String key : map.keySet()) {

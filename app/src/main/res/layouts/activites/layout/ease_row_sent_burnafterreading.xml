@@ -126,7 +126,7 @@
             android:textSize="@dimen/chat_nick_text_size" />
     </RelativeLayout>
 
-    <ImageView
+    <com.xunda.mo.staticdata.TimerImgView
         android:id="@+id/fire_Img"
         android:layout_width="0dp"
         android:layout_height="0dp"

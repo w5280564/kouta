@@ -82,7 +82,9 @@ public class MainLogin_Register extends AppCompatActivity {
     private class login_Btnlister extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            startLocation();
+            Intent intent = new Intent(MainLogin_Register.this, MainLogin_OldUser_Psd.class);
+            startActivity(intent);
+//            startLocation();
         }
     }
 
@@ -172,9 +174,6 @@ public class MainLogin_Register extends AppCompatActivity {
     }
 
     public void startLocation() {
-
-
-
         //监听授权
         List<String> permissionList = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(MainLogin_Register.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {//电话权限 是获取手机状态（包括手机号码、IMEI、IMSI权限等

@@ -97,4 +97,15 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
+    <ImageView
+        android:id="@+id/copy_Img"
+        android:layout_width="11dp"
+        android:layout_height="12dp"
+        android:src="@mipmap/copy_icon"
+        android:layout_marginStart="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+        app:layout_constraintStart_toEndOf="@+id/tv_title"
+        app:layout_constraintTop_toTopOf="@+id/tv_title" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

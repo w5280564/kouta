@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class Olduser_Model {
 
-
     @JsonProperty("msg")
     private String msg;
     @JsonProperty("code")
@@ -42,8 +41,14 @@ public class Olduser_Model {
         private String hxUserName;
         @JsonProperty("inPassword")
         private String inPassword;
+        @JsonProperty("isHasLockPassword")
+        private Integer isHasLockPassword;
+        @JsonProperty("isHasLoginPassword")
+        private Integer isHasLoginPassword;
         @JsonProperty("isNeedUnlock")
         private Integer isNeedUnlock;
+        @JsonProperty("isQuestion")
+        private Integer isQuestion;
         @JsonProperty("lightStatus")
         private Integer lightStatus;
         @JsonProperty("mailbox")
@@ -60,13 +65,13 @@ public class Olduser_Model {
         private String tag;
         @JsonProperty("token")
         private String token;
+        @JsonProperty("unlockType")
+        private Integer unlockType;
         @JsonProperty("userId")
         private String userId;
         @JsonProperty("userNum")
         private Integer userNum;
         @JsonProperty("vipType")
         private Integer vipType;
-        @JsonProperty("isQuestion")
-        private Integer isQuestion;
     }
 }

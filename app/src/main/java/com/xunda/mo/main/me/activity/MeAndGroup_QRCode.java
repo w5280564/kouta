@@ -59,11 +59,10 @@ import cn.bingoogolapple.qrcode.zxing.QRCodeEncoder;
 
 public class MeAndGroup_QRCode extends BaseInitActivity {
     // APP_ID 替换为你的应用从官方网站申请到的合法appID
-    private static final String WECHAT_APP_ID = "wxdd3384bb6c79b2ca";
-    private static final String QQ_APP_ID = "101968658";
+    public static final String WECHAT_APP_ID = "wxdd3384bb6c79b2ca";
+    public static final String QQ_APP_ID = "101968658";
 
-    // IWXAPI 是第三方app和微信通信的openApi接口
-    private IWXAPI api;
+
     private ImageView head_Image;
     private ImageView qrCode_Img;
     public static String user = "user";
@@ -72,10 +71,13 @@ public class MeAndGroup_QRCode extends BaseInitActivity {
     private TextView titleName, nick_Txt, moId_Txt;
     private ConstraintLayout meAndGroup;
     private GruopInfo_Bean groupBean;
+    // IWXAPI 是第三方app和微信通信的openApi接口
+    private IWXAPI api;
     private Tencent mTencent;
     private File File;
     private final String picName = "/QRCode" + ".jpg";
     private View share_Group;
+    private TextView qr_Content;
 
     public static void actionUserStart(Context context) {
         Intent intent = new Intent(context, MeAndGroup_QRCode.class);
@@ -116,6 +118,7 @@ public class MeAndGroup_QRCode extends BaseInitActivity {
         return_Btn.setOnClickListener(new return_BtnClick());
         ImageView qrcode_share = findViewById(R.id.qrcode_share);
         qrcode_share.setOnClickListener(new qrcode_shareClick());
+        qr_Content = findViewById(R.id.qr_Content);
 
     }
 
@@ -139,6 +142,7 @@ public class MeAndGroup_QRCode extends BaseInitActivity {
             moId_Txt.setText("Mo ID: " + myInfo.getUserInfo().getUserNum());
             String qrCodeStr = "user-" + myInfo.getUserInfo().getHxUserName();
             createEnglishQRCode(qrCodeStr);
+            qr_Content.setText("使用默言默语APP扫描二维码，加我为好友");
         } else if (TextUtils.equals(meOrGroup, group)) {
             titleName.setText("群二维码");
             GruopInfo_Bean.DataDTO userData = groupBean.getData();
@@ -148,6 +152,7 @@ public class MeAndGroup_QRCode extends BaseInitActivity {
             moId_Txt.setText("群ID: " + userData.getGroupNum());
             String qrCodeStr = "group-" + userData.getGroupHxId();
             createEnglishQRCode(qrCodeStr);
+            qr_Content.setText("使用默言默语APP扫描二维码，加入群聊");
         }
         regToWx();
         regToQQ();

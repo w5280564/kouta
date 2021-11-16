@@ -66,7 +66,6 @@ import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.common.utils.PreferenceManager;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
-import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.group.fragment.GroupEditFragment;
@@ -487,16 +486,13 @@ public class UserDetail_Set extends BaseInitActivity {
                 .setTitle("提示")
                 .showContent(true)
                 .setContent(content)
-                .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view) {
-                        if (TextUtils.equals(changString, CHANGE_HEAD)) {
-                            startCamera();
-                        } else if (TextUtils.equals(changString, CHANGE_NICK)) {
-                            changeNick();
-                        } else if (TextUtils.equals(changString, CHANGE_SEX)) {
-                            setSex();
-                        }
+                .setOnConfirmClickListener(view -> {
+                    if (TextUtils.equals(changString, CHANGE_HEAD)) {
+                        startCamera();
+                    } else if (TextUtils.equals(changString, CHANGE_NICK)) {
+                        changeNick();
+                    } else if (TextUtils.equals(changString, CHANGE_SEX)) {
+                        setSex();
                     }
                 })
                 .showCancelButton(true)
@@ -537,6 +533,7 @@ public class UserDetail_Set extends BaseInitActivity {
                 .isAndroidQTransform(true)//Android Q版本下是否需要拷贝文件至应用沙盒内
                 .isPreviewImage(true)// 是否可预览图片 true or false
                 .isCamera(true)// 是否显示拍照按钮 true or false
+                .isEnableCrop(true)//开启裁剪
                 .cropImageWideHigh(200, 200)//裁剪尺寸
                 .withAspectRatio(1, 1)//裁剪比例1：1是正方形
                 .freeStyleCropEnabled(true)//裁剪框是否可拖拽
@@ -666,7 +663,8 @@ public class UserDetail_Set extends BaseInitActivity {
                 if (isQ()) {
                     fileName = selectList.get(0).getAndroidQToPath();
                 }
-                objectName = "user/" + userModel.getData().getUserId() + "/headImg/" + selectList.get(0).getFileName();//对应上传之后的文件名称
+//                objectName = "user/" + userModel.getData().getUserId() + "/headImg/" + selectList.get(0).getFileName();//对应上传之后的文件名称
+                objectName = "user/" + userModel.getData().getUserId() + "/headImg/" + System.currentTimeMillis()+".jpg";//对应上传之后的文件名称
                 FileInputStream fis = new FileInputStream(fileName);
                 obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
                 sbf.append(objectName);

@@ -3,10 +3,9 @@ package com.xunda.mo.hx.section.chat.views;
 import android.content.Context;
 import android.text.Spannable;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 
 import com.bumptech.glide.Glide;
@@ -24,13 +23,12 @@ import com.xunda.mo.R;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.network.saveFile;
-import com.xunda.mo.staticdata.FireTimerTextView;
+import com.xunda.mo.staticdata.TimerImgView;
 
 public class MyBurnAfterReadingRowText extends EaseChatRow {
-    private FireTimerTextView contentView;
+    private TextView contentView;
     private EaseImageView iv_userhead;
-    private ImageView fire_Img;
-    private ConstraintLayout cons_Mes;
+    private TimerImgView fire_Img;
     private Group mes_group;
 
     public MyBurnAfterReadingRowText(Context context, boolean isSender) {
@@ -49,10 +47,9 @@ public class MyBurnAfterReadingRowText extends EaseChatRow {
 
     @Override
     protected void onFindViewById() {
-        cons_Mes = findViewById(R.id.cons_Mes);
-        contentView = (FireTimerTextView) findViewById(R.id.tv_chatcontent);
+        contentView = findViewById(R.id.tv_chatcontent);
         iv_userhead = (EaseImageView) findViewById(R.id.iv_userhead);
-        fire_Img = (ImageView) findViewById(R.id.fire_Img);
+        fire_Img = findViewById(R.id.fire_Img);
         mes_group = (Group) findViewById(R.id.mes_group);
     }
 
@@ -64,10 +61,15 @@ public class MyBurnAfterReadingRowText extends EaseChatRow {
                 String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
                 Glide.with(getContext()).load(headUrl).into(userAvatarView);
             } else {
-//                cons_Mes.setVisibility(GONE);
-                mes_group.setVisibility(GONE);
-                iv_userhead.setVisibility(VISIBLE);
-                fire_Img.setVisibility(VISIBLE);
+
+                boolean isSleckt = message.getBooleanAttribute("isSleckt", false);
+                if (isSleckt) {
+                    mes_group.setVisibility(VISIBLE);
+                    fire_Img.setVisibility(GONE);
+                } else {
+                    mes_group.setVisibility(GONE);
+                    fire_Img.setVisibility(VISIBLE);
+                }
             }
             //添加群聊其他用户的名字与头像
         } else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
@@ -89,23 +91,24 @@ public class MyBurnAfterReadingRowText extends EaseChatRow {
         }
 
         fire_Img.setOnClickListener(v -> {
-//            cons_Mes.setVisibility(VISIBLE);
+            int textLen = (int) (contentView.getText().length() * 0.06 * 1000 + 500);
+            int voiceLen = Math.max(textLen, 3000) + 10000;//返回一组数中最大的
+            fire_Img.setTimer(voiceLen);
             mes_group.setVisibility(VISIBLE);
-            iv_userhead.setVisibility(VISIBLE);
             fire_Img.setVisibility(GONE);
+            EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.getFrom(), EMConversation.EMConversationType.Chat, true);
+            message.setAttribute("isSleckt", true);
+            conversation.updateMessage(message);
+            fire_Img.startTimer(() -> {
+                try {
+                    EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
+                    conversation.removeMessage(message.getMsgId());
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+                LiveDataBus.get().with(MyConstant.FIRE_REFRESH).postValue(true);
+            });
             sendCMDFireMess();
-            // 当消息已读之后，发送已读回执，并删除消息
-            try {
-                EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
-//                // 消息所属会话
-                EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.getFrom(), EMConversation.EMConversationType.Chat, true);
-                conversation.removeMessage(message.getMsgId());
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
-            contentView.startTimer(() -> LiveDataBus.get().with(MyConstant.FIRE_REFRESH).postValue(true));
-
-
         });
     }
 

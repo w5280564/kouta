@@ -31,7 +31,6 @@
             android:layout_marginStart="18dp"
             android:scaleType="fitXY"
             android:src="@drawable/mo_icon"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,7 +54,7 @@
                 android:scaleType="fitCenter"
                 app:ease_radius="@dimen/ease_chat_image_corner_radius"
                 app:ease_shape_type="rectangle"
-                tools:src="@drawable/mo_icon" />
+                tools:src="@drawable/ease_default_image" />
 
 
             <LinearLayout
@@ -117,7 +116,7 @@
             tools:ignore="NotSibling" />
 
 
-        <ImageView
+        <com.xunda.mo.staticdata.TimerImgView
             android:id="@+id/fire_Img"
             android:layout_width="92dp"
             android:layout_height="33dp"

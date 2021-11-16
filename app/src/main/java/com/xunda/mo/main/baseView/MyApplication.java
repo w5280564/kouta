@@ -2,7 +2,6 @@ package com.xunda.mo.main.baseView;
 
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
@@ -11,6 +10,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.github.gzuliyujiang.oaid.DeviceID;
@@ -40,7 +40,7 @@ import java.util.List;
 import lombok.SneakyThrows;
 
 
-public class MyApplication extends Application implements Thread.UncaughtExceptionHandler {
+public class MyApplication extends MultiDexApplication implements Thread.UncaughtExceptionHandler {
     private static final String TAG = "JPush";
     public static Context mycontext;
     private UserActivityLifecycleCallbacks mLifecycleCallbacks = new UserActivityLifecycleCallbacks();

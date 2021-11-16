@@ -28,7 +28,6 @@ import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
 import com.xunda.mo.hx.common.interfaceOrImplement.DemoEmCallBack;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
-import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.constant.MyConstant;
@@ -192,7 +191,7 @@ public class Friend_NewFriends extends BaseInitActivity {
         TextView change_txt = contentView.findViewById(R.id.change_txt);
         change_txt.setText("全部拒绝");
         TextView newregistr_txt = contentView.findViewById(R.id.newregistr_txt);
-        newregistr_txt.setText("全部清除");
+        newregistr_txt.setText("全部清空");
         TextView cancel_txt = contentView.findViewById(R.id.cancel_txt);
         change_txt.setOnClickListener(new NoDoubleClickListener() {
             @Override
@@ -220,12 +219,7 @@ public class Friend_NewFriends extends BaseInitActivity {
     private void clearHistory() {
         new SimpleDialogFragment.Builder(mContext)
                 .setTitle("是否清空全部历史记录？")
-                .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view) {
-                        rejectAll_AndClearMethod(Friend_NewFriends.this, saveFile.Friend_ClearApplyList_Url);
-                    }
-                })
+                .setOnConfirmClickListener(view -> rejectAll_AndClearMethod(Friend_NewFriends.this, saveFile.Friend_ClearApplyList_Url))
                 .showCancelButton(true)
                 .show();
     }

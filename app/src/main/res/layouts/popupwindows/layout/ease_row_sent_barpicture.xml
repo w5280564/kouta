@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingTop="13dp">
@@ -17,30 +17,34 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_chat_activity" >
+        android:layout_marginTop="@dimen/margin_chat_activity">
 
         <com.hyphenate.easeui.widget.EaseImageView
             android:id="@+id/iv_userhead"
-            style="@style/ease_row_sent_iv_userhead_style"/>
+            style="@style/ease_row_sent_iv_userhead_style"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/mo_icon"/>
 
         <RelativeLayout
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/tv_userid"
             android:layout_marginRight="@dimen/margin_chat_activity"
-            android:layout_toLeftOf="@id/iv_userhead"
-            android:layout_below="@id/tv_userid">
+            android:layout_toLeftOf="@id/iv_userhead">
 
             <com.hyphenate.easeui.widget.EaseImageView
                 android:id="@+id/image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="fitCenter"
-                tools:src="@drawable/ease_default_image"
+                app:ease_radius="@dimen/ease_chat_image_corner_radius"
                 app:ease_shape_type="rectangle"
-                app:ease_radius="@dimen/ease_chat_image_corner_radius" />
+                tools:src="@drawable/ease_default_image" />
 
-        </RelativeLayout>	
+        </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/ll_loading"
             android:layout_width="wrap_content"
@@ -48,32 +52,41 @@
             android:layout_centerInParent="true"
             android:layout_toLeftOf="@id/bubble"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <ProgressBar
                 android:id="@+id/progress_bar"
                 style="?android:attr/progressBarStyle"
-                android:indeterminateDrawable="@drawable/ease_chat_loading_progress_bar"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:indeterminateDrawable="@drawable/ease_chat_loading_progress_bar"
                 android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/percentage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minWidth="40dp"
                 android:gravity="center"
-                tools:text="0%"
+                android:minWidth="40dp"
                 android:textColor="@android:color/black"
                 android:visibility="invisible"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                tools:text="0%" />
         </LinearLayout>
 
         <ImageView
+            android:layout_width="13dp"
+            android:layout_height="17dp"
+            android:src="@mipmap/fire_icon"
+            android:layout_above="@id/bubble"
+            android:layout_alignStart="@id/bubble"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="-17dp"/>
+
+        <ImageView
             android:id="@+id/msg_status"
-            android:layout_toLeftOf="@id/bubble"
-            style="@style/ease_row_sent_iv_fail_style"/>
+            style="@style/ease_row_sent_iv_fail_style"
+            android:layout_toLeftOf="@id/bubble" />
 
         <TextView
             android:id="@+id/tv_ack"
@@ -81,24 +94,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/bubble"
             android:layout_marginRight="@dimen/ease_chat_ack_margin_bubble"
+            android:layout_toLeftOf="@id/bubble"
             android:text="@string/text_ack_msg"
             android:textSize="12sp"
             android:visibility="invisible" />
-        
+
         <TextView
             android:id="@+id/tv_delivered"
             style="@style/chat_text_name_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/bubble"
             android:layout_marginRight="@dimen/ease_chat_ack_margin_bubble"
+            android:layout_toLeftOf="@id/bubble"
             android:text="@string/text_delivered_msg"
             android:textSize="12sp"
-            android:visibility="invisible"
-            />
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/tv_userid"
@@ -106,8 +118,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/chat_nick_margin_left"
-            android:textSize="@dimen/chat_nick_text_size"
             android:layout_toLeftOf="@id/iv_userhead"
+            android:textSize="@dimen/chat_nick_text_size"
             android:visibility="gone" />
 
         <com.xunda.mo.staticdata.TimerImgView
@@ -117,8 +129,8 @@
             android:layout_marginStart="10dp"
             android:enabled="true"
             android:src="@mipmap/fire_bg"
-            android:visibility="visible"
-            app:layout_constraintStart_toEndOf="@+id/iv_userhead"/>
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/iv_userhead" />
     </RelativeLayout>
 
 </LinearLayout>

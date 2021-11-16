@@ -102,4 +102,5 @@ public interface MyConstant extends DemoConstant {
 
     String Black_Friend = "blackFriend";
     String Dele_Friend = "deletFriend";
+    String USER_UUID = "uuid";
 }

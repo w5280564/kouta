@@ -63,6 +63,7 @@ import com.xunda.mo.hx.common.utils.FetchUserInfoList;
 import com.xunda.mo.hx.common.utils.FetchUserRunnable;
 import com.xunda.mo.hx.common.utils.PreferenceManager;
 import com.xunda.mo.hx.section.chat.ChatPresenter;
+import com.xunda.mo.hx.section.chat.delegates.BARVoiceAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.BurnAfterReadingAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.ChatConferenceInviteAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.ChatNotificationAdapterDelegate;
@@ -72,6 +73,7 @@ import com.xunda.mo.hx.section.chat.delegates.ChatVideoCallAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.ChatVoiceCallAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.HornAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.MyEaseAt_TextAdapterDelegate;
+import com.xunda.mo.hx.section.chat.delegates.MyEaseBARImageAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.MyEaseCustomAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.MyEaseExpressionAdapterDelegate;
 import com.xunda.mo.hx.section.chat.delegates.MyEaseFileAdapterDelegate;
@@ -228,9 +230,10 @@ public class DemoHelper {
                 .addMessageType(MyEaseLocationAdapterDelegate.class)         //定位
                 .addMessageType(MyEaseExpressionAdapterDelegate.class)       //自定义表情
                 .addMessageType(MyEaseFileAdapterDelegate.class)             //文件
-//                .addMessageType(MyEaseBARImageAdapterDelegate.class)            //mo图片
+                .addMessageType(MyEaseBARImageAdapterDelegate.class)         //mo图片
                 .addMessageType(MyEaseImageAdapterDelegate.class)            //图片
                 .addMessageType(MyEaseVideoAdapterDelegate.class)            //视频
+                .addMessageType(BARVoiceAdapterDelegate.class)            //Mo声音
                 .addMessageType(MyEaseVoiceAdapterDelegate.class)            //声音
                 .addMessageType(ChatConferenceInviteAdapterDelegate.class) //语音邀请
                 .addMessageType(ChatVideoCallAdapterDelegate.class)        //视频通话

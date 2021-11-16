@@ -1,6 +1,5 @@
 package com.xunda.mo.staticdata;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipboardManager;
@@ -17,10 +16,8 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -31,9 +28,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
-
-import com.github.gzuliyujiang.oaid.DeviceID;
+import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.network.saveFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,6 +51,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -942,33 +939,44 @@ public class StaticData {
 
     @SuppressLint("MissingPermission")
     public static String getIMEI(Context context) {
-        String deviceId = null;
-        try {
-            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        String deviceId = "";
 
-                deviceId = DeviceID.getOAID();
-                if (TextUtils.isEmpty(deviceId)) {
-                    deviceId = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                }
-            } else {
-                // request old storage permission 需要电话权限
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                    return null;
-                }
-              deviceId =  getDouIMEI(context);
-            }
-
-            if (TextUtils.isEmpty(deviceId)) {
-                return getLocalMacAddress(context);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (TextUtils.isEmpty(deviceId)) {
-                return getLocalMacAddress(context);
-            }
+        String uuid = saveFile.getShareData(MyConstant.USER_UUID, context);
+        if (TextUtils.equals(uuid, "false")) {
+            deviceId = getUUID();
+            saveFile.saveShareData(MyConstant.USER_UUID, deviceId, context);
+        }else {
+            deviceId = uuid;
         }
+//        if (isHarmonyOSa()){
+//            return deviceId;
+//        }
 
+//        try {
+//            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//
+//                deviceId = DeviceID.getOAID();
+//                if (TextUtils.isEmpty(deviceId)) {
+//                    deviceId = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+//                }
+//            } else {
+//                // request old storage permission 需要电话权限
+//                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//                    return null;
+//                }
+//                deviceId = getDouIMEI(context);
+//            }
+//
+//            if (TextUtils.isEmpty(deviceId)) {
+//                return getLocalMacAddress(context);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            if (TextUtils.isEmpty(deviceId)) {
+//                return getLocalMacAddress(context);
+//            }
+//        }
         return deviceId;
     }
 
@@ -1008,6 +1016,32 @@ public class StaticData {
         WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = wifi.getConnectionInfo();
         return info.getMacAddress();
+    }
+
+    private static final String HARMONY_OS = "harmony";
+
+
+    //判断是否为鸿蒙
+    public static boolean isHarmonyOSa() {
+        try {
+            Class clz = Class.forName("com.huawei.system.BuildEx");
+            Method method = clz.getMethod("getOsBrand");
+            ClassLoader classLoader = clz.getClassLoader();
+            System.out.println("classLoader: " + classLoader);
+            //BootClassLoader的parent为null
+            if (classLoader != null && classLoader.getParent() == null) {
+                //return method.invoke(clz).toString();//返回获取的名称
+                //****返回是否是鸿蒙系统 自行注释并将方法返回值改为boolean
+                return HARMONY_OS.equals(method.invoke(clz));
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
+
+
+    public static String getUUID() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
 

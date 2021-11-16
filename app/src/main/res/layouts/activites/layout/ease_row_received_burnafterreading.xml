@@ -46,7 +46,7 @@
             app:layout_constraintStart_toEndOf="@id/iv_userhead"
             app:layout_constraintTop_toBottomOf="@id/tv_userid">
 
-            <com.xunda.mo.staticdata.FireTimerTextView
+            <TextView
                 android:id="@+id/tv_chatcontent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             tools:ignore="NotSibling" />
 
 
-        <ImageView
+        <com.xunda.mo.staticdata.TimerImgView
             android:id="@+id/fire_Img"
             android:layout_width="92dp"
             android:layout_height="33dp"

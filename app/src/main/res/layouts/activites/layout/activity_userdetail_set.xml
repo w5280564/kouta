@@ -224,6 +224,7 @@
         app:arrowItemTitleColor="@color/blacktitlettwo"
         app:arrowItemTitleSize="15sp"
         app:arrowItemShowArrow="false"
+        app:arrowItemCopyShow="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signature_ArrowItemView" />

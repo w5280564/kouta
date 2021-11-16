@@ -119,11 +119,11 @@
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/qr_Content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="使用默言默语APP扫描二维码，加我为好友"
+            android:text=""
             android:textColor="@color/blacktitle"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -137,8 +137,8 @@
             android:layout_marginTop="20dp"
             android:scaleType="centerCrop"
             android:src="@drawable/qrcode_down_icon"
-            app:layout_constraintStart_toStartOf="@+id/textView6"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            app:layout_constraintStart_toStartOf="@+id/qr_Content"
+            app:layout_constraintTop_toBottomOf="@+id/qr_Content" />
 
 
         <TextView
@@ -159,8 +159,8 @@
             android:layout_marginTop="20dp"
             android:scaleType="centerCrop"
             android:src="@drawable/qrcode_share_icon"
-            app:layout_constraintEnd_toEndOf="@+id/textView6"
-            app:layout_constraintTop_toBottomOf="@+id/textView6"/>
+            app:layout_constraintEnd_toEndOf="@+id/qr_Content"
+            app:layout_constraintTop_toBottomOf="@+id/qr_Content"/>
 
 
         <TextView

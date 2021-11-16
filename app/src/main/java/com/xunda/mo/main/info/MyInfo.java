@@ -53,6 +53,7 @@ public class MyInfo {
         myInfo.setUserNum(share.getInt("userNum", 0));
         myInfo.setVipType(share.getInt("VipType", 0));
         myInfo.setIsQuestion(share.getInt("isQuestion", 0));
+        myInfo.setIsHasLoginPassword(share.getInt("isHasLoginPassword", 0));
         return myInfo;
     }
 
@@ -84,11 +85,12 @@ public class MyInfo {
         editor.putInt("userNum", model.getUserNum());
         editor.putInt("VipType", model.getVipType());
         editor.putInt("isQuestion", model.getIsQuestion());
+        editor.putInt("isHasLoginPassword", model.getIsHasLoginPassword());
         editor.apply();
     }
 
     //更新个人信息 没有token与问题isQuestion
-    public void  updateData( UserDetail_Bean.DataDTO userModel){
+    public void  updateData(UserDetail_Bean.DataDTO userModel){
         SharedPreferences.Editor editor = share.edit();
         editor.putInt("age", userModel.getAge());
         editor.putString("areaCode", userModel.getAreaCode());
@@ -112,6 +114,7 @@ public class MyInfo {
         editor.putString("userId", userModel.getUserId());
         editor.putInt("userNum", userModel.getUserNum());
         editor.putInt("VipType", userModel.getVipType());
+        editor.putInt("isHasLoginPassword", userModel.getIsHasLoginPassword());
         editor.apply();
     }
 

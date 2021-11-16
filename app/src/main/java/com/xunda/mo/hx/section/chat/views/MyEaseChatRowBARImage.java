@@ -5,17 +5,21 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.utils.EaseImageUtils;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRowFile;
+import com.hyphenate.exceptions.HyphenateException;
 import com.xunda.mo.R;
+import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.network.saveFile;
+import com.xunda.mo.staticdata.TimerImgView;
 
 /**
  * image for row
@@ -23,7 +27,7 @@ import com.xunda.mo.network.saveFile;
 public class MyEaseChatRowBARImage extends EaseChatRowFile {
     protected ImageView imageView;
     private EMImageMessageBody imgBody;
-    private ImageView fire_Img;
+    private TimerImgView fire_Img;
     private View mes_group;
     private View cons_Mes;
 
@@ -43,34 +47,58 @@ public class MyEaseChatRowBARImage extends EaseChatRowFile {
 
     @Override
     protected void onFindViewById() {
-        percentageView = (TextView) findViewById(R.id.percentage);
-        imageView = (ImageView) findViewById(R.id.image);
-        mes_group =  findViewById(R.id.mes_group);
-        fire_Img =  findViewById(R.id.fire_Img);
-        cons_Mes =  findViewById(R.id.cons_Mes);
+        percentageView = findViewById(R.id.percentage);
+        imageView = findViewById(R.id.image);
+        mes_group = findViewById(R.id.mes_group);
+        fire_Img = findViewById(R.id.fire_Img);
+        cons_Mes = findViewById(R.id.cons_Mes);
+        fire_Img.setOnClickListener(v -> {
+            fire_Img.setTimer(10000);
+            fire_Img.setVisibility(GONE);
+            mes_group.setVisibility(VISIBLE);
+            EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.getFrom(), EMConversation.EMConversationType.Chat, true);
+            message.setAttribute("isSleckt", true);
+            conversation.updateMessage(message);
+            // 当消息已读之后，发送已读回执，并删除消息
+            fire_Img.startTimer(() -> {
+                try {
+                    EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
+                    conversation.removeMessage(message.getMsgId());
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+                LiveDataBus.get().with(MyConstant.FIRE_REFRESH).postValue(true);
+            });
+            sendCMDFireMess();
+
+        });
     }
 
-    
+
     @Override
     protected void onSetUpView() {
-        if(bubbleLayout != null) {
+        if (bubbleLayout != null) {
             bubbleLayout.setBackground(null);
         }
 
         if (message.getChatType() == EMMessage.ChatType.Chat) {
-            if (isSender()){
+            if (isSender()) {
                 String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
                 Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).into(userAvatarView);
-            }else {
+            } else {
                 mes_group.setVisibility(GONE);
                 fire_Img.setVisibility(VISIBLE);
+                boolean isSleckt = message.getBooleanAttribute("isSleckt", false);
+                if (isSleckt) {
+                    mes_group.setVisibility(VISIBLE);
+                    fire_Img.setVisibility(GONE);
+                }
             }
-//            fire_Img.setTimer(10000);
 //            fire_Img.setEnabled(true);
             //添加群聊其他用户的名字与头像
-        }else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-            usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME,""));
-            String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD,"");
+        } else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+            usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME, ""));
+            String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
             Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).into(userAvatarView);
 
             //匿名聊天
@@ -79,7 +107,7 @@ public class MyEaseChatRowBARImage extends EaseChatRowFile {
             }
         }
         imgBody = (EMImageMessageBody) message.getBody();
-       if (message.direct() == EMMessage.Direct.RECEIVE) {// received messages
+        if (message.direct() == EMMessage.Direct.RECEIVE) {// received messages
             ViewGroup.LayoutParams params = EaseImageUtils.getImageShowSize(context, message);
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
             layoutParams.width = params.width;
@@ -87,29 +115,6 @@ public class MyEaseChatRowBARImage extends EaseChatRowFile {
             return;
         }
         showImageView(message);
-
-
-
-        fire_Img.setOnClickListener(v -> {
-            fire_Img.setVisibility(GONE);
-            mes_group.setVisibility(VISIBLE);
-            // 当消息已读之后，发送已读回执，并删除消息
-//            try {
-//                EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
-////                // 消息所属会话
-//                EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.getFrom(), EMConversation.EMConversationType.Chat, true);
-//                conversation.removeMessage(message.getMsgId());
-//            } catch (HyphenateException e) {
-//                e.printStackTrace();
-//            }
-//            fire_Img.startTimer(new TimerImgView.TimerListener() {
-//                @Override
-//                public void onFinish() {
-//
-//                }
-//            });
-        });
-
     }
 
     @Override
@@ -127,14 +132,14 @@ public class MyEaseChatRowBARImage extends EaseChatRowFile {
 
     @Override
     protected void onMessageInProgress() {
-        if(message.direct() == EMMessage.Direct.SEND) {
+        if (message.direct() == EMMessage.Direct.SEND) {
             super.onMessageInProgress();
-        }else {
-            if(EMClient.getInstance().getOptions().getAutodownloadThumbnail()){
+        } else {
+            if (EMClient.getInstance().getOptions().getAutodownloadThumbnail()) {
                 //imageView.setImageResource(R.drawable.ease_default_image);
-            }else {
+            } else {
                 progressBar.setVisibility(View.INVISIBLE);
-                if(percentageView != null) {
+                if (percentageView != null) {
                     percentageView.setVisibility(View.INVISIBLE);
                 }
             }
@@ -143,10 +148,21 @@ public class MyEaseChatRowBARImage extends EaseChatRowFile {
 
     /**
      * load image into image view
-     *
      */
     @SuppressLint("StaticFieldLeak")
     private void showImageView(final EMMessage message) {
         EaseImageUtils.showImage(context, imageView, message);
     }
+
+    private void sendCMDFireMess() {
+        EMMessage cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD);
+        EMCmdMessageBody cmdBody = new EMCmdMessageBody("撤回");
+        cmdMsg.setTo(message.getFrom());
+        cmdMsg.addBody(cmdBody);
+        cmdMsg.setAttribute(MyConstant.Dele_Type, true);
+        cmdMsg.setAttribute(MyConstant.SendFireRecall_Mess_ID, message.getMsgId());
+        EMClient.getInstance().chatManager().sendMessage(cmdMsg);
+    }
+
+
 }

@@ -401,7 +401,7 @@ public class ChatDetailSet extends BaseInitActivity {
                 Uri uri = Uri.parse(model.getData().getHeadImg());
                 person_img.setImageURI(uri);
                 String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
-                nick_nameTxt.setText(name);
+                nick_nameTxt.setText("昵称："+name);
                 cententTxt.setText(name);
                 nick_tv_content.setText(name);
                 leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());

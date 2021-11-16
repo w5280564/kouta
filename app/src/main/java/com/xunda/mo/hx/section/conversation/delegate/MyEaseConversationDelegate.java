@@ -72,10 +72,8 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         String HeadName = "";
 
         Log.e("group", item.conversationId());
-        String mesType = item.getLastMessage().getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-
+//        String mesType = item.getLastMessage().getStringAttribute(MyConstant.MESSAGE_TYPE, "");
         holder.name.setTextColor(ContextCompat.getColor(context, R.color.blacktitle));
-
         if (item.getType() == EMConversation.EMConversationType.GroupChat) {
             if (EaseAtMessageHelper.get().hasAtMeMsg(username)) {
                 holder.mentioned.setText(R.string.were_mentioned);

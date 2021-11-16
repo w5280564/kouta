@@ -71,6 +71,11 @@ public class Me_Set_PSW extends BaseInitActivity {
         MyInfo myInfo = new MyInfo(mContext);
         String moID = String.format("MO ID：%1$s",myInfo.getUserInfo().getUserNum());
         moID_Txt.setText(moID);
+        int oldPsd = myInfo.getUserInfo().getIsHasLoginPassword();
+        old_Psw.setVisibility(View.VISIBLE);
+        if (oldPsd == 0){
+            old_Psw.setVisibility(View.GONE);
+        }
     }
 
     private void initTitle() {

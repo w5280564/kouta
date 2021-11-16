@@ -31,7 +31,7 @@ public class MyArrowItemView extends ConstraintLayout {
     private float titleSize;
     private float contentSize;
     private View root;
-    private ImageView tv_img;
+    private ImageView tv_img,copy_Img;
 
     public MyArrowItemView(Context context) {
         this(context, null);
@@ -55,6 +55,7 @@ public class MyArrowItemView extends ConstraintLayout {
         ivArrow = findViewById(R.id.iv_arrow);
         viewDivider = findViewById(R.id.view_divider);
         tv_img = findViewById(R.id.tv_img);
+        copy_Img = findViewById(R.id.copy_Img);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ArrowItemView);
         int titleResourceId = a.getResourceId(R.styleable.ArrowItemView_arrowItemTitle, -1);
@@ -120,6 +121,8 @@ public class MyArrowItemView extends ConstraintLayout {
 
         boolean showTvImg = a.getBoolean(R.styleable.ArrowItemView_arrowItemShowtvImg, false);
         tv_img.setVisibility(showTvImg ? VISIBLE : GONE);
+        boolean isCopy = a.getBoolean(R.styleable.ArrowItemView_arrowItemCopyShow, false);
+        copy_Img.setVisibility(isCopy ? VISIBLE : GONE);
 
 //        int tv_imgSrcResourceId = a.getResourceId(R.styleable.ArrowItemView_tvImgItemSrc, -1);
 //        if(tv_imgSrcResourceId != -1) {

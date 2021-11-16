@@ -19,7 +19,7 @@ import com.hyphenate.easeui.viewholder.EaseChatRowViewHolder;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRowVoicePlayer;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
-import com.xunda.mo.hx.section.chat.views.MyEaseChatRowVoice;
+import com.xunda.mo.hx.section.chat.views.MyEaseChatRowBARVoice;
 
 import java.io.File;
 
@@ -33,7 +33,7 @@ public class MyEaseVoiceViewHolder extends EaseChatRowViewHolder {
 
     public static EaseChatRowViewHolder create(ViewGroup parent,
                                                boolean isSender, MessageListItemClickListener itemClickListener) {
-        return new MyEaseVoiceViewHolder(new MyEaseChatRowVoice(parent.getContext(), isSender), itemClickListener);
+        return new MyEaseVoiceViewHolder(new MyEaseChatRowBARVoice(parent.getContext(), isSender), itemClickListener);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class MyEaseVoiceViewHolder extends EaseChatRowViewHolder {
             // Stop the voice play first, no matter the playing voice item is this or others.
             voicePlayer.stop();
             // Stop the voice play animation.
-            ((MyEaseChatRowVoice) getChatRow()).stopVoicePlayAnimation();
+            ((MyEaseChatRowBARVoice) getChatRow()).stopVoicePlayAnimation();
 
             // If the playing voice item is this item, only need stop play.
             String playingId = voicePlayer.getCurrentPlayingId();
@@ -61,7 +61,7 @@ public class MyEaseVoiceViewHolder extends EaseChatRowViewHolder {
             if (file.exists() && file.isFile()) {
                 playVoice(message);
                 // Start the voice play animation.
-                ((MyEaseChatRowVoice) getChatRow()).startVoicePlayAnimation();
+                ((MyEaseChatRowBARVoice) getChatRow()).startVoicePlayAnimation();
             } else {
                 asyncDownloadVoice(message);
             }
@@ -101,7 +101,7 @@ public class MyEaseVoiceViewHolder extends EaseChatRowViewHolder {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 // Stop the voice play animation.
-                ((MyEaseChatRowVoice) getChatRow()).stopVoicePlayAnimation();
+                ((MyEaseChatRowBARVoice) getChatRow()).stopVoicePlayAnimation();
             }
         });
     }
@@ -129,7 +129,7 @@ public class MyEaseVoiceViewHolder extends EaseChatRowViewHolder {
             ackMessage(message);
             playVoice(message);
             // Start the voice play animation.
-            ((MyEaseChatRowVoice) getChatRow()).startVoicePlayAnimation();
+            ((MyEaseChatRowBARVoice) getChatRow()).startVoicePlayAnimation();
         } else {
             EMLog.e(TAG, "file not exist");
         }

@@ -20,7 +20,7 @@ public class UserDetail_Bean implements Serializable {
 
     @NoArgsConstructor
     @Data
-    public static class DataDTO implements Serializable{
+    public static class DataDTO {
         @JsonProperty("age")
         private Integer age;
         @JsonProperty("areaCode")
@@ -43,8 +43,14 @@ public class UserDetail_Bean implements Serializable {
         private String hxUserName;
         @JsonProperty("inPassword")
         private String inPassword;
+        @JsonProperty("isHasLockPassword")
+        private Integer isHasLockPassword;
+        @JsonProperty("isHasLoginPassword")
+        private Integer isHasLoginPassword;
         @JsonProperty("isNeedUnlock")
         private Integer isNeedUnlock;
+        @JsonProperty("isQuestion")
+        private Integer isQuestion;
         @JsonProperty("lightStatus")
         private Integer lightStatus;
         @JsonProperty("mailbox")
@@ -61,6 +67,8 @@ public class UserDetail_Bean implements Serializable {
         private String tag;
         @JsonProperty("token")
         private String token;
+        @JsonProperty("unlockType")
+        private Integer unlockType;
         @JsonProperty("userId")
         private String userId;
         @JsonProperty("userNum")
