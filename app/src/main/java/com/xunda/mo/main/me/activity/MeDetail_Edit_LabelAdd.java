@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 import com.xunda.mo.R;
+import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.main.constant.MyConstant;
@@ -71,6 +72,12 @@ public class MeDetail_Edit_LabelAdd extends BaseInitActivity {
         query = findViewById(R.id.query);
         Label_Add.setOnClickListener(new Label_AddClick());
         label_Lin = findViewById(R.id.label_Lin);
+        findViewById(R.id.search_clear).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                query.setText("");
+            }
+        });
     }
 
     private void initTitle() {
@@ -80,8 +87,8 @@ public class MeDetail_Edit_LabelAdd extends BaseInitActivity {
         Button return_Btn = title_Include.findViewById(R.id.return_Btn);
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         return_Btn.setVisibility(View.VISIBLE);
-        TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
-        cententTxt.setText("编辑标签");
+        TextView cententTxt = title_Include.findViewById(R.id.cententtxt);
+        cententTxt.setText("编辑个人标签");
         Button right_Btn = title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.GONE);
         return_Btn.setOnClickListener(new return_Btn());
@@ -142,20 +149,41 @@ public class MeDetail_Edit_LabelAdd extends BaseInitActivity {
             label_Name.setText(tagS.get(i));
             myFlow.addView(view);
             remove_Img.setOnClickListener(v -> {
-                for (int k = 0; k < myFlow.getChildCount(); k++) {
-                    if (view == myFlow.getChildAt(k)) {
-                        myFlow.removeViewAt(k);
-                        tagS.remove(k);
-                        String changType = "6";
-                        ChangeUserMethod(MeDetail_Edit_LabelAdd.this, saveFile.User_Update_Url,changType);
-                        break;
-                    }
-                }
-
+                showToastDialog(myFlow,view);
             });
 
         }
     }
+
+    /**
+     * 提示dialog
+     */
+    private void showToastDialog(LinearLayout myFlow,View view ) {
+        TwoButtonDialog dialog = new TwoButtonDialog(this, "您确定要删除该标签吗", "取消", "确定",
+                new TwoButtonDialog.ConfirmListener() {
+
+                    @Override
+                    public void onClickRight() {
+                        for (int k = 0; k < myFlow.getChildCount(); k++) {
+                            if (view == myFlow.getChildAt(k)) {
+                                myFlow.removeViewAt(k);
+                                tagS.remove(k);
+                                String changType = "6";
+                                ChangeUserMethod(MeDetail_Edit_LabelAdd.this, saveFile.User_Update_Url,changType);
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onClickLeft() {
+
+                    }
+                });
+        dialog.show();
+
+    }
+
 
 
     /**
@@ -173,8 +201,7 @@ public class MeDetail_Edit_LabelAdd extends BaseInitActivity {
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                baseDataModel baseModel = new Gson().fromJson(result, baseDataModel.class);
-//                Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
+                query.setText("");
                 LiveDataBus.get().with(MyConstant.MY_LABEL).setValue(str);
 
             }

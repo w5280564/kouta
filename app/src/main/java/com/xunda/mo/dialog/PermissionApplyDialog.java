@@ -1,4 +1,4 @@
-package com.xunda.mo.staticdata.permission;
+package com.xunda.mo.dialog;
 
 import static com.luck.picture.lib.tools.ScreenUtils.getScreenWidth;
 

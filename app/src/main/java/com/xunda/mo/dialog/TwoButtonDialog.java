@@ -1,10 +1,11 @@
-package com.xunda.mo.staticdata.permission;
+package com.xunda.mo.dialog;
 
 import static com.luck.picture.lib.tools.ScreenUtils.getScreenWidth;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -19,7 +20,7 @@ public class TwoButtonDialog extends Dialog implements
 		View.OnClickListener {
 
 	private ConfirmListener listener;
-	private String content, left, right;
+	private String title,content, left, right;
 	private Context mContext;
 	private TextView tv_right, tv_left;
 
@@ -27,6 +28,18 @@ public class TwoButtonDialog extends Dialog implements
 						   String right,  ConfirmListener confirmListener) {
 		super(context, R.style.CenterDialogStyle);
 		this.listener = confirmListener;
+		this.content = content;
+		this.left = left;
+		this.right = right;
+		this.mContext = context;
+	}
+
+
+	public TwoButtonDialog(Context context,String title,  String content, String left,
+						   String right,  ConfirmListener confirmListener) {
+		super(context, R.style.CenterDialogStyle);
+		this.listener = confirmListener;
+		this.title = title;
 		this.content = content;
 		this.left = left;
 		this.right = right;
@@ -55,9 +68,11 @@ public class TwoButtonDialog extends Dialog implements
 
 		tv_right = findViewById(R.id.tv_right);
 		tv_left = findViewById(R.id.tv_left);
+		TextView tv_title = findViewById(R.id.tv_title);
 		TextView tv_content = findViewById(R.id.tv_content);
 		tv_right.setText(right);
 		tv_left.setText(left);
+		tv_title.setText(TextUtils.isEmpty(title)?"温馨提示":title);
 		tv_content.setText(content);
 	}
 

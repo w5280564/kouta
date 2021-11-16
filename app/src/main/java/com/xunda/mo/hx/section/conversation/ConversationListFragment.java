@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,7 +62,7 @@ import java.util.List;
 
 
 public class ConversationListFragment extends MyEaseConversationListFragment implements View.OnClickListener {
-    private EaseSearchTextView tvSearch;
+    private LinearLayout ll_search;
 
     private ConversationListViewModel mViewModel;
     private EaseRecyclerView rv_conversation_list;
@@ -78,7 +80,9 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         //添加搜索会话布局
         View view = LayoutInflater.from(mContext).inflate(R.layout.demo_layout_search, null);
         llRoot.addView(view, 1);
-        tvSearch = view.findViewById(R.id.tv_search);
+        ll_search = view.findViewById(R.id.ll_search);
+        TextView tv_search = view.findViewById(R.id.tv_search);
+        tv_search.setHint("搜索");
         conversationListLayout.getListAdapter().setEmptyLayoutId(R.layout.ease_layout_default_no_data);
 
         conversationListLayout.setItemHeight((int) EaseCommonUtils.sp2px(mContext, 66));
@@ -140,7 +144,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
     @Override
     public void initListener() {
         super.initListener();
-        tvSearch.setOnClickListener(this);
+        ll_search.setOnClickListener(this);
     }
 
     @Override
@@ -296,7 +300,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_search:
+            case R.id.ll_search:
                 SearchConversationActivity.actionStart(mContext);
                 break;
         }

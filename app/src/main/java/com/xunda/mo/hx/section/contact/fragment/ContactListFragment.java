@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -88,13 +89,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ContactListFragment extends EaseContactListFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
-    private EaseSearchTextView tvSearch;
+    private LinearLayout ll_search;
     public ContactsViewModel mViewModel;
     private MyContactList_Adapter myContactList_adapter;// 列表适配器
     private MyContactHead_ListAdapter myContact_Head_listAdapter;//头部适配器
     private ConcatAdapter concatAdapter;
     private EaseContactListLayout contactList;
-    private Button more_img;
     private TextView more_Txt;
     private TextView mTvMainFriendsMsg;
 
@@ -247,7 +247,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
         llRoot.addView(head_view, 0);
         ConstraintLayout more_Con = head_view.findViewById(R.id.more_Con);
         more_Txt = head_view.findViewById(R.id.more_Txt);
-        more_img = head_view.findViewById(R.id.more_img);
         more_Con.setOnClickListener(new more_ConClick());
     }
 
@@ -262,8 +261,9 @@ public class ContactListFragment extends EaseContactListFragment implements View
         //添加搜索会话布局
         View view = LayoutInflater.from(mContext).inflate(R.layout.demo_layout_search, null);
         llRoot.addView(view, 1);
-        tvSearch = view.findViewById(R.id.tv_search);
-        tvSearch.setHint(R.string.em_friend_list_search_hint);
+        ll_search = view.findViewById(R.id.ll_search);
+        TextView tv_search = view.findViewById(R.id.tv_search);
+        tv_search.setHint("搜索昵称/Moid");
     }
 
 
@@ -271,7 +271,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
     public void initListener() {
         super.initListener();
         contactLayout.getSwipeRefreshLayout().setOnRefreshListener(this);
-        tvSearch.setOnClickListener(this);
+        ll_search.setOnClickListener(this);
         contactLayout.getContactList().setOnCustomItemClickListener(new OnItemClickListener() {
             @SuppressLint("NonConstantResourceId")
             @Override
@@ -398,7 +398,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_search:
+            case R.id.ll_search:
                 SearchFriendsActivity.actionStart(mContext);
                 break;
         }

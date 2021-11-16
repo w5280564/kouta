@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    tools:ignore="MissingConstraints"
-    android:layout_marginTop="10dp">
+    android:background="@color/white">
 
 
     <ImageView
         android:id="@+id/remove_Img"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="@dimen/dp_12"
+        android:layout_height="@dimen/dp_12"
         android:layout_marginStart="15dp"
-        android:src="@drawable/label_remove_icon"
+        android:src="@mipmap/icon_jian"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,17 +19,28 @@
     <TextView
         android:id="@+id/label_Name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dp_20"
         android:layout_marginStart="15dp"
         android:background="@drawable/group_labeladd_radius"
         android:gravity="center"
         android:text="哈哈哈哈"
         android:textColor="@color/yellow"
-        android:textSize="14sp"
+        android:textSize="@dimen/sp_12"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/remove_Img"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/greyfive"
+        android:layout_marginStart="@dimen/dp_42"
+        android:layout_marginTop="@dimen/dp_13"
+        app:layout_constraintTop_toBottomOf="@id/label_Name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

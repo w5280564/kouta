@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.xunda.mo.R;
+import com.xunda.mo.dialog.PermissionApplyDialog;
+import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.section.base.BaseActivity;
 
 import java.util.List;

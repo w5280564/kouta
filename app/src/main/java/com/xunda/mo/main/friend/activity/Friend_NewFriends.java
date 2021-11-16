@@ -23,6 +23,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.manager.EaseSystemMsgManager;
 import com.xunda.mo.R;
+import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
@@ -31,6 +32,7 @@ import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.conversation.Group_Notices;
 import com.xunda.mo.main.friend.myAdapter.Friend_NewFriendList_Adapter;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.NewFriend_Bean;
@@ -149,9 +151,6 @@ public class Friend_NewFriends extends BaseInitActivity {
         mAdapter.setOnItemClickLitener(new Friend_NewFriendList_Adapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-//                String addType = "8";
-//                String friendUserId = baseModel.get(position).
-//                ChatFriend_Detail.actionStart(mContext, friendUserId, addType);
             }
 
             @Override
@@ -204,7 +203,7 @@ public class Friend_NewFriends extends BaseInitActivity {
             @Override
             protected void onNoDoubleClick(View v) {
                 MorePopup.dismiss();
-                clearHistory();
+                showToastDialog();
             }
         });
         cancel_txt.setOnClickListener(new NoDoubleClickListener() {
@@ -215,14 +214,28 @@ public class Friend_NewFriends extends BaseInitActivity {
         });
     }
 
-    //清除申请记录
-    private void clearHistory() {
-        new SimpleDialogFragment.Builder(mContext)
-                .setTitle("是否清空全部历史记录？")
-                .setOnConfirmClickListener(view -> rejectAll_AndClearMethod(Friend_NewFriends.this, saveFile.Friend_ClearApplyList_Url))
-                .showCancelButton(true)
-                .show();
+
+    /**
+     * 提示dialog
+     */
+    private void showToastDialog() {
+        TwoButtonDialog dialog = new TwoButtonDialog(this, "全部清空","是否清空全部历史记录？", "取消", "确定",
+                new TwoButtonDialog.ConfirmListener() {
+
+                    @Override
+                    public void onClickRight() {
+                        rejectAll_AndClearMethod(Friend_NewFriends.this, saveFile.Friend_ClearApplyList_Url);
+                    }
+
+                    @Override
+                    public void onClickLeft() {
+
+                    }
+                });
+        dialog.show();
+
     }
+
 
 
     private List<NewFriend_Bean.DataDTO.ListDTO> baseModel;
@@ -324,6 +337,7 @@ public class Friend_NewFriends extends BaseInitActivity {
             public void success(String result) {
                 baseModel baseBean = new Gson().fromJson(result, baseModel.class);
                 list_xrecycler.refreshComplete();
+                mAdapter.notifyDataSetChanged();
                 Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
             }
 
