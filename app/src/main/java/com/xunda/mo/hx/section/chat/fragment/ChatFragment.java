@@ -1109,7 +1109,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 GruopInfo_Bean.DataDTO dataDTO = groupModel.getData();
                 String topStr = dataDTO.getGroupNotice();
                 setTopView(topStr);
-                titleBarMessage.setTitle(dataDTO.getGroupName());
+                titleBarMessage.setTitle(String.format("%1$s(%2$s)", dataDTO.getGroupName(), dataDTO.getGroupUserCount()));
                 sendAnonymousName(groupModel.getData().getIsAnonymous());
             }
 

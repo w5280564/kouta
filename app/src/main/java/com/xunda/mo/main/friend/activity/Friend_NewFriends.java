@@ -21,7 +21,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.manager.EaseSystemMsgManager;
 import com.xunda.mo.R;
-import com.xunda.mo.dialog.TwoButtonDialog;
+import com.xunda.mo.dialog.TwoButtonDialogWithTitle;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
@@ -217,8 +217,8 @@ public class Friend_NewFriends extends BaseInitActivity {
      * 提示dialog
      */
     private void showToastDialog() {
-        TwoButtonDialog dialog = new TwoButtonDialog(this, "全部清空","是否清空全部历史记录？", "取消", "确定",
-                new TwoButtonDialog.ConfirmListener() {
+        TwoButtonDialogWithTitle dialog = new TwoButtonDialogWithTitle(this, "全部清空","是否清空全部历史记录？", "取消", "确定",
+                new TwoButtonDialogWithTitle.ConfirmListener() {
 
                     @Override
                     public void onClickRight() {

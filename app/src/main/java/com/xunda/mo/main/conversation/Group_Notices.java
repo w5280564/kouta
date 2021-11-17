@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -19,14 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.gson.Gson;
 import com.hyphenate.chat.EMConversation;
 import com.xunda.mo.R;
-import com.xunda.mo.dialog.TwoButtonDialog;
+import com.xunda.mo.dialog.TwoButtonDialogWithTitle;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
-import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
-import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.group.adapter.GroupNotice_Adapter;
-import com.xunda.mo.main.me.activity.MeDetail_Edit_LabelAdd;
 import com.xunda.mo.model.Group_notices_Bean;
 import com.xunda.mo.model.baseModel;
 import com.xunda.mo.network.saveFile;
@@ -221,8 +217,8 @@ public class Group_Notices extends BaseInitActivity {
      * 提示dialog
      */
     private void showToastDialog() {
-        TwoButtonDialog dialog = new TwoButtonDialog(this, "是否清空全部历史记录？", "取消", "确定",
-                new TwoButtonDialog.ConfirmListener() {
+        TwoButtonDialogWithTitle dialog = new TwoButtonDialogWithTitle(this, "是否清空全部历史记录？", "取消", "确定",
+                new TwoButtonDialogWithTitle.ConfirmListener() {
 
                     @Override
                     public void onClickRight() {

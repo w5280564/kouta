@@ -15,6 +15,7 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_chatdetailset.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_chatfriend_detail.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_friend_newfriends.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_group_detailset.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_main.xml" value="0.17806484295845998" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_main_login_code.xml" value="0.36614583333333334" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_me_about.xml" value="0.3536458333333333" />
@@ -37,6 +38,7 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/contactlist_head.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/conversationlist_head.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/dialog_two_button.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/dialog_two_button_with_title.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/group_label_add.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/popup_more_convers.xml" value="0.3536458333333333" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/32246fbe39018eda991bd63abf46f795/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_layout_chat.xml" value="0.31157407407407406" />
@@ -247,7 +249,7 @@
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/group_allmembers_add.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/group_allmembers_manage.xml" value="0.33" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/group_allmembers_manage_blacklist.xml" value="0.30972222222222223" />
-        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/group_allmembers_remove.xml" value="0.33" />
+        <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/group_allmembers_remove.xml" value="0.1352755194218609" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/group_at.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/group_detailreport.xml" value="0.5" />
         <entry key="..\:/waylen/kouta/app/src/main/res/layouts/activites/layout/groupallmembers_manage_setupmanage.xml" value="0.33" />
@@ -356,7 +358,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_15_PREVIEW" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

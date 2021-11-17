@@ -273,8 +273,8 @@ public class GroupDetail_Report extends BaseInitActivity {
             int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
             int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
             LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(width, height);
-            int margisright = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-            itemParams.setMargins(margisright, margisright, margisright, margisright);
+            int marginLeft = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
+            itemParams.setMargins(marginLeft, 0, 0, marginLeft);
 
             final SimpleDraweeView mySimple = new SimpleDraweeView(this);
             add_photo_Img.setLayoutParams(itemParams);
@@ -282,7 +282,6 @@ public class GroupDetail_Report extends BaseInitActivity {
             addSimplePath(mySimple, imgList.get(i));//多图修改尺寸
 
             mySimple.setTag(i);
-//            mySimpleArr.add(mySimple);
             int position = photoLayout.getChildCount() - 1;//下标
             myFlow.addView(mySimple, position);
             mySimple.setOnLongClickListener(new View.OnLongClickListener() {

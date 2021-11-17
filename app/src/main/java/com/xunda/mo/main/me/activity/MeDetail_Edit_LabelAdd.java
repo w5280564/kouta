@@ -17,13 +17,11 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
-import com.google.gson.Gson;
 import com.xunda.mo.R;
-import com.xunda.mo.dialog.TwoButtonDialog;
+import com.xunda.mo.dialog.TwoButtonDialogWithTitle;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.main.constant.MyConstant;
-import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
@@ -159,8 +157,8 @@ public class MeDetail_Edit_LabelAdd extends BaseInitActivity {
      * 提示dialog
      */
     private void showToastDialog(LinearLayout myFlow,View view ) {
-        TwoButtonDialog dialog = new TwoButtonDialog(this, "您确定要删除该标签吗？", "取消", "确定",
-                new TwoButtonDialog.ConfirmListener() {
+        TwoButtonDialogWithTitle dialog = new TwoButtonDialogWithTitle(this, "您确定要删除该标签吗？", "取消", "确定",
+                new TwoButtonDialogWithTitle.ConfirmListener() {
 
                     @Override
                     public void onClickRight() {

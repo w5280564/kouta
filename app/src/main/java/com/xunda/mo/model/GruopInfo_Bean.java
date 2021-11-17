@@ -74,5 +74,7 @@ public class GruopInfo_Bean implements Serializable {
         private String myNickname;
         @JsonProperty("tag")
         private String tag;
+        @JsonProperty("groupUserCount")
+        private Integer groupUserCount;
     }
 }

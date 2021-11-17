@@ -37,6 +37,8 @@ import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseCompat;
 import com.hyphenate.easeui.utils.EaseFileUtils;
 import com.xunda.mo.R;
+import com.xunda.mo.dialog.TwoButtonDialog;
+import com.xunda.mo.dialog.TwoButtonDialogWithTitle;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
@@ -52,6 +54,7 @@ import com.xunda.mo.main.baseView.FlowLayout;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.baseView.MySwitchItemView;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.conversation.Group_Notices;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.me.activity.MeAndGroup_QRCode;
 import com.xunda.mo.model.GroupMember_Bean;
@@ -415,16 +418,34 @@ public class GroupDetailSet extends BaseInitActivity {
     private class clearHistory_TxtClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            showClearConfirmDialog();
+            showToastDialog(getString(R.string.em_chat_group_detail_clear_history_warning),1);
         }
     }
 
-    private void showClearConfirmDialog() {
-        new SimpleDialogFragment.Builder(mContext)
-                .setTitle(R.string.em_chat_group_detail_clear_history_warning)
-                .setOnConfirmClickListener(view -> viewModel.clearHistory(HXgroupId))
-                .showCancelButton(true)
-                .show();
+
+    /**
+     * 提示dialog
+     */
+    private void showToastDialog(String content,int type) {
+        TwoButtonDialog dialog = new TwoButtonDialog(this, content, "取消", "确定",
+                new TwoButtonDialog.ConfirmListener() {
+
+                    @Override
+                    public void onClickRight() {
+                        if (type==1) {//清空聊天记录
+                            viewModel.clearHistory(HXgroupId);
+                        }else{//解散/退出群组
+                            dissmissGroupMethod(GroupDetailSet.this, saveFile.Group_Out_Url);
+                        }
+                    }
+
+                    @Override
+                    public void onClickLeft() {
+
+                    }
+                });
+        dialog.show();
+
     }
 
 
@@ -453,19 +474,11 @@ public class GroupDetailSet extends BaseInitActivity {
         String content = "";
         if (Identity == 1) {
             content = "解散群后您将失去和群友的联系，确定要解散嘛？";
+            showToastDialog(content,2);
         } else {
             content = "您将退出群聊,同时删除该群的聊天记录？";
+            showToastDialog(content,3);
         }
-        new SimpleDialogFragment.Builder(mContext)
-                .setTitle("提示")
-                .showContent(true)
-                .setContent(content)
-                .setOnConfirmClickListener(view -> {
-//                        String changType = "4";
-                    dissmissGroupMethod(GroupDetailSet.this, saveFile.Group_Out_Url);
-                })
-                .showCancelButton(true)
-                .show();
     }
 
 

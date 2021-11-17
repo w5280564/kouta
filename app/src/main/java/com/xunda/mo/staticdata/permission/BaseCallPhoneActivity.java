@@ -12,7 +12,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.xunda.mo.R;
 import com.xunda.mo.dialog.PermissionApplyDialog;
-import com.xunda.mo.dialog.TwoButtonDialog;
+import com.xunda.mo.dialog.TwoButtonDialogWithTitle;
 import com.xunda.mo.hx.section.base.BaseActivity;
 
 import java.util.List;
@@ -43,8 +43,8 @@ public abstract class BaseCallPhoneActivity extends BaseActivity implements Easy
      * 拨打电话dialog
      */
     private void showCallDialog() {
-        TwoButtonDialog dialog = new TwoButtonDialog(this, phone, getString(R.string.Cancel), "呼叫",
-                new TwoButtonDialog.ConfirmListener() {
+        TwoButtonDialogWithTitle dialog = new TwoButtonDialogWithTitle(this, phone, getString(R.string.Cancel), "呼叫",
+                new TwoButtonDialogWithTitle.ConfirmListener() {
 
                     @Override
                     public void onClickRight() {
