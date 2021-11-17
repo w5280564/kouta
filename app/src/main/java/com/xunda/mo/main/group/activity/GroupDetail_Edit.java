@@ -77,6 +77,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
     private SimpleDraweeView person_img;
     private MyArrowItemView adress_ArrowItemView, brief_ArrowItemView;
     private LinearLayout label_Lin;
+    private TextView tv_tag_no;
 
     public static void actionStart(Context context, int Identity, GruopInfo_Bean groupModel) {
         Intent intent = new Intent(context, GroupDetail_Edit.class);
@@ -108,6 +109,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
         label_Constraint = findViewById(R.id.label_Constraint);
         label_Constraint.setOnClickListener(new label_ConstraintClick());
         label_Lin = findViewById(R.id.label_Lin);
+        tv_tag_no = findViewById(R.id.tv_tag_no);
         adress_ArrowItemView = findViewById(R.id.adress_ArrowItemView);
         adress_ArrowItemView.setOnClickListener(new adress_ArrowItemViewClick());
         brief_ArrowItemView = findViewById(R.id.brief_ArrowItemView);
@@ -116,6 +118,8 @@ public class GroupDetail_Edit extends BaseInitActivity {
         initObsClient();
 
         LiveDataBus.get().with(MyConstant.MY_GROUP_LABEL, String.class).observe(this, s -> {
+            tv_tag_no.setVisibility(View.GONE);
+            label_Lin.setVisibility(View.VISIBLE);
             tagList(label_Lin, GroupDetail_Edit.this, s);
         });
     }
@@ -128,7 +132,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         return_Btn.setVisibility(View.VISIBLE);
         TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
-        cententTxt.setText("编辑资料");
+        cententTxt.setText("群资料");
         Button right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.GONE);
         return_Btn.setOnClickListener(new return_Btn());
@@ -148,12 +152,20 @@ public class GroupDetail_Edit extends BaseInitActivity {
             GruopInfo_Bean.DataDTO dataDTO = groupModel.getData();
             Uri uri = Uri.parse(dataDTO.getGroupHeadImg());
             person_img.setImageURI(uri);
-            String adressStr = dataDTO.getGroupAddr().isEmpty() ? "未设置" : dataDTO.getGroupAddr();
-            adress_ArrowItemView.getTvContent().setText(adressStr);
+            String addressStr = dataDTO.getGroupAddr().isEmpty() ? "未设置" : dataDTO.getGroupAddr();
+            adress_ArrowItemView.getTvContent().setText(addressStr);
             String content = dataDTO.getGroupIntroduction().isEmpty() ? "群主很懒，还没有群介绍哦~" : dataDTO.getGroupIntroduction();
             brief_ArrowItemView.getTip().setText(content);
             String tag = groupModel.getData().getTag();
-            tagList(label_Lin, GroupDetail_Edit.this, tag);
+            if (TextUtils.isEmpty(tag)) {
+                tv_tag_no.setVisibility(View.VISIBLE);
+                label_Lin.setVisibility(View.GONE);
+            }else{
+                tv_tag_no.setVisibility(View.GONE);
+                label_Lin.setVisibility(View.VISIBLE);
+                tagList(label_Lin, GroupDetail_Edit.this, tag);
+            }
+
 
             //3是普通成员不能修改
             if (Identity == 3) {

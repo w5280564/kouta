@@ -80,11 +80,12 @@ public class GroupDetailSet extends BaseInitActivity {
 
     private String HXgroupId;
     private SimpleDraweeView person_img;
-    private TextView group_Name, group_content, clearHistory_Txt, remove_Txt;
-    private MyArrowItemView group_Name_ArrowItemView, group_Code_ArrowItemView, group_Nick_ArrowItemView, group_member_ArrowItemView,
+    private TextView group_Name, group_content, clearHistory_Txt, remove_Txt,tv_id;
+    private MyArrowItemView group_Name_ArrowItemView,  group_Nick_ArrowItemView, group_member_ArrowItemView,
             clear_ArrowItemView, group_Top_ArrowItemView, chatBg_ArrowItemView, group_Management_ArrowItemView;
     private MySwitchItemView member_quit_Switch, group_chatTop_Switch, disturb_Switch;
     private Group Muggle_Group;
+    private ConstraintLayout group_Code_ArrowItemView;
     private FlowLayout group_Flow;
     private ImageView groupmember_add, groupmember_remove;
     private GroupDetailViewModel viewModel;
@@ -121,6 +122,7 @@ public class GroupDetailSet extends BaseInitActivity {
         clear_ArrowItemView = findViewById(R.id.clear_ArrowItemView);
         clear_ArrowItemView.setOnClickListener(new clear_ArrowItemViewClick());
         group_Flow = findViewById(R.id.group_Flow);
+        tv_id = findViewById(R.id.tv_id);
         group_Code_ArrowItemView = findViewById(R.id.group_Code_ArrowItemView);
         group_Code_ArrowItemView.setOnClickListener(new group_Code_ArrowItemViewClick());
         group_Nick_ArrowItemView = findViewById(R.id.group_Nick_ArrowItemView);
@@ -499,7 +501,7 @@ public class GroupDetailSet extends BaseInitActivity {
                 String content = dataDTO.getGroupIntroduction().isEmpty() ? "群主很懒，还没有群介绍哦~" : dataDTO.getGroupIntroduction();
                 group_content.setText(content);
                 group_Name_ArrowItemView.getTvContent().setText(dataDTO.getGroupName());
-                group_Code_ArrowItemView.getTvContent().setText(dataDTO.getGroupNum().toString());
+                tv_id.setText(dataDTO.getGroupNum().toString());
                 group_Nick_ArrowItemView.getTvContent().setText(dataDTO.getMyNickname());
                 String topStr = TextUtils.isEmpty(dataDTO.getGroupNotice()) ? "未设置" : dataDTO.getGroupNotice();
                 group_Top_ArrowItemView.getTvContent().setText(topStr);

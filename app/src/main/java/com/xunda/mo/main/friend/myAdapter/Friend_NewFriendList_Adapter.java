@@ -16,6 +16,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.xunda.mo.R;
 import com.xunda.mo.model.NewFriend_Bean;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.StaticData;
 
 import java.util.List;
 
@@ -128,7 +129,7 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
         holder.refuse_Btn.setVisibility(View.INVISIBLE);
         holder.add_Btn.setVisibility(View.INVISIBLE);
         holder.time_Txt.setVisibility(View.VISIBLE);
-//        holder.time_Txt.setText(StaticData.stampToDate(oneData.getUpdateTime()));
+        holder.time_Txt.setText(StaticData.stampToDate(oneData.getUpdateTime()));
         //1申请中2已同意3被拒绝4已过期
         if (oneData.getApplyStatus() == 1) {
             holder.refuse_Btn.setVisibility(View.VISIBLE);

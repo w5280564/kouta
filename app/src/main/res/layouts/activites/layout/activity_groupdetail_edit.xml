@@ -45,6 +45,15 @@
             app:layout_constraintTop_toTopOf="parent"
             app:roundedCornerRadius="15dp" />
 
+        <ImageView
+            android:layout_width="7dp"
+            android:layout_height="12dp"
+            android:src="@mipmap/person_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UseAppTint" />
+
         <View
             android:id="@+id/view_divider"
             android:layout_width="0dp"
@@ -57,19 +66,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!--    <com.xunda.mo.main.baseView.MyArrowItemView-->
-    <!--        android:id="@+id/friend_ArrowItemView"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="50dp"-->
-    <!--        android:background="@color/white"-->
-    <!--        app:arrowItemContent=""-->
-    <!--        app:arrowItemContentColor="@color/greytwo"-->
-    <!--        app:arrowItemTitle="群标签"-->
-    <!--        app:arrowItemTitleColor="@color/blacktitlettwo"-->
-    <!--        app:arrowItemTitleSize="15sp"-->
-    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
-    <!--        app:layout_constraintRight_toRightOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/head_Constraint" />-->
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -109,10 +105,27 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:orientation="horizontal"
+            android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/iv_arrow"
             app:layout_constraintStart_toEndOf="@+id/textView16"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_tag_no"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:text="未设置"
+            android:textColor="@color/greytwo"
+            android:textSize="14sp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_arrow"
+            app:layout_constraintStart_toEndOf="@+id/textView16"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
 
 
         <View
