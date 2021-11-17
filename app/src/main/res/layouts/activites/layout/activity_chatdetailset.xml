@@ -52,6 +52,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:drawableRight="@mipmap/copy_icon"
+                android:drawablePadding="@dimen/dp_6"
                 android:text="Mo ID:"
                 android:textColor="@color/yellowfive"
                 android:textSize="12sp"
@@ -59,12 +61,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/nick_nameTxt" />
 
-            <TextView
+            <com.xunda.mo.view.LightningView
                 android:id="@+id/vip_Txt"
                 android:layout_width="29dp"
                 android:layout_height="15dp"
-                android:layout_marginStart="10dp"
-                android:background="@color/yellow"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/shape_vip_bg"
                 android:gravity="center"
                 android:text="VIP"
                 android:textColor="@color/vipred"
@@ -128,6 +130,7 @@
                 app:arrowItemContent=""
                 app:arrowItemContentColor="@color/greytwo"
                 app:arrowItemTitle="好友来源"
+                app:arrowItemShowArrow="false"
                 app:arrowItemTitleColor="@color/blacktitlettwo"
                 app:arrowItemTitleSize="15sp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -152,7 +155,9 @@
                 android:layout_width="0dp"
                 android:layout_height="45dp"
                 app:arrowItemContentColor="@color/greytwo"
-                app:arrowItemShowArrow="false"
+                app:arrowItemShowArrow="true"
+                app:arrowItemShowtvImg="true"
+                app:arrowItemImageSrc = "@mipmap/icon_create_group"
                 app:arrowItemTitle="创建群聊"
                 app:arrowItemTitleColor="@color/blacktitlettwo"
                 app:arrowItemTitleSize="15sp"

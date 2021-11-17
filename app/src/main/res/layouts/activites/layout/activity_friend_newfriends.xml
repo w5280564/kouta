@@ -19,7 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_Include"/>
+        app:layout_constraintTop_toBottomOf="@id/title_Include"
+        android:background="@color/white"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

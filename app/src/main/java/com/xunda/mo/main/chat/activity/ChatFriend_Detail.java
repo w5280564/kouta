@@ -114,6 +114,12 @@ public class ChatFriend_Detail extends BaseInitActivity {
         context.startActivity(intent);
     }
 
+
+    /**
+     * @param context
+     * @param toChatUsername 环信username  对应服务器HXusername
+     * @param addType        1:墨号添加 2:昵称添加 3:手机号添加 4:邮箱添加 5:标签添加 6:通过群添加 7:二维码添加 8:通过名片添加  9:通过等级排行榜添加
+     */
     public static void actionStartActivity(Context context, String toChatUsername, String addType) {
         Intent intent = new Intent(context, ChatFriend_Detail.class);
         intent.putExtra("toChatUsername", toChatUsername);

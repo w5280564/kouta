@@ -19,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,7 +65,7 @@ import lombok.SneakyThrows;
 public class GroupDetail_Report extends BaseInitActivity {
 
     private MyArrowItemView report_ArrowItemView;
-    private ImageButton add_photo_Img;
+    private ImageView add_photo_Img;
     private Button next_Btn;
     private EditText content_edit;
     private ObsClient obsClient;
@@ -100,7 +101,7 @@ public class GroupDetail_Report extends BaseInitActivity {
         report_ArrowItemView = findViewById(R.id.report_ArrowItemView);
         report_ArrowItemView.setOnClickListener(new report_ArrowItemViewClick());
         photoLayout = findViewById(R.id.photoLayout);
-        add_photo_Img = (ImageButton) findViewById(R.id.add_photo_Img);
+        add_photo_Img = findViewById(R.id.add_photo_Img);
         add_photo_Img.setOnClickListener(new add_photo_ImgOnclickLister());
         content_edit = findViewById(R.id.content_edit);
         next_Btn = findViewById(R.id.next_Btn);
@@ -177,7 +178,7 @@ public class GroupDetail_Report extends BaseInitActivity {
     private class next_BtnClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-            String contenttxt = content_edit.getText().toString().trim();
+            String content_txt = content_edit.getText().toString().trim();
             String reportStr = report_ArrowItemView.getTvContent().getText().toString().trim();
 
             if (TextUtils.equals(reportStr, "请选择")) {
@@ -185,7 +186,7 @@ public class GroupDetail_Report extends BaseInitActivity {
                 return;
             }
 
-            if (TextUtils.isEmpty(contenttxt)) {
+            if (TextUtils.isEmpty(content_txt)) {
                 Toast.makeText(GroupDetail_Report.this, "不能为空", Toast.LENGTH_SHORT).show();
                 return;
             }

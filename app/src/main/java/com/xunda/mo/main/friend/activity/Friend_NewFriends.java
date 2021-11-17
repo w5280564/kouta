@@ -13,10 +13,8 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.google.gson.Gson;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
@@ -29,10 +27,9 @@ import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
 import com.xunda.mo.hx.common.interfaceOrImplement.DemoEmCallBack;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
-import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.baseView.BasePopupWindow;
+import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.constant.MyConstant;
-import com.xunda.mo.main.conversation.Group_Notices;
 import com.xunda.mo.main.friend.myAdapter.Friend_NewFriendList_Adapter;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.NewFriend_Bean;
@@ -42,7 +39,6 @@ import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
 import com.xunda.mo.xrecycle.XRecyclerView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -151,6 +147,8 @@ public class Friend_NewFriends extends BaseInitActivity {
         mAdapter.setOnItemClickLitener(new Friend_NewFriendList_Adapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
+                String HXusername = baseModel.get(position).getHxUserName();
+                ChatFriend_Detail.actionStartActivity(mContext, HXusername,"1");
             }
 
             @Override
@@ -299,7 +297,6 @@ public class Friend_NewFriends extends BaseInitActivity {
             @Override
             public void success(String result) {
                 if (TextUtils.equals(agreeType, "1")) {
-//                        EMClient.getInstance().contactManager().acceptInvitation(hXUserName);
                     DemoHelper.getInstance().getContactManager().asyncAcceptInvitation(hXUserName, new DemoEmCallBack() {
                         @Override
                         public void onSuccess() {

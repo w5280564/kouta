@@ -126,10 +126,10 @@ public class MyArrowItemView extends ConstraintLayout {
         boolean isTipCopy = a.getBoolean(R.styleable.ArrowItemView_arrowItemTipCopyShow, false);
         tip_copy_Img.setVisibility(isTipCopy ? VISIBLE : GONE);
 
-//        int tv_imgSrcResourceId = a.getResourceId(R.styleable.ArrowItemView_tvImgItemSrc, -1);
-//        if(tv_imgSrcResourceId != -1) {
-//            tv_img.setImageResource(tv_imgSrcResourceId);
-//        }
+        int tv_imgSrcResourceId = a.getResourceId(R.styleable.ArrowItemView_arrowItemImageSrc, -1);
+        if(tv_imgSrcResourceId != -1) {
+            tv_img.setImageResource(tv_imgSrcResourceId);
+        }
 
 //        int ArrowHeightId = a.getResourceId(R.styleable.ArrowItemView_arrowHeight, -1);
 //        float ArrowHeight = a.getDimension(R.styleable.ArrowItemView_arrowHeight, 0);

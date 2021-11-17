@@ -3,6 +3,7 @@ package com.xunda.mo.main.friend.myAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,6 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
     }
 
     public void addMoreData(List<NewFriend_Bean.DataDTO.ListDTO> otherList) {
-//        this.otherList = otherList;
         notifyDataSetChanged();
     }
 
@@ -121,8 +121,8 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
         }
 
         holder.name_Txt.setText(oneData.getNickname());
-        holder.friend_Txt.setText(oneData.getRemark());
-        holder.apply_Txt.setText(oneData.getSource());
+        holder.friend_Txt.setText(TextUtils.isEmpty(oneData.getRemark())?"请求添加你为好友":oneData.getRemark());
+        holder.apply_Txt.setText("来源："+oneData.getSource());
 
 
         holder.refuse_Btn.setVisibility(View.INVISIBLE);
@@ -137,7 +137,7 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
         } else if (oneData.getApplyStatus() == 2) {
             holder.result_Txt.setText("已同意");
         } else if (oneData.getApplyStatus() == 3) {
-            holder.result_Txt.setText("被拒绝");
+            holder.result_Txt.setText("已拒绝");
         } else if (oneData.getApplyStatus() == 4) {
             holder.result_Txt.setText("已过期");
         }

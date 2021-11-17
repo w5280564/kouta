@@ -3,6 +3,7 @@ package com.xunda.mo.staticdata;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -42,6 +43,7 @@ public class xUtils3Http {
             @Override
             public void onSuccess(String result) {
                 if (result != null) {
+                    Log.d("xunda",url+"接口返回"+result);
                     baseModel model = new Gson().fromJson(result, baseModel.class);
                     if (model.getCode() == 201) {
                         Intent intent = new Intent(mContext, MainLogin_Register.class);
@@ -109,6 +111,7 @@ public class xUtils3Http {
             @Override
             public void onSuccess(String result) {
                 if (result != null) {
+                    Log.d("xunda",url+"接口返回"+result);
                     baseModel model = new Gson().fromJson(result, baseModel.class);
                     if (model.getCode() == 201) {
                         Intent intent = new Intent(mContext, MainLogin_Register.class);

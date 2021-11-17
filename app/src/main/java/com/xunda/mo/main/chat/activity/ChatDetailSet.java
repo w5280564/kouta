@@ -63,6 +63,7 @@ import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
+import com.xunda.mo.view.LightningView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,7 +80,8 @@ import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 public class ChatDetailSet extends BaseInitActivity {
     private String toChatUsername;
     private SimpleDraweeView person_img;
-    private TextView nick_nameTxt, cententTxt, leID_Txt, vip_Txt, signature_Txt, grade_Txt;
+    private TextView nick_nameTxt, cententTxt, leID_Txt, signature_Txt, grade_Txt;
+    private LightningView vip_Txt;
     private Button right_Btn;
     private TextView friend_tv_content, nick_tv_content, clear_Txt, remove_Txt;
     private EMConversation conversation;
@@ -405,7 +407,7 @@ public class ChatDetailSet extends BaseInitActivity {
                 cententTxt.setText(name);
                 nick_tv_content.setText(name);
                 leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
-                signature_Txt.setText("个性签名：" + dataDTO.getSignature());
+                signature_Txt.setText("个性签名：" + (TextUtils.isEmpty(dataDTO.getSignature())?"暂无":dataDTO.getSignature()));
                 friend_tv_content.setText(dataDTO.getSource());
                 grade_Txt.setText("LV" + dataDTO.getGrade().intValue());
                 if (dataDTO.getVipType() == 0) {

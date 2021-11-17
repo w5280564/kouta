@@ -19,6 +19,7 @@ import com.baozi.treerecyclerview.factory.ItemHelperFactory;
 import com.baozi.treerecyclerview.item.TreeItem;
 import com.google.gson.Gson;
 import com.xunda.mo.R;
+import com.xunda.mo.hx.section.search.SearchFriendsActivity;
 import com.xunda.mo.model.Friend_MyGroupBean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.SetStatusBar;
@@ -84,13 +85,12 @@ public class MyGroup extends AppCompatActivity {
         //可折叠
         treeRecyclerAdapter = new TreeRecyclerAdapter(TreeRecyclerType.SHOW_EXPAND);
         group_Rv.setAdapter(treeRecyclerAdapter);
-//        treeRecyclerAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(@NonNull @NotNull ViewHolder viewHolder, int position) {
-//                ChatActivity.actionStart(MyGroup.this,model.getData().get(position).getGroupList().get(0).getGroupId() , DemoConstant.CHATTYPE_GROUP);
-//
-//            }
-//        });
+        findViewById(R.id.ll_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SearchFriendsActivity.actionStart(MyGroup.this);
+            }
+        });
 
 
     }
