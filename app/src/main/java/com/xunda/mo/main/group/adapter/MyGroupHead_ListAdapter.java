@@ -131,10 +131,15 @@ public class MyGroupHead_ListAdapter extends EaseBaseRecyclerViewAdapter<MyEaseU
             String name = item.getNickname();
             int nameLength = name.length();
             String nameAndNum = name + " (" + item.getUserNum() + ")";
-            setName(nameAndNum, nameLength, mName);
-            if (item.getVipType() == 1){
+            mName.setText(nameAndNum);
+            if (item.getVipType() == 0){
+                vipType_txt.setVisibility(View.GONE);
+                mName.setTextColor(ContextCompat.getColor(mContext, R.color.blacktitle));
+            }else {
                 vipType_txt.setVisibility(View.VISIBLE);
+                mName.setTextColor(ContextCompat.getColor(mContext, R.color.yellowfive));
             }
+
             Glide.with(mContext)
                     .load(item.getAvatar())
                     .error(contactSetModel.getAvatarDefaultSrc() != null ? contactSetModel.getAvatarDefaultSrc()

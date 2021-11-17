@@ -35,6 +35,7 @@ import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.SortMembersList;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
 
@@ -49,7 +50,6 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
     private RecyclerView addMembers_Recycler;
     private EditText query_Edit;
     private View search_clear;
-    private String keyword = "";
     private String[] newmembers;
     Button right_Btn;
 
@@ -114,7 +114,7 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
                 return;
             }
             v.setEnabled(false);
-            AddGroupMemberMethod(GroupAllMembers_Remove.this,  saveFile.group_MangerUser_Url);
+            AddGroupMemberMethod(GroupAllMembers_Remove.this, saveFile.group_MangerUser_Url);
 
         }
     }
@@ -128,7 +128,7 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
     @Override
     protected void initData() {
         super.initData();
-        GroupMemberListMethod(GroupAllMembers_Remove.this,  saveFile.Group_UserList_Url );
+        GroupMemberListMethod(GroupAllMembers_Remove.this, saveFile.Group_UserList_Url);
 //        GroupMethod(GroupAllMembers_Remove.this,  saveFile.Group_MyGroupInfo_Url );
     }
 
@@ -163,14 +163,15 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
     GroupMember_Bean groupListModel;
 
     public void GroupMemberListMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("groupId",groupId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", groupId);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 groupListModel = new Gson().fromJson(result, GroupMember_Bean.class);
                 getGroupList();
             }
+
             @Override
             public void failed(String... args) {
 
@@ -180,10 +181,7 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
 
 
     private void getGroupList() {
-    List<MyEaseUser> data = new ArrayList<>();
-        if (data != null){
-            data.clear();
-        }
+        List<MyEaseUser> data = new ArrayList<>();
         for (int i = 0; i < groupListModel.getData().size(); i++) {
             GroupMember_Bean.DataDTO dataDTO = groupListModel.getData().get(i);
             MyEaseUser user = new MyEaseUser();
@@ -208,8 +206,8 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
             } else {
                 data.add(user);
             }
-
         }
+        SortMembersList.getLastDescList(data);
         if (newmembers != null) {
             mAdapter.setExistMember(Arrays.asList(newmembers));
         } else {
@@ -231,7 +229,7 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
 
         @Override
         public void afterTextChanged(Editable s) {
-            keyword = s.toString();
+            String keyword = s.toString();
             if (!TextUtils.isEmpty(keyword)) {
                 search_clear.setVisibility(View.VISIBLE);
                 SearchGroupMember(keyword);
@@ -278,6 +276,7 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
                 searchData.add(user);
             }
         }
+        SortMembersList.getLastDescList(searchData);
         if (newmembers != null) {
             mAdapter.setExistMember(Arrays.asList(newmembers));
         } else {
@@ -287,14 +286,16 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
 
 
     GruopInfo_Bean groupModel;
+
     public void GroupMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("groupId",groupId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", groupId);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 groupModel = new Gson().fromJson(result, GruopInfo_Bean.class);
             }
+
             @Override
             public void failed(String... args) {
 
@@ -308,7 +309,7 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
     public void AddGroupMemberMethod(Context context, String baseUrl) {
         List<String> SelectedMembers = mAdapter.getSelectedMembers();
         String userIds = String.join(",", SelectedMembers);
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("groupId", groupId);
         map.put("type", "2");
         map.put("userIds", userIds);
@@ -316,12 +317,13 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
             @Override
             public void success(String result) {
                 Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
-                GruopAddOrRemove_Bean groupBean = new Gson().fromJson(result,GruopAddOrRemove_Bean.class);
+                GruopAddOrRemove_Bean groupBean = new Gson().fromJson(result, GruopAddOrRemove_Bean.class);
 
                 sendMes(groupBean);
                 finish();
                 right_Btn.setEnabled(true);
             }
+
             @Override
             public void failed(String... args) {
                 right_Btn.setEnabled(true);
@@ -359,8 +361,7 @@ public class GroupAllMembers_Remove extends BaseInitActivity {
         for (int i = 0; i < selectMembers.size(); i++) {
             userListStr.add(selectMembers.get(i).getNickname());
         }
-        String userName = String.join(",", userListStr);
-        return userName;
+        return String.join(",", userListStr);
     }
 
 

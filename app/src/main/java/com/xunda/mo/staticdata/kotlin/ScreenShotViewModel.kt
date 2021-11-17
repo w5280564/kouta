@@ -67,8 +67,7 @@ class ScreenShotViewModel : ViewModel() {
     fun registerContentObserver() {
         if (contentObserver == null) {
             contentObserver =
-                MyApplication.getInstance().contentResolver.registerObserver(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI) {
+                MyApplication.getInstance().contentResolver.registerObserver( MediaStore.Images.Media.EXTERNAL_CONTENT_URI) {
                     //监听到截图后
                     _dataChanged.value = true
                 }
@@ -203,8 +202,7 @@ class ScreenShotViewModel : ViewModel() {
     fun createSqlQueryBundle(
         selection: String,
         selectionArgs: Array<String>,
-        sortOrder: String?, limitCount: Int = 0, offset: Int = 0
-    ): Bundle? {
+        sortOrder: String?, limitCount: Int = 0, offset: Int = 0): Bundle? {
         val queryArgs = Bundle()
         queryArgs.putString(ContentResolver.QUERY_ARG_SQL_SELECTION, selection)
         queryArgs.putStringArray(ContentResolver.QUERY_ARG_SQL_SELECTION_ARGS, selectionArgs)

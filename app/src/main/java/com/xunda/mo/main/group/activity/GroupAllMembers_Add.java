@@ -35,6 +35,7 @@ import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.SortMembersList;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
 
@@ -198,6 +199,7 @@ public class GroupAllMembers_Add extends BaseInitActivity {
             user.setUserNum(dataDTO.getUserNum());
             data.add(user);
         }
+        SortMembersList.getLastDescList(data);
         if (newmembers != null) {
             mAdapter.setExistMember(Arrays.asList(newmembers));
         } else {

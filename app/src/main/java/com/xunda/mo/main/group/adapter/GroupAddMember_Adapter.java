@@ -105,8 +105,8 @@ public class GroupAddMember_Adapter extends EaseBaseRecyclerViewAdapter<MyEaseUs
             String name = item.getNickname();
             int nameLength = name.length();
             String nameAndNum = name + " (" + item.getUserNum() + ")";
-            setName(nameAndNum, nameLength, this.name);
-
+//            setName(nameAndNum, nameLength, this.name);
+            this.name.setText(nameAndNum);
 
             String avatarString = item.getAvatar();
             Glide.with(mContext).load(avatarString).into(avatar);

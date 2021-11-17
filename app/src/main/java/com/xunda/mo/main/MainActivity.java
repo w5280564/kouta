@@ -69,6 +69,7 @@ import com.xunda.mo.main.viewmodels.MainViewModel;
 import com.xunda.mo.model.adress_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
+import com.xunda.mo.staticdata.SortMembersList;
 import com.xunda.mo.staticdata.xUtils3Http;
 
 import org.json.JSONException;
@@ -577,6 +578,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
             info.setUserId(info.getUserId());
             EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
         }
+        SortMembersList.getLastList(data);
         //先清空本地数据库
         DemoDbHelper.getInstance(MyApplication.getInstance()).getUserDao().clearUsers();
         //更新本地数据库信息

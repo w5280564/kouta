@@ -10,7 +10,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
@@ -42,7 +41,6 @@ import com.hyphenate.easeui.modules.contact.model.EaseContactSetStyle;
 import com.hyphenate.easeui.modules.menu.EasePopupMenuHelper;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.EaseImageView;
-import com.hyphenate.easeui.widget.EaseSearchTextView;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
@@ -76,6 +74,7 @@ import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.SortMembersList;
 import com.xunda.mo.staticdata.xUtils3Http;
 
 import org.json.JSONException;
@@ -585,6 +584,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
             EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
         }
 //        sortList(data);
+        SortMembersList.getLastList(data);
         myContactList_adapter.setData(data);
         contactLayout.getSwipeRefreshLayout().setRefreshing(false);
 

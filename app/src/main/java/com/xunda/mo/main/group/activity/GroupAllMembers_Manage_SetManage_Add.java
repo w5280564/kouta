@@ -33,6 +33,7 @@ import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.SortMembersList;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
 
@@ -163,6 +164,9 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
     }
 
     private void getGroupList() {
+        if (groupListModel == null){
+            return;
+        }
         List<MyEaseUser> data = new ArrayList<>();
         for (int i = 0; i < groupListModel.getData().size(); i++) {
             GroupMember_Bean.DataDTO dataDTO = groupListModel.getData().get(i);
@@ -188,8 +192,8 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
             } else {
                 data.add(user);
             }
-
         }
+        SortMembersList.getLastDescList(data);
         if (newmembers != null) {
             mAdapter.setExistMember(Arrays.asList(newmembers));
         } else {
@@ -232,6 +236,9 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
 
 
     private void SearchGroupMember(String keyword) {
+        if (groupListModel == null){
+            return;
+        }
         List<MyEaseUser> searchData = new ArrayList<>();
         for (int i = 0; i < groupListModel.getData().size(); i++) {
             GroupMember_Bean.DataDTO dataDTO = groupListModel.getData().get(i);
@@ -258,6 +265,7 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
                 searchData.add(user);
             }
         }
+        SortMembersList.getLastDescList(searchData);
         if (newmembers != null) {
             mAdapter.setExistMember(Arrays.asList(newmembers));
         } else {
@@ -343,6 +351,8 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
         String userName = String.join(",", userListStr);
         return userName;
     }
+
+
 
 
 }

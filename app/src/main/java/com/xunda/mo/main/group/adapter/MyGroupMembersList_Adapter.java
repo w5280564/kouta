@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.hyphenate.easeui.adapter.EaseBaseRecyclerViewAdapter;
@@ -137,17 +138,19 @@ public class MyGroupMembersList_Adapter extends EaseBaseRecyclerViewAdapter<MyEa
             String name = item.getNickname();
             int nameLength = name.length();
             String nameAndNum = name + " (" + item.getUserNum() + ")";
-            setName(nameAndNum, nameLength, mName);
-
-            if (item.getVipType() == 1){
+//            setName(nameAndNum, nameLength, mName);
+            mName.setText(nameAndNum);
+            if (item.getVipType() == 0){
+                vipType_txt.setVisibility(View.GONE);
+                mName.setTextColor(ContextCompat.getColor(mContext, R.color.blacktitle));
+            }else {
                 vipType_txt.setVisibility(View.VISIBLE);
+                mName.setTextColor(ContextCompat.getColor(mContext, R.color.yellowfive));
             }
-
-            Glide.with(mContext)
-                    .load(item.getAvatar())
-                    .into(mAvatar);
+            Glide.with(mContext).load(item.getAvatar()).into(mAvatar);
         }
     }
+
 
     /**
      * @param name       要显示的数据
@@ -162,7 +165,6 @@ public class MyGroupMembersList_Adapter extends EaseBaseRecyclerViewAdapter<MyEa
         spannableString.setSpan(relativeSizeSpan, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         viewName.setText(spannableString);
     }
-
 
 
 
