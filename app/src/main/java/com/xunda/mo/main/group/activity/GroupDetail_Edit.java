@@ -36,6 +36,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.obs.services.IFSClient;
 import com.obs.services.ObsClient;
 import com.obs.services.ObsConfiguration;
 import com.obs.services.exception.ObsException;
@@ -117,10 +118,15 @@ public class GroupDetail_Edit extends BaseInitActivity {
 
         initObsClient();
 
-        LiveDataBus.get().with(MyConstant.MY_GROUP_LABEL, String.class).observe(this, s -> {
-            tv_tag_no.setVisibility(View.GONE);
-            label_Lin.setVisibility(View.VISIBLE);
-            tagList(label_Lin, GroupDetail_Edit.this, s);
+        LiveDataBus.get().with(MyConstant.MY_GROUP_LABEL, String.class).observe(this, tag -> {
+            if (TextUtils.isEmpty(tag)) {
+                tv_tag_no.setVisibility(View.VISIBLE);
+                label_Lin.setVisibility(View.GONE);
+            }else{
+                tv_tag_no.setVisibility(View.GONE);
+                label_Lin.setVisibility(View.VISIBLE);
+                tagList(label_Lin, GroupDetail_Edit.this, tag);
+            }
         });
     }
 
