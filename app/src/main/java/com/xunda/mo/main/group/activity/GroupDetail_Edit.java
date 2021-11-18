@@ -46,6 +46,7 @@ import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.group.fragment.GroupEditFragment;
+import com.xunda.mo.hx.section.group.fragment.GroupEditFragmentInfo;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
@@ -79,6 +80,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
     private MyArrowItemView adress_ArrowItemView, brief_ArrowItemView;
     private LinearLayout label_Lin;
     private TextView tv_tag_no;
+    private String group_des;
 
     public static void actionStart(Context context, int Identity, GruopInfo_Bean groupModel) {
         Intent intent = new Intent(context, GroupDetail_Edit.class);
@@ -160,8 +162,8 @@ public class GroupDetail_Edit extends BaseInitActivity {
             person_img.setImageURI(uri);
             String addressStr = dataDTO.getGroupAddr().isEmpty() ? "未设置" : dataDTO.getGroupAddr();
             adress_ArrowItemView.getTvContent().setText(addressStr);
-            String content = dataDTO.getGroupIntroduction().isEmpty() ? "群主很懒，还没有群介绍哦~" : dataDTO.getGroupIntroduction();
-            brief_ArrowItemView.getTip().setText(content);
+            group_des = dataDTO.getGroupIntroduction();
+            brief_ArrowItemView.getTip().setText(group_des.isEmpty()? "群主很懒，还没有群介绍哦~" :group_des);
             String tag = groupModel.getData().getTag();
             if (TextUtils.isEmpty(tag)) {
                 tv_tag_no.setVisibility(View.VISIBLE);
@@ -252,19 +254,15 @@ public class GroupDetail_Edit extends BaseInitActivity {
     }
 
     private void showBriefDialog() {
-        String hint = groupModel.getData().getGroupIntroduction().isEmpty() ? "群主很懒，还没有群介绍哦~" : "";
-        GroupEditFragment.showDialog(mContext,
+        GroupEditFragmentInfo.showDialog(mContext,
                 "群简介",
-                brief_ArrowItemView.getTip().getText().toString().trim(),
-                hint,
+                group_des,
                 (view, content) -> {
-                    //群简介
-                    if (!TextUtils.isEmpty(content)) {
-                        brief_ArrowItemView.getTip().setText(content);
-                        String changType = "3";
-                        String keyStr = "groupIntroduction";
-                        CreateGroupMethod(GroupDetail_Edit.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, content, "", "");
-                    }
+                    group_des = content;
+                    brief_ArrowItemView.getTip().setText(!TextUtils.isEmpty(content)?content:"");
+                    String changType = "3";
+                    String keyStr = "groupIntroduction";
+                    CreateGroupMethod(GroupDetail_Edit.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, content, "", "");
                 });
     }
 

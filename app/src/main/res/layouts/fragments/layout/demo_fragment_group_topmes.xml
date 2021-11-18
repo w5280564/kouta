@@ -23,6 +23,7 @@ tools:ignore="MissingConstraints">
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/dp_15"
     android:layout_marginRight="@dimen/dp_15"
+    android:layout_marginTop="@dimen/dp_10"
     android:layout_marginBottom="@dimen/dp_15"
     android:background="@drawable/group_top_mes_bg_shape"
     android:gravity="left|top"

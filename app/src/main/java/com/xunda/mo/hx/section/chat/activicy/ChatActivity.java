@@ -252,7 +252,15 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
 
     @Override
     public void onChatError(int code, String errorMsg) {
-//        showToast(errorMsg);
+        if (!TextUtils.isEmpty(errorMsg)) {
+            if ("Not in group or chatroom white list".equals(errorMsg)||"User muted".equals(errorMsg)) {
+                showToast("您已被群主或管理员禁言");
+            }else if("User has no permission for this operation".equals(errorMsg)){
+                showToast("您已被对方加入黑名单");
+            }else if("User has no permission for this operation".equals(errorMsg)){
+                showToast("您已被对方加入黑名单");
+            }
+        }
     }
 
     @Override

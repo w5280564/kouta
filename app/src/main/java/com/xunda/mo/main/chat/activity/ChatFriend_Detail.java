@@ -38,6 +38,7 @@ import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.xunda.mo.R;
+import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.db.DemoDbHelper;
@@ -53,6 +54,7 @@ import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.baseView.MySwitchItemView;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.group.activity.GroupDetailSet;
 import com.xunda.mo.main.group.activity.GroupDetail_Report;
 import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.model.baseModel;
@@ -131,7 +133,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private SimpleDraweeView person_img;
     private TextView nick_nameTxt, cententTxt, leID_Txt, vip_Txt, signature_Txt, grade_Txt;
     private Button right_Btn;
-    private TextView friend_tv_content, nick_tv_content, send_mess_Txt, remove_Txt, add_Txt, move_Block_Txt;
+    private TextView friend_tv_content, nick_tv_content, send_mess_Txt, remove_Txt, add_Txt;
     private EMConversation conversation;
     private ChatViewModel viewModel;
     private MySwitchItemView black_Switch;
@@ -157,8 +159,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
         remove_Txt = findViewById(R.id.remove_Txt);
         remove_Txt.setOnClickListener(new remove_TxtClick());
         add_Txt = findViewById(R.id.add_Txt);
-        move_Block_Txt = findViewById(R.id.move_Block_Txt);
-        move_Block_Txt.setOnClickListener(new move_Block_TxtClick());
         add_friend_Group = findViewById(R.id.add_friend_Group);
         send_mess_Txt.setOnClickListener(new send_mess_TxtOnClick());
         site_progressbar = findViewById(R.id.site_progressbar);
@@ -292,23 +292,31 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private class remove_TxtClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            removeFriend();
+            showToastDialog();
         }
     }
 
-    private void removeFriend() {
-        // 是否删除好友
-        new SimpleDialogFragment.Builder(mContext)
-                .setTitle("删除好友将会删除与该好友的聊天记录")
-                .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
+    /**
+     * 提示dialog
+     */
+    private void showToastDialog() {
+        TwoButtonDialog dialog = new TwoButtonDialog(this, "删除好友将会删除与该好友的聊天记录", "取消", "确定",
+                new TwoButtonDialog.ConfirmListener() {
+
                     @Override
-                    public void onConfirmClick(View view) {
+                    public void onClickRight() {
                         RemoveMethod(ChatFriend_Detail.this, saveFile.Friend_Delete_Url);
                     }
-                })
-                .showCancelButton(true)
-                .show();
+
+                    @Override
+                    public void onClickLeft() {
+
+                    }
+                });
+        dialog.show();
+
     }
+
 
 
     //加入黑名单
@@ -320,13 +328,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
         }
     }
 
-    //移除黑名单
-    private class move_Block_TxtClick extends NoDoubleClickListener {
-        @Override
-        protected void onNoDoubleClick(View v) {
-            BlackMethod(ChatFriend_Detail.this, saveFile.Friend_SetBlack_Url, false, black_Switch.getSwitch());
-        }
-    }
 
     String userName;
     String userID;
@@ -437,26 +438,20 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private void isFriendSetView(Long isFriend, String friendStatus) {
         if (isFriend == 0) {
             add_Txt.setVisibility(View.VISIBLE);
-            move_Block_Txt.setVisibility(View.GONE);
             send_mess_Txt.setVisibility(View.GONE);
             remove_Txt.setVisibility(View.GONE);
             add_friend_Group.setVisibility(View.GONE);//好友设置
         } else {
             if (TextUtils.equals(friendStatus, "3")) {
                 add_Txt.setVisibility(View.GONE);
-                move_Block_Txt.setVisibility(View.VISIBLE);
                 send_mess_Txt.setVisibility(View.GONE);
-                remove_Txt.setVisibility(View.GONE);
+                remove_Txt.setVisibility(View.VISIBLE);
                 add_friend_Group.setVisibility(View.VISIBLE);//好友设置
                 black_Switch.getSwitch().setChecked(true);
-                Log.d("block", " 已拉黑");
             } else if (TextUtils.equals(friendStatus, "2")) {
                 black_Switch.getSwitch().setChecked(false);
-
             } else {
-                Log.d("block", " 取消拉黑");
                 add_Txt.setVisibility(View.GONE);
-                move_Block_Txt.setVisibility(View.GONE);
                 send_mess_Txt.setVisibility(View.VISIBLE);
                 remove_Txt.setVisibility(View.VISIBLE);
                 add_friend_Group.setVisibility(View.VISIBLE);//好友设置
@@ -466,26 +461,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
         }
     }
 
-    private class clear_TxtOnClick extends NoDoubleClickListener {
-        @Override
-        protected void onNoDoubleClick(View v) {
-            clearHistory();
-        }
-    }
-
-    private void clearHistory() {
-        // 是否删除会话
-        new SimpleDialogFragment.Builder(mContext)
-                .setTitle(R.string.em_chat_delete_conversation)
-                .setOnConfirmClickListener(new DemoDialogFragment.OnConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view) {
-                        viewModel.deleteConversationById(conversation.conversationId());
-                    }
-                })
-                .showCancelButton(true)
-                .show();
-    }
 
     private void showMore(final Context mContext, final View view, final int pos) {
         View contentView = View.inflate(mContext, R.layout.chatdetailset_feedback, null);
@@ -536,24 +511,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
         }
     }
 
-    //举报用户头像
-    public void QuestionMethod(Context context, String baseUrl) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("picture", model.getData().getHeadImg());
-        map.put("toReportId", model.getData().getUserNum());
-        map.put("type", "1");
-        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
-            @Override
-            public void success(String result) {
-                Toast.makeText(context, "反馈已上传", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-
-            @Override
-            public void failed(String... args) {
-            }
-        });
-    }
 
     /**
      * 删除好友
@@ -609,9 +566,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
             public void success(String result) {
                 if (isBlock) {
                     model.getData().setFriendStatus("3");
-                    String HxUserName = model.getData().getHxUserName();
-//                    sendCMDBlackMess(HxUserName);
-//                    DemoHelper.getInstance().getChatManager().deleteConversation(HxUserName, false);
                 } else {
                     model.getData().setFriendStatus("1");
                 }
@@ -628,14 +582,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
         });
     }
 
-    private void sendCMDBlackMess(String HxUserName) {
-        EMMessage cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD);
-        EMCmdMessageBody cmdBody = new EMCmdMessageBody("拉黑");
-        cmdMsg.setTo(HxUserName);
-        cmdMsg.addBody(cmdBody);
-        cmdMsg.setAttribute(MyConstant.Black_Friend, "1");
-        EMClient.getInstance().chatManager().sendMessage(cmdMsg);
-    }
 
 
     /**

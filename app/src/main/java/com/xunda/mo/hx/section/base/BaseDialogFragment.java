@@ -92,7 +92,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
             lp.dimAmount = 0.6f;
             lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
             lp.gravity =  Gravity.BOTTOM;
             setDialogParams(lp);
         } catch (Exception e) {
