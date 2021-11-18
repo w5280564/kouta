@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.mcxtzhang.captchalib.SwipeCaptchaView;
 import com.xunda.mo.R;
 import com.xunda.mo.main.baseView.BasePopupWindow;
+import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.Main_ForgetPsw_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
@@ -47,12 +48,6 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
     private String LoginID, titleName, phoneNumber, type;
     private TextView id_txt;
 
-    public static void actionStart(Context context, String titleName, String phoneNumber) {
-        Intent intent = new Intent(context, MainLogin_ForgetPsw_OrQuestion.class);
-        intent.putExtra("titleName", titleName);
-        intent.putExtra("phoneNumber", phoneNumber);
-        context.startActivity(intent);
-    }
 
     /**
      * @param context
@@ -93,11 +88,8 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
         Button return_Btn = title_Include.findViewById(R.id.return_Btn);
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         return_Btn.setVisibility(View.VISIBLE);
-        TextView cententTxt = title_Include.findViewById(R.id.cententtxt);
-        cententTxt.setText("输入手机号");
-        if (TextUtils.equals(type, "1")) {
-            cententTxt.setText("手机号验证");
-        }
+        TextView contentTxt = title_Include.findViewById(R.id.cententtxt);
+        contentTxt.setText(titleName);
         right_Btn = title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.GONE);
         return_Btn.setOnClickListener(new return_Btn());

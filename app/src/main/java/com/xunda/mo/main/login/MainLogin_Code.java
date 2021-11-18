@@ -89,28 +89,6 @@ public class MainLogin_Code extends BaseInitActivity {
         context.startActivity(intent);
     }
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main_login_code);
-//
-//        StatusBar(this);
-//        MIUISetStatusBarLightMode(this.getWindow(), true);
-//        FlymeSetStatusBarLightMode(this.getWindow(), true);
-//
-//        equipmentName = android.os.Build.BRAND + "  " + android.os.Build.MODEL;
-//        version = android.os.Build.VERSION.RELEASE;
-//        meid = StaticData.getIMEI(this);
-//        String smsCode;
-//
-//
-//        LoginPhoneNume = getIntent().getStringExtra("LoginPhoneNume");
-//        TitleName = getIntent().getStringExtra("TitleName");
-//        userNum = getIntent().getStringExtra("userNum");
-//        initTitle();
-//        initView();
-//        initReceiver();
-//    }
 
     @Override
     protected int getLayoutId() {
