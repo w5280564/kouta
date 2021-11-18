@@ -109,11 +109,7 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
     }
 
     private void initData() {
-        if (TextUtils.equals(type, "1")) {
-            baseMethod(MainLogin_ForgetPsw_OrQuestion.this, saveFile.User_GetPhone_Url, "0");
-        } else if (TextUtils.equals(type, "2")) {
-            id_txt.setText("为保护您的账号安全，请您输入完整的手机号码：\n" + phoneNumber);
-        }
+        id_txt.setText("为保护您的账号安全，请您输入完整的手机号码：\n" + phoneNumber);
     }
 
     private class num_BtnOnClick extends NoDoubleClickListener {
@@ -177,25 +173,6 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
         }
     }
 
-    Main_ForgetPsw_Model baseModel;
-
-    public void baseMethod(Context context, String baseUrl, String type) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("userNum", LoginID);
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
-            @Override
-            public void success(String result) {
-                baseModel = new Gson().fromJson(result, Main_ForgetPsw_Model.class);
-                phoneNumber = baseModel.getData();
-                id_txt.setText("为保护您的账号安全，请您输入完整的手机号码：\n" + baseModel.getData());
-            }
-
-            @Override
-            public void failed(String... args) {
-            }
-        });
-
-    }
 
 
     //验证码

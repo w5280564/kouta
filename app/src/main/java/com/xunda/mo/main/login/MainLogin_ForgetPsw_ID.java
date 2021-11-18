@@ -4,6 +4,7 @@ import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -14,9 +15,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
 import com.xunda.mo.R;
+import com.xunda.mo.model.Main_ForgetPsw_Model;
+import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainLogin_ForgetPsw_ID extends AppCompatActivity {
 
@@ -84,16 +92,38 @@ public class MainLogin_ForgetPsw_ID extends AppCompatActivity {
     private class next_BtnOnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            if (id_edit.getText().toString().isEmpty()){
+            String LoginID = id_edit.getText().toString();
+            if (LoginID.isEmpty()){
                 Toast.makeText(MainLogin_ForgetPsw_ID.this, "请输入ID", Toast.LENGTH_SHORT).show();
                 return;
             }
-            String titleName = "忘记密码";
-            String LoginID = id_edit.getText().toString();
-            String type = "1";
-            MainLogin_ForgetPsw_OrQuestion.actionStart(MainLogin_ForgetPsw_ID.this, titleName,"0",LoginID,type);
+
+            baseMethod(MainLogin_ForgetPsw_ID.this, saveFile.User_GetPhone_Url,LoginID);
+
         }
     }
 
+
+    ;
+
+    public void baseMethod(Context context, String baseUrl, String LoginID) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userNum", LoginID);
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                Main_ForgetPsw_Model baseModel = new Gson().fromJson(result, Main_ForgetPsw_Model.class);
+                String phoneNumber = baseModel.getData();
+                String titleName = "忘记密码";
+                String type = "1";
+                MainLogin_ForgetPsw_OrQuestion.actionStart(MainLogin_ForgetPsw_ID.this, titleName,phoneNumber,LoginID,type);
+            }
+
+            @Override
+            public void failed(String... args) {
+            }
+        });
+
+    }
 
 }
