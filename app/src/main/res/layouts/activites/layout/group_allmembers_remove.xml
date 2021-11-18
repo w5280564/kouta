@@ -62,11 +62,11 @@
 
 
     <com.xunda.mo.pinyin.WaveSideBar
+        android:id="@+id/waveSideBar"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
         app:layout_constraintTop_toTopOf="@+id/addMembers_Recycler" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

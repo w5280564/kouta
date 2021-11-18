@@ -1,7 +1,13 @@
 package com.xunda.mo.staticdata;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.hyphenate.easeui.domain.EaseUser;
 import com.xunda.mo.hx.section.domain.MyEaseUser;
+import com.xunda.mo.model.GroupMemberAdd_Bean;
+import com.xunda.mo.pinyin.PinyinUtils;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,6 +32,12 @@ public class SortMembersList {
                 return o1.getInitialLetter().compareTo(o2.getInitialLetter());
             }
         });
+        return list;
+    }
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        public static List<GroupMemberAdd_Bean.DataDTO> getMemberList(List<GroupMemberAdd_Bean.DataDTO> list) {
+        Collections.sort(list, Comparator.comparing(o -> PinyinUtils.getFirstSpell(o.getNickname())));
         return list;
     }
 

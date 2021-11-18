@@ -8,21 +8,17 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.core.content.ContextCompat;
 
-
 import com.xunda.mo.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -112,7 +108,7 @@ public class WaveSideBar extends View {
     }
 
     private void init(Context context, AttributeSet attrs, List<String> list) {
-        mLetters = Arrays.asList(context.getResources().getStringArray(R.array.waveSideBarLetters));
+//        mLetters = Arrays.asList(context.getResources().getStringArray(R.array.waveSideBarLetters));
         mTextColor = Color.parseColor("#969696");
         mWaveColor = Color.parseColor("#bef9b81b");
         mTextColorChoose = ContextCompat.getColor(context, android.R.color.white);
@@ -400,6 +396,7 @@ public class WaveSideBar extends View {
 
     public void setLetters(List<String> letters) {
         this.mLetters = letters;
+        requestLayout();
         invalidate();
     }
 
