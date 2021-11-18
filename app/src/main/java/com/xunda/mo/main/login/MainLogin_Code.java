@@ -252,8 +252,8 @@ public class MainLogin_Code extends BaseInitActivity {
             //登录验证码
             type = "2";
             codeMethod(saveFile.User_SmsCode_Url, "type", type, type);
-        } else if (TitleName.equals("忘记密码")) {
-            //忘记密码
+        } else if (TitleName.equals("手机号验证")) {
+            //忘记密码手机号验证
             nonecode_txt.setVisibility(View.VISIBLE);
             type = "3";
             codeMethod(saveFile.User_checkPhone_Url, "userNum", userNum, type);
@@ -307,7 +307,7 @@ public class MainLogin_Code extends BaseInitActivity {
         });
     }
 
-    //忘记密码校验
+    //忘记密码手机号验证校验
     public void ForgetCodeMethod(String baseUrl, String Code, String type) {
         Map<String, Object> map = new HashMap<>();
         map.put("phoneNum", LoginPhoneNume);
@@ -315,7 +315,7 @@ public class MainLogin_Code extends BaseInitActivity {
         xUtils3Http.get(MainLogin_Code.this, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                if (TitleName.equals("忘记密码")) {
+                if (TitleName.equals("手机号验证")) {
                     Intent intent = new Intent(MainLogin_Code.this, MainLogin_ForgetPsw_SetPsw.class);
                     intent.putExtra("phoneNum",LoginPhoneNume);
                     startActivity(intent);
@@ -459,11 +459,9 @@ public class MainLogin_Code extends BaseInitActivity {
                     RegisterMethod(saveFile.User_Register_Url, type);
                 } else if (TitleName.equals("验证码登录")) {
                     String type = "1";
-                    String phoneNum = LoginPhoneNume;
-                    String smsCode = capt_view.getText().toString();
                     LoginMethod(MainLogin_Code.this, saveFile.User_Login_Url, type);
-                } else if (TitleName.equals("忘记密码")) {
-                    //忘记密码
+                } else if (TitleName.equals("手机号验证")) {
+                    //忘记密码手机号验证
                     type = "3";
                     String Code = capt_view.getText().toString();
                     ForgetCodeMethod(saveFile.User_checkChangeCode_Url, Code, type);
