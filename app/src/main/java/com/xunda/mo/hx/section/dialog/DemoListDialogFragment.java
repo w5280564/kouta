@@ -113,11 +113,8 @@ public class DemoListDialogFragment extends BaseDialogFragment {
             adapter = getDefaultAdapter();
         }
         rvDialogList.setAdapter(adapter);
-
         rvDialogList.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
-
         adapter.setData(data);
-
         this.adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {

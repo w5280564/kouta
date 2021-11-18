@@ -237,8 +237,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
 
         });
-
-//        isATMes("content");
     }
 
 
@@ -375,7 +373,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         }
         return nameStr;
     }
-
 
 
     public EMMessageListener msgListener;
@@ -705,15 +702,17 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             String userID = "";
             String myUsername = myInfo.getUserInfo().getHxUserName();
             if (TextUtils.equals(username, myUsername)) {
-                if (TextUtils.isEmpty(myUsername)){
+                if (TextUtils.isEmpty(myUsername)) {
                     return;
                 }
                 UserDetail_Set.actionStart(mContext);
             } else {
-                if (TextUtils.isEmpty(username) || groupModel == null){
+                if (TextUtils.isEmpty(username) || groupModel == null) {
                     return;
                 }
-                GroupFriend_Detail.actionStart(mContext, userID, username, groupModel);
+                String url = saveFile.Group_UserInfo_Url;
+                String groupId = groupModel.getData().getGroupId();
+                groupFriendMethod(requireActivity(), url, username,groupId);
             }
         }
 
@@ -727,7 +726,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 if (groupModel == null) {
                     return;
                 }
-                showMore(mContext, et_sendmessage,username);
+                showMore(mContext, et_sendmessage, username);
             }
         }
 
@@ -1129,7 +1128,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         }
     }
 
-     //是否有置顶消息
+    //是否有置顶消息
     private void setTopView(String topStr) {
         if (!TextUtils.isEmpty(topStr)) {
             top_Constraint.setVisibility(View.VISIBLE);
@@ -1420,7 +1419,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
 
-
     //at页面返回的用户Map
     private void editAtMes(HashMap atMap) {
         if (atMap.isEmpty()) {
@@ -1542,7 +1540,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 //        return "";
 //    }
 
-    private void showMore(final Context mContext,  View view,String username) {
+    private void showMore(final Context mContext, View view, String username) {
         View contentView = View.inflate(mContext, R.layout.at_mes_popup, null);
         PopupWindow MorePopup = new BasePopupWindow(mContext);
         MorePopup.setWidth(RadioGroup.LayoutParams.MATCH_PARENT);
@@ -1559,7 +1557,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
         cancel_txt.setOnClickListener(v -> MorePopup.dismiss());
     }
-
 
 
     public void GroupAtName(Context context, String baseUrl, String groupID, String hxId) {
@@ -1580,7 +1577,22 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
             }
         });
+    }
 
+    @SuppressLint("SetTextI18n")
+    public void groupFriendMethod(Context mContext, String baseUrl, String username,String groupId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupId", groupId);
+        map.put("hxUserName", username);
+        xUtils3Http.get(mContext, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                GroupFriend_Detail.actionStart(mContext, "", username, groupModel);
+            }
+            @Override
+            public void failed(String... args) {
+            }
+        });
     }
 
 

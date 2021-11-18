@@ -396,7 +396,7 @@
     <string name="yangshengqi">使用扬声器播放语音</string>
     <string name="call_option">通话设置</string>
     <string name="offline_call_push">通话离线推送</string>
-    <string name="offline_push_no_disturb">推送消息免打扰</string>
+    <string name="offline_push_no_disturb">消息免打扰</string>
     <string name="offline_default_time_range">22:00~07:00</string>
     <string name="offline_time_rang_error">起止时间不能相同</string>
     <string name="demo_offline_nickname_update_success">昵称已修改成功</string>

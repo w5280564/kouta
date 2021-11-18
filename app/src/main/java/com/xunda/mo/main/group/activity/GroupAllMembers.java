@@ -3,18 +3,23 @@ package com.xunda.mo.main.group.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.ConcatAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.hyphenate.easeui.modules.contact.EaseContactLayout;
 import com.hyphenate.easeui.modules.contact.EaseContactListLayout;
 import com.hyphenate.easeui.modules.contact.model.EaseContactSetStyle;
+import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.EaseSearchTextView;
+import com.hyphenate.easeui.widget.EaseSidebar;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.domain.MyEaseUser;
@@ -25,6 +30,7 @@ import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.SortMembersList;
 import com.xunda.mo.staticdata.xUtils3Http;
 
 import java.io.Serializable;
@@ -41,6 +47,7 @@ public class GroupAllMembers extends BaseInitActivity {
     private String groupId;
     private int Identity;
     private GruopInfo_Bean groupModel;
+    private TextView floating_header;
 
     public static void actionStart(Context context, List<GroupMember_Bean.DataDTO> groupMember, GruopInfo_Bean groupModel) {
         Intent intent = new Intent(context, GroupAllMembers.class);
@@ -82,6 +89,9 @@ public class GroupAllMembers extends BaseInitActivity {
         query_Edit.setOnClickListener(new query_EditClick());
         contact_layout = findViewById(R.id.contact_layout);
         contactList = contact_layout.getContactList();
+        EaseSidebar sideBarContact =  contact_layout.findViewById(R.id.side_bar_contact);
+         floating_header =  contact_layout.findViewById(R.id.floating_header);
+        sideBarContact.setOnTouchEventListener(new sideBarContactTouchEvent());
         addAdapter();
 
         if (Identity == 3) {
@@ -137,15 +147,14 @@ public class GroupAllMembers extends BaseInitActivity {
             user.setUserId(dataDTO.getUserId());
             user.setUserNum(dataDTO.getUserNum());
             int Identity = groupListModel.getData().get(i).getIdentity();
-
             if (Identity == 1 || Identity == 2) {
                 dataHeadList.add(user);
                 continue;
             } else {
                 data.add(user);
             }
-
         }
+        SortMembersList.getLastDescList(data);
         myContact_Head_listAdapter.setData(dataHeadList);
         myGroupList_adapter.setData(data);
 
@@ -223,6 +232,57 @@ public class GroupAllMembers extends BaseInitActivity {
             public void failed(String... args) {
             }
         });
+    }
+
+
+    private class sideBarContactTouchEvent implements EaseSidebar.OnTouchEventListener {
+        @Override
+        public void onActionDown(MotionEvent event, String pointer) {
+            showFloatingHeader(pointer);
+            moveToRecyclerItem(pointer);
+        }
+
+        @Override
+        public void onActionMove(MotionEvent event, String pointer) {
+            showFloatingHeader(pointer);
+            moveToRecyclerItem(pointer);
+        }
+
+        @Override
+        public void onActionUp(MotionEvent event) {
+            hideFloatingHeader();
+        }
+    }
+
+    private void moveToRecyclerItem(String pointer) {
+        List<MyEaseUser> data = myGroupList_adapter.getData();
+        if(data == null || data.isEmpty()) {
+            return;
+        }
+        for(int i = 0; i < data.size(); i++) {
+            if(TextUtils.equals(EaseCommonUtils.getLetter(data.get(i).getNickname()), pointer)) {
+                LinearLayoutManager manager = (LinearLayoutManager) contactList.getLayoutManager();
+                if(manager != null) {
+                    manager.scrollToPositionWithOffset(i, 0);
+                }
+            }
+        }
+    }
+
+    /**
+     * 展示滑动的字符
+     * @param pointer
+     */
+    private void showFloatingHeader(String pointer) {
+        if(TextUtils.isEmpty(pointer)) {
+            hideFloatingHeader();
+            return;
+        }
+        floating_header.setText(pointer);
+        floating_header.setVisibility(View.VISIBLE);
+    }
+    private void hideFloatingHeader() {
+        floating_header.setVisibility(View.GONE);
     }
 
 

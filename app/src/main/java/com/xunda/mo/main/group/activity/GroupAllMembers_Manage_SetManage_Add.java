@@ -22,6 +22,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.xunda.mo.R;
+import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.domain.MyEaseUser;
@@ -113,7 +114,7 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
                 Toast.makeText(GroupAllMembers_Manage_SetManage_Add.this, "请添加成员", Toast.LENGTH_SHORT).show();
                 return;
             }
-            AddManageMethod(GroupAllMembers_Manage_SetManage_Add.this, saveFile.group_AddBatchManger_Url);
+          showToastDialog();
 
         }
     }
@@ -352,6 +353,23 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
         return userName;
     }
 
+    /**
+     * 提示dialog
+     */
+    private void showToastDialog() {
+        TwoButtonDialog dialog = new TwoButtonDialog(this, "您确定将以下人员设置为管理员吗？", "取消", "确定",
+                new TwoButtonDialog.ConfirmListener() {
+                    @Override
+                    public void onClickRight() {
+                        AddManageMethod(GroupAllMembers_Manage_SetManage_Add.this, saveFile.group_AddBatchManger_Url);
+                    }
+                    @Override
+                    public void onClickLeft() {
+
+                    }
+                });
+        dialog.show();
+    }
 
 
 

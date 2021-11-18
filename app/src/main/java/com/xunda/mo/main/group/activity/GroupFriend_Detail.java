@@ -19,6 +19,7 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -245,7 +246,7 @@ public class GroupFriend_Detail extends BaseInitActivity {
         public void onClick(View v) {
             v.setEnabled(false);
             if (black_Switch.getSwitch().isChecked()) {
-                isBlack(v);
+                isBlack(black_Switch.getSwitch());
             } else {
                 BlockMethod(GroupFriend_Detail.this, saveFile.Group_SetBlack_Url, black_Switch.getSwitch().isChecked(), black_Switch.getSwitch());
             }
@@ -303,13 +304,17 @@ public class GroupFriend_Detail extends BaseInitActivity {
 
 
     //
-    private void isBlack(View v) {
+    private void isBlack(Switch v) {
         new SimpleDialogFragment.Builder(mContext)
                 .setTitle("提示")
                 .showContent(true)
                 .setContent("将成员加入群聊黑名单，禁止聊天")
                 .setOnConfirmClickListener(view -> BlockMethod(GroupFriend_Detail.this, saveFile.Group_SetBlack_Url, black_Switch.getSwitch().isChecked(), black_Switch.getSwitch()))
                 .showCancelButton(true)
+                .setOnCancelClickListener(view -> {
+                    v.setEnabled(true);
+                    v.setChecked(false);
+                })
                 .show();
     }
 
@@ -323,7 +328,7 @@ public class GroupFriend_Detail extends BaseInitActivity {
         new DemoListDialogFragment.Builder(mContext)
                 .setTitle(titleStr)
                 .setData(dataList)
-                .setCancelColorRes(R.color.black)
+                .setCancelColorRes(R.color.yellowfive)
                 .setWindowAnimations(R.style.animate_dialog)
                 .setOnItemClickListener((view, position) -> {
                     forbidden_ArrowItemView.getTvContent().setText("剩余时间：" + dataList.get(position));

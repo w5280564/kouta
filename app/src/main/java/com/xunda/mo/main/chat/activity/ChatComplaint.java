@@ -140,7 +140,7 @@ public class ChatComplaint extends BaseInitActivity {
 //                Toast.makeText(ChatComplaint.this, "不能为空", Toast.LENGTH_SHORT).show();
 //                return;
 //            }
-            if (TextUtils.isEmpty(reasons)){
+            if (TextUtils.isEmpty(reasons)) {
                 Toast.makeText(ChatComplaint.this, "请选择举报原因", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -195,34 +195,24 @@ public class ChatComplaint extends BaseInitActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case PictureConfig.CHOOSE_REQUEST:
-                    // 结果回调
-                    List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
-                    List<String> pathList = new ArrayList<>();
-                    pathNameList = new ArrayList<>();
-                    if (pathList != null) {
-                        pathList.clear();
+            if (requestCode == PictureConfig.CHOOSE_REQUEST) {// 结果回调
+                List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
+                List<String> pathList = new ArrayList<>();
+                pathNameList = new ArrayList<>();
+                int size = selectList.size();
+                for (int i = 0; i < size; i++) {
+                    if (isQ()) {
+                        pathList.add(selectList.get(i).getAndroidQToPath());
+                    } else {
+                        pathList.add(selectList.get(i).getRealPath());
                     }
-                    int size = selectList.size();
-                    for (int i = 0; i < size; i++) {
-                        if (isQ()){
-                            pathList.add(selectList.get(i).getAndroidQToPath());
-                        }else {
-                            pathList.add(selectList.get(i).getRealPath());
-                        }
-                        pathNameList.add(selectList.get(i).getFileName());
-                    }
-
-                    if (pathList != null) {
-                        imgFlow(photoLayout, pathList);
-                    }
-                    break;
-                default:
-                    break;
+                    pathNameList.add(selectList.get(i).getFileName());
+                }
+                imgFlow(photoLayout, pathList);
             }
         }
     }
+
     private boolean isQ() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             return true;
@@ -360,7 +350,7 @@ public class ChatComplaint extends BaseInitActivity {
 
     //问题反馈
     public void QuestionMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("reasons", reasons);
         map.put("picture", pictures);
         map.put("remark", content_edit.getText().toString());
@@ -370,6 +360,7 @@ public class ChatComplaint extends BaseInitActivity {
                 Toast.makeText(context, "您的投诉已提交", Toast.LENGTH_SHORT).show();
                 finish();
             }
+
             @Override
             public void failed(String... args) {
             }

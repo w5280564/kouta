@@ -261,7 +261,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
         llRoot.addView(view, 1);
         ll_search = view.findViewById(R.id.ll_search);
         TextView tv_search = view.findViewById(R.id.tv_search);
-        tv_search.setHint("搜索昵称/Moid");
+        tv_search.setHint("搜索昵称/MoID");
     }
 
 

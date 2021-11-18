@@ -78,9 +78,10 @@
     <com.hyphenate.easeui.modules.contact.EaseContactLayout
         android:id="@+id/contact_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/query_Edit" />
+        app:layout_constraintTop_toBottomOf="@+id/query_Edit"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

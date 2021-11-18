@@ -2,10 +2,8 @@ package com.xunda.mo.main;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,8 +15,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -52,8 +48,6 @@ import com.xunda.mo.hx.common.db.DemoDbHelper;
 import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.common.manager.HMSPushHelper;
-import com.xunda.mo.hx.common.permission.PermissionsManager;
-import com.xunda.mo.hx.common.permission.PermissionsResultAction;
 import com.xunda.mo.hx.common.utils.PreferenceManager;
 import com.xunda.mo.hx.common.utils.PushUtils;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
@@ -168,8 +162,6 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     protected void initData() {
         super.initData();
         initViewModel();
-//        requestPermissions();
-//        startLocation();
         ChatPresenter.getInstance().init();
         // 获取华为 HMS 推送 token
         HMSPushHelper.getInstance().getHMSToken(this);
@@ -312,23 +304,6 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         }
     }
 
-    /**
-     * 申请权限
-     */
-    // TODO: 2019/12/19 0019 有必要修改一下
-    private void requestPermissions() {
-        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(mContext, new PermissionsResultAction() {
-            @Override
-            public void onGranted() {
-
-            }
-
-            @Override
-            public void onDenied(String permission) {
-
-            }
-        });
-    }
 
     private void switchToHome() {
         if (mConversationListFragment == null) {
@@ -467,46 +442,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         }
     }
 
-    public void startLocation() {
-        //监听授权
-        List<String> permissionList = new ArrayList<>();
-//        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
-//                permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {//定位 高德
-//            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
-//        }
-//        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
-//                permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {//录音权限 发送语音
-//            permissionList.add(Manifest.permission.RECORD_AUDIO);
-//        }
-//
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
-                permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {//电话权限 是获取手机状态（包括手机号码、IMEI、IMSI权限等
-            permissionList.add(Manifest.permission.READ_PHONE_STATE);
-        }
-
-//        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
-//                permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {//文件
-//            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//        }
-
-//        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.
-//                permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {//摄像与录制
-//            permissionList.add(Manifest.permission.CAMERA);
-//        }
-
-
-        if (!permissionList.isEmpty()) {
-            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
-            ActivityCompat.requestPermissions(MainActivity.this, permissions, 1);
-        } else {
-//            initView(savedInstanceState);
-            // requestLocation();
-        }
-    }
-
-
     boolean mIsSupportedBade = true;
-
     /** set badge number*/
     public void setBadgeNum(int num) {
         try {

@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.xunda.mo.R;
+import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.main.constant.MyConstant;
@@ -132,11 +133,8 @@ public class GroupAllMembers_Manage_SetupManage extends BaseInitActivity {
         addMembers_Recycler.setAdapter(mAdapter);
 
         mAdapter.setOnItemAddRemoveClickLister((view, position) -> {
-            UserName = manageList.get(position).getNickname();
-            String userId = manageList.get(position).getUserId();
-            AddManageMethod(GroupAllMembers_Manage_SetupManage.this,  saveFile.group_MangerSet_Url, userId);
-            mAdapter.removeData(position);
-            setManageTxt(manageList.size(), groupModel.getData().getMaxManagerCount());
+            String content = String.format("你确定将移除%1$s的管理员身份吗？",manageList.get(position).getNickname()) ;
+            showToastDialog(content,position);
         });
     }
 
@@ -222,6 +220,28 @@ public class GroupAllMembers_Manage_SetupManage extends BaseInitActivity {
         message.setAttribute(MyConstant.GROUP_NAME, Model.getData().getGroupName());
         message.setAttribute(MyConstant.GROUP_HEAD, Model.getData().getGroupHeadImg());
         DemoHelper.getInstance().getChatManager().sendMessage(message);
+    }
+
+    /**
+     * 提示dialog
+     */
+    private void showToastDialog(String content,int position) {
+        TwoButtonDialog dialog = new TwoButtonDialog(this, content, "取消", "确定",
+                new TwoButtonDialog.ConfirmListener() {
+                    @Override
+                    public void onClickRight() {
+                        UserName = manageList.get(position).getNickname();
+                        String userId = manageList.get(position).getUserId();
+                        AddManageMethod(GroupAllMembers_Manage_SetupManage.this,  saveFile.group_MangerSet_Url, userId);
+                        mAdapter.removeData(position);
+                        setManageTxt(manageList.size(), groupModel.getData().getMaxManagerCount());
+                    }
+                    @Override
+                    public void onClickLeft() {
+
+                    }
+                });
+        dialog.show();
     }
 
 
