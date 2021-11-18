@@ -36,6 +36,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -459,7 +460,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         chatLayout.turnOnTypingMonitor(DemoHelper.getInstance().getModel().isShowMsgTyping());//正在输入监控
 
         LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
-        LiveDataBus.get().with(DemoConstant.MESSAGE_CALL_SAVE, Boolean.class).observe(getViewLifecycleOwner(), event -> {
+        LiveDataBus.get().with(DemoConstant.MESSAGE_CALL_SAVE, Boolean.class).observe(this, event -> {
             if (event == null) {
                 return;
             }
@@ -468,7 +469,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
         });
 
-        LiveDataBus.get().with(DemoConstant.CONVERSATION_DELETE, EaseEvent.class).observe(getViewLifecycleOwner(), event -> {
+        LiveDataBus.get().with(DemoConstant.CONVERSATION_DELETE, EaseEvent.class).observe(this, event -> {
             if (event == null) {
                 return;
             }
@@ -477,7 +478,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
         });
 
-        LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.class).observe(getViewLifecycleOwner(), event -> {
+        LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.class).observe(this, event -> {
             if (event == null) {
                 return;
             }
@@ -486,7 +487,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
 
         });
-        LiveDataBus.get().with(DemoConstant.CONVERSATION_READ, EaseEvent.class).observe(getViewLifecycleOwner(), event -> {
+        LiveDataBus.get().with(DemoConstant.CONVERSATION_READ, EaseEvent.class).observe(this, event -> {
             if (event == null) {
                 return;
             }
@@ -496,14 +497,14 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         });
 
         //更新用户属性刷新列表
-        LiveDataBus.get().with(DemoConstant.CONTACT_ADD, EaseEvent.class).observe(getViewLifecycleOwner(), event -> {
+        LiveDataBus.get().with(DemoConstant.CONTACT_ADD, EaseEvent.class).observe(this, event -> {
             if (event == null) {
                 return;
             }
             chatLayout.getChatMessageListLayout().refreshMessages();
         });
 
-        LiveDataBus.get().with(DemoConstant.CONTACT_UPDATE, EaseEvent.class).observe(getViewLifecycleOwner(), event -> {
+        LiveDataBus.get().with(DemoConstant.CONTACT_UPDATE, EaseEvent.class).observe(this, event -> {
             if (event == null) {
                 return;
             }
@@ -511,7 +512,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         });
 
 
-        LiveDataBus.get().with(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL, EaseEvent.class).observe(requireActivity(), event -> {
+        LiveDataBus.get().with(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL, EaseEvent.class).observe(this, event -> {
             if (event == null) {
                 return;
             }
@@ -522,36 +523,48 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
         });
 
-        LiveDataBus.get().with(MyConstant.BURN_AFTER_READING_SET, Boolean.class).observe(requireActivity(), event -> {
-            if (event) {
-                model.getData().setFireType("2");
-            } else {
-                model.getData().setFireType("1");
+        LiveDataBus.get().with(MyConstant.BURN_AFTER_READING_SET, Boolean.class).observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean event) {
+                if (event) {
+                    model.getData().setFireType("2");
+                } else {
+                    model.getData().setFireType("1");
+                }
             }
         });
 
         //Mo消息刷新数据
-        LiveDataBus.get().with(MyConstant.FIRE_REFRESH, Boolean.class).observe(requireActivity(), aBoolean -> {
-            if (aBoolean) {
-                messageListLayout.refreshToLatest();
+        LiveDataBus.get().with(MyConstant.FIRE_REFRESH, Boolean.class).observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    messageListLayout.refreshToLatest();
+                }
             }
         });
 
         //删除好友会话
-        LiveDataBus.get().with(MyConstant.Dele_Friend, String.class).observe(requireActivity(), conversationId -> {
-            if (TextUtils.isEmpty(conversationId)) {
-                DemoHelper.getInstance().getChatManager().deleteConversation(conversationId, true);
+        LiveDataBus.get().with(MyConstant.Dele_Friend, String.class).observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String conversationId) {
+                if (TextUtils.isEmpty(conversationId)) {
+                    DemoHelper.getInstance().getChatManager().deleteConversation(conversationId, true);
 //                messageListLayout.refreshToLatest();
+                }
             }
         });
 
 
-        //
-        LiveDataBus.get().with(MyConstant.MESS_TYPE_GROUP_HORN, EMMessage.class).observe(requireActivity(), message -> {
-            List<EMMessage> msgs = new ArrayList<>();
-            msgs.add(message);
-            onMarquee(msgs);
+        LiveDataBus.get().with(MyConstant.MESS_TYPE_GROUP_HORN, EMMessage.class).observe(this, new Observer<EMMessage>() {
+            @Override
+            public void onChanged(EMMessage message) {
+                List<EMMessage> msgs = new ArrayList<>();
+                msgs.add(message);
+                ChatFragment.this.onMarquee(msgs);
+            }
         });
+
 
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             AddFriendMethod(getActivity(), saveFile.Friend_info_Url);

@@ -215,4 +215,26 @@ public class GroupAddMember_Adapter extends EaseBaseRecyclerViewAdapter<MyEaseUs
         spannableString.setSpan(relativeSizeSpan, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         viewName.setText(spannableString);
     }
+
+    /**
+     * 根据ListView的当前位置获取分类的首字母的char ascii值
+     */
+    public int getSectionForPosition(int position) {
+        return mData.get(position).getInitialLetter().charAt(0);
+    }
+
+    /**
+     * 根据分类的首字母的Char ascii值获取其第一次出现该首字母的位置
+     */
+    public int getPositionForSection(int section) {
+        for (int i = 0; i < getItemCount(); i++) {
+            String sortStr = mData.get(i).getInitialLetter();
+            char firstChar = sortStr.toUpperCase().charAt(0);
+            if (firstChar == section) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }

@@ -33,6 +33,7 @@ import com.xunda.mo.model.GroupMember_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
+import com.xunda.mo.pinyin.WaveSideBar;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.SortMembersList;
 import com.xunda.mo.staticdata.viewTouchDelegate;
@@ -52,6 +53,8 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
     private String keyword = "";
     private String[] newmembers;
     Button right_Btn;
+    private WaveSideBar waveSideBar;
+    private LinearLayoutManager mMangaer;
 
     public static void actionStart(Context context, String groupId) {
         Intent intent = new Intent(context, GroupAllMembers_Manage_SetManage_Add.class);
@@ -68,15 +71,15 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-
         query_Edit = findViewById(R.id.query_Edit);
         query_Edit.addTextChangedListener(new query_EditChangeListener());
         search_clear = findViewById(R.id.search_clear);
         search_clear.setOnClickListener(new search_clearClick());
         addMembers_Recycler = findViewById(R.id.addMembers_Recycler);
+        waveSideBar = findViewById(R.id.waveSideBar);
+        waveSideBar.setOnTouchLetterChangeListener(new waveSideBarListener());
         initTitle();
         initMemberList(GroupAllMembers_Manage_SetManage_Add.this);
-
 
     }
 
@@ -135,7 +138,7 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
     GroupAddMember_Adapter mAdapter;
 
     public void initMemberList(final Context context) {
-        LinearLayoutManager mMangaer = new LinearLayoutManager(context);
+         mMangaer = new LinearLayoutManager(context);
         addMembers_Recycler.setLayoutManager(mMangaer);
         //如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
         addMembers_Recycler.setHasFixedSize(true);
@@ -372,5 +375,14 @@ public class GroupAllMembers_Manage_SetManage_Add extends BaseInitActivity {
     }
 
 
-
+    private class waveSideBarListener implements WaveSideBar.OnTouchLetterChangeListener {
+        @Override
+        public void onLetterChange(String letter) {
+            //该字母首次出现的位置
+            int position = mAdapter.getPositionForSection(letter.charAt(0));
+            if (position != -1) {
+                mMangaer.scrollToPositionWithOffset(position, 0);
+            }
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.xunda.mo.main.group.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +36,7 @@ import com.xunda.mo.model.GruopAddOrRemove_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
+import com.xunda.mo.pinyin.WaveSideBar;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.SortMembersList;
 import com.xunda.mo.staticdata.viewTouchDelegate;
@@ -44,6 +47,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GroupAllMembers_Add extends BaseInitActivity {
     private String groupId;
@@ -53,6 +57,8 @@ public class GroupAllMembers_Add extends BaseInitActivity {
     private String keyword = "";
     private String[] newmembers;
     Button right_Btn;
+    private WaveSideBar waveSideBar;
+    private LinearLayoutManager mMangaer;
 
     public static void actionStart(Context context, String groupId) {
         Intent intent = new Intent(context, GroupAllMembers_Add.class);
@@ -75,6 +81,8 @@ public class GroupAllMembers_Add extends BaseInitActivity {
         search_clear = findViewById(R.id.search_clear);
         search_clear.setOnClickListener(new search_clearClick());
         addMembers_Recycler = findViewById(R.id.addMembers_Recycler);
+        waveSideBar = findViewById(R.id.waveSideBar);
+        waveSideBar.setOnTouchLetterChangeListener(new waveSideBarListener());
         initTitle();
         initMemberList(GroupAllMembers_Add.this);
     }
@@ -133,7 +141,7 @@ public class GroupAllMembers_Add extends BaseInitActivity {
     GroupAddMember_Adapter mAdapter;
 
     public void initMemberList(final Context context) {
-        LinearLayoutManager mMangaer = new LinearLayoutManager(context);
+        mMangaer = new LinearLayoutManager(context);
         addMembers_Recycler.setLayoutManager(mMangaer);
         //如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
         addMembers_Recycler.setHasFixedSize(true);
@@ -163,6 +171,7 @@ public class GroupAllMembers_Add extends BaseInitActivity {
         Map<String, Object> map = new HashMap<>();
         map.put("groupId", groupId);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void success(String result) {
                 groupListModel = new Gson().fromJson(result, GroupMemberAdd_Bean.class);
@@ -176,10 +185,13 @@ public class GroupAllMembers_Add extends BaseInitActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void sortList() {
         List<MyEaseUser> data = new ArrayList<>();
-        for (int i = 0; i < groupListModel.getData().size(); i++) {
-            GroupMemberAdd_Bean.DataDTO dataDTO = groupListModel.getData().get(i);
+        List<String> lettersData = new ArrayList<>();
+        List<GroupMemberAdd_Bean.DataDTO> memberList = SortMembersList.getMemberList(groupListModel.getData());//数据源排序
+        for (int i = 0; i < memberList.size(); i++) {
+            GroupMemberAdd_Bean.DataDTO dataDTO = memberList.get(i);
             MyEaseUser user = new MyEaseUser();
             user.setUsername("");
             String userNickName = TextUtils.isEmpty(dataDTO.getNickname()) ? dataDTO.getRemarkName() : dataDTO.getNickname();
@@ -191,6 +203,7 @@ public class GroupAllMembers_Add extends BaseInitActivity {
             } else {
                 user.setInitialLetter("#");
             }
+            lettersData.add(user.getInitialLetter());
             user.setAvatar(dataDTO.getHeadImg());
             user.setContact(0);//朋友属性 4是没有预设置
             user.setGender(0);
@@ -199,7 +212,9 @@ public class GroupAllMembers_Add extends BaseInitActivity {
             user.setUserNum(dataDTO.getUserNum());
             data.add(user);
         }
-        SortMembersList.getLastDescList(data);
+        List<String> myList = lettersData.stream().distinct().collect(Collectors.toList());//去重
+        waveSideBar.setLetters(myList);
+//        SortMembersList.getLastDescList(data);
         if (newmembers != null) {
             mAdapter.setExistMember(Arrays.asList(newmembers));
         } else {
@@ -219,6 +234,7 @@ public class GroupAllMembers_Add extends BaseInitActivity {
 
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void afterTextChanged(Editable s) {
             keyword = s.toString();
@@ -233,6 +249,7 @@ public class GroupAllMembers_Add extends BaseInitActivity {
     }
 
     private class search_clearClick implements View.OnClickListener {
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onClick(View v) {
             query_Edit.getText().clear();
@@ -349,6 +366,17 @@ public class GroupAllMembers_Add extends BaseInitActivity {
         }
         String userName = String.join(",", userListStr);
         return userName;
+    }
+
+    private class waveSideBarListener implements WaveSideBar.OnTouchLetterChangeListener {
+        @Override
+        public void onLetterChange(String letter) {
+            //该字母首次出现的位置
+            int position = mAdapter.getPositionForSection(letter.charAt(0));
+            if (position != -1) {
+                mMangaer.scrollToPositionWithOffset(position, 0);
+            }
+        }
     }
 
 
