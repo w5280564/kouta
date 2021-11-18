@@ -20,10 +20,16 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_group_detailset.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_groupdetail_edit.xml" value="0.5" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_main.xml" value="0.17806484295845998" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_main_login.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_main_login_code.xml" value="0.36614583333333334" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_main_login_old_users.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_mainlogin_forgetpsw.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_mainlogin_olduser_phone.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_mainlogin_olduserpsd.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_me_about.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_my_group.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_userdetail_set.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activitymain_loginforget_psw_id.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/base_titlebar.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_about_hx.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_chat_group_pick_contacts.xml" value="0.3536458333333333" />

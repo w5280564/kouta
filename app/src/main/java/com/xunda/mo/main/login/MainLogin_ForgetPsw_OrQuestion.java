@@ -85,9 +85,6 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
         initTitle();
         initView();
         initData();
-//        String phonestr = "18721666525";
-//        String replace = phonestr.substring(4, phonestr.length());
-//        String newStr = phonestr.replace(replace, "****");
     }
 
     private void initTitle() {
@@ -116,14 +113,12 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
     private void initView() {
         num_Btn = findViewById(R.id.num_Btn);
         StaticData.changeShapColor(num_Btn, ContextCompat.getColor(this, R.color.grey));
-//        psw_txt = findViewById(R.id.psw_txt);
         id_txt = findViewById(R.id.id_txt);
         phone_edit = findViewById(R.id.phone_edit);
         fork_img = findViewById(R.id.fork_img);
         num_Btn.setOnClickListener(new num_BtnOnClick());
         phone_edit.addTextChangedListener(new textchangerlister());
         fork_img.setOnClickListener(new fork_imgOnClick());
-//        psw_txt.setOnClickListener(new MainLogin_OldUsers.psw_txtOnClick());
     }
 
     private void initData() {
@@ -140,12 +135,13 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
             hideSoftInput(phone_edit);
             if (TextUtils.equals(type, "1")) {
                 String edit_PhoneNumber = phone_edit.getText().toString().trim();
-//                if (!TextUtils.equals(phoneNumber,edit_PhoneNumber)){
-//                    Toast.makeText(MainLogin_ForgetPsw_OrQuestion.this,"手机号不正确", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
+                if (!TextUtils.equals(phoneNumber,edit_PhoneNumber)){
+                    Toast.makeText(MainLogin_ForgetPsw_OrQuestion.this,"手机号不正确", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String userNum = LoginID;
-                MainLogin_Code.actionStart(MainLogin_ForgetPsw_OrQuestion.this, "忘记密码", edit_PhoneNumber, userNum);
+                MainLogin_Code.actionStart(MainLogin_ForgetPsw_OrQuestion.this, "手机号验证", edit_PhoneNumber, userNum);
             } else if (TextUtils.equals(type, "2")) {
                 CodeMore(MainLogin_ForgetPsw_OrQuestion.this, num_Btn, 0);
             }
@@ -167,7 +163,7 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
                 num_Btn.setEnabled(true);
                 StaticData.changeShapColor(num_Btn, ContextCompat.getColor(MainLogin_ForgetPsw_OrQuestion.this, R.color.yellow));
             } else {
-//                num_Btn.setEnabled(false);
+                num_Btn.setEnabled(false);
                 StaticData.changeShapColor(num_Btn, ContextCompat.getColor(MainLogin_ForgetPsw_OrQuestion.this, R.color.grey));
             }
         }
@@ -181,7 +177,6 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
         }
     }
 
-    //
     Main_ForgetPsw_Model baseModel;
 
     public void baseMethod(Context context, String baseUrl, String type) {
