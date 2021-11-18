@@ -3,7 +3,6 @@ package com.xunda.mo.main.login;
 import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,22 +20,18 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
 import com.google.gson.Gson;
 import com.mcxtzhang.captchalib.SwipeCaptchaView;
 import com.xunda.mo.R;
 import com.xunda.mo.main.baseView.BasePopupWindow;
-import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.Main_ForgetPsw_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -127,18 +122,31 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
             hideSoftInput(phone_edit);
             if (TextUtils.equals(type, "1")) {
                 String edit_PhoneNumber = phone_edit.getText().toString().trim();
-                if (!TextUtils.equals(phoneNumber,edit_PhoneNumber)){
-                    Toast.makeText(MainLogin_ForgetPsw_OrQuestion.this,"手机号不正确", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                String userNum = LoginID;
-                MainLogin_Code.actionStart(MainLogin_ForgetPsw_OrQuestion.this, "手机号验证", edit_PhoneNumber, userNum);
+                checkPhoneNoSms(edit_PhoneNumber);
             } else if (TextUtils.equals(type, "2")) {
                 CodeMore(MainLogin_ForgetPsw_OrQuestion.this, num_Btn, 0);
             }
         }
     }
+
+
+    //校验手机号不用发短信
+    public void checkPhoneNoSms(String edit_PhoneNumber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("phoneNum", edit_PhoneNumber);
+        map.put("userNum", LoginID);
+        xUtils3Http.get(MainLogin_ForgetPsw_OrQuestion.this, saveFile.User_checkPhoneNoSms_Url, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                MainLogin_Code.actionStart(MainLogin_ForgetPsw_OrQuestion.this, "手机号验证", edit_PhoneNumber, LoginID);
+            }
+
+            @Override
+            public void failed(String... args) {
+            }
+        });
+    }
+
 
     private class textchangerlister implements TextWatcher {
         @Override

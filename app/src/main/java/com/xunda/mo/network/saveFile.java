@@ -35,6 +35,7 @@ public class saveFile {
     public static String User_PublicQuestionBack_Url = "public/questionBack";
     public static String User_GetPhone_Url = "public/getPhone";
     public static String User_checkPhone_Url = "public/checkPhone";
+    public static String User_checkPhoneNoSms_Url = "public/checkPhoneNoSms";
     public static String User_checkChangeCode_Url = "public/checkChangeCode";
     public static String User_forgetPassword_Url = "public/forgetPassword";
     public static String User_Friendlist_Url = "friend/list";

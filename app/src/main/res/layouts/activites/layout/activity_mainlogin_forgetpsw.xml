@@ -15,15 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/icon_Img"-->
-<!--        android:layout_width="56dp"-->
-<!--        android:layout_height="56dp"-->
-<!--        android:layout_below="@id/title_Include"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_marginTop="58dp"-->
-<!--        android:layout_marginBottom="40dp"-->
-<!--        android:background="@drawable/mo_icon" />-->
 
     <TextView
         android:id="@+id/forget_txt"
@@ -112,7 +103,8 @@
         android:background="@drawable/loginbtn_radius"
         android:text="下一步"
         android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:enabled="false"/>
 
 
 </RelativeLayout>

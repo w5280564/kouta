@@ -190,22 +190,11 @@ public class MainRegister extends AppCompatActivity {
     private class login_txtOnClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-//            Intent Intent = new Intent(MainRegister.this, MainRegister_Agreement.class);
-//            startActivity(Intent);
             String url = xUtils3Http.BASE_URL+"service.html";
             MainRegister_Agreement.actionStart(MainRegister.this,url);
         }
     }
 
-    private class oldusers_BtnOnClick extends NoDoubleClickListener {
-        @Override
-        protected void onNoDoubleClick(View v) {
-            Intent intent = new Intent(MainRegister.this, MainLogin_OldUsers.class);
-            intent.putExtra("LoginPhoneNume", phone_edit.getText().toString());
-//            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-            startActivity(intent);
-        }
-    }
 
     private class right_BtnOnClickLister extends NoDoubleClickListener {
         @Override
