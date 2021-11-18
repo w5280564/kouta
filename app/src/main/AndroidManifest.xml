@@ -217,6 +217,9 @@
             android:name=".main.group.activity.GroupDetailSet"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".main.me.activity.ChangeNameActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".main.group.activity.newGroup"
             android:screenOrientation="portrait" />
         <activity

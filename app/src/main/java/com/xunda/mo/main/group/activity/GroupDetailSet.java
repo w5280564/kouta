@@ -56,6 +56,7 @@ import com.xunda.mo.main.baseView.MySwitchItemView;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.conversation.Group_Notices;
 import com.xunda.mo.main.info.MyInfo;
+import com.xunda.mo.main.me.activity.ChangeNameActivity;
 import com.xunda.mo.main.me.activity.MeAndGroup_QRCode;
 import com.xunda.mo.model.GroupMember_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
@@ -300,22 +301,8 @@ public class GroupDetailSet extends BaseInitActivity {
     private class group_Nick_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            changeNick();
+            ChangeNameActivity.actionStart(mContext,group_Nick_ArrowItemView.getTvContent().getText().toString(),myGroupId);
         }
-    }
-
-    private void changeNick() {
-        new EditTextDialogFragment.Builder(mContext)
-                .setContent(group_Nick_ArrowItemView.getTvContent().getText().toString())
-                .setConfirmClickListener((view, content) -> {
-                    if (!TextUtils.isEmpty(content)) {
-//                            itemGroupName.getTvContent().setText(content);
-                        String changType = "3";
-                        changeGroupNameMethod(GroupDetailSet.this, saveFile.Group_UpdateNickName_Url, content);
-                    }
-                })
-                .setTitle("设置群昵称")
-                .show();
     }
 
 
