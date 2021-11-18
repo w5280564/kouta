@@ -72,15 +72,7 @@ public class MainLogin_OldUsers extends AppCompatActivity {
     private class num_BtnOnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-//            if (!StaticData.isPhone(phone_edit.getText().toString())){
-//                Toast.makeText(MainLogin_OldUser_Phone.this, "请输入正确手机号码", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-            Intent intent = new Intent(MainLogin_OldUsers.this, MainLogin_Code.class);
-            intent.putExtra("LoginPhoneNume", LoginPhoneNume);
-            intent.putExtra("TitleName", "验证码登录");
-            startActivity(intent);
-
+            MainLogin_Code.actionStart(MainLogin_OldUsers.this, "验证码登录", LoginPhoneNume);
         }
     }
 

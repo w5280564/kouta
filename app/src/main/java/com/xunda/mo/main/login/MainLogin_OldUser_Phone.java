@@ -164,10 +164,7 @@ public class MainLogin_OldUser_Phone extends AppCompatActivity {
                 Toast.makeText(MainLogin_OldUser_Phone.this, "请阅读并同意用户协议和隐私政策", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Intent intent = new Intent(MainLogin_OldUser_Phone.this, MainLogin_Code.class);
-            intent.putExtra("LoginPhoneNume",  phone_edit.getText().toString());
-            intent.putExtra("TitleName", "验证码登录");
-            startActivity(intent);
+            MainLogin_Code.actionStart(MainLogin_OldUser_Phone.this, "验证码登录", phone_edit.getText().toString());
         }
     }
 

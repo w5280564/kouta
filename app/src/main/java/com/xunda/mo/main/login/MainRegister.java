@@ -183,11 +183,7 @@ public class MainRegister extends AppCompatActivity {
                 Toast.makeText(MainRegister.this, "请阅读并同意用户协议和隐私政策", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Intent intent = new Intent(MainRegister.this, MainLogin_Code.class);
-            intent.putExtra("TitleName", "手机号注册");
-            intent.putExtra("LoginPhoneNume", phone_edit.getText().toString());
-            startActivity(intent);
-
+            MainLogin_Code.actionStart(MainRegister.this, "手机号注册", phone_edit.getText().toString());
         }
     }
 

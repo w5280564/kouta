@@ -74,18 +74,20 @@ public class MainLogin_Code extends BaseInitActivity {
     private String meid;
     private LoginViewModel loginViewModels;
 
-    public static void actionStart(Context context, String titleName, String loginPhone) {
-        Intent intent = new Intent(context, MainLogin_Code.class);
-        intent.putExtra("TitleName", titleName);
-        intent.putExtra("LoginPhoneNume", loginPhone);
-        context.startActivity(intent);
-    }
 
     public static void actionStart(Context context, String titleName, String loginPhone, String userNum) {
         Intent intent = new Intent(context, MainLogin_Code.class);
         intent.putExtra("TitleName", titleName);
         intent.putExtra("LoginPhoneNume", loginPhone);
         intent.putExtra("userNum", userNum);
+        context.startActivity(intent);
+    }
+
+
+    public static void actionStart(Context context, String titleName, String loginPhone) {
+        Intent intent = new Intent(context, MainLogin_Code.class);
+        intent.putExtra("TitleName", titleName);
+        intent.putExtra("LoginPhoneNume", loginPhone);
         context.startActivity(intent);
     }
 
@@ -108,7 +110,6 @@ public class MainLogin_Code extends BaseInitActivity {
         equipmentName = android.os.Build.BRAND + "  " + android.os.Build.MODEL;
         version = android.os.Build.VERSION.RELEASE;
         meid = StaticData.getIMEI(this);
-        String smsCode;
 
         LoginPhoneNume = intent.getStringExtra("LoginPhoneNume");
         TitleName = intent.getStringExtra("TitleName");
@@ -126,7 +127,6 @@ public class MainLogin_Code extends BaseInitActivity {
     @Override
     protected void initData() {
         super.initData();
-//        initReceiver();
         initViewModel();
     }
 
@@ -136,7 +136,6 @@ public class MainLogin_Code extends BaseInitActivity {
         loginViewModels.getLoginObservable().observe(this, response -> parseResource(response, new OnResourceParseCallback<EaseUser>(true) {
             @Override
             public void onSuccess(EaseUser data) {
-                Log.e("login", "login success");
                 DemoHelper.getInstance().setAutoLogin(true);
             }
 
