@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import com.hyphenate.easeui.utils.StatusBarCompat;
 import com.hyphenate.easeui.widget.EaseTitleBar;
@@ -66,7 +67,7 @@ public class GroupEditFragmentInfo extends BaseDialogFragment implements EaseTit
         super.initView(savedInstanceState);
         titleBar = findViewById(R.id.title_bar);
         etContent = findViewById(R.id.et_content);
-
+        titleBar.getRightText().setTextColor(ContextCompat.getColor(mContext,R.color.yellow));
 
         if (!TextUtils.isEmpty(content)) {
             etContent.setText(content);

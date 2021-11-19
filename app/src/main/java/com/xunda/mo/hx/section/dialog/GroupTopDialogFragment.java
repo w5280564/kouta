@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.hyphenate.easeui.utils.StatusBarCompat;
@@ -102,6 +103,7 @@ public class GroupTopDialogFragment extends BaseDialogFragment implements EaseTi
         titleBar = findViewById(R.id.title_bar);
         etContent = findViewById(R.id.et_content);
         empty_Txt = findViewById(R.id.empty_Txt);
+        titleBar.getRightText().setTextColor(ContextCompat.getColor(mContext,R.color.yellow));
         if (TextUtils.isEmpty(content)) {
             etContent.setHint(hint);
         } else {

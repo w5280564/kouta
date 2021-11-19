@@ -20,7 +20,7 @@
         android:layout_marginTop="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
         android:background="@drawable/background_reset_nikename"
-        android:maxLength="24"
+        android:maxLength="12"
         android:paddingLeft="@dimen/dp_10"
         android:textColor="#6F6F6F"
         android:textSize="14sp" />
@@ -32,7 +32,7 @@
         android:layout_marginTop="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_20"
         android:gravity="right"
-        android:text="24个字以为"
+        android:text="12个字以内"
         android:textColor="#A1A1A1"
         android:textSize="12sp" />
 
