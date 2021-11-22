@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:gravity="center"
             android:orientation="vertical">
 
             <ImageView
@@ -28,11 +29,11 @@
 
             <TextView
                 android:id="@+id/tv_version"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_12"
                 android:scrollbars="vertical"
-                android:gravity="center"
+                android:textStyle="bold"
                 android:textColor="@color/blacktitle"
                 android:textSize="16sp" />
 
@@ -64,7 +65,7 @@
                         android:scrollbars="vertical"
                         android:gravity="left|top"
                         android:lineSpacingExtra="4dp"
-                        android:textColor="@color/blacktitle"
+                        android:textColor="#666666"
                         android:textSize="14sp" />
                 </LinearLayout>
 

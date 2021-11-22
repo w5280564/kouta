@@ -109,6 +109,6 @@ public interface MyConstant extends DemoConstant {
     public static final String BRAND_HUAWEI = "Huawei";
     public static final String BRAND_OPPO = "OPPO";
     public static final String BRAND_VIVO = "vivo";
-    public static final String APP_PKG = "com.dayi.mall";
-    public static final String WEB_SITE_URL = "http://www.shandongdayi.com/";
+    public static final String APP_PKG = "com.xunda.mo";
+    public static final String WEB_SITE_URL = "https://www.ahxunda.com/";
 }

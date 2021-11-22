@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xunda.mo.R;
+import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.utils.StringUtil;
 
 /**
@@ -21,15 +22,16 @@ public class VersionDialog extends Dialog implements
 
 	private VersionConfirmListener listener;
 	private Context mContext;
-	private TextView tv_update,tv_cancel,tv_content;
-	private String update_content;
+	private TextView tv_update,tv_cancel,tv_content,tv_version;
+	private String update_content,version;
 	private int isForceUpdate;
 
-	public VersionDialog(Context context,String update_content,int isForceUpdate,VersionConfirmListener confirmListener) {
+	public VersionDialog(Context context,String update_content,String version,int isForceUpdate,VersionConfirmListener confirmListener) {
 		super(context, R.style.CenterDialogStyle);
 		this.listener = confirmListener;
 		this.mContext = context;
 		this.update_content = update_content;
+		this.version = version;
 		this.isForceUpdate = isForceUpdate;
 	}
 
@@ -51,11 +53,14 @@ public class VersionDialog extends Dialog implements
 		layoutParams.width = parentWidth;
 		layoutParams.height = parentHeight;
 		ll_parent.setLayoutParams(layoutParams);
+		tv_version =  findViewById(R.id.tv_version);
 		tv_cancel =  findViewById(R.id.tv_cancel);
 		tv_update =  findViewById(R.id.tv_update);
 		tv_content = findViewById(R.id.tv_content);
 		tv_content.setText(StringUtil.isBlank(update_content)?"":update_content);
 		tv_cancel.setVisibility(isForceUpdate==0?View.VISIBLE:View.GONE);//0推荐更新1强制
+		String versionName = "发现新版本 V" + version;
+		tv_version.setText(versionName);
 	}
 	
 	
@@ -80,7 +85,6 @@ public class VersionDialog extends Dialog implements
 			break;
 		case R.id.tv_update:
 			listener.onDownload();
-			dismiss();
 			break;
 		default:
 			break;

@@ -567,8 +567,9 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
 
                 int  isForceUpdate = apkObj.getIsForceUpdate();//0推荐更新1强制2当前版本最新无需更新
                 String remark = apkObj.getRemark();
+                String version = apkObj.getVersion();
                 if(isForceUpdate!=2){
-                    showVersionDialog(remark,isForceUpdate,apkObj.getPlatform());
+                    showVersionDialog(remark,version,isForceUpdate,"官网");
                 }
             }
 
@@ -580,8 +581,8 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     }
 
 
-    private void showVersionDialog(String remark, int isForceUpdate, String platform) {
-        VersionDialog dialog = new VersionDialog(this, remark, isForceUpdate,
+    private void showVersionDialog(String remark, String version,int isForceUpdate, String platform) {
+        VersionDialog dialog = new VersionDialog(this, remark,version, isForceUpdate,
                 new VersionDialog.VersionConfirmListener() {
                     @Override
                     public void onDownload() {
@@ -636,13 +637,19 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
             }
         }
 
-        if (mPlatformList.contains("应用宝")) {
-            AppMarketBean obj = new AppMarketBean();
-            obj.setMarketName("应用宝");
-            obj.setMarketPakageName("com.tencent.android.qqdownloader");
-            obj.setIconResource(R.mipmap.icon_yyb);
-        }
+//        if (mPlatformList.contains("应用宝")) {
+//            AppMarketBean obj = new AppMarketBean();
+//            obj.setMarketName("应用宝");
+//            obj.setMarketPakageName("com.tencent.android.qqdownloader");
+//            obj.setIconResource(R.mipmap.icon_yyb);
+//            mMarketList.add(obj);
+//        }
 
+        AppMarketBean obj = new AppMarketBean();
+        obj.setMarketName("应用宝");
+        obj.setMarketPakageName("com.tencent.android.qqdownloader");
+        obj.setIconResource(R.mipmap.icon_yyb);
+        mMarketList.add(obj);
         showChooseMarketDialog(isForceUpdate, mMarketList);
     }
 
