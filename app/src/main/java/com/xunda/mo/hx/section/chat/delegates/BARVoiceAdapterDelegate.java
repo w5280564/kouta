@@ -10,6 +10,7 @@ import com.hyphenate.easeui.interfaces.MessageListItemClickListener;
 import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.viewholder.EaseChatRowViewHolder;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
+import com.xunda.mo.hx.section.chat.viewholder.MyEaseBARVoiceViewHolder;
 import com.xunda.mo.hx.section.chat.viewholder.MyEaseVoiceViewHolder;
 import com.xunda.mo.hx.section.chat.views.MyEaseChatRowBARVoice;
 import com.xunda.mo.main.constant.MyConstant;
@@ -44,6 +45,6 @@ public class BARVoiceAdapterDelegate extends EaseMessageAdapterDelegate<EMMessag
 
     @Override
     protected EaseChatRowViewHolder createViewHolder(View view, MessageListItemClickListener itemClickListener) {
-        return new MyEaseVoiceViewHolder(view, itemClickListener);
+        return new MyEaseBARVoiceViewHolder(view, itemClickListener);
     }
 }

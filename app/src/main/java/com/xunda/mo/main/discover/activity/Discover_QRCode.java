@@ -35,6 +35,7 @@ import cn.bingoogolapple.qrcode.zxing.ZXingView;
 public class Discover_QRCode extends BaseInitActivity implements QRCodeView.Delegate {
     private ZXingView mZXingView;
     private ImageView select_Picture_Img;
+    private View return_Btn;
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, Discover_QRCode.class);
@@ -49,6 +50,8 @@ public class Discover_QRCode extends BaseInitActivity implements QRCodeView.Dele
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
+        return_Btn = findViewById(R.id.return_Btn);
+        return_Btn.setOnClickListener(new return_BtnClick());
         mZXingView = findViewById(R.id.zxingview);
         mZXingView.hiddenScanRect();
         mZXingView.setDelegate(this);
@@ -196,5 +199,11 @@ public class Discover_QRCode extends BaseInitActivity implements QRCodeView.Dele
     }
 
 
+    private class return_BtnClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            finish();
+        }
+    }
 }
 

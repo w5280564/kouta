@@ -75,6 +75,7 @@ import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.login.MainLogin_Register;
 import com.xunda.mo.model.UserDetail_Bean;
 import com.xunda.mo.model.UserDetail_Check_Bean;
+import com.xunda.mo.model.UserDetail_System_Bean;
 import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.GlideEnGine;
@@ -97,17 +98,15 @@ import lombok.SneakyThrows;
 
 public class UserDetail_Set extends BaseInitActivity {
 
-    private TextView cententTxt,label_Txt;
+    private TextView label_Txt;
     private SimpleDraweeView person_img;
     private MyArrowItemView friend_ArrowItemView, sex_ArrowItemView, birthday_ArrowItemView, adress_ArrowItemView, signature_ArrowItemView,
             ID_ArrowItemView, QRcode_ArrowItemView;
-    private View quit_Btn;
-    private static String CHANGE_HEAD = "1";
-    private static String CHANGE_NICK = "2";
-    private static String CHANGE_SEX = "3";
+    private static final String CHANGE_HEAD = "1";
+    private static final String CHANGE_NICK = "2";
+    private static final String CHANGE_SEX = "3";
     private ObsClient obsClient;
     private LinearLayout label_Lin;
-    private ConstraintLayout label_Constraint;
     private String tagString;
 
     public static void actionStart(Context context) {
@@ -143,12 +142,12 @@ public class UserDetail_Set extends BaseInitActivity {
         ID_ArrowItemView.setOnClickListener(new ID_ArrowItemViewItemViewClick());
         QRcode_ArrowItemView = findViewById(R.id.QRcode_ArrowItemView);
         QRcode_ArrowItemView.setOnClickListener(new QRcode_ArrowItemViewClick());
-        label_Constraint = findViewById(R.id.label_Constraint);
+        ConstraintLayout label_Constraint = findViewById(R.id.label_Constraint);
         label_Constraint.setOnClickListener(new label_ConstraintClick());
         label_Lin = findViewById(R.id.label_Lin);
         label_Txt = findViewById(R.id.label_Txt);
 
-        quit_Btn = findViewById(R.id.quit_Btn);
+        View quit_Btn = findViewById(R.id.quit_Btn);
         quit_Btn.setOnClickListener(new quit_BtnClick());
         WheelView sexWheel = findViewById(R.id.sexWheel);
         sexWheel.setCyclic(false);
@@ -208,12 +207,12 @@ public class UserDetail_Set extends BaseInitActivity {
         View title_Include = findViewById(R.id.title_Include);
         title_Include.setElevation(2f);//阴影
         title_Include.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
-        Button return_Btn = (Button) title_Include.findViewById(R.id.return_Btn);
+        Button return_Btn = title_Include.findViewById(R.id.return_Btn);
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         return_Btn.setVisibility(View.VISIBLE);
-        cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
+        TextView cententTxt =  title_Include.findViewById(R.id.cententtxt);
         cententTxt.setText("个人设置");
-        Button right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
+        Button right_Btn =  title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.GONE);
         return_Btn.setOnClickListener(new return_Btn());
     }
@@ -229,10 +228,15 @@ public class UserDetail_Set extends BaseInitActivity {
     protected void initData() {
         super.initData();
         UserMethod(UserDetail_Set.this, saveFile.User_GetUserInfo_Url);
-        CheckUpdateMethod(UserDetail_Set.this, saveFile.User_CheckUpdateUser_Url);
+
 //        AllDistrictsMethod(UserDetail_Set.this, saveFile.BaseUrl + saveFile.Common_AllDistricts_Url);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CheckUpdateMethod(UserDetail_Set.this, saveFile.User_CheckUpdateUser_Url);
+    }
 
     private class label_ConstraintClick implements View.OnClickListener {
         @Override
@@ -271,19 +275,16 @@ public class UserDetail_Set extends BaseInitActivity {
         final List<String> mOptionsItems = new ArrayList<>();
         mOptionsItems.add("男");
         mOptionsItems.add("女");
-        OptionsPickerView pvOptions = new OptionsPickerBuilder(UserDetail_Set.this, new OnOptionsSelectListener() {
-            @Override
-            public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                sex_ArrowItemView.getTvContent().setText(mOptionsItems.get(options1));
-                String sexValue = "";
-                if (TextUtils.equals(mOptionsItems.get(options1), "男")) {
-                    sexValue = "0";
-                } else {
-                    sexValue = "1";
-                }
-                String changType = "3";
-                ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "sex", sexValue, "", "");
+        OptionsPickerView pvOptions = new OptionsPickerBuilder(UserDetail_Set.this, (options1, option2, options3, v) -> {
+            sex_ArrowItemView.getTvContent().setText(mOptionsItems.get(options1));
+            String sexValue;
+            if (TextUtils.equals(mOptionsItems.get(options1), "男")) {
+                sexValue = "0";
+            } else {
+                sexValue = "1";
             }
+            String changType = "3";
+            ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "sex", sexValue, "", "");
         }).build();
         pvOptions.setPicker(mOptionsItems);
         pvOptions.show();
@@ -298,16 +299,14 @@ public class UserDetail_Set extends BaseInitActivity {
     }
 
     //时间选择器
+    @SuppressLint("SimpleDateFormat")
     private void setTime() {
-        TimePickerView pvTime = new TimePickerBuilder(UserDetail_Set.this, new OnTimeSelectListener() {
-            @Override
-            public void onTimeSelect(Date date, View v) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                String dateString = sdf.format(date);
+        TimePickerView pvTime = new TimePickerBuilder(UserDetail_Set.this, (date, v) -> {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = sdf.format(date);
 //                birthday_ArrowItemView.getTvContent().setText(dateString);
-                String changType = "4";
-                ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "birthday", dateString, "", "");
-            }
+            String changType = "4";
+            ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "birthday", dateString, "", "");
         }).build();
         pvTime.show();
     }
@@ -429,13 +428,13 @@ public class UserDetail_Set extends BaseInitActivity {
                     sex_ArrowItemView.setEnabled(false);
                 }
             }
-
             @Override
             public void failed(String... args) {
 
             }
         });
     }
+
 
 
     void logout() {
@@ -467,13 +466,9 @@ public class UserDetail_Set extends BaseInitActivity {
 
             @Override
             public void onError(int code, String message) {
-                runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        pd.dismiss();
-                        Toast.makeText(UserDetail_Set.this, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
-                    }
+                runOnUiThread(() -> {
+                    pd.dismiss();
+                    Toast.makeText(UserDetail_Set.this, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -507,7 +502,7 @@ public class UserDetail_Set extends BaseInitActivity {
         }
 
         if (!permissionList.isEmpty()) {
-            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+            String[] permissions = permissionList.toArray(new String[0]);
             ActivityCompat.requestPermissions(UserDetail_Set.this, permissions, 1);
         } else {
             //打开相机录制视频
@@ -567,14 +562,11 @@ public class UserDetail_Set extends BaseInitActivity {
     private void changeNick() {
         new EditTextDialogFragment.Builder(mContext)
                 .setContent(friend_ArrowItemView.getTvContent().getText().toString())
-                .setConfirmClickListener(new EditTextDialogFragment.ConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view, String content) {
-                        if (!TextUtils.isEmpty(content)) {
+                .setConfirmClickListener((view, content) -> {
+                    if (!TextUtils.isEmpty(content)) {
 //                            itemGroupName.getTvContent().setText(content);
-                            String changType = "2";
-                            ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "nickname", content, "", "");
-                        }
+                        String changType = "2";
+                        ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "nickname", content, "", "");
                     }
                 })
                 .setTitle("设置昵称")
@@ -587,15 +579,12 @@ public class UserDetail_Set extends BaseInitActivity {
                 "签名",
                 signature_ArrowItemView.getTvContent().getText().toString().trim(),
                 "请输入个性签名",
-                new GroupEditFragment.OnSaveClickListener() {
-                    @Override
-                    public void onSaveClick(View view, String content) {
-                        //群简介
-                        if (!TextUtils.isEmpty(content)) {
+                (view, content) -> {
+                    //群简介
+                    if (!TextUtils.isEmpty(content)) {
 //                            signature_ArrowItemView.getTvContent().setText(content);
-                            String changType = "7";
-                            ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "signature", content, "", "");
-                        }
+                        String changType = "7";
+                        ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "signature", content, "", "");
                     }
                 });
     }
@@ -657,7 +646,7 @@ public class UserDetail_Set extends BaseInitActivity {
         @SneakyThrows
         @Override
         protected String doInBackground(Void... voids) {
-            StringBuffer sbf = new StringBuffer();
+            StringBuilder sbf = new StringBuilder();
             try {
                 fileName = selectList.get(0).getRealPath();
                 if (isQ()) {
@@ -671,7 +660,7 @@ public class UserDetail_Set extends BaseInitActivity {
                 return sbf.toString();
             } catch (ObsException e) {
                 sbf.append("\n\n");
-                sbf.append("Response Code:" + e.getResponseCode())
+                sbf.append("Response Code:").append(e.getResponseCode())
                         .append("\n\n").append("Error Message:" + e.getErrorMessage())
                         .append("\n\n").append("Error Code:" + e.getErrorCode())
                         .append("\n\n").append("Request ID:" + e.getErrorRequestId())
@@ -760,12 +749,7 @@ public class UserDetail_Set extends BaseInitActivity {
                 .setTitle("")
                 .showContent(true)
                 .setContent("确定退出登录吗？")
-                .setOnConfirmClickListener(new BaseDialogFragment.OnConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view) {
-                        logout();
-                    }
-                })
+                .setOnConfirmClickListener(view -> logout())
                 .showCancelButton(true)
                 .show();
     }

@@ -110,7 +110,8 @@ public class saveFile {
     public static String Friend_Blacks_List = "friend/blacks";
     public static String User_CheckOldPhone = "user/checkOldPhone";
     public static String Group_myGroupNicknameByHx = "group/myGroupNicknameByHxIdOrGroupId";
-    public static String versionUpdate = "public/isForceUpdate";;
+    public static String versionUpdate = "public/isForceUpdate";
+
 
 
 
