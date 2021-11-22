@@ -707,16 +707,9 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     //打开应用宝
     private void openTencentYingYongBao(String marketPkg) {
         try {
-            Uri uri = Uri.parse("market://details?id=" + MyConstant.APP_PKG);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            if (!StringUtil.isBlank(marketPkg)) {
-                intent.setPackage(marketPkg);
-            }
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mContext.startActivity(intent);
+            launchAppDetail(marketPkg);
         } catch (Exception e) {
             e.printStackTrace();
-            //网页版不支持路径规划
             Toast.makeText(this, "请先安装应用宝", Toast.LENGTH_SHORT).show();
             Uri uri = Uri.parse("https://a.app.qq.com/o/simple.jsp?pkgname=com.xunda.mo");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
