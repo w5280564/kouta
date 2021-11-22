@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".main.login.MainLogin_ForgetPsw_Question"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/greythree">
 
     <include
         android:id="@+id/title_Include"

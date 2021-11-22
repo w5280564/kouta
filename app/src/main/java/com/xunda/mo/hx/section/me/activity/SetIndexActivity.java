@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.xunda.mo.R;
+import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.main.baseView.MyArrowItemView;
@@ -83,7 +84,7 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
                 PrivacyIndexActivity.actionStart(mContext);
                 break;
             case R.id.btn_logout:
-               quitMethod();
+                showExitDialog();
                 break;
             case R.id.item_se:
                 Me_Safety.actionStart(mContext);
@@ -91,19 +92,26 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
         }
     }
 
-    private void quitMethod() {
-        new BaseDialogFragment.Builder(mContext)
-                .setTitle("")
-                .showContent(true)
-                .setContent("确定退出登录吗？")
-                .setOnConfirmClickListener(new BaseDialogFragment.OnConfirmClickListener() {
+
+    /**
+     * 提示dialog
+     */
+    private void showExitDialog() {
+        TwoButtonDialog dialog = new TwoButtonDialog(this, "确定退出登录吗？", "取消", "确定",
+                new TwoButtonDialog.ConfirmListener() {
+
                     @Override
-                    public void onConfirmClick(View view) {
+                    public void onClickRight() {
                         logout();
                     }
-                })
-                .showCancelButton(true)
-                .show();
+
+                    @Override
+                    public void onClickLeft() {
+
+                    }
+                });
+        dialog.show();
+
     }
 
 

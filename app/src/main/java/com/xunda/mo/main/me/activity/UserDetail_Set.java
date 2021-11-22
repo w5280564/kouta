@@ -61,6 +61,7 @@ import com.obs.services.ObsConfiguration;
 import com.obs.services.exception.ObsException;
 import com.obs.services.model.AuthTypeEnum;
 import com.xunda.mo.R;
+import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
@@ -70,6 +71,7 @@ import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.group.fragment.GroupEditFragment;
 import com.xunda.mo.main.baseView.MyArrowItemView;
+import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.login.MainLogin_Register;
@@ -329,7 +331,7 @@ public class UserDetail_Set extends BaseInitActivity {
     private class quit_BtnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            quitMethod();
+            showExitDialog();
         }
     }
 
@@ -744,14 +746,26 @@ public class UserDetail_Set extends BaseInitActivity {
         }
     }
 
-    private void quitMethod() {
-        new BaseDialogFragment.Builder(mContext)
-                .setTitle("")
-                .showContent(true)
-                .setContent("确定退出登录吗？")
-                .setOnConfirmClickListener(view -> logout())
-                .showCancelButton(true)
-                .show();
+
+    /**
+     * 提示dialog
+     */
+    private void showExitDialog() {
+        TwoButtonDialog dialog = new TwoButtonDialog(this, "确定退出登录吗？", "取消", "确定",
+                new TwoButtonDialog.ConfirmListener() {
+
+                    @Override
+                    public void onClickRight() {
+                        logout();
+                    }
+
+                    @Override
+                    public void onClickLeft() {
+
+                    }
+                });
+        dialog.show();
+
     }
 
 
