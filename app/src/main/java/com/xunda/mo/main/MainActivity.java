@@ -565,11 +565,11 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
                     return;
                 }
 
-                int  isForceUpdate = apkObj.getIsForceUpdate();//0推荐更新1强制2当前版本最新无需更新
+                int isForceUpdate = apkObj.getIsForceUpdate();//0推荐更新1强制2当前版本最新无需更新
                 String remark = apkObj.getRemark();
                 String version = apkObj.getVersion();
                 if(isForceUpdate!=2){
-                    showVersionDialog(remark,version,isForceUpdate,"官网");
+                    showVersionDialog(remark,version,isForceUpdate,apkObj.getPlatform());
                 }
             }
 
@@ -637,19 +637,14 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
             }
         }
 
-//        if (mPlatformList.contains("应用宝")) {
-//            AppMarketBean obj = new AppMarketBean();
-//            obj.setMarketName("应用宝");
-//            obj.setMarketPakageName("com.tencent.android.qqdownloader");
-//            obj.setIconResource(R.mipmap.icon_yyb);
-//            mMarketList.add(obj);
-//        }
+        if (mPlatformList.contains("应用宝")) {
+            AppMarketBean obj = new AppMarketBean();
+            obj.setMarketName("应用宝");
+            obj.setMarketPakageName("com.tencent.android.qqdownloader");
+            obj.setIconResource(R.mipmap.icon_yyb);
+            mMarketList.add(obj);
+        }
 
-        AppMarketBean obj = new AppMarketBean();
-        obj.setMarketName("应用宝");
-        obj.setMarketPakageName("com.tencent.android.qqdownloader");
-        obj.setIconResource(R.mipmap.icon_yyb);
-        mMarketList.add(obj);
         showChooseMarketDialog(isForceUpdate, mMarketList);
     }
 

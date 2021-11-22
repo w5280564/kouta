@@ -9,7 +9,6 @@
         android:id="@+id/ll_parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_38"
         android:background="@drawable/shape_background_white_radius10"
         android:orientation="vertical"
         android:paddingLeft="20dp"
@@ -43,7 +42,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginTop="@dimen/dp_12"
             android:orientation="vertical">
 
 
