@@ -148,7 +148,6 @@ public class MainLogin_ForgetPsw_Question extends AppCompatActivity {
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                Security_QuestionList_Model baseModel = new Gson().fromJson(result, Security_QuestionList_Model.class);
                 Intent intent = new Intent(context, MainLogin_ForgetPsw_SetPsw.class);
                 intent.putExtra("phoneNum",phoneNumber);
                 startActivity(intent);

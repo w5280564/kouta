@@ -32,6 +32,8 @@ import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
+import com.xunda.mo.utils.StringUtil;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,7 +86,7 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         return_Btn.setVisibility(View.VISIBLE);
         TextView contentTxt = title_Include.findViewById(R.id.cententtxt);
-        contentTxt.setText(titleName);
+        contentTxt.setText(StringUtil.getStringValue(titleName));
         right_Btn = title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.GONE);
         return_Btn.setOnClickListener(new return_Btn());

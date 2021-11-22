@@ -15,19 +15,6 @@
         android:layout_height="wrap_content" />
 
 
-    <TextView
-        android:id="@+id/ques_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title_Include"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginBottom="10dp"
-        android:text="请选择并回答密保问题"
-        android:textColor="@color/greytwo"
-        android:textSize="12sp" />
-
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -36,7 +23,7 @@
             android:id="@+id/question_lin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ques_txt"
+            android:layout_below="@id/title_Include"
             android:orientation="vertical" />
 
     </ScrollView>

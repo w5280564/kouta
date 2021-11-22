@@ -119,12 +119,11 @@ public class Main_Novalidation_Code extends BaseInitActivity {
     private void initTitle() {
         View title_Include = findViewById(R.id.title_Include);
         title_Include.setElevation(2f);//阴影
-        Button return_Btn = (Button) title_Include.findViewById(R.id.return_Btn);
+        Button return_Btn = title_Include.findViewById(R.id.return_Btn);
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         return_Btn.setVisibility(View.VISIBLE);
-        TextView cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
-//        cententTxt.setText(TitleName);
-        cententTxt.setText("");
+        TextView cententTxt = title_Include.findViewById(R.id.cententtxt);
+        cententTxt.setText(TitleName);
         right_Btn = title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.GONE);
         return_Btn.setOnClickListener(new return_Btn());
@@ -155,8 +154,8 @@ public class Main_Novalidation_Code extends BaseInitActivity {
     }
 
     private void Data() {
-        if (TitleName.equals("验证手机号")) {
-            //密保验证手机号
+        if (TitleName.equals("手机号验证")) {
+            //密保手机号验证
             type = "4";
             codeMethod(saveFile.User_checkPhone_Url, "userNum", userNum, type);
         } else if (TitleName.equals("忘记密码")) {
@@ -189,7 +188,7 @@ public class Main_Novalidation_Code extends BaseInitActivity {
         @Override
         public void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
             if (text.toString().length() >= 4) {
-                if (TitleName.equals("验证手机号")) {
+                if (TitleName.equals("手机号验证")) {
                     //忘记密码
                     type = "4";
                     String Code = capt_view.getText().toString();
@@ -245,7 +244,7 @@ public class Main_Novalidation_Code extends BaseInitActivity {
         xUtils3Http.get(Main_Novalidation_Code.this, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                if (TitleName.equals("验证手机号")) {
+                if (TitleName.equals("手机号验证")) {
                     Me_Set_SecurityQuestion.actionStart(mContext,LoginPhoneNume);
 
                 } else if (TitleName.equals("忘记密码")) {

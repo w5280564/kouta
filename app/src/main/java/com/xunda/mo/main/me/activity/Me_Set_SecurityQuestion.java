@@ -185,7 +185,6 @@ public class Me_Set_SecurityQuestion extends BaseInitActivity {
             LinearLayout choice_lin = myView.findViewById(R.id.choice_lin);
             ImageView arrow_img = myView.findViewById(R.id.arrow_img);
             arrow_img.setImageResource(R.mipmap.login_forgetpsw_down);
-//            questionTxt.setText(nameArr[i]);
             questiontxt_List.add(questionTxt);
             answerTxt_List.add(phone_edit);
             questionlin_List.add(choice_lin);
