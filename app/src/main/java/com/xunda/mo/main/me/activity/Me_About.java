@@ -84,7 +84,7 @@ public class Me_About extends BaseInitActivity {
     @Override
     protected void initData() {
         super.initData();
-        String versionName = "v" + StaticData.getversionName(mContext);
+        String versionName = "v" + StaticData.getVersionName(mContext);
         version_Txt.setText(versionName);
         setSe(login_txt);
     }

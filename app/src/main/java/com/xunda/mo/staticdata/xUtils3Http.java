@@ -32,6 +32,7 @@ public class xUtils3Http {
         if (parms != null) {
             for (String key : parms.keySet()) {
                 params.addParameter(key, parms.get(key));
+                Log.d("MoYanMoYu",key + " = " + parms.get(key).toString());
             }
         }
         MyInfo myInfo = new MyInfo(mContext);
@@ -43,7 +44,7 @@ public class xUtils3Http {
             @Override
             public void onSuccess(String result) {
                 if (result != null) {
-                    Log.d("xunda",url+"接口返回"+result);
+                    Log.d("MoYanMoYu",url+"接口返回"+result);
                     baseModel model = new Gson().fromJson(result, baseModel.class);
                     if (model.getCode() == 201) {
                         Intent intent = new Intent(mContext, MainLogin_Register.class);
@@ -90,6 +91,7 @@ public class xUtils3Http {
             try {
                 for (String key : parms.keySet()) {
                     obj.put(key, parms.get(key));
+                    Log.d("MoYanMoYu",key + " = " + parms.get(key).toString());
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -111,7 +113,7 @@ public class xUtils3Http {
             @Override
             public void onSuccess(String result) {
                 if (result != null) {
-                    Log.d("xunda",url+"接口返回"+result);
+                    Log.d("MoYanMoYu",url+"接口返回"+result);
                     baseModel model = new Gson().fromJson(result, baseModel.class);
                     if (model.getCode() == 201) {
                         Intent intent = new Intent(mContext, MainLogin_Register.class);

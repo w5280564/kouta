@@ -4,8 +4,6 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,9 +21,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -65,16 +61,16 @@ import com.xunda.mo.hx.section.conversation.ConversationListFragment;
 import com.xunda.mo.main.baseView.MyApplication;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.discover.DiscoverFragment;
-import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.me.MeFragment;
 import com.xunda.mo.main.viewmodels.MainViewModel;
 import com.xunda.mo.model.ApkBean;
 import com.xunda.mo.model.AppMarketBean;
-import com.xunda.mo.model.UserDetail_Bean;
+import com.xunda.mo.model.AppVersionBean;
 import com.xunda.mo.model.adress_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
 import com.xunda.mo.staticdata.SortMembersList;
+import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.xUtils3Http;
 import com.xunda.mo.utils.GsonUtil;
 import com.xunda.mo.utils.ListUtils;
@@ -167,7 +163,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         navView.setOnNavigationItemSelectedListener(this);
     }
 
-    private void addToHone(){
+    private void addToHone() {
         switchToHome();
     }
 
@@ -458,7 +454,10 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     }
 
     boolean mIsSupportedBade = true;
-    /** set badge number*/
+
+    /**
+     * set badge number
+     */
     public void setBadgeNum(int num) {
         try {
             Bundle bunlde = new Bundle();
@@ -544,32 +543,6 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
 
 
 
-    /**
-     * 过滤出已经安装的包名集合
-     * @param context
-     * @return 已安装的包名集合
-     */
-    public ArrayList<String> getFilterInstallMarkets(Context context) {
-        ArrayList<String> appList = new ArrayList<String>();
-        PackageManager pm = context.getPackageManager();
-        List<PackageInfo> installedPkgs = pm.getInstalledPackages(0);
-        int li = installedPkgs.size();
-        for (int i = 0; i < li; i++) {
-            String installPkg = "";
-            PackageInfo packageInfo = installedPkgs.get(i);
-            try {
-                installPkg = packageInfo.packageName;
-
-                Log.e("installPkg","installPkg>>>>>"+installPkg);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return appList;
-    }
-
-
-
     private ChooseAppMarketDialog mChooseAppMarketDialog;
 
 
@@ -577,19 +550,26 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
      * 检查新版本
      */
     private void checkUpdate() {
-        getFilterInstallMarkets(this);
         Map<String, Object> map = new HashMap<>();
+        map.put("version", String.valueOf(StaticData.getVersionName(mContext)));
         xUtils3Http.get(this, saveFile.versionUpdate, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-//                ApkBean apkObj = GsonUtil.getInstance().json2Bean(data, ApkBean.class);
-//                if (apkObj != null) {
-//                    int  isForceUpdate = apkObj.getIsForceUpdate();//0推荐更新1强制2当前版本最新无需更新
-//                    String remark = apkObj.getRemark();
-//                    if(isForceUpdate!=2){
-//                        showVersionDialog(remark,isForceUpdate,apkObj.getPlatform());
-//                    }
-//                }
+                AppVersionBean appVersionObj = GsonUtil.getInstance().json2Bean(result, AppVersionBean.class);
+                if (appVersionObj==null) {
+                    return;
+                }
+                ApkBean apkObj = appVersionObj.getData();
+
+                if (apkObj==null) {
+                    return;
+                }
+
+                int  isForceUpdate = apkObj.getIsForceUpdate();//0推荐更新1强制2当前版本最新无需更新
+                String remark = apkObj.getRemark();
+                if(isForceUpdate!=2){
+                    showVersionDialog(remark,isForceUpdate,apkObj.getPlatform());
+                }
             }
 
             @Override
@@ -600,12 +580,21 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     }
 
 
-    private void showVersionDialog(String remark,int isForceUpdate,String platform) {
-        VersionDialog dialog = new VersionDialog(this, remark,isForceUpdate,
+    private void showVersionDialog(String remark, int isForceUpdate, String platform) {
+        VersionDialog dialog = new VersionDialog(this, remark, isForceUpdate,
                 new VersionDialog.VersionConfirmListener() {
                     @Override
                     public void onDownload() {
-                        handlePlatformList(isForceUpdate,platform);
+                        if (!StringUtil.isBlank(platform)){
+                            List<String> mPlatformList = StringUtil.stringToList(platform);
+                            if (!ListUtils.isEmpty(mPlatformList)) {
+                                if (mPlatformList.size()==1) {
+                                    jumpToWebsite();//只有一个平台时，点击下载直接跳官网
+                                }else{//否则弹出平台选择弹窗
+                                    handlePlatformList(isForceUpdate,mPlatformList);
+                                }
+                            }
+                        }
                     }
 
                 });
@@ -613,62 +602,66 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     }
 
 
-
-    private void handlePlatformList(int isForceUpdate,String platform){
+    private void handlePlatformList(int isForceUpdate,List<String> mPlatformList){
         String deviceBrandName = android.os.Build.BRAND;
         List<AppMarketBean> mMarketList = new ArrayList<>();
-        if (!ListUtils.isEmpty(StringUtil.stringToList(platform))) {
-            for (int i = 0; i < StringUtil.stringToList(platform).size(); i++) {
-                String name = StringUtil.stringToList(platform).get(i);
-                AppMarketBean obj = new AppMarketBean();
-                obj.setMarketName(name);
-
-                if(deviceBrandName.equalsIgnoreCase(MyConstant.BRAND_OPPO)&&"OPPO".equals(name)){
-                    obj.setMarketPakageName("com.heytap.market");
-                    obj.setIconResource(R.mipmap.icon_oppo);
-                    obj.setBrandName(MyConstant.BRAND_OPPO);
-                    mMarketList.add(obj);
-                    break;
-                }else if(deviceBrandName.equalsIgnoreCase(MyConstant.BRAND_VIVO)&&"VIVO".equals(name)){
-                    obj.setMarketPakageName("com.bbk.appstore");
-                    obj.setIconResource(R.mipmap.icon_vivo);
-                    obj.setBrandName(MyConstant.BRAND_VIVO);
-                    mMarketList.add(obj);
-                    break;
-                }else if(deviceBrandName.equalsIgnoreCase(MyConstant.BRAND_HUAWEI)&&"华为".equals(name)){
-                    obj.setMarketPakageName("com.huawei.appmarket");
-                    obj.setIconResource(R.mipmap.icon_huawei);
-                    obj.setBrandName(MyConstant.BRAND_HUAWEI);
-                    mMarketList.add(obj);
-                    break;
-                }else if(deviceBrandName.equalsIgnoreCase(MyConstant.BRAND_HONOR)&&"华为".equals(name)){
-                    obj.setMarketPakageName("com.huawei.appmarket");
-                    obj.setIconResource(R.mipmap.icon_huawei);
-                    obj.setBrandName(MyConstant.BRAND_HUAWEI);
-                    mMarketList.add(obj);
-                    break;
-                }
+        for (int i = 0; i < mPlatformList.size(); i++) {
+            String name = mPlatformList.get(i);
+            AppMarketBean obj = new AppMarketBean();
+            obj.setMarketName(name);
+            if (deviceBrandName.equalsIgnoreCase(MyConstant.BRAND_OPPO) && "OPPO".equals(name)) {
+                obj.setMarketPakageName("com.heytap.market");
+                obj.setIconResource(R.mipmap.icon_oppo);
+                obj.setBrandName(MyConstant.BRAND_OPPO);
+                mMarketList.add(obj);
+                break;
+            } else if (deviceBrandName.equalsIgnoreCase(MyConstant.BRAND_VIVO) && "VIVO".equals(name)) {
+                obj.setMarketPakageName("com.bbk.appstore");
+                obj.setIconResource(R.mipmap.icon_vivo);
+                obj.setBrandName(MyConstant.BRAND_VIVO);
+                mMarketList.add(obj);
+                break;
+            } else if (deviceBrandName.equalsIgnoreCase(MyConstant.BRAND_HUAWEI) && "华为".equals(name)) {
+                obj.setMarketPakageName("com.huawei.appmarket");
+                obj.setIconResource(R.mipmap.icon_huawei);
+                obj.setBrandName(MyConstant.BRAND_HUAWEI);
+                mMarketList.add(obj);
+                break;
+            } else if (deviceBrandName.equalsIgnoreCase(MyConstant.BRAND_HONOR) && "华为".equals(name)) {
+                obj.setMarketPakageName("com.huawei.appmarket");
+                obj.setIconResource(R.mipmap.icon_huawei);
+                obj.setBrandName(MyConstant.BRAND_HUAWEI);
+                mMarketList.add(obj);
+                break;
             }
         }
 
+        if (mPlatformList.contains("应用宝")) {
+            AppMarketBean obj = new AppMarketBean();
+            obj.setMarketName("应用宝");
+            obj.setMarketPakageName("com.tencent.android.qqdownloader");
+            obj.setIconResource(R.mipmap.icon_yyb);
+        }
 
-        showChooseMarketDialog(isForceUpdate,mMarketList);
+        showChooseMarketDialog(isForceUpdate, mMarketList);
     }
 
     /**
      * 弹出选择市场框
      */
-    public void showChooseMarketDialog(int isForceUpdate,List<AppMarketBean> mMarketList) {
+    public void showChooseMarketDialog(int isForceUpdate, List<AppMarketBean> mMarketList) {
 
 
         if (mChooseAppMarketDialog == null) {
-            mChooseAppMarketDialog = new ChooseAppMarketDialog(this,mMarketList , isForceUpdate,new ChooseAppMarketDialog.DialogItemChooseListener() {
+            mChooseAppMarketDialog = new ChooseAppMarketDialog(this, mMarketList, isForceUpdate, new ChooseAppMarketDialog.DialogItemChooseListener() {
                 @Override
                 public void onItemChooseClick(AppMarketBean obj) {
                     if (obj != null) {
-                        if("官网".equals(obj.getMarketName())){
+                        if ("官网".equals(obj.getMarketName())) {
                             jumpToWebsite();
-                        }else{
+                        } else if ("应用宝".equals(obj.getMarketName())) {
+                            openTencentYingYongBao(obj.getMarketPakageName());
+                        } else {
                             launchAppDetail(obj.getMarketPakageName());
                         }
                     }
@@ -682,7 +675,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         }
     }
 
-    private void jumpToWebsite(){
+    private void jumpToWebsite() {
         Uri uri = Uri.parse(MyConstant.WEB_SITE_URL);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
@@ -691,13 +684,14 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
 
     /**
      * 跳转到应用市场app详情界面
+     *
      * @param marketPkg 应用市场包名
      */
     public void launchAppDetail(String marketPkg) {
         try {
             Uri uri = Uri.parse("market://details?id=" + MyConstant.APP_PKG);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            if (!StringUtil.isBlank(marketPkg)){
+            if (!StringUtil.isBlank(marketPkg)) {
                 intent.setPackage(marketPkg);
             }
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -707,5 +701,25 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         }
     }
 
+
+    //打开应用宝
+    private void openTencentYingYongBao(String marketPkg) {
+        Intent gdNav = new Intent();
+        String actView = Intent.ACTION_VIEW;
+        String cat = Intent.CATEGORY_DEFAULT;
+        gdNav.setAction(actView);
+        gdNav.addCategory(cat);
+        try {
+            startActivity(gdNav);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //网页版不支持路径规划
+            Toast.makeText(this, "请安装应用宝", Toast.LENGTH_SHORT).show();
+            Uri uri = Uri.parse("market://details?id=" + marketPkg);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }
+
+    }
 
 }

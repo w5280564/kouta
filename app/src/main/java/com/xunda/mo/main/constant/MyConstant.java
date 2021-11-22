@@ -105,7 +105,6 @@ public interface MyConstant extends DemoConstant {
     String USER_UUID = "uuid";
 
 
-    public static final String BRAND_TENCENT = "yingyongbao";
     public static final String BRAND_HONOR = "HONOR";
     public static final String BRAND_HUAWEI = "Huawei";
     public static final String BRAND_OPPO = "OPPO";

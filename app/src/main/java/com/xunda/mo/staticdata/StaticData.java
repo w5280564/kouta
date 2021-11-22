@@ -530,11 +530,10 @@ public class StaticData {
      * @param context
      * @return
      */
-    public static String getversionName(Context context) {
+    public static String getVersionName(Context context) {
         String verName = "";
         try {
-            //注意："com.example.try_downloadfile_progress"对应AndroidManifest.xml里的package="……"部分
-            verName = context.getPackageManager().getPackageInfo("com.xunda.mo", 0).versionName;
+            verName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("msg", e.getMessage());
         }
