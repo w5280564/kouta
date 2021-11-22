@@ -4,6 +4,8 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,6 +22,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -42,6 +47,8 @@ import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.ui.base.EaseBaseFragment;
 import com.hyphenate.util.EMLog;
 import com.xunda.mo.R;
+import com.xunda.mo.dialog.ChooseAppMarketDialog;
+import com.xunda.mo.dialog.VersionDialog;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.db.DemoDbHelper;
@@ -58,13 +65,20 @@ import com.xunda.mo.hx.section.conversation.ConversationListFragment;
 import com.xunda.mo.main.baseView.MyApplication;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.discover.DiscoverFragment;
+import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.me.MeFragment;
 import com.xunda.mo.main.viewmodels.MainViewModel;
+import com.xunda.mo.model.ApkBean;
+import com.xunda.mo.model.AppMarketBean;
+import com.xunda.mo.model.UserDetail_Bean;
 import com.xunda.mo.model.adress_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
 import com.xunda.mo.staticdata.SortMembersList;
 import com.xunda.mo.staticdata.xUtils3Http;
+import com.xunda.mo.utils.GsonUtil;
+import com.xunda.mo.utils.ListUtils;
+import com.xunda.mo.utils.StringUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -161,6 +175,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     @Override
     protected void initData() {
         super.initData();
+        checkUpdate();
         initViewModel();
         ChatPresenter.getInstance().init();
         // 获取华为 HMS 推送 token
@@ -525,7 +540,172 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     }
 
 
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>版本更新开始>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+
+
+    /**
+     * 过滤出已经安装的包名集合
+     * @param context
+     * @return 已安装的包名集合
+     */
+    public ArrayList<String> getFilterInstallMarkets(Context context) {
+        ArrayList<String> appList = new ArrayList<String>();
+        PackageManager pm = context.getPackageManager();
+        List<PackageInfo> installedPkgs = pm.getInstalledPackages(0);
+        int li = installedPkgs.size();
+        for (int i = 0; i < li; i++) {
+            String installPkg = "";
+            PackageInfo packageInfo = installedPkgs.get(i);
+            try {
+                installPkg = packageInfo.packageName;
+
+                Log.e("installPkg","installPkg>>>>>"+installPkg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return appList;
+    }
+
+
+
+    private ChooseAppMarketDialog mChooseAppMarketDialog;
+
+
+    /**
+     * 检查新版本
+     */
+    private void checkUpdate() {
+        getFilterInstallMarkets(this);
+        Map<String, Object> map = new HashMap<>();
+        xUtils3Http.get(this, saveFile.versionUpdate, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+//                ApkBean apkObj = GsonUtil.getInstance().json2Bean(data, ApkBean.class);
+//                if (apkObj != null) {
+//                    int  isForceUpdate = apkObj.getIsForceUpdate();//0推荐更新1强制2当前版本最新无需更新
+//                    String remark = apkObj.getRemark();
+//                    if(isForceUpdate!=2){
+//                        showVersionDialog(remark,isForceUpdate,apkObj.getPlatform());
+//                    }
+//                }
+            }
+
+            @Override
+            public void failed(String... args) {
+
+            }
+        });
+    }
+
+
+    private void showVersionDialog(String remark,int isForceUpdate,String platform) {
+        VersionDialog dialog = new VersionDialog(this, remark,isForceUpdate,
+                new VersionDialog.VersionConfirmListener() {
+                    @Override
+                    public void onDownload() {
+                        handlePlatformList(isForceUpdate,platform);
+                    }
+
+                });
+        dialog.show();
+    }
+
+
+
+    private void handlePlatformList(int isForceUpdate,String platform){
+        String deviceBrandName = android.os.Build.BRAND;
+        List<AppMarketBean> mMarketList = new ArrayList<>();
+        if (!ListUtils.isEmpty(StringUtil.stringToList(platform))) {
+            for (int i = 0; i < StringUtil.stringToList(platform).size(); i++) {
+                String name = StringUtil.stringToList(platform).get(i);
+                AppMarketBean obj = new AppMarketBean();
+                obj.setMarketName(name);
+
+                if(deviceBrandName.equalsIgnoreCase(MyConstant.BRAND_OPPO)&&"OPPO".equals(name)){
+                    obj.setMarketPakageName("com.heytap.market");
+                    obj.setIconResource(R.mipmap.icon_oppo);
+                    obj.setBrandName(MyConstant.BRAND_OPPO);
+                    mMarketList.add(obj);
+                    break;
+                }else if(deviceBrandName.equalsIgnoreCase(MyConstant.BRAND_VIVO)&&"VIVO".equals(name)){
+                    obj.setMarketPakageName("com.bbk.appstore");
+                    obj.setIconResource(R.mipmap.icon_vivo);
+                    obj.setBrandName(MyConstant.BRAND_VIVO);
+                    mMarketList.add(obj);
+                    break;
+                }else if(deviceBrandName.equalsIgnoreCase(MyConstant.BRAND_HUAWEI)&&"华为".equals(name)){
+                    obj.setMarketPakageName("com.huawei.appmarket");
+                    obj.setIconResource(R.mipmap.icon_huawei);
+                    obj.setBrandName(MyConstant.BRAND_HUAWEI);
+                    mMarketList.add(obj);
+                    break;
+                }else if(deviceBrandName.equalsIgnoreCase(MyConstant.BRAND_HONOR)&&"华为".equals(name)){
+                    obj.setMarketPakageName("com.huawei.appmarket");
+                    obj.setIconResource(R.mipmap.icon_huawei);
+                    obj.setBrandName(MyConstant.BRAND_HUAWEI);
+                    mMarketList.add(obj);
+                    break;
+                }
+            }
+        }
+
+
+        showChooseMarketDialog(isForceUpdate,mMarketList);
+    }
+
+    /**
+     * 弹出选择市场框
+     */
+    public void showChooseMarketDialog(int isForceUpdate,List<AppMarketBean> mMarketList) {
+
+
+        if (mChooseAppMarketDialog == null) {
+            mChooseAppMarketDialog = new ChooseAppMarketDialog(this,mMarketList , isForceUpdate,new ChooseAppMarketDialog.DialogItemChooseListener() {
+                @Override
+                public void onItemChooseClick(AppMarketBean obj) {
+                    if (obj != null) {
+                        if("官网".equals(obj.getMarketName())){
+                            jumpToWebsite();
+                        }else{
+                            launchAppDetail(obj.getMarketPakageName());
+                        }
+                    }
+
+                }
+            });
+        }
+
+        if (!mChooseAppMarketDialog.isShowing()) {
+            mChooseAppMarketDialog.show();
+        }
+    }
+
+    private void jumpToWebsite(){
+        Uri uri = Uri.parse(MyConstant.WEB_SITE_URL);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+    }
+
+
+    /**
+     * 跳转到应用市场app详情界面
+     * @param marketPkg 应用市场包名
+     */
+    public void launchAppDetail(String marketPkg) {
+        try {
+            Uri uri = Uri.parse("market://details?id=" + MyConstant.APP_PKG);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            if (!StringUtil.isBlank(marketPkg)){
+                intent.setPackage(marketPkg);
+            }
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

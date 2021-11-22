@@ -111,6 +111,7 @@ android {
 //            manifest.srcFile("other/AndroidManifest.xml")
 
             res.srcDirs = [
+                    'src/main/res/layouts/dialog',
                     'src/main/res/layouts/activites',
                     'src/main/res/layouts/adapter',
                     'src/main/res/layouts/fragments',
@@ -233,6 +234,8 @@ dependencies {
     implementation 'androidx.documentfile:documentfile:1.0.1'
     implementation 'com.guolindev.permissionx:permissionx:1.6.1' //权限管理
 //
+
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'//万能适配器
 
 }
 

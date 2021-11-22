@@ -103,4 +103,13 @@ public interface MyConstant extends DemoConstant {
     String Black_Friend = "blackFriend";
     String Dele_Friend = "deletFriend";
     String USER_UUID = "uuid";
+
+
+    public static final String BRAND_TENCENT = "yingyongbao";
+    public static final String BRAND_HONOR = "HONOR";
+    public static final String BRAND_HUAWEI = "Huawei";
+    public static final String BRAND_OPPO = "OPPO";
+    public static final String BRAND_VIVO = "vivo";
+    public static final String APP_PKG = "com.dayi.mall";
+    public static final String WEB_SITE_URL = "http://www.shandongdayi.com/";
 }
