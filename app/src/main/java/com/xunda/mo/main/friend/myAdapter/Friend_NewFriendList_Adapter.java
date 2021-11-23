@@ -79,7 +79,7 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
                         v.setEnabled(false);
                         holder.refuse_Btn.setVisibility(View.GONE);
                         holder.time_Txt.setVisibility(View.VISIBLE);
-                        holder.result_Txt.setText("已接受");
+                        holder.result_Txt.setText("已同意");
                     }
                     onItemAddRemoveClickLister.onItemAddClick(v, position);
 
@@ -136,7 +136,7 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
             holder.add_Btn.setVisibility(View.VISIBLE);
             holder.time_Txt.setVisibility(View.INVISIBLE);
         } else if (oneData.getApplyStatus() == 2) {
-            holder.result_Txt.setText("已接受");
+            holder.result_Txt.setText("已同意");
         } else if (oneData.getApplyStatus() == 3) {
             holder.result_Txt.setText("已拒绝");
         } else if (oneData.getApplyStatus() == 4) {
