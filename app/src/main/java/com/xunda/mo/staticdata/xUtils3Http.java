@@ -90,7 +90,7 @@ public class xUtils3Http {
             try {
                 for (String key : parms.keySet()) {
                     obj.put(key, parms.get(key));
-                    Log.d("MoYanMoYu",key + " = " + parms.get(key).toString());
+                    Log.d("MoYanMoYu",key + " = " + parms.get(key));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
