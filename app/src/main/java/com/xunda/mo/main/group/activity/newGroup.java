@@ -331,8 +331,7 @@ public class newGroup extends BaseInitActivity {
     }
 
 
-    String objectName = "";
-
+    @SuppressLint("StaticFieldLeak")
     public class PostObjectTask extends AsyncTask<Void, Void, String> {
         @SneakyThrows
         @Override
@@ -341,23 +340,21 @@ public class newGroup extends BaseInitActivity {
             try {
 
                 MyInfo myInfo = new MyInfo(newGroup.this);
-                objectName = "group/headImg/" + myInfo.getUserInfo().getUserId() + "/" + selectList.get(0).getFileName();//对应上传之后的文件名称
+                String  objectName = "group/headImg/" + myInfo.getUserInfo().getUserId() + "/" + selectList.get(0).getFileName();//对应上传之后的文件名称
                 FileInputStream fis = new FileInputStream(new File(selectList.get(0).getCutPath()));
                 obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
                 sbf.append(objectName);
                 return sbf.toString();
             } catch (ObsException e) {
-                sbf.append("\n\n");
                 sbf.append("Response Code:" + e.getResponseCode())
-                        .append("\n\n").append("Error Message:" + e.getErrorMessage())
-                        .append("\n\n").append("Error Code:" + e.getErrorCode())
-                        .append("\n\n").append("Request ID:" + e.getErrorRequestId())
-                        .append("\n\n").append("Host ID:" + e.getErrorHostId());
-                return sbf.toString();
+                        .append("Error Message:" + e.getErrorMessage())
+                        .append("Error Code:" + e.getErrorCode())
+                        .append("Request ID:" + e.getErrorRequestId())
+                        .append("Host ID:" + e.getErrorHostId());
+                return "";
             } catch (Exception e) {
-                sbf.append("\n\n");
                 sbf.append(e.getMessage());
-                return sbf.toString();
+                return "";
             } finally {
                 if (obsClient != null) {
                     try {
@@ -372,9 +369,13 @@ public class newGroup extends BaseInitActivity {
         @Override
         protected void onPostExecute(String pic) {
             super.onPostExecute(pic);
+            if (TextUtils.isEmpty(pic)) {
+                Toast.makeText(mContext, "上传图片失败", Toast.LENGTH_SHORT).show();
+            } else {
 //            groupHead_Sim.setEnabled(false);
-            pictures = pic;
-            CreateGroupMethod(newGroup.this, saveFile.Group_Create_Url);
+                pictures = pic;
+                CreateGroupMethod(newGroup.this, saveFile.Group_Create_Url);
+            }
         }
     }
 

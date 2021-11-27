@@ -228,6 +228,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
     }
 
     //会话列表最后一条消息内容
+
     private void setContent(TextView mentioned, TextView contentView, EMConversation item) {
         MyInfo myInfo = new MyInfo(contentView.getContext());
         EMMessage lastMessage = item.getLastMessage();
@@ -240,8 +241,12 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         String lastFireType = lastMessage.getStringAttribute(MyConstant.FIRE_TYPE, "");
         boolean isRecall = lastMessType.equals(MyConstant.Message_Recall);
         boolean isHxRecall = lastMessType.equals(DemoConstant.MESSAGE_TYPE_RECALL);
+        String sendName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
         String messageStr = "";
-        if (isRecall || isHxRecall) {
+        if (TextUtils.equals(lastMessType,MyConstant.MESSAGE_TYPE_CREATE_GROUP)){
+            messageStr = String.format("'%1$s'创建了群聊",sendName);
+            contentView.setText(messageStr);
+        }else if (isRecall || isHxRecall) {
             if (lastMessage.getChatType() == EMMessage.ChatType.Chat) {
                 if (lastMessage.direct() == EMMessage.Direct.SEND) {
                     messageStr = "您撤回一条消息";
@@ -252,7 +257,6 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                 if (lastMessage.direct() == EMMessage.Direct.SEND) {
                     messageStr = "您撤回一条消息";
                 } else {
-                    String sendName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
                     messageStr = String.format(contentView.getContext().getString(R.string.msg_recall_by_user), sendName);
                 }
             }
@@ -261,7 +265,6 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
             messageStr = "[Mo 语]";
             contentView.setText(messageStr);
         } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_SCREENSHORTS) || TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS)) {
-            String sendName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
             if (lastMessage.getChatType() == EMMessage.ChatType.Chat) {
                 if (lastMessage.direct() == EMMessage.Direct.RECEIVE) {
                     messageStr = "对方进行了截屏";
@@ -376,17 +379,16 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
             }
             contentView.setText(messageStr);
         } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
-            String sendName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
             if (lastMessage.direct() == EMMessage.Direct.SEND) {
                 messageStr = "您撤回了所有消息";
             } else {
                 messageStr = String.format("'%1$s'撤回了所有消息", sendName);
             }
             contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.APPLY)) {
-            String sendName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
+        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_APPLY)) {
+            String toName = lastMessage.getStringAttribute(MyConstant.TO_NAME, "");
             if (lastMessage.direct() == EMMessage.Direct.SEND) {
-                messageStr = String.format("您已同意添加'%1$s'，现在可以开始聊天了", sendName);
+                messageStr = String.format("您已同意添加'%1$s'，现在可以开始聊天了", toName);
             } else {
                 messageStr = String.format("'%1$s'已同意添加好友，现在可以开始聊天了", sendName);
             }

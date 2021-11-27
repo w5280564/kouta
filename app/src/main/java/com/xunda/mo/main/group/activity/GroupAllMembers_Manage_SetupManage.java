@@ -103,12 +103,13 @@ public class GroupAllMembers_Manage_SetupManage extends BaseInitActivity {
     @Override
     protected void initData() {
         super.initData();
-        GroupMethod(GroupAllMembers_Manage_SetupManage.this,  saveFile.Group_MyGroupInfo_Url);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        GroupMethod(GroupAllMembers_Manage_SetupManage.this,  saveFile.Group_MyGroupInfo_Url);
         GroupMemberListMethod(GroupAllMembers_Manage_SetupManage.this, saveFile.Group_UserList_Url );
     }
 
@@ -150,7 +151,7 @@ public class GroupAllMembers_Manage_SetupManage extends BaseInitActivity {
     public void GroupMemberListMethod(Context context, String baseUrl) {
         Map<String,Object> map = new HashMap<>();
         map.put("groupId",groupId);
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 groupListModel = new Gson().fromJson(result, GroupMember_Bean.class);

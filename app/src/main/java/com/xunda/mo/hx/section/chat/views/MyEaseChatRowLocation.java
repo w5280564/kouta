@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.bumptech.glide.Glide;
 import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMMessage;
@@ -11,6 +13,7 @@ import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 import com.xunda.mo.R;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.network.saveFile;
+import com.xunda.mo.staticdata.StaticData;
 
 /**
  * location row
@@ -36,57 +39,56 @@ public class MyEaseChatRowLocation extends EaseChatRow {
 
     @Override
     protected void onFindViewById() {
-    	locationView = (TextView) findViewById(R.id.tv_location);
-    	tvLocationName = findViewById(R.id.tv_location_name);
+        locationView = (TextView) findViewById(R.id.tv_location);
+        tvLocationName = findViewById(R.id.tv_location_name);
     }
 
     @Override
     protected void onSetUpView() {
-		locBody = (EMLocationMessageBody) message.getBody();
+        locBody = (EMLocationMessageBody) message.getBody();
 
-		String Address = locBody.getAddress();
+        String Address = locBody.getAddress();
         String locName = Address.substring(0, Address.indexOf(","));
-        String location = Address.substring(Address.indexOf(",")+1);
+        String location = Address.substring(Address.indexOf(",") + 1);
         tvLocationName.setText(locName);
-		locationView.setText(location);
+        locationView.setText(location);
 
         if (message.getChatType() == EMMessage.ChatType.Chat) {
-            if (isSender()){
+            if (isSender()) {
                 String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
                 Glide.with(getContext()).load(headUrl).into(userAvatarView);
             }
             //添加群聊其他用户的名字与头像
-        }else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+        } else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
             usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME, ""));
             String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
             Glide.with(getContext()).load(headUrl).into(userAvatarView);
-
             //匿名聊天
             if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
                 Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(R.drawable.mo_icon).into(userAvatarView);
             }
-
-
+        }
+        if (isSender()) {
+            StaticData.changeShapColor(bubbleLayout, ContextCompat.getColor(context, R.color.white));
         }
     }
 
     @Override
     protected void onMessageCreate() {
-        if(progressBar != null) {
+        if (progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
         }
-        if(statusView != null) {
+        if (statusView != null) {
             statusView.setVisibility(View.GONE);
         }
-
     }
 
     @Override
     protected void onMessageSuccess() {
-        if(progressBar != null) {
+        if (progressBar != null) {
             progressBar.setVisibility(View.GONE);
         }
-        if(statusView != null) {
+        if (statusView != null) {
             statusView.setVisibility(View.GONE);
         }
 
@@ -95,20 +97,20 @@ public class MyEaseChatRowLocation extends EaseChatRow {
     @Override
     protected void onMessageError() {
         super.onMessageError();
-        if(progressBar != null) {
+        if (progressBar != null) {
             progressBar.setVisibility(View.GONE);
         }
-        if(statusView != null) {
+        if (statusView != null) {
             statusView.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     protected void onMessageInProgress() {
-        if(progressBar != null) {
+        if (progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
         }
-        if(statusView != null) {
+        if (statusView != null) {
             statusView.setVisibility(View.GONE);
         }
     }

@@ -136,7 +136,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/psw_line"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:text="忘记密码？"
         android:textColor="@color/yellowfour"
         android:textSize="12sp" />
@@ -146,10 +146,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/psw_line"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp"
         android:text="使用手机验证码登录"
-        android:textColor="@color/greytwo"
+        android:textColor="@color/yellowfour"
         android:textSize="12sp" />
 
 

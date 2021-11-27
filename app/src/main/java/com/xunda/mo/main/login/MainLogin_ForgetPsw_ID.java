@@ -7,6 +7,9 @@ import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,12 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 import com.xunda.mo.R;
 import com.xunda.mo.model.Main_ForgetPsw_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
 
@@ -76,9 +81,34 @@ public class MainLogin_ForgetPsw_ID extends AppCompatActivity {
         next_Btn = findViewById(R.id.next_Btn);
 //        StaticData.changeShapColor(num_Btn, ContextCompat.getColor(this, R.color.grey));
         id_edit = findViewById(R.id.id_edit);
+        id_edit.addTextChangedListener(new textchangerLister());
         fork_img = findViewById(R.id.fork_img);
         next_Btn.setOnClickListener(new next_BtnOnClick());
         fork_img.setOnClickListener(new fork_imgOnClick());
+    }
+
+    private class textchangerLister implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (!TextUtils.isEmpty(s.toString())){
+                if (s.length() == 7) {
+                    next_Btn.setEnabled(true);
+                    StaticData.changeShapColor(next_Btn, ContextCompat.getColor(MainLogin_ForgetPsw_ID.this, R.color.yellow));
+                } else {
+                    next_Btn.setEnabled(false);
+                    StaticData.changeShapColor(next_Btn, ContextCompat.getColor(MainLogin_ForgetPsw_ID.this, R.color.grey));
+                }
+            }
+
+        }
     }
 
 
@@ -102,9 +132,6 @@ public class MainLogin_ForgetPsw_ID extends AppCompatActivity {
 
         }
     }
-
-
-    ;
 
     public void baseMethod(Context context, String baseUrl, String LoginID) {
         Map<String, Object> map = new HashMap<>();

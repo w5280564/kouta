@@ -118,9 +118,11 @@ public class MessageReceiveSetActivity extends BaseInitActivity implements Switc
         if(isChecked) {
             rlSwitchSound.setVisibility(View.VISIBLE);
             rlSwitchVibrate.setVisibility(View.VISIBLE);
+            itemPushMessageStyle.setVisibility(View.VISIBLE);
         }else {
             rlSwitchSound.setVisibility(View.GONE);
             rlSwitchVibrate.setVisibility(View.GONE);
+            itemPushMessageStyle.setVisibility(View.GONE);
         }
     }
 

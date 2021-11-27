@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import com.xunda.mo.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -190,7 +191,7 @@ public class WaveSideBar extends View {
         } else {
             mHeight = mItemHeight * mLetters.size();
         }
-
+        mHeight = getMeasuredHeight();
         mWidth = getMeasuredWidth();
 //        if (mLetters.size() == 0) {
 //            mItemHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics());// 获取每一个字母的高度
@@ -260,12 +261,12 @@ public class WaveSideBar extends View {
             Paint.FontMetricsInt Metrics = mLettersPaint.getFontMetricsInt();
 //            float selectline = ((targetRect.bottom + targetRect.top - Metrics.bottom - Metrics.top) - mLetters.size() * mItemHeight) / 2 + mItemHeight * i;
 
+            pointY = mItemHeight * i + mHeight / 2;
+
             if (i == mChoosePosition) {
 //                mPointY = selectline;
                 mPointY = pointY;
             } else {
-
-
 //                float selectline = (targetRect.bottom + targetRect.top - Metrics.bottom - Metrics.top) / 2 + mItemHeight * i;
 //                canvas.drawText(mLetters.get(i), targetRect.centerX(), selectline, mLettersPaint);
 

@@ -36,7 +36,7 @@
                 android:layout_marginStart="7dp"
                 android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="MoID/昵称/手机号/标签/群"
+                android:hint="Mo ID/昵称/手机号/标签"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:lines="1"
@@ -62,7 +62,7 @@
         android:id="@+id/list_xrecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/seek_rel"/>
+        android:layout_below="@id/seek_rel" />
 
 
 </RelativeLayout>

@@ -276,7 +276,8 @@ public class MainLogin_OldUser_Psd extends BaseInitActivity {
             public void success(String result) {
                 Olduser_Model baseModel = new Gson().fromJson(result, Olduser_Model.class);
                 String name = baseModel.getData().getHxUserName();
-                loginViewModels.login(name, name, false);
+                String hxPassword = baseModel.getData().getHxPassword();
+                loginViewModels.login(name, hxPassword, false);
                 DemoHelper.getInstance().setAutoLogin(true);
 
                 saveFile.saveShareData("JSESSIONID", baseModel.getData().getToken(), context);

@@ -261,7 +261,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
         llRoot.addView(view, 1);
         ll_search = view.findViewById(R.id.ll_search);
         TextView tv_search = view.findViewById(R.id.tv_search);
-        tv_search.setHint("搜索昵称/MoID");
+        tv_search.setHint("搜索昵称/Mo ID");
     }
 
 
@@ -297,13 +297,17 @@ public class ContactListFragment extends EaseContactListFragment implements View
             parseResource(response, new OnResourceParseCallback<List<EaseUser>>() {
                 @Override
                 public void onSuccess(List<EaseUser> data) {
+                    if (data != null){
                     contactLayout.getContactList().setData(data);
+                    }
                 }
 
                 @Override
                 public void onLoading(@Nullable List<EaseUser> data) {
                     super.onLoading(data);
-                    contactLayout.getContactList().setData(data);
+                    if (data != null) {
+                        contactLayout.getContactList().setData(data);
+                    }
                 }
             });
         });
@@ -460,7 +464,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
     //联系人列表
     public void addressData(final Context context, String baseUrl, String projectId) {
         Map<String, Object> map = new HashMap<>();
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
 //                contactLayout.canUseRefresh(true);//取消刷新

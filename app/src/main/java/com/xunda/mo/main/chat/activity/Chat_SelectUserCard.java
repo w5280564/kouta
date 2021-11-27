@@ -167,7 +167,7 @@ public class Chat_SelectUserCard extends BaseInitActivity {
 
     public void friendMemberListMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 friendListModel = new Gson().fromJson(result, adress_Model.class);

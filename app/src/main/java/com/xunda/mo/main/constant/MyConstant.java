@@ -105,10 +105,10 @@ public interface MyConstant extends DemoConstant {
     String USER_UUID = "uuid";
 
 
-    public static final String BRAND_HONOR = "HONOR";
-    public static final String BRAND_HUAWEI = "Huawei";
-    public static final String BRAND_OPPO = "OPPO";
-    public static final String BRAND_VIVO = "vivo";
-    public static final String APP_PKG = "com.xunda.mo";
-    public static final String WEB_SITE_URL = "https://www.ahxunda.com/";
+    String BRAND_HONOR = "HONOR";
+    String BRAND_HUAWEI = "Huawei";
+    String BRAND_OPPO = "OPPO";
+    String BRAND_VIVO = "vivo";
+    String APP_PKG = "com.xunda.mo";
+    String WEB_SITE_URL = "https://www.ahxunda.com/";
 }

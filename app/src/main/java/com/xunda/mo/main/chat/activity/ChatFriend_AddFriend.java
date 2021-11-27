@@ -196,7 +196,7 @@ public class ChatFriend_AddFriend extends BaseInitActivity {
     public void FriendMethod(Context context, String baseUrl) {
         Map<String,Object> map = new HashMap<>();
         map.put("friendHxName",toChatUsername);
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 detailModel = new Gson().fromJson(result, Friend_Details_Bean.class);

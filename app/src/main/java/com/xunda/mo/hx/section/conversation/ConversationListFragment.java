@@ -12,11 +12,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,8 +25,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.gson.Gson;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.manager.EaseSystemMsgManager;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.modules.conversation.model.EaseConversationInfo;
@@ -34,7 +37,6 @@ import com.hyphenate.easeui.modules.conversation.model.EaseConversationSetStyle;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.easeui.widget.EaseRecyclerView;
-import com.hyphenate.easeui.widget.EaseSearchTextView;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
@@ -55,11 +57,17 @@ import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.conversation.Group_Notices;
 import com.xunda.mo.main.discover.activity.Discover_QRCode;
 import com.xunda.mo.main.friend.activity.Friend_Add;
+import com.xunda.mo.model.ChatUserBean;
+import com.xunda.mo.model.GruopInfo_Bean;
+import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
-import com.xunda.mo.staticdata.viewTouchDelegate;
+import com.xunda.mo.staticdata.xUtils3Http;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 
 public class ConversationListFragment extends MyEaseConversationListFragment implements View.OnClickListener {
@@ -103,7 +111,6 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
 
         initViewModel();
     }
-
 
 
     @Override
@@ -195,7 +202,6 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
 
 
     }
-
 
 
     @Override
@@ -309,7 +315,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
     @Override
     public void onItemClick(View view, int position) {
         super.onItemClick(view, position);
-        if (conversationListLayout.getItem(position) == null){
+        if (conversationListLayout.getItem(position) == null) {
             return;
         }
         Object item = conversationListLayout.getItem(position).getInfo();
@@ -317,7 +323,6 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
             if (TextUtils.equals(((EMConversation) item).getLastMessage().getFrom(), MyConstant.ADMIN)) {
 //                ToastUtils.showToast("群组消息");
                 Group_Notices.actionStart(mContext, ((EMConversation) item).conversationId());
-
             } else if (EaseSystemMsgManager.getInstance().isSystemConversation((EMConversation) item)) {
                 SystemMsgsActivity.actionStart(mContext);
             } else {
@@ -329,13 +334,33 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
 //                if (mess_Type.equals(MyConstant.MO_CUSTOMER)) {
 //                    type = MyConstant.CHATTYPE_MO;
 //                }
-                ChatActivity.actionStart(mContext, ((EMConversation) item).conversationId(), EaseCommonUtils.getChatType((EMConversation) item));
+                if (EaseCommonUtils.getChatType((EMConversation) item) == EaseConstant.CHATTYPE_GROUP) {
+                    if (isMOCustomer((EMConversation) item)) {
+                        ChatActivity.actionStart(mContext, ((EMConversation) item).conversationId(), EaseCommonUtils.getChatType((EMConversation) item));
+                    } else {
+                        GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url, (EMConversation) item);
+                    }
+                } else if (EaseCommonUtils.getChatType((EMConversation) item) == EaseConstant.CHATTYPE_SINGLE) {
+                    AddFriendMethod(getActivity(), saveFile.Friend_info_Url, (EMConversation) item);
+                }
             }
-
 //            EMConversation conversation = EMClient.getInstance().chatManager().getConversation(((EMConversation) item).conversationId(), EMConversation.EMConversationType.Chat, true);
 //            conversation.setExtField();
-
         }
+    }
+
+    //是否是客服会话
+    private boolean isMOCustomer(EMConversation item) {
+        EMMessage conMsg = item.getLatestMessageFromOthers();
+        if (conMsg == null) {
+            return false;
+        }
+        Map<String, Object> mapExt = conMsg.ext();
+        if (mapExt != null && !mapExt.isEmpty()) {
+            String messType = (String) mapExt.get(MyConstant.MESSAGE_TYPE);
+            return !TextUtils.isEmpty(messType) && Objects.equals(messType, MyConstant.MO_CUSTOMER);
+        }
+        return false;
     }
 
     @Override
@@ -410,4 +435,45 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
 
         }
     }
+
+    public void GroupMethod(Context context, String baseUrl, EMConversation item) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupHxId", item.conversationId());
+        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                GruopInfo_Bean groupModel = new Gson().fromJson(result, GruopInfo_Bean.class);
+                ChatActivity.actionStart(mContext, ((EMConversation) item).conversationId(), EaseCommonUtils.getChatType((EMConversation) item));
+            }
+
+            @Override
+            public void failed(String... args) {
+
+            }
+        });
+    }
+
+
+    public void AddFriendMethod(Context context, String baseUrl, EMConversation item) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("friendHxName", item.conversationId());
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                ChatUserBean model = new Gson().fromJson(result, ChatUserBean.class);
+                if (model.getData().getIsFriend() == 1) {
+                    ChatActivity.actionStart(mContext, ((EMConversation) item).conversationId(), EaseCommonUtils.getChatType((EMConversation) item));
+                }else {
+                    Toast.makeText(mContext,"你们已不是好友",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failed(String... args) {
+
+            }
+        });
+    }
+
+
 }

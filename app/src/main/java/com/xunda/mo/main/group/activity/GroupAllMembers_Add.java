@@ -170,7 +170,7 @@ public class GroupAllMembers_Add extends BaseInitActivity {
     public void GroupMemberListMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put("groupId", groupId);
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void success(String result) {
@@ -214,7 +214,7 @@ public class GroupAllMembers_Add extends BaseInitActivity {
         }
         List<String> myList = lettersData.stream().distinct().collect(Collectors.toList());//去重
         waveSideBar.setLetters(myList);
-//        SortMembersList.getLastDescList(data);
+        SortMembersList.getLastDescList(data);
         if (newmembers != null) {
             mAdapter.setExistMember(Arrays.asList(newmembers));
         } else {

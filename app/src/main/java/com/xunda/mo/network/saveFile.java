@@ -24,8 +24,6 @@ import java.util.Locale;
 
 @SuppressLint({"WorldReadableFiles", "WorldWriteableFiles"})
 public class saveFile {
-//        public static String BaseUrl = "https://xd.ahxunda.com/";
-//        public static String BaseUrl = "http://119.3.23.16:8088/";
     public static String User_SmsCode_Url = "user/smsCode";
     public static String User_Register_Url = "user/register";
     public static String User_Login_Url = "user/login";
@@ -111,6 +109,7 @@ public class saveFile {
     public static String User_CheckOldPhone = "user/checkOldPhone";
     public static String Group_myGroupNicknameByHx = "group/myGroupNicknameByHxIdOrGroupId";
     public static String versionUpdate = "public/isForceUpdate";
+    public static String SensitiveWord = "public/sensitiveWord";
 
 
 

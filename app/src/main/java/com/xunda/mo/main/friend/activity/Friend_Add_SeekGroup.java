@@ -32,6 +32,7 @@ import com.xunda.mo.model.AddFriend_UserList_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
+import com.xunda.mo.view.LightningView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
 
     private void initData(int type) {
          searchStr = seek_edit.getText().toString().trim();
-        AddFriendMethod(Friend_Add_SeekGroup.this,  saveFile.User_SearchAll_Url );
+        AddFriendMethod(Friend_Add_SeekGroup.this,  saveFile.User_SearchAll_Url);
 
 //        AddFriendMethod(Friend_Add_SeekGroup.this, saveFile.BaseUrl + saveFile.Group_SearchGroup_Url
 //                + "?search=" + searchStr + "&type=" + type + "&pageNum=" + 1 + "&pageSize=" + 10);
@@ -220,7 +221,7 @@ public class Friend_Add_SeekGroup extends AppCompatActivity {
 
             SimpleDraweeView head_simple = myView.findViewById(R.id.head_simple);
             TextView name = myView.findViewById(R.id.name);
-            TextView vipType_txt = myView.findViewById(R.id.vipType_txt);
+            LightningView vipType_txt = myView.findViewById(R.id.vipType_txt);
             TextView contentid_txt = myView.findViewById(R.id.contentid_txt);
 
             if (typeStr.equals("User")) {

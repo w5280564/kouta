@@ -22,6 +22,7 @@ import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.main.info.MyInfo;
+import com.xunda.mo.main.login.MainLogin_ForgetPsw_ID;
 import com.xunda.mo.main.login.MainLogin_Register;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
@@ -63,13 +64,15 @@ public class Me_Set_PSW extends BaseInitActivity {
         CheckBox choice_check = findViewById(R.id.choice_check);
         viewTouchDelegate.expandViewTouchDelegate(choice_check,50,50,50,50);
         choice_check.setOnCheckedChangeListener(new choice_checkOnChackedLister());
+      TextView  psw_txt = findViewById(R.id.psw_txt);
+        psw_txt.setOnClickListener(new psw_txtClick());
     }
 
     @Override
     protected void initData() {
         super.initData();
         MyInfo myInfo = new MyInfo(mContext);
-        String moID = String.format("MO ID：%1$s",myInfo.getUserInfo().getUserNum());
+        String moID = String.format("Mo ID：%1$s",myInfo.getUserInfo().getUserNum());
         moID_Txt.setText(moID);
         int oldPsd = myInfo.getUserInfo().getIsHasLoginPassword();
         old_Psw.setVisibility(View.VISIBLE);
@@ -96,6 +99,14 @@ public class Me_Set_PSW extends BaseInitActivity {
         @Override
         protected void onNoDoubleClick(View v) {
             finish();
+        }
+    }
+
+    private class psw_txtClick extends NoDoubleClickListener {
+        @Override
+        protected void onNoDoubleClick(View v) {
+            Intent intent = new Intent(mContext, MainLogin_ForgetPsw_ID.class);
+            startActivity(intent);
         }
     }
 

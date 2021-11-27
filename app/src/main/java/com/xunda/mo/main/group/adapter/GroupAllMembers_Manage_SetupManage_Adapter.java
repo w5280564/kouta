@@ -17,6 +17,7 @@ import com.xunda.mo.R;
 import com.xunda.mo.model.GroupMember_Bean;
 import com.xunda.mo.model.NewFriend_Bean;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
+import com.xunda.mo.view.LightningView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -123,9 +124,10 @@ public class GroupAllMembers_Manage_SetupManage_Adapter extends RecyclerView.Ada
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        private LightningView vipType_txt;
         private Button remove_Btn;
         private EaseImageView head_Simple;
-        private TextView name_Txt, vipType_txt, moID_Txt;
+        private TextView name_Txt, moID_Txt;
 
         public MyViewHolder(View itemView) {
             super(itemView);

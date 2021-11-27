@@ -173,8 +173,7 @@ public class GroupMemberAuthorityActivity extends BaseInitActivity implements Ea
                 invalidateOptionsMenu();
                 break;
             case R.id.action_group_add :
-                GroupPickContactsActivity.actionStartForResult(mContext,
-                        groupId, false, REQUEST_CODE_ADD_USER);
+                GroupPickContactsActivity.actionStartForResult(mContext, groupId, false, REQUEST_CODE_ADD_USER);
                 break;
         }
         return super.onOptionsItemSelected(item);

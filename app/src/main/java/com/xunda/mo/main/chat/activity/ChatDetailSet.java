@@ -49,6 +49,7 @@ import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.group.activity.GroupPrePickActivity;
 import com.xunda.mo.hx.section.search.SearchSingleChatActivity;
+import com.xunda.mo.main.MainActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.baseView.MySwitchItemView;
@@ -321,7 +322,7 @@ public class ChatDetailSet extends BaseInitActivity {
     private class recommend_ArrowItemOnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            Chat_SelectUserCard.actionStartSingle(ChatDetailSet.this, conversation.conversationId(),"3");
+            Chat_SelectUserCard.actionStartSingle(ChatDetailSet.this, conversation.conversationId(), "3");
         }
     }
 
@@ -395,7 +396,7 @@ public class ChatDetailSet extends BaseInitActivity {
     public void AddFriendMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put("friendHxName", toChatUsername);
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 model = new Gson().fromJson(result, Friend_Details_Bean.class);
@@ -403,11 +404,11 @@ public class ChatDetailSet extends BaseInitActivity {
                 Uri uri = Uri.parse(model.getData().getHeadImg());
                 person_img.setImageURI(uri);
                 String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
-                nick_nameTxt.setText("昵称："+name);
+                nick_nameTxt.setText("昵称：" + name);
                 cententTxt.setText(name);
                 nick_tv_content.setText(name);
                 leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
-                signature_Txt.setText("个性签名：" + (TextUtils.isEmpty(dataDTO.getSignature())?"暂无":dataDTO.getSignature()));
+                signature_Txt.setText("个性签名：" + (TextUtils.isEmpty(dataDTO.getSignature()) ? "暂无" : dataDTO.getSignature()));
                 friend_tv_content.setText(dataDTO.getSource());
                 grade_Txt.setText("LV" + dataDTO.getGrade().intValue());
                 if (dataDTO.getVipType() == 0) {
@@ -471,13 +472,13 @@ public class ChatDetailSet extends BaseInitActivity {
         String user = "user";
         change_txt.setOnClickListener(v -> {
             String type = "2";
-            GroupDetail_Report.actionStart(mContext, userId, user,type);
+            GroupDetail_Report.actionStart(mContext, userId, user, type);
             MorePopup.dismiss();
         });
         newregistr_txt.setOnClickListener(v -> {
 //            reportMethod(mContext, saveFile.Report_CreatReportLog_Url, type);
             String type = "1";
-            GroupDetail_Report.actionStart(mContext, userId, user,type);
+            GroupDetail_Report.actionStart(mContext, userId, user, type);
             MorePopup.dismiss();
         });
         cancel_txt.setOnClickListener(v -> {
@@ -534,7 +535,9 @@ public class ChatDetailSet extends BaseInitActivity {
                 sendCMDFireMess(HxUserName);
                 DemoHelper.getInstance().getContactManager().deleteContact(HxUserName, false);
 //                DemoHelper.getInstance().getChatManager().deleteConversation(HxUserName, true);
-                finish();
+                Intent intent = new Intent(ChatDetailSet.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
 //                DemoHelper.getInstance().getContactManager().aysncDeleteContact(HxUserName, new DemoEmCallBack() {
 //                    @Override
 //                    public void onSuccess() {
@@ -558,7 +561,6 @@ public class ChatDetailSet extends BaseInitActivity {
         cmdMsg.setAttribute(MyConstant.Dele_Friend, "1");
         EMClient.getInstance().chatManager().sendMessage(cmdMsg);
     }
-
 
 
     protected static final int REQUEST_CODE_LOCAL = 3;
@@ -666,7 +668,9 @@ public class ChatDetailSet extends BaseInitActivity {
         });
     }
 
-    /**开启Mo消息
+    /**
+     * 开启Mo消息
+     *
      * @param context
      * @param baseUrl
      * @param

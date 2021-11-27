@@ -13,7 +13,8 @@
         android:layout_height="@dimen/em_common_title_bar_height"
         app:titleBarTitle="@string/em_privacy_equipments"
         android:background="@color/white"
-        app:titleBarDisplayHomeAsUpEnabled="true"/>
+        app:titleBarDisplayHomeAsUpEnabled="true"
+        app:titleBarLeftImage="@mipmap/return_img"/>
 
     <ListView
         android:id="@+id/list"

@@ -26,6 +26,7 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.xunda.mo.R;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.view.LightningView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,10 +48,11 @@ public class MyContactList_Adapter extends EaseBaseRecyclerViewAdapter<EaseUser>
     private class ContactViewHolder extends ViewHolder<EaseUser> {
         private TextView mHeader;
         private EaseImageView mAvatar;
-        private TextView mName, vipType_txt;
+        private TextView mName;
         private TextView mSignature;
         private TextView mUnreadMsgNumber;
         private ConstraintLayout clUser;
+        private LightningView vipType_txt;
 
         public ContactViewHolder(@NonNull View itemView) {
             super(itemView);

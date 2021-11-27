@@ -95,12 +95,15 @@ import com.xunda.mo.main.info.NameResource;
 import com.xunda.mo.main.me.activity.Me_VIP;
 import com.xunda.mo.main.me.activity.UserDetail_Set;
 import com.xunda.mo.model.ChatUserBean;
+import com.xunda.mo.model.Chat_SensitiveWordBean;
+import com.xunda.mo.model.Group_Details_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.kotlin.ScreenShotViewModel;
 import com.xunda.mo.staticdata.xUtils3Http;
+import com.xunda.mo.utils.ListUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -213,8 +216,8 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         btn_send.setOnClickListener(view -> {
             String content;
             content = et_sendmessage.getText().toString();
-//                String filterContent = forbidSensitiveWord(content);
-            String filterContent = content;
+            String filterContent = forbidSensitiveWord(content);
+//            String filterContent = content;
             if (chatType == EaseConstant.CHATTYPE_GROUP) {
                 if (!isMOCustomer()) {
                     et_sendmessage.setText("");
@@ -224,7 +227,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                         chatInputMenu.onSendBtnClicked(filterContent);
                     }
                 } else {
-//                        sendCustomerMes(filterContent);
+//                    sendCustomerMes(filterContent);
                     if (!isMOCustomer()) {//没在人工服务时才请求答案
 //                        serviceAnswerData(filterContent);
                         chatInputMenu.onSendBtnClicked(filterContent);
@@ -573,6 +576,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url);
             }
         }
+        sensitiveWord(getActivity(), saveFile.SensitiveWord);
     }
 
     private void removeHornMes(List<EMMessage> msgs, ConstraintLayout Con) {
@@ -725,7 +729,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 }
                 String url = saveFile.Group_UserInfo_Url;
                 String groupId = groupModel.getData().getGroupId();
-                groupFriendMethod(requireActivity(), url, username,groupId);
+                groupFriendMethod(requireActivity(), url, username, groupId);
             }
         }
 
@@ -1075,7 +1079,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     public void AddFriendMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put("friendHxName", conversationId);
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 model = new Gson().fromJson(result, ChatUserBean.class);
@@ -1130,7 +1134,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
             }
         });
-
     }
 
 
@@ -1536,22 +1539,23 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
 
-    //    /**
-//     * 屏蔽敏感词汇
-//     * @param sendBeforeMessage
-//     */
-//    private String forbidSensitiveWord(String sendBeforeMessage) {
-//        if (!ListUtils.isEmpty(mSensitiveWordList)) {
-//            for (int i = 0; i < mSensitiveWordList.size(); i++) {
-//                if (sendBeforeMessage.contains(mSensitiveWordList.get(i))) {
-//                    sendBeforeMessage = sendBeforeMessage.replaceAll(mSensitiveWordList.get(i), "***");
-//                }
-//            }
-//            return sendBeforeMessage;
-//
-//        }
-//        return "";
-//    }
+    /**
+     * 屏蔽敏感词汇
+     *
+     * @param sendBeforeMessage
+     */
+    private String forbidSensitiveWord(String sendBeforeMessage) {
+        if (!ListUtils.isEmpty(chat_sensitiveWordBean.getData())) {
+            for (int i = 0; i < chat_sensitiveWordBean.getData().size(); i++) {
+                if (sendBeforeMessage.contains(chat_sensitiveWordBean.getData().get(i))) {
+                    sendBeforeMessage = sendBeforeMessage.replaceAll(chat_sensitiveWordBean.getData().get(i), "***");
+                }
+            }
+            return sendBeforeMessage;
+
+        }
+        return "";
+    }
 
     private void showMore(final Context mContext, View view, String username) {
         View contentView = View.inflate(mContext, R.layout.at_mes_popup, null);
@@ -1593,15 +1597,34 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
     @SuppressLint("SetTextI18n")
-    public void groupFriendMethod(Context mContext, String baseUrl, String username,String groupId) {
+    public void groupFriendMethod(Context mContext, String baseUrl, String username, String groupId) {
         Map<String, Object> map = new HashMap<>();
         map.put("groupId", groupId);
         map.put("hxUserName", username);
         xUtils3Http.get(mContext, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                GroupFriend_Detail.actionStart(mContext, "", username, groupModel);
+                Group_Details_Bean model = new Gson().fromJson(result, Group_Details_Bean.class);
+                String userID = model.getData().getGroupUserId();
+                GroupFriend_Detail.actionStart(mContext, userID, username, groupModel);
             }
+
+            @Override
+            public void failed(String... args) {
+            }
+        });
+    }
+
+    Chat_SensitiveWordBean chat_sensitiveWordBean;
+    @SuppressLint("SetTextI18n")
+    public void sensitiveWord(Context mContext, String baseUrl) {
+        Map<String, Object> map = new HashMap<>();
+        xUtils3Http.get(mContext, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                 chat_sensitiveWordBean = new Gson().fromJson(result, Chat_SensitiveWordBean.class);
+            }
+
             @Override
             public void failed(String... args) {
             }

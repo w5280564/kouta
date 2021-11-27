@@ -135,8 +135,7 @@ public class Friend_Add extends AppCompatActivity {
 
         PageIndex = 1;
         pageSize = 10;
-        AddFriendMethod(Friend_Add.this, saveFile.Group_SearchGroup_Url);
-//        AddFriendMethod(Friend_Add_SeekPerson.this, saveFile.BaseUrl + saveFile.User_SearchAll_Url + "?search=" + searchStr + "&type=" + type + "&pageNum=" + 1 + "&pageSize=" + 10);
+//        AddFriendMethod(Friend_Add.this, saveFile.Group_SearchGroup_Url);
     }
 
     private class seek_linClickLister implements View.OnClickListener {
@@ -160,7 +159,7 @@ public class Friend_Add extends AppCompatActivity {
             add_left.setTextColor(getResources().getColor(R.color.white, null));
             add_right.setBackground(null);
             add_right.setTextColor(getResources().getColor(R.color.yellow, null));
-            seek_txt.setText("MoID/昵称/手机号/标签/群");
+            seek_txt.setText("Mo ID/昵称/手机号/标签");
             seekPerson_InClue.setVisibility(View.VISIBLE);
             seekGroup_InClue.setVisibility(View.GONE);
         } else if (i == 1) {

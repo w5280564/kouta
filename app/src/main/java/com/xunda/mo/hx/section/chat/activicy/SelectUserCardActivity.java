@@ -537,7 +537,7 @@ public class SelectUserCardActivity extends BaseInitActivity implements EaseTitl
     //联系人列表
     public void adressData(final Context context, String baseUrl, String projectId) {
         Map<String,Object> map = new HashMap<>();
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 adress_Model model = new Gson().fromJson(result, adress_Model.class);

@@ -1,5 +1,6 @@
 package com.xunda.mo.main.friend.myAdapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.xunda.mo.R;
 import com.xunda.mo.model.AddFriend_FriendGroup_Model;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.xunda.mo.view.LightningView;
 
 import java.util.List;
 
@@ -41,8 +43,9 @@ public class Friend_Seek_GroupList_Adapter extends RecyclerView.Adapter<Friend_S
         return myview;
     }
 
+    @SuppressLint("RecyclerView")
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -90,13 +93,13 @@ public class Friend_Seek_GroupList_Adapter extends RecyclerView.Adapter<Friend_S
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private SimpleDraweeView head_simple;
-        private TextView name, vipType_txt, contentid_txt;
+        private TextView name, contentid_txt;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             head_simple = itemView.findViewById(R.id.head_simple);
             name = itemView.findViewById(R.id.name);
-            vipType_txt = itemView.findViewById(R.id.vipType_txt);
+            LightningView vipType_txt = itemView.findViewById(R.id.vipType_txt);
             contentid_txt = itemView.findViewById(R.id.contentid_txt);
 
 

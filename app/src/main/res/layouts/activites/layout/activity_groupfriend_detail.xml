@@ -59,6 +59,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:drawableEnd="@mipmap/copy_icon"
+                android:drawablePadding="6dp"
                 android:text="Mo ID:"
                 android:textColor="@color/yellowfive"
                 android:textSize="12sp"

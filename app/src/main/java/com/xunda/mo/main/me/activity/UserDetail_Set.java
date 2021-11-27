@@ -35,8 +35,6 @@ import androidx.core.content.ContextCompat;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
-import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.contrarywind.view.WheelView;
@@ -71,19 +69,16 @@ import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.group.fragment.GroupEditFragment;
 import com.xunda.mo.main.baseView.MyArrowItemView;
-import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.login.MainLogin_Register;
 import com.xunda.mo.model.UserDetail_Bean;
 import com.xunda.mo.model.UserDetail_Check_Bean;
-import com.xunda.mo.model.UserDetail_System_Bean;
 import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.GlideEnGine;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
-import com.xunda.mo.staticdata.dialog.BaseDialogFragment;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
 
@@ -91,7 +86,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,6 +104,7 @@ public class UserDetail_Set extends BaseInitActivity {
     private ObsClient obsClient;
     private LinearLayout label_Lin;
     private String tagString;
+    private View head_arrow;
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, UserDetail_Set.class);
@@ -127,9 +122,10 @@ public class UserDetail_Set extends BaseInitActivity {
         super.initView(savedInstanceState);
         initTitle();
 
-       ConstraintLayout head_Constraint = findViewById(R.id.head_Constraint);
+        ConstraintLayout head_Constraint = findViewById(R.id.head_Constraint);
         person_img = findViewById(R.id.person_img);
         person_img.setOnClickListener(new person_imgClick());
+        head_arrow = findViewById(R.id.head_arrow);
         friend_ArrowItemView = findViewById(R.id.friend_ArrowItemView);
         friend_ArrowItemView.setOnClickListener(new friend_ArrowItemViewClick());
         sex_ArrowItemView = findViewById(R.id.sex_ArrowItemView);
@@ -212,9 +208,9 @@ public class UserDetail_Set extends BaseInitActivity {
         Button return_Btn = title_Include.findViewById(R.id.return_Btn);
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         return_Btn.setVisibility(View.VISIBLE);
-        TextView cententTxt =  title_Include.findViewById(R.id.cententtxt);
+        TextView cententTxt = title_Include.findViewById(R.id.cententtxt);
         cententTxt.setText("个人设置");
-        Button right_Btn =  title_Include.findViewById(R.id.right_Btn);
+        Button right_Btn = title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.GONE);
         return_Btn.setOnClickListener(new return_Btn());
     }
@@ -230,7 +226,6 @@ public class UserDetail_Set extends BaseInitActivity {
     protected void initData() {
         super.initData();
         UserMethod(UserDetail_Set.this, saveFile.User_GetUserInfo_Url);
-
 //        AllDistrictsMethod(UserDetail_Set.this, saveFile.BaseUrl + saveFile.Common_AllDistricts_Url);
     }
 
@@ -366,7 +361,7 @@ public class UserDetail_Set extends BaseInitActivity {
     @SuppressLint("SetTextI18n")
     public void UserMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 userModel = new Gson().fromJson(result, UserDetail_Bean.class);
@@ -375,7 +370,7 @@ public class UserDetail_Set extends BaseInitActivity {
                 person_img.setImageURI(uri);
 
                 friend_ArrowItemView.getTvContent().setText(dataDTO.getNickname());
-                if (TextUtils.isEmpty(dataDTO.getNickname())){
+                if (TextUtils.isEmpty(dataDTO.getNickname())) {
                     friend_ArrowItemView.getTvContent().setText("未设置");
                 }
                 if (dataDTO.getSex() == 0) {
@@ -384,23 +379,23 @@ public class UserDetail_Set extends BaseInitActivity {
                     sex_ArrowItemView.getTvContent().setText("女");
                 }
                 birthday_ArrowItemView.getTvContent().setText(dataDTO.getBirthday());
-                if (TextUtils.isEmpty(dataDTO.getBirthday())){
+                if (TextUtils.isEmpty(dataDTO.getBirthday())) {
                     birthday_ArrowItemView.getTvContent().setText("未设置");
                 }
                 adress_ArrowItemView.getTvContent().setText(dataDTO.getAreaName());
-                if (TextUtils.isEmpty(dataDTO.getAreaName())){
+                if (TextUtils.isEmpty(dataDTO.getAreaName())) {
                     adress_ArrowItemView.getTvContent().setText("未设置");
                 }
                 signature_ArrowItemView.getTvContent().setText(dataDTO.getSignature());
-                if (TextUtils.isEmpty(dataDTO.getSignature())){
+                if (TextUtils.isEmpty(dataDTO.getSignature())) {
                     signature_ArrowItemView.getTvContent().setText("未设置");
                 }
                 ID_ArrowItemView.getTvContent().setText(dataDTO.getUserNum() + "");
                 String tag = userModel.getData().getTag();
                 tagString = tag;
-                if (TextUtils.isEmpty(tag)){
+                if (TextUtils.isEmpty(tag)) {
                     label_Txt.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     tagList(label_Lin, context, tag);
                 }
             }
@@ -422,21 +417,24 @@ public class UserDetail_Set extends BaseInitActivity {
                 UserDetail_Check_Bean model = new Gson().fromJson(result, UserDetail_Check_Bean.class);
                 if (model.getData().getIsUpdateHead() == 0) {
                     person_img.setEnabled(false);
+                    head_arrow.setVisibility(View.GONE);
                 }
                 if (model.getData().getIsUpdateNickName() == 0) {
                     friend_ArrowItemView.setEnabled(false);
+                    friend_ArrowItemView.getArrow().setVisibility(View.GONE);
                 }
                 if (model.getData().getIsUpdateSex() == 0) {
                     sex_ArrowItemView.setEnabled(false);
+                    sex_ArrowItemView.getArrow().setVisibility(View.GONE);
                 }
             }
+
             @Override
             public void failed(String... args) {
 
             }
         });
     }
-
 
 
     void logout() {
@@ -577,9 +575,10 @@ public class UserDetail_Set extends BaseInitActivity {
 
 
     private void showSignatureDialog() {
+      String contentStr =   TextUtils.equals(signature_ArrowItemView.getTvContent().getText().toString(),"未设置")?"":signature_ArrowItemView.getTvContent().getText().toString().trim();
         GroupEditFragment.showDialog(mContext,
-                "签名",
-                signature_ArrowItemView.getTvContent().getText().toString().trim(),
+                "个性签名",
+                contentStr,
                 "请输入个性签名",
                 (view, content) -> {
                     //群简介
@@ -619,13 +618,18 @@ public class UserDetail_Set extends BaseInitActivity {
                     String HxUserName = info.getUserInfo().getHxUserName();
                     DemoHelper.getInstance().getUserInfo(HxUserName).setAvatar(baseModel.getData());
                     info.setOneData("HeadImg", baseModel.getData());
-
                     changeFileHead(baseModel.getData());
+                    person_img.setEnabled(false);
+                    head_arrow.setVisibility(View.GONE);
                 } else if (TextUtils.equals(changType, "2")) {
                     friend_ArrowItemView.getTvContent().setText(valueStr);
                     info.setOneData("nickname", valueStr);
+                    friend_ArrowItemView.setEnabled(false);
+                    friend_ArrowItemView.getArrow().setVisibility(View.GONE);
                 } else if (TextUtils.equals(changType, "3")) {
 //                            sex_ArrowItemView.getTvContent().setText(valueStr);
+                    sex_ArrowItemView.setEnabled(false);
+                    sex_ArrowItemView.getArrow().setVisibility(View.GONE);
                 } else if (TextUtils.equals(changType, "4")) {
                     birthday_ArrowItemView.getTvContent().setText(valueStr);
                 } else if (TextUtils.equals(changType, "5")) {
@@ -641,9 +645,8 @@ public class UserDetail_Set extends BaseInitActivity {
         });
     }
 
-    String objectName = "";
     String fileName;
-
+    @SuppressLint("StaticFieldLeak")
     class PostObjectTask extends AsyncTask<Void, Void, String> {
         @SneakyThrows
         @Override
@@ -655,29 +658,26 @@ public class UserDetail_Set extends BaseInitActivity {
                     fileName = selectList.get(0).getAndroidQToPath();
                 }
 //                objectName = "user/" + userModel.getData().getUserId() + "/headImg/" + selectList.get(0).getFileName();//对应上传之后的文件名称
-                objectName = "user/" + userModel.getData().getUserId() + "/headImg/" + System.currentTimeMillis()+".jpg";//对应上传之后的文件名称
+                String  objectName = "user/" + userModel.getData().getUserId() + "/headImg/" + System.currentTimeMillis() + ".jpg";//对应上传之后的文件名称
                 FileInputStream fis = new FileInputStream(fileName);
                 obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
                 sbf.append(objectName);
                 return sbf.toString();
             } catch (ObsException e) {
-                sbf.append("\n\n");
                 sbf.append("Response Code:").append(e.getResponseCode())
-                        .append("\n\n").append("Error Message:" + e.getErrorMessage())
-                        .append("\n\n").append("Error Code:" + e.getErrorCode())
-                        .append("\n\n").append("Request ID:" + e.getErrorRequestId())
-                        .append("\n\n").append("Host ID:" + e.getErrorHostId());
-                return sbf.toString();
+                        .append("Error Message:" + e.getErrorMessage())
+                        .append("Error Code:" + e.getErrorCode())
+                        .append("Request ID:" + e.getErrorRequestId())
+                        .append("Host ID:" + e.getErrorHostId());
+                return "";
             } catch (Exception e) {
-                sbf.append("\n\n");
                 sbf.append(e.getMessage());
-                return sbf.toString();
+                return "";
             } finally {
                 if (obsClient != null) {
                     try {
-                        //Close obs client
                         obsClient.close();
-                    } catch (IOException e) {
+                    } catch (IOException ignored) {
                     }
                 }
             }
@@ -686,12 +686,21 @@ public class UserDetail_Set extends BaseInitActivity {
         @Override
         protected void onPostExecute(String pictures) {
             super.onPostExecute(pictures);
-//            Log.i("abc", " result.getStatusCode():" + s);
-            person_img.setEnabled(false);
-            Uri uri = Uri.parse("file:///" + fileName);
-            person_img.setImageURI(uri);
-            String changType = "1";
-            ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "headImg", pictures, "", "");
+            if (TextUtils.isEmpty(pictures)) {
+                Toast.makeText(mContext, "上传图片失败", Toast.LENGTH_SHORT).show();
+            } else {
+                person_img.setEnabled(false);
+                Uri uri = Uri.parse("file:///" + fileName);
+                person_img.setImageURI(uri);
+                String changType = "1";
+                ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "headImg", pictures, "", "");
+            }
+
+        }
+
+        @Override
+        protected void onCancelled(String s) {
+            super.onCancelled(s);
         }
     }
 

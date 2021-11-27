@@ -31,8 +31,11 @@ import com.xunda.mo.model.AddFriend_UserList_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
+import com.xunda.mo.view.LightningView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Friend_Add_SeekFriend extends AppCompatActivity {
@@ -53,9 +56,10 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
 
         initView();
     }
+
     private void initData(int type) {
-         searchStr = seek_edit.getText().toString().trim();
-        AddFriendMethod(Friend_Add_SeekFriend.this, saveFile.User_SearchAll_Url );
+        searchStr = seek_edit.getText().toString().trim();
+        AddFriendMethod(Friend_Add_SeekFriend.this, saveFile.User_SearchAll_Url);
     }
 
     private void initView() {
@@ -76,15 +80,17 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
     }
 
     private AddFriend_UserList_Model model;
+
     public void AddFriendMethod(Context context, String baseUrl) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("search",searchStr);
+        Map<String, Object> map = new HashMap<>();
+        map.put("search", searchStr);
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 model = new Gson().fromJson(result, AddFriend_UserList_Model.class);
                 FriendList(Friend_Add_SeekFriend.this, friend_lin, 0);
             }
+
             @Override
             public void failed(String... args) {
 
@@ -141,16 +147,19 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
             if (UserType.equals("nicknameUser")) {
                 tag_txt.setText("联系人");
             } else if (UserType.equals("userNumUser")) {
-                tag_txt.setText("MoId");
+                tag_txt.setText("Mo ID");
             } else if (UserType.equals("phoneNumUser")) {
                 tag_txt.setText("手机号");
             } else if (UserType.equals("tagUser")) {
                 tag_txt.setText("含有该标签的人");
-            } else if (UserType.equals("nameGroup")) {
-                tag_txt.setText("群聊");
-            } else if (UserType.equals("tagGroup")) {
-                tag_txt.setText("含有该标签的群聊");
+            } else {
+                myView.setVisibility(View.GONE);
             }
+//            else if (UserType.equals("nameGroup")) {
+//                tag_txt.setText("群聊");
+//            } else if (UserType.equals("tagGroup")) {
+//                tag_txt.setText("含有该标签的群聊");
+//            }
             FriendListDetail(context, list_lin, myView, i, model.getData().get(i));
             list_lin.setTag(i);
             more_txt.setTag(i);
@@ -163,7 +172,7 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
                     intent.putExtra("type", model.getData().get(tag).getUserType());
                     intent.putExtra("seekStr", seek_edit.getText().toString());
                     startActivity(intent);
-                }else {
+                } else {
                     Intent intent = new Intent(context, Friend_Add_seekPerson_GruopList.class);
                     intent.putExtra("type", model.getData().get(tag).getUserType());
                     intent.putExtra("seekStr", seek_edit.getText().toString());
@@ -202,7 +211,7 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
             myView.setLayoutParams(itemParams);
             SimpleDraweeView head_simple = myView.findViewById(R.id.head_simple);
             TextView name = myView.findViewById(R.id.name);
-            TextView vipType_txt = myView.findViewById(R.id.vipType_txt);
+            LightningView vipType_txt = myView.findViewById(R.id.vipType_txt);
             TextView contentid_txt = myView.findViewById(R.id.contentid_txt);
 
             if (typeStr.equals("User")) {
@@ -241,15 +250,14 @@ public class Friend_Add_SeekFriend extends AppCompatActivity {
                 if (typeStr.equals("User")) {
                     String friendUserId = model.getUserList().get(tag1).getUserId();
                     String addType = "2";
-                    ChatFriend_Detail.actionStart(context, friendUserId,  addType);
-                }else{
-                    String GroupId =  model.getGroupList().get(tag1).getGroupId();
+                    ChatFriend_Detail.actionStart(context, friendUserId, addType);
+                } else {
+                    String GroupId = model.getGroupList().get(tag1).getGroupId();
                     Friend_Group_Detail.actionStart(Friend_Add_SeekFriend.this, GroupId);
                 }
             });
         }
     }
-
 
 
 }

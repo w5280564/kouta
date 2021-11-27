@@ -2,6 +2,7 @@ package com.xunda.mo.main;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -401,6 +402,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         });
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         showMenu = true;
@@ -441,7 +443,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         if (mIsSupportedBade) {
             int unReadMessCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
             ShortcutBadger.applyCount(mContext, unReadMessCount); //for 1.1.4+
-            setBadgeNum(unReadMessCount);
+//            setBadgeNum(unReadMessCount);
         }
     }
 
@@ -454,7 +456,6 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     }
 
     boolean mIsSupportedBade = true;
-
     /**
      * set badge number
      */
@@ -473,7 +474,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     //联系人列表
     public void addressData(final Context context, String baseUrl, String projectId) {
         Map<String, Object> map = new HashMap<>();
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 adress_Model model = new Gson().fromJson(result, adress_Model.class);

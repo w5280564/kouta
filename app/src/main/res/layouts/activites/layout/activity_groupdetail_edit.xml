@@ -90,7 +90,7 @@
 
 
         <ImageView
-            android:id="@+id/iv_arrow"
+            android:id="@+id/label_arrow"
             android:layout_width="7dp"
             android:layout_height="12dp"
             android:src="@mipmap/person_arrow"
@@ -107,7 +107,7 @@
             android:orientation="horizontal"
             android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/iv_arrow"
+            app:layout_constraintEnd_toStartOf="@+id/label_arrow"
             app:layout_constraintStart_toEndOf="@+id/textView16"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -122,7 +122,7 @@
             android:textSize="14sp"
             android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/iv_arrow"
+            app:layout_constraintEnd_toStartOf="@+id/label_arrow"
             app:layout_constraintStart_toEndOf="@+id/textView16"
             app:layout_constraintTop_toTopOf="parent"
             android:visibility="gone"/>

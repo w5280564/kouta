@@ -101,10 +101,10 @@
         android:layout_marginTop="32dp"
         android:layout_marginRight="15dp"
         android:background="@drawable/loginbtn_radius"
+        android:enabled="false"
         android:text="下一步"
         android:textColor="@color/white"
-        android:textStyle="bold"
-        android:enabled="false"/>
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

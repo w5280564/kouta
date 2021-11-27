@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.xunda.mo.R;
+import com.xunda.mo.view.LightningView;
 
 import java.util.List;
 
@@ -115,8 +116,9 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
     //**************************************************************
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        LightningView vipType_txt;
         SimpleDraweeView head_simple;
-        TextView tvName, state_txt,vipType_txt;
+        TextView tvName, state_txt;
 
         public ViewHolder(View itemView) {
             super(itemView);

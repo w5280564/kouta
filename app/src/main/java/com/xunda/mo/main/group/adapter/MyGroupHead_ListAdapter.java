@@ -22,6 +22,7 @@ import com.hyphenate.easeui.modules.contact.model.EaseContactSetStyle;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.section.domain.MyEaseUser;
+import com.xunda.mo.view.LightningView;
 
 public class MyGroupHead_ListAdapter extends EaseBaseRecyclerViewAdapter<MyEaseUser> {
     private EaseContactSetStyle contactSetModel;
@@ -56,8 +57,9 @@ public class MyGroupHead_ListAdapter extends EaseBaseRecyclerViewAdapter<MyEaseU
     private class CustomViewHolder extends ViewHolder<MyEaseUser> {
         private TextView mHeader;
         private EaseImageView mAvatar;
-        private TextView mName,vipType_txt;
+        private TextView mName;
         private ConstraintLayout clUser;
+        private LightningView vipType_txt;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -69,7 +71,7 @@ public class MyGroupHead_ListAdapter extends EaseBaseRecyclerViewAdapter<MyEaseU
             mAvatar = findViewById(R.id.avatar);
             mName = findViewById(R.id.name);
             clUser = findViewById(R.id.cl_user);
-            vipType_txt = findViewById(R.id.vipType_txt);
+             vipType_txt = findViewById(R.id.vipType_txt);
             if(contactSetModel != null) {
                 float titleTextSize = contactSetModel.getTitleTextSize();
                 if(titleTextSize != 0) {

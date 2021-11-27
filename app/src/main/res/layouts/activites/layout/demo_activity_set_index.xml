@@ -1,66 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/greyfive"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/greyfive">
 
     <com.hyphenate.easeui.widget.EaseTitleBar
         android:id="@+id/title_bar"
         android:layout_width="0dp"
         android:layout_height="@dimen/em_common_title_bar_height"
+        android:background="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleBarTitle="@string/em_about_me_set"
-        android:background="@color/white"
-        app:titleBarDisplayHomeAsUpEnabled="true"/>
+        app:titleBarDisplayHomeAsUpEnabled="true"
+        app:titleBarLeftImage="@mipmap/return_img"
+        app:titleBarTitle="@string/em_about_me_set" />
 
     <com.xunda.mo.main.baseView.MyArrowItemView
         android:id="@+id/item_security"
         android:layout_width="0dp"
         android:layout_height="44dp"
-        app:arrowItemTitleColor="@color/blacktitlettwo"
         android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_bar"
+        android:background="@color/white"
+        android:foreground="@drawable/demo_ripple_click_gray"
         app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
         app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
         app:arrowItemTitle="账号"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
         app:arrowItemTitleSize="@dimen/em_size_normal"
-        android:foreground="@drawable/demo_ripple_click_gray"
-        android:background="@color/white"/>
-
-        <com.xunda.mo.main.baseView.MyArrowItemView
-        android:id="@+id/item_se"
-        android:layout_width="0dp"
-            android:layout_height="44dp"
-            app:arrowItemTitleColor="@color/blacktitlettwo"
-            android:layout_marginTop="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_security"
-        app:arrowItemTitle="安全"
-        app:arrowItemTitleSize="@dimen/em_size_normal"
-        android:foreground="@drawable/demo_ripple_click_gray"
-        android:background="@color/white"/>
+        app:layout_constraintTop_toBottomOf="@id/title_bar" />
 
+    <com.xunda.mo.main.baseView.MyArrowItemView
+        android:id="@+id/item_se"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:foreground="@drawable/demo_ripple_click_gray"
+        app:arrowItemTitle="安全"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
+        app:arrowItemTitleSize="@dimen/em_size_normal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_security" />
 
 
     <com.xunda.mo.main.baseView.MyArrowItemView
         android:id="@+id/item_notification"
         android:layout_width="0dp"
         android:layout_height="44dp"
+        android:background="@color/white"
+        android:foreground="@drawable/demo_ripple_click_gray"
+        app:arrowItemTitle="@string/em_set_message_set"
         app:arrowItemTitleColor="@color/blacktitlettwo"
+        app:arrowItemTitleSize="@dimen/em_size_normal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_se"
-        app:arrowItemTitle="@string/em_set_message_set"
-        app:arrowItemTitleSize="@dimen/em_size_normal"
-        android:foreground="@drawable/demo_ripple_click_gray"
-        android:background="@color/white"/>
-
+        app:layout_constraintTop_toBottomOf="@id/item_se" />
 
 
     <com.xunda.mo.main.baseView.MyArrowItemView
@@ -68,43 +67,43 @@
         android:layout_width="0dp"
         android:layout_height="44dp"
         android:layout_marginTop="10dp"
-        app:arrowItemTitleColor="@color/blacktitlettwo"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_notification"
+        android:background="@color/white"
+        android:foreground="@drawable/demo_ripple_click_gray"
         app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
         app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
         app:arrowItemTitle="@string/em_set_privacy"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
         app:arrowItemTitleSize="@dimen/em_size_normal"
-        android:foreground="@drawable/demo_ripple_click_gray"
-        android:background="@color/white"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_notification" />
 
     <com.xunda.mo.main.baseView.MyArrowItemView
         android:id="@+id/item_common_set"
         android:layout_width="0dp"
         android:layout_height="44dp"
-        app:arrowItemTitleColor="@color/blacktitlettwo"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_privacy"
+        android:background="@color/white"
+        android:foreground="@drawable/demo_ripple_click_gray"
         app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
         app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
         app:arrowItemTitle="@string/em_set_common_set"
+        app:arrowItemTitleColor="@color/blacktitlettwo"
         app:arrowItemTitleSize="@dimen/em_size_normal"
-        android:foreground="@drawable/demo_ripple_click_gray"
-        android:background="@color/white"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_privacy" />
 
     <Button
         android:id="@+id/btn_logout"
         android:layout_width="0dp"
         android:layout_height="44dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_common_set"
         android:layout_marginTop="12dp"
         android:background="@color/white"
         android:text="@string/button_logout"
         android:textColor="@color/blacktitlettwo"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_common_set" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

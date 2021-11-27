@@ -408,7 +408,7 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
         @SneakyThrows
         @Override
         protected String doInBackground(Void... voids) {
-            StringBuffer sbf = new StringBuffer();
+            StringBuilder sbf = new StringBuilder();
             try {
                 int size = photoPaths.size();
                 String objectName = "";
@@ -422,29 +422,20 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
                 }
                 return sbf.toString();
             } catch (ObsException e) {
-                sbf.append("\n\n");
                 sbf.append("Response Code:" + e.getResponseCode())
-                        .append("\n\n")
                         .append("Error Message:" + e.getErrorMessage())
-                        .append("\n\n")
                         .append("Error Code:" + e.getErrorCode())
-                        .append("\n\n")
                         .append("Request ID:" + e.getErrorRequestId())
-                        .append("\n\n")
                         .append("Host ID:" + e.getErrorHostId());
-                return sbf.toString();
+                return "";
             } catch (Exception e) {
-                sbf.append("\n\n");
                 sbf.append(e.getMessage());
-                return sbf.toString();
+                return "";
             } finally {
                 if (obsClient != null) {
                     try {
-                        /*
-                         * Close obs client
-                         */
                         obsClient.close();
-                    } catch (IOException e) {
+                    } catch (IOException ignored) {
                     }
                 }
             }
@@ -455,11 +446,15 @@ public class MainLogin_QuestionFeedBack extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 //            Log.i("abc", " result.getStatusCode():" + s);
-            pictures = s;
-            if (!TextUtils.isEmpty(type) && TextUtils.equals(type, "2")) {
-                QuestionMethod(MainLogin_QuestionFeedBack.this, saveFile.Question_Login);
+            if (TextUtils.isEmpty(s)) {
+                Toast.makeText(MainLogin_QuestionFeedBack.this, "上传图片失败", Toast.LENGTH_SHORT).show();
             } else {
-                QuestionMethod(MainLogin_QuestionFeedBack.this, saveFile.Question_NoLogin);
+                pictures = s;
+                if (!TextUtils.isEmpty(type) && TextUtils.equals(type, "2")) {
+                    QuestionMethod(MainLogin_QuestionFeedBack.this, saveFile.Question_Login);
+                } else {
+                    QuestionMethod(MainLogin_QuestionFeedBack.this, saveFile.Question_NoLogin);
+                }
             }
         }
     }

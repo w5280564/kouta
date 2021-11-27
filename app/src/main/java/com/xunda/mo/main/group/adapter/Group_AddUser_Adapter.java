@@ -20,6 +20,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.xunda.mo.R;
 import com.xunda.mo.model.NewFriend_Bean;
+import com.xunda.mo.view.LightningView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -139,9 +140,9 @@ public class Group_AddUser_Adapter extends RecyclerView.Adapter<Group_AddUser_Ad
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private Button add_Btn, refuse_Btn;
+        private  LightningView vipType_txt;
         private SimpleDraweeView head_Simple;
-        private TextView name_Txt, vipType_txt, friend_Txt, apply_Txt, result_Txt, time_Txt;
+        private TextView name_Txt;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -151,7 +152,7 @@ public class Group_AddUser_Adapter extends RecyclerView.Adapter<Group_AddUser_Ad
             head_Simple = itemView.findViewById(R.id.head_Simple);
             name_Txt = itemView.findViewById(R.id.name_Txt);
             vipType_txt = itemView.findViewById(R.id.vipType_txt);
-            friend_Txt = itemView.findViewById(R.id.friend_Txt);
+            TextView friend_Txt = itemView.findViewById(R.id.friend_Txt);
 
         }
     }

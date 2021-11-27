@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:ignore="MissingConstraints">
 
     <com.hyphenate.easeui.widget.EaseTitleBar
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/em_common_title_bar_height"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleBarLeftImage="@mipmap/return_img"
         app:titleBarRightTitle="@string/em_chat_group_save"
-        app:titleBarRightVisible="true"
-        app:titleBarLeftImage="@drawable/em_back"/>
+        app:titleBarRightVisible="true" />
 
     <EditText
         android:id="@+id/et_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="300dp"
-        android:layout_marginLeft="@dimen/em_margin_30"
-        android:layout_marginRight="@dimen/em_margin_30"
-        android:layout_marginStart="@dimen/em_margin_30"
-        android:layout_marginEnd="@dimen/em_margin_30"
-        android:paddingTop="10dp"
-        tools:hint="请输入群公告"
+        android:layout_height="200dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/group_top_mes_bg_shape"
         android:gravity="left|top"
-        android:background="@color/white"/>
+        android:maxLength="60"
+        android:paddingStart="15dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="15dp"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/title_bar"
+        tools:hint="请输入群公告" />
 
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="60字以内"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/et_content"
+        app:layout_constraintTop_toBottomOf="@+id/et_content" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

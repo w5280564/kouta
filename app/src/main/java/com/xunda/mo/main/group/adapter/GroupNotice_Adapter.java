@@ -18,6 +18,7 @@ import com.xunda.mo.R;
 import com.xunda.mo.model.Group_notices_Bean;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
+import com.xunda.mo.view.LightningView;
 
 import java.util.List;
 
@@ -171,9 +172,13 @@ public class GroupNotice_Adapter extends RecyclerView.Adapter<GroupNotice_Adapte
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private final Group isAgree_Group;
+        private  LightningView vipType_txt;
         private Button add_Btn, refuse_Btn, black_Btn;
         private SimpleDraweeView head_Simple;
-        private TextView name_Txt, vipType_txt, friend_Txt, apply_Txt, result_Txt, time_Txt;
+        private TextView name_Txt;
+        private TextView friend_Txt;
+        private TextView result_Txt;
+        private TextView time_Txt;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -184,7 +189,7 @@ public class GroupNotice_Adapter extends RecyclerView.Adapter<GroupNotice_Adapte
             name_Txt = itemView.findViewById(R.id.name_Txt);
             vipType_txt = itemView.findViewById(R.id.vipType_txt);
             friend_Txt = itemView.findViewById(R.id.friend_Txt);
-            apply_Txt = itemView.findViewById(R.id.apply_Txt);
+            TextView apply_Txt = itemView.findViewById(R.id.apply_Txt);
             add_Btn = itemView.findViewById(R.id.add_Btn);
             refuse_Btn = itemView.findViewById(R.id.refuse_Btn);
             black_Btn = itemView.findViewById(R.id.black_Btn);

@@ -334,7 +334,7 @@ public class Friend_NewFriends extends BaseInitActivity {
             public void success(String result) {
                 baseModel baseBean = new Gson().fromJson(result, baseModel.class);
                 list_xrecycler.refreshComplete();
-                mAdapter.notifyDataSetChanged();
+                initData();
                 Toast.makeText(context, baseBean.getMsg(), Toast.LENGTH_SHORT).show();
             }
 

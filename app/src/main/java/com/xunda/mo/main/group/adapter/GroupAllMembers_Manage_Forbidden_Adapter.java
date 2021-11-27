@@ -17,6 +17,7 @@ import com.xunda.mo.R;
 import com.xunda.mo.model.GroupForbiddenList_Bean;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
+import com.xunda.mo.view.LightningView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -134,7 +135,7 @@ public class GroupAllMembers_Manage_Forbidden_Adapter extends RecyclerView.Adapt
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private Button remove_Btn;
         private EaseImageView head_Simple;
-        private TextView name_Txt, vipType_txt, moID_Txt;
+        private TextView name_Txt, moID_Txt;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -143,7 +144,7 @@ public class GroupAllMembers_Manage_Forbidden_Adapter extends RecyclerView.Adapt
             itemView.setLayoutParams(params);
             head_Simple = itemView.findViewById(R.id.head_Simple);
             name_Txt = itemView.findViewById(R.id.name_Txt);
-            vipType_txt = itemView.findViewById(R.id.vipType_txt);
+            LightningView vipType_txt = itemView.findViewById(R.id.vipType_txt);
             moID_Txt = itemView.findViewById(R.id.moID_Txt);
             remove_Btn = itemView.findViewById(R.id.remove_Btn);
 

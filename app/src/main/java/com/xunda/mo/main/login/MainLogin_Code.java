@@ -357,10 +357,7 @@ public class MainLogin_Code extends BaseInitActivity {
             public void failed(String... args) {
             }
         });
-
-
     }
-
 
     //登录
     public void LoginMethod(Context context, String baseUrl, String type) {
@@ -377,7 +374,8 @@ public class MainLogin_Code extends BaseInitActivity {
             public void success(String result) {
                 Olduser_Model baseModel = new Gson().fromJson(result, Olduser_Model.class);
                 String name = baseModel.getData().getHxUserName();
-                loginViewModels.login(name, name, false);
+                String hxPassword = baseModel.getData().getHxPassword();
+                loginViewModels.login(name, hxPassword, false);
                 DemoHelper.getInstance().setAutoLogin(true);
 
                 saveFile.saveShareData("JSESSIONID", baseModel.getData().getToken(), context);

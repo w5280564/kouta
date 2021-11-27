@@ -37,7 +37,7 @@
             android:layout_height="60dp"
             android:gravity="center"
             android:text="解除禁言"
-            android:textColor="@color/vipred"
+            android:textColor="@color/yellowfive"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@+id/title_Txt" />
 
@@ -51,7 +51,7 @@
         android:background="@drawable/round_rectangle"
         android:gravity="center"
         android:text="取消"
-        android:textColor="@color/blacktitlettwo"
+        android:textColor="@color/yellowfive"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/top_Constr" />
 

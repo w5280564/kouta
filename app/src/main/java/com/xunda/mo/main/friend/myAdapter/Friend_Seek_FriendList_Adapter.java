@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.xunda.mo.R;
 import com.xunda.mo.model.AddFriend_FriendList_Model;
+import com.xunda.mo.view.LightningView;
 
 import java.util.List;
 
@@ -66,10 +67,10 @@ public class Friend_Seek_FriendList_Adapter extends RecyclerView.Adapter<Friend_
         }
 
         final AddFriend_FriendList_Model.DataDTO.ListDTO oneData = otherList.get(position);
-        if (oneData.getHeadImg()!= null) {
+        if (oneData.getHeadImg() != null) {
             Uri uri = Uri.parse(oneData.getHeadImg());
             holder.head_simple.setImageURI(uri);
-        }else {
+        } else {
 //            StaticData.lodingheadBg(holder.head_simple);
         }
         holder.name.setText(oneData.getNickname());
@@ -101,14 +102,16 @@ public class Friend_Seek_FriendList_Adapter extends RecyclerView.Adapter<Friend_
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private  SimpleDraweeView head_simple;
-        private TextView name, vipType_txt, contentid_txt;
+        private LightningView vipType_txt;
+        private SimpleDraweeView head_simple;
+        private TextView name, contentid_txt;
+
         public MyViewHolder(View itemView) {
             super(itemView);
-             head_simple = itemView.findViewById(R.id.head_simple);
-             name = itemView.findViewById(R.id.name);
-             vipType_txt = itemView.findViewById(R.id.vipType_txt);
-             contentid_txt = itemView.findViewById(R.id.contentid_txt);
+            head_simple = itemView.findViewById(R.id.head_simple);
+            name = itemView.findViewById(R.id.name);
+            vipType_txt = itemView.findViewById(R.id.vipType_txt);
+            contentid_txt = itemView.findViewById(R.id.contentid_txt);
 
 
         }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -12,7 +14,9 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 import com.xunda.mo.R;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.login.MainLogin_OldUser_Phone;
 import com.xunda.mo.network.saveFile;
+import com.xunda.mo.staticdata.StaticData;
 
 import java.util.Map;
 
@@ -59,6 +63,11 @@ public class chatRowUserCard extends EaseChatRow {
             if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
                 Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(R.drawable.mo_icon).into(userAvatarView);
             }
+        }
+
+        if (isSender()){
+//            bubbleLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.chat_send_bg));
+            StaticData.changeShapColor(bubbleLayout, ContextCompat.getColor(context, R.color.white));
         }
     }
 }

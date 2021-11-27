@@ -6,19 +6,6 @@
     android:layout_height="wrap_content"
     android:background="@color/white">
 
-<!--    <com.facebook.drawee.view.SimpleDraweeView-->
-<!--        android:id="@+id/head_Simple"-->
-<!--        android:layout_width="48dp"-->
-<!--        android:layout_height="48dp"-->
-<!--        android:layout_centerVertical="true"-->
-<!--        android:layout_marginStart="15dp"-->
-<!--        android:layout_marginTop="15dp"-->
-<!--        android:layout_marginBottom="15dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:roundedCornerRadius="5dp" />-->
-
     <com.hyphenate.easeui.widget.EaseImageView
         android:id="@+id/head_Simple"
         android:layout_width="40dp"
@@ -26,7 +13,7 @@
         android:layout_centerVertical="true"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:src="@drawable/mo_icon"
         app:ease_radius="9dp"
         app:ease_shape_type="rectangle"
@@ -39,18 +26,18 @@
         android:id="@+id/name_Txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:text="小乐"
         android:textColor="@color/blacktitlettwo"
         android:textSize="15sp"
         app:layout_constraintLeft_toRightOf="@id/head_Simple"
         app:layout_constraintTop_toTopOf="@id/head_Simple" />
 
-    <TextView
+    <com.xunda.mo.view.LightningView
         android:id="@+id/vipType_txt"
         android:layout_width="29dp"
         android:layout_height="14dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:background="@drawable/vip_txt_radius"
         android:gravity="center"
         android:text="VIP"

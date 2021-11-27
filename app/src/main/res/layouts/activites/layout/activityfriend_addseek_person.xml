@@ -37,7 +37,7 @@
                 android:layout_marginStart="7dp"
                 android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="MoID/昵称/手机号/标签/群"
+                android:hint="Mo ID/昵称/手机号/标签"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:lines="1"

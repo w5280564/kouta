@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -47,14 +46,11 @@ import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.hx.section.chat.viewmodel.ChatViewModel;
-import com.xunda.mo.hx.section.dialog.DemoDialogFragment;
 import com.xunda.mo.hx.section.dialog.EditTextDialogFragment;
-import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.baseView.MySwitchItemView;
 import com.xunda.mo.main.constant.MyConstant;
-import com.xunda.mo.main.group.activity.GroupDetailSet;
 import com.xunda.mo.main.group.activity.GroupDetail_Report;
 import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.model.baseModel;
@@ -241,7 +237,9 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private class recommend_ArrowItemOnClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            Chat_SelectUserCard.actionStartSingle(ChatFriend_Detail.this, conversation.conversationId(),"3");
+            if (!TextUtils.isEmpty(conversation.conversationId())) {
+                Chat_SelectUserCard.actionStartSingle(ChatFriend_Detail.this, conversation.conversationId(), "3");
+            }
         }
     }
 
@@ -262,9 +260,9 @@ public class ChatFriend_Detail extends BaseInitActivity {
                     public void onConfirmClick(View view, String content) {
 //                        if (!TextUtils.isEmpty(content)) {
 //                            itemGroupName.getTvContent().setText(content);
-                            String changType = "2";
-                            remarkName = content;
-                            ChangeUserMethod(ChatFriend_Detail.this, saveFile.Friend_UpdateRemarkName_Url);
+                        String changType = "2";
+                        remarkName = content;
+                        ChangeUserMethod(ChatFriend_Detail.this, saveFile.Friend_UpdateRemarkName_Url);
 //                        }
                     }
                 })
@@ -318,7 +316,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
     }
 
 
-
     //加入黑名单
     private class switch_itemClickClick implements View.OnClickListener {
         @Override
@@ -366,7 +363,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
     public void FriendMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put(userName, userID);
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 model = new Gson().fromJson(result, Friend_Details_Bean.class);
@@ -374,7 +371,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 Uri uri = Uri.parse(model.getData().getHeadImg());
                 person_img.setImageURI(uri);
 
-                 nickName = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
+                nickName = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
                 nick_nameTxt.setText("昵称：" + nickName);
                 cententTxt.setText(nickName);
                 nick_tv_content.setText(nickName);
@@ -479,7 +476,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
             @Override
             protected void onNoDoubleClick(View v) {
                 String type = "2";
-                GroupDetail_Report.actionStart(mContext, userId, user,type);
+                GroupDetail_Report.actionStart(mContext, userId, user, type);
                 MorePopup.dismiss();
             }
         });
@@ -488,7 +485,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
             protected void onNoDoubleClick(View v) {
 //                QuestionMethod(mContext, saveFile.Question_Login);
                 String type = "1";
-                GroupDetail_Report.actionStart(mContext, userId, user,type);
+                GroupDetail_Report.actionStart(mContext, userId, user, type);
                 MorePopup.dismiss();
             }
         });
@@ -583,7 +580,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
     }
 
 
-
     /**
      * 修改用户信息
      */
@@ -594,7 +590,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                if (TextUtils.isEmpty(remarkName)){
+                if (TextUtils.isEmpty(remarkName)) {
                     remarkName = nickName;
                 }
                 nick_nameTxt.setText("昵称：" + remarkName);

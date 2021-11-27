@@ -296,43 +296,33 @@ public class ChatComplaint extends BaseInitActivity {
         @SneakyThrows
         @Override
         protected String doInBackground(Void... voids) {
-            StringBuffer sbf = new StringBuffer();
+            StringBuilder sbf = new StringBuilder();
             try {
                 int size = photoPaths.size();
                 String objectName = "";
                 for (int i = 0; i < size; i++) {
 //                objectName = "user/" + userId + "/" + pathNameList.get(i);//对应上传之后的文件名称
                     objectName = "question_back/" + pathNameList.get(i);//对应上传之后的文件名称
-                    FileInputStream fis = new FileInputStream(new File(photoPaths.get(i)));
+                    FileInputStream fis = new FileInputStream(photoPaths.get(i));
                     obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
-//                    addAcl(obsClient,bucketName,objectName,photoPaths.get(i));
                     sbf.append(objectName).append(",");
                 }
-                return sbf.toString();
+                return "";
             } catch (ObsException e) {
-                sbf.append("\n\n");
                 sbf.append("Response Code:" + e.getResponseCode())
-                        .append("\n\n")
                         .append("Error Message:" + e.getErrorMessage())
-                        .append("\n\n")
                         .append("Error Code:" + e.getErrorCode())
-                        .append("\n\n")
                         .append("Request ID:" + e.getErrorRequestId())
-                        .append("\n\n")
                         .append("Host ID:" + e.getErrorHostId());
                 return sbf.toString();
             } catch (Exception e) {
-                sbf.append("\n\n");
                 sbf.append(e.getMessage());
-                return sbf.toString();
+                return "";
             } finally {
                 if (obsClient != null) {
                     try {
-                        /*
-                         * Close obs client
-                         */
                         obsClient.close();
-                    } catch (IOException e) {
+                    } catch (IOException ignored) {
                     }
                 }
             }
@@ -342,9 +332,12 @@ public class ChatComplaint extends BaseInitActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-//            Log.i("abc", " result.getStatusCode():" + s);
-            pictures = s;
-            QuestionMethod(ChatComplaint.this, saveFile.Receptionist_Complaint);
+            if (TextUtils.isEmpty(s)) {
+                Toast.makeText(mContext, "上传图片失败", Toast.LENGTH_SHORT).show();
+            } else {
+                pictures = s;
+                QuestionMethod(ChatComplaint.this, saveFile.Receptionist_Complaint);
+            }
         }
     }
 

@@ -45,7 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nick_nameTxt" />
 
-    <TextView
+    <com.xunda.mo.view.LightningView
         android:id="@+id/vip_Txt"
         android:layout_width="29dp"
         android:layout_height="15dp"

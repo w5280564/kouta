@@ -56,7 +56,6 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
 
     @Override
     protected int getLayoutId() {
-
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);//不允许截图
         return R.layout.demo_activity_chat;
     }

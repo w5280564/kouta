@@ -73,5 +73,7 @@ public class Olduser_Model {
         private Integer userNum;
         @JsonProperty("vipType")
         private Integer vipType;
+        @JsonProperty("hxPassword")
+        private String hxPassword;
     }
 }

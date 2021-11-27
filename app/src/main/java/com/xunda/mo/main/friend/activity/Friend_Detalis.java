@@ -109,7 +109,7 @@ public class Friend_Detalis extends AppCompatActivity {
     public void AddFriendMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put("friendUserId", friendUserId);
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 Friend_Details_Bean model = new Gson().fromJson(result, Friend_Details_Bean.class);

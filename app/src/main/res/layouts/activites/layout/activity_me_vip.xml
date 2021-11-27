@@ -68,7 +68,7 @@
         app:layout_constraintStart_toEndOf="@+id/head_Image"
         app:layout_constraintTop_toTopOf="@+id/head_Image" />
 
-    <TextView
+    <com.xunda.mo.view.LightningView
         android:id="@+id/vip_Txt"
         android:layout_width="29dp"
         android:layout_height="15dp"

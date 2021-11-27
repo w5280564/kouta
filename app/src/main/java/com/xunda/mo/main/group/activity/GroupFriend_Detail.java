@@ -81,7 +81,7 @@ public class GroupFriend_Detail extends BaseInitActivity {
     private TextView send_mess_Txt, remove_Txt, add_Txt;
     private EMConversation conversation;
     private MySwitchItemView black_Switch;
-    private LinearLayout garde_Lin,label_Lin;
+    private LinearLayout garde_Lin, label_Lin;
 
     /**
      * @param context
@@ -212,11 +212,10 @@ public class GroupFriend_Detail extends BaseInitActivity {
             userName = "userId";
             userID = userId;
         }
-        String url = saveFile.Group_UserInfo_Url ;
+        String url = saveFile.Group_UserInfo_Url;
 //        url = String.format(url, userName);
-        groupFriendMethod(GroupFriend_Detail.this, url,userName,userID);
+        groupFriendMethod(GroupFriend_Detail.this, url, userName, userID);
     }
-
 
 
     //修改备注
@@ -260,7 +259,7 @@ public class GroupFriend_Detail extends BaseInitActivity {
             if (model.getData().getIsMute() == 0) {
                 showSelectDialog();
             } else {
-                showCancelProhibition(mContext,forbidden_ArrowItemView);
+                showCancelProhibition(mContext, forbidden_ArrowItemView);
             }
         }
     }
@@ -331,7 +330,10 @@ public class GroupFriend_Detail extends BaseInitActivity {
                 .setCancelColorRes(R.color.yellowfive)
                 .setWindowAnimations(R.style.animate_dialog)
                 .setOnItemClickListener((view, position) -> {
-                    forbidden_ArrowItemView.getTvContent().setText("剩余时间：" + dataList.get(position));
+                    int dataIndex = dataList.get(position).indexOf("言") + 1;
+                    int dataLength = dataList.get(position).length();
+                    String dataStr = dataList.get(position).substring(dataIndex, dataLength);
+                    forbidden_ArrowItemView.getTvContent().setText("剩余禁言时间：" + dataStr);
                     int timeType = position + 1;
                     AddForbiddenMethod(GroupFriend_Detail.this, saveFile.Group_UserMute_Url, timeType);
                 })
@@ -350,7 +352,7 @@ public class GroupFriend_Detail extends BaseInitActivity {
         TextView change_txt = contentView.findViewById(R.id.change_txt);
         TextView cancel_txt = contentView.findViewById(R.id.cancel_txt);
         String dataStr = StaticData.stampToDate(model.getData().getMuteEndTime());
-        String titleStr = String.format("%1$s的禁言操作\n禁言截止时间%2$s",UserName,dataStr);
+        String titleStr = String.format("%1$s的禁言操作\n禁言截止时间%2$s", UserName, dataStr);
         title_Txt.setText(titleStr);
 
         change_txt.setOnClickListener(new NoDoubleClickListener() {
@@ -372,10 +374,10 @@ public class GroupFriend_Detail extends BaseInitActivity {
     Group_Details_Bean model;
 
     @SuppressLint("SetTextI18n")
-    public void groupFriendMethod(Context mContext, String baseUrl,String keyStr,String valueStr) {
+    public void groupFriendMethod(Context mContext, String baseUrl, String keyStr, String valueStr) {
         Map<String, Object> map = new HashMap<>();
-        map.put("groupId",groupId);
-        map.put(keyStr,valueStr);
+        map.put("groupId", groupId);
+        map.put(keyStr, valueStr);
         xUtils3Http.get(mContext, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
@@ -507,7 +509,7 @@ public class GroupFriend_Detail extends BaseInitActivity {
             @Override
             protected void onNoDoubleClick(View v) {
                 String type = "2";
-                GroupDetail_Report.actionStart(mContext, userId, user,type);
+                GroupDetail_Report.actionStart(mContext, userId, user, type);
                 MorePopup.dismiss();
             }
         });
@@ -515,7 +517,7 @@ public class GroupFriend_Detail extends BaseInitActivity {
             @Override
             protected void onNoDoubleClick(View v) {
                 String type = "1";
-                GroupDetail_Report.actionStart(mContext, userId, user,type);
+                GroupDetail_Report.actionStart(mContext, userId, user, type);
                 MorePopup.dismiss();
             }
         });
@@ -630,6 +632,7 @@ public class GroupFriend_Detail extends BaseInitActivity {
                 site_progressbar.setVisibility(View.GONE);
                 switchView.setEnabled(true);
             }
+
             @Override
             public void failed(String... args) {
                 site_progressbar.setVisibility(View.GONE);

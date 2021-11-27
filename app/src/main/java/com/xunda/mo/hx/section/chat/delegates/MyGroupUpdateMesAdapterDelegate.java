@@ -37,7 +37,7 @@ public class MyGroupUpdateMesAdapterDelegate extends EaseMessageAdapterDelegate<
                 case MyConstant.GROUP_UPDATE_GROUPDES:
                 case MyConstant.MESSAGE_TYPE_DOUBLE_RECALL:
                 case MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL:
-                case MyConstant.APPLY:
+                case MyConstant.MESSAGE_TYPE_APPLY:
                 case MyConstant.MESSAGE_GROUP_Message:
                 case MyConstant.Message_Recall:
                 case MyConstant.MESSAGE_TYPE_SCREENSHORTS:

@@ -17,6 +17,7 @@ import com.xunda.mo.R;
 import com.xunda.mo.model.NewFriend_Bean;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
+import com.xunda.mo.view.LightningView;
 
 import java.util.List;
 
@@ -159,9 +160,10 @@ public class Friend_NewFriendList_Adapter extends RecyclerView.Adapter<Friend_Ne
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        private  LightningView vipType_txt;
         private Button add_Btn, refuse_Btn;
         private SimpleDraweeView head_Simple;
-        private TextView name_Txt, vipType_txt, friend_Txt, apply_Txt, result_Txt, time_Txt;
+        private TextView name_Txt, friend_Txt, apply_Txt, result_Txt, time_Txt;
 
         public MyViewHolder(View itemView) {
             super(itemView);

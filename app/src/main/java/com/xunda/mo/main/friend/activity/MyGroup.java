@@ -104,7 +104,7 @@ public class MyGroup extends AppCompatActivity {
     Friend_MyGroupBean model;
     public void groupData(final Context context, String baseUrl) {
         Map<String,Object> map = new HashMap<>();
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 model = new Gson().fromJson(result, Friend_MyGroupBean.class);

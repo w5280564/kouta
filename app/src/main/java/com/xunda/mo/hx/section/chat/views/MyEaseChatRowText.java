@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
+import androidx.core.content.ContextCompat;
+
 import com.bumptech.glide.Glide;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -32,8 +34,8 @@ public class MyEaseChatRowText extends EaseChatRow {
 
     @Override
     protected void onInflateView() {
-        inflater.inflate(!showSenderType ? R.layout.ease_row_received_message
-                : R.layout.ease_row_sent_message, this);
+        inflater.inflate(!showSenderType ? R.layout.myease_row_received_message
+                : R.layout.myease_row_sent_message, this);
     }
 
     @Override
@@ -75,6 +77,7 @@ public class MyEaseChatRowText extends EaseChatRow {
             Spannable span = EaseSmileUtils.getSmiledText(context, txtBody.getMessage());
             // 设置内容
             contentView.setText(span, BufferType.SPANNABLE);
+            contentView.setTextColor(ContextCompat.getColor(context,R.color.blacktitle));
         }
     }
 

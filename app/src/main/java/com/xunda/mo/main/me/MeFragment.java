@@ -32,6 +32,7 @@ import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.MyLevel;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.xUtils3Http;
+import com.xunda.mo.view.LightningView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +42,8 @@ public class MeFragment extends BaseInitFragment {
     private MyArrowItemView item_set, version_set, item_service_set, item_coupon_set, item_vip_set;
     private LinearLayout garde_Lin;
     private ImageView head_Image;
-    private TextView nick_Txt, moId_Txt, vipType_txt;
+    private TextView nick_Txt, moId_Txt;
+    private LightningView vipType_txt;
 
     @Override
     protected int getLayoutId() {
@@ -127,7 +129,7 @@ public class MeFragment extends BaseInitFragment {
     @SuppressLint("SetTextI18n")
     public void UserMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 userModel = new Gson().fromJson(result, UserDetail_Bean.class);

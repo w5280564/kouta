@@ -36,7 +36,7 @@ public class GroupHelper {
     }
 
     /**
-     * 是否是管理员
+     * 是否是
      * @return
      */
     public synchronized static boolean isAdmin(EMGroup group) {

@@ -3,6 +3,7 @@ package com.xunda.mo.main.login;
 import static com.xunda.mo.staticdata.SetStatusBar.FlymeSetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.MIUISetStatusBarLightMode;
 import static com.xunda.mo.staticdata.SetStatusBar.StatusBar;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,13 +21,13 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import com.google.gson.Gson;
+
 import com.mcxtzhang.captchalib.SwipeCaptchaView;
 import com.xunda.mo.R;
 import com.xunda.mo.main.baseView.BasePopupWindow;
-import com.xunda.mo.model.Main_ForgetPsw_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
@@ -87,6 +88,9 @@ public class MainLogin_ForgetPsw_OrQuestion extends AppCompatActivity {
         return_Btn.setVisibility(View.VISIBLE);
         TextView contentTxt = title_Include.findViewById(R.id.cententtxt);
         contentTxt.setText(StringUtil.getStringValue(titleName));
+        if (TextUtils.equals(type, "1")) {
+            contentTxt.setText("输入手机号");
+        }
         right_Btn = title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.GONE);
         return_Btn.setOnClickListener(new return_Btn());

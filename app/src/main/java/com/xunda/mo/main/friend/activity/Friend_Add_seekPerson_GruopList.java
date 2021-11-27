@@ -103,7 +103,7 @@ public class Friend_Add_seekPerson_GruopList extends AppCompatActivity implement
     public void onLoadMore() {
         PageIndex = PageIndex + 1;
         pageSize = 10;
-        AddFriendMethod(Friend_Add_seekPerson_GruopList.this, saveFile.Group_SearchGroup_Url);
+        AddFriendMethod(Friend_Add_seekPerson_GruopList.this, saveFile.Group_SearchGroup_Url,seekStr);
     }
 
     private class cancel_txtOnclickLister implements View.OnClickListener {
@@ -135,7 +135,7 @@ public class Friend_Add_seekPerson_GruopList extends AppCompatActivity implement
     private void initData(String type, String seekStr) {
         PageIndex = 1;
         pageSize = 10;
-        AddFriendMethod(Friend_Add_seekPerson_GruopList.this, saveFile.Group_SearchGroup_Url);
+        AddFriendMethod(Friend_Add_seekPerson_GruopList.this, saveFile.Group_SearchGroup_Url,seekStr);
     }
 
 
@@ -166,7 +166,7 @@ public class Friend_Add_seekPerson_GruopList extends AppCompatActivity implement
     private List<AddFriend_FriendGroup_Model.DataDTO.ListDTO> baseModel;
     private AddFriend_FriendGroup_Model Model;
 
-    public void AddFriendMethod(Context context, String baseUrl) {
+    public void AddFriendMethod(Context context, String baseUrl, String seekStr) {
         Map<String, Object> map = new HashMap<>();
         map.put("search", seekStr);
         map.put("type", type);

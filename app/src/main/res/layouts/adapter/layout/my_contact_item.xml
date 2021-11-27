@@ -105,7 +105,7 @@
             android:layout_marginStart="64dp"
             android:background="@color/ease_base_color_divider"/>
 
-        <TextView
+        <com.xunda.mo.view.LightningView
             android:id="@+id/vipType_txt"
             android:layout_width="29dp"
             android:layout_height="14dp"

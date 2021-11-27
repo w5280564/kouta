@@ -50,6 +50,7 @@ import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
+import com.xunda.mo.view.LightningView;
 
 import org.json.JSONObject;
 
@@ -62,7 +63,7 @@ import java.util.Map;
 public class Me_VIP extends BaseInitActivity {
     private Button on_Btn,return_Btn;
     private ConstraintLayout vip_Con;
-    private TextView zun_Txt, couponCount_Txt, attemptCount_Txt, expCount_Txt, vip_Time, name_Txt, vip_Txt, id_Txt;
+    private TextView zun_Txt, couponCount_Txt, attemptCount_Txt, expCount_Txt, vip_Time, name_Txt, id_Txt;
     Double pay = 0.0;
     int month = 1;
     String cardId;
@@ -73,6 +74,7 @@ public class Me_VIP extends BaseInitActivity {
     private static final int SDK_AUTH_FLAG = 2;
     private EaseImageView head_Image;
     private FlowLayout vipType_Flow;
+    private LightningView vip_Txt;
 
 
     public static void actionStart(Context context) {
@@ -368,7 +370,7 @@ public class Me_VIP extends BaseInitActivity {
     @SuppressLint("SetTextI18n")
     public void UserMethod(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
-        xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 UserDetail_Bean  userModel = new Gson().fromJson(result, UserDetail_Bean.class);

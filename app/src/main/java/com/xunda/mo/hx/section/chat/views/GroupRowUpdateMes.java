@@ -133,10 +133,11 @@ public class GroupRowUpdateMes extends EaseChatRow {
                 content = String.format("'%1$s'撤回了所有消息", sendName);
             }
             content_Txt.setText(content);
-        } else if (TextUtils.equals(mess_Type, MyConstant.APPLY)) {
+        } else if (TextUtils.equals(mess_Type, MyConstant.MESSAGE_TYPE_APPLY)) {
             String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
+            String toName = message.getStringAttribute(MyConstant.TO_NAME, "");
             if (isSender()) {
-                content = String.format("您已同意添加'%1$s'，现在可以开始聊天了", sendName);
+                content = String.format("您已同意添加'%1$s'，现在可以开始聊天了", toName);
             }else {
                 content = String.format("'%1$s'已同意添加好友，现在可以开始聊天了", sendName);
             }

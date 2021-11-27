@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.xunda.mo.R;
+import com.xunda.mo.dialog.TwoButtonDialogWithTitle;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
-import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.main.me.adapter.Me_Manage_BlackList_Adapter;
 import com.xunda.mo.model.GroupBlackList_Bean;
 import com.xunda.mo.network.saveFile;
@@ -160,18 +160,21 @@ public class Me_Manage_BlackList extends BaseInitActivity {
 
 
     private void isRemove(int pos) {
-        String content = "";
-        content = "移出黑名单";
-        new SimpleDialogFragment.Builder(mContext)
-                .setTitle("提示")
-                .showContent(true)
-                .setContent(content)
-                .setOnConfirmClickListener(view -> {
-                    BlackMethod(Me_Manage_BlackList.this, saveFile.Friend_SetBlack_Url, false);
-                    mAdapter.removeData(pos);
-                })
-                .showCancelButton(true)
-                .show();
+        TwoButtonDialogWithTitle dialog = new TwoButtonDialogWithTitle(this, "提示","移除黑名单", "取消", "确定",
+                new TwoButtonDialogWithTitle.ConfirmListener() {
+
+                    @Override
+                    public void onClickRight() {
+                        BlackMethod(Me_Manage_BlackList.this, saveFile.Friend_SetBlack_Url, false);
+                        mAdapter.removeData(pos);
+                    }
+
+                    @Override
+                    public void onClickLeft() {
+
+                    }
+                });
+        dialog.show();
     }
 
 

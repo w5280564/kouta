@@ -6,6 +6,7 @@ import static com.xunda.mo.staticdata.AppConstant.endPoint;
 import static com.xunda.mo.staticdata.AppConstant.sk;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -36,7 +37,6 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.obs.services.IFSClient;
 import com.obs.services.ObsClient;
 import com.obs.services.ObsConfiguration;
 import com.obs.services.exception.ObsException;
@@ -45,7 +45,6 @@ import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
-import com.xunda.mo.hx.section.group.fragment.GroupEditFragment;
 import com.xunda.mo.hx.section.group.fragment.GroupEditFragmentInfo;
 import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.constant.MyConstant;
@@ -58,7 +57,6 @@ import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -81,6 +79,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
     private LinearLayout label_Lin;
     private TextView tv_tag_no;
     private String group_des;
+    private View label_arrow;
 
     public static void actionStart(Context context, int Identity, GruopInfo_Bean groupModel) {
         Intent intent = new Intent(context, GroupDetail_Edit.class);
@@ -112,6 +111,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
         label_Constraint = findViewById(R.id.label_Constraint);
         label_Constraint.setOnClickListener(new label_ConstraintClick());
         label_Lin = findViewById(R.id.label_Lin);
+        label_arrow = findViewById(R.id.label_arrow);
         tv_tag_no = findViewById(R.id.tv_tag_no);
         adress_ArrowItemView = findViewById(R.id.adress_ArrowItemView);
         adress_ArrowItemView.setOnClickListener(new adress_ArrowItemViewClick());
@@ -124,7 +124,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
             if (TextUtils.isEmpty(tag)) {
                 tv_tag_no.setVisibility(View.VISIBLE);
                 label_Lin.setVisibility(View.GONE);
-            }else{
+            } else {
                 tv_tag_no.setVisibility(View.GONE);
                 label_Lin.setVisibility(View.VISIBLE);
                 tagList(label_Lin, GroupDetail_Edit.this, tag);
@@ -163,12 +163,12 @@ public class GroupDetail_Edit extends BaseInitActivity {
             String addressStr = dataDTO.getGroupAddr().isEmpty() ? "未设置" : dataDTO.getGroupAddr();
             adress_ArrowItemView.getTvContent().setText(addressStr);
             group_des = dataDTO.getGroupIntroduction();
-            brief_ArrowItemView.getTip().setText(group_des.isEmpty()? "群主很懒，还没有群介绍哦~" :group_des);
+            brief_ArrowItemView.getTip().setText(group_des.isEmpty() ? "群主很懒，还没有群介绍哦~" : group_des);
             String tag = groupModel.getData().getTag();
             if (TextUtils.isEmpty(tag)) {
                 tv_tag_no.setVisibility(View.VISIBLE);
                 label_Lin.setVisibility(View.GONE);
-            }else{
+            } else {
                 tv_tag_no.setVisibility(View.GONE);
                 label_Lin.setVisibility(View.VISIBLE);
                 tagList(label_Lin, GroupDetail_Edit.this, tag);
@@ -181,6 +181,10 @@ public class GroupDetail_Edit extends BaseInitActivity {
                 adress_ArrowItemView.setEnabled(false);
                 brief_ArrowItemView.setEnabled(false);
                 label_Constraint.setEnabled(false);
+                if (tv_tag_no.getVisibility() == View.GONE) {
+
+                    label_arrow.setVisibility(View.GONE);
+                }
             }
 
         }
@@ -259,7 +263,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
                 group_des,
                 (view, content) -> {
                     group_des = content;
-                    brief_ArrowItemView.getTip().setText(!TextUtils.isEmpty(content)?content:"");
+                    brief_ArrowItemView.getTip().setText(!TextUtils.isEmpty(content) ? content : "");
                     String changType = "3";
                     String keyStr = "groupIntroduction";
                     CreateGroupMethod(GroupDetail_Edit.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, content, "", "");
@@ -358,37 +362,32 @@ public class GroupDetail_Edit extends BaseInitActivity {
     }
 
 
-    String objectName = "";
-
+    @SuppressLint("StaticFieldLeak")
     public class PostObjectTask extends AsyncTask<Void, Void, String> {
         @SneakyThrows
         @Override
         protected String doInBackground(Void... voids) {
-            StringBuffer sbf = new StringBuffer();
+            StringBuilder sbf = new StringBuilder();
             try {
-
                 MyInfo myInfo = new MyInfo(GroupDetail_Edit.this);
-                objectName = "group/headImg/" + myInfo.getUserInfo().getUserId() + "/" + selectList.get(0).getFileName();//对应上传之后的文件名称
-                FileInputStream fis = new FileInputStream(new File(selectList.get(0).getCutPath()));
+                String objectName = "group/headImg/" + myInfo.getUserInfo().getUserId() + "/" + selectList.get(0).getFileName();//对应上传之后的文件名称
+                FileInputStream fis = new FileInputStream(selectList.get(0).getCutPath());
                 obsClient.putObject(bucketName, objectName, fis); // localfile为待上传的本地文件路径，需要指定到具体的文件名
                 sbf.append(objectName);
                 return sbf.toString();
             } catch (ObsException e) {
-                sbf.append("\n\n");
                 sbf.append("Response Code:" + e.getResponseCode())
-                        .append("\n\n").append("Error Message:" + e.getErrorMessage())
-                        .append("\n\n").append("Error Code:" + e.getErrorCode())
-                        .append("\n\n").append("Request ID:" + e.getErrorRequestId())
-                        .append("\n\n").append("Host ID:" + e.getErrorHostId());
-                return sbf.toString();
+                        .append("Error Message:" + e.getErrorMessage())
+                        .append("Error Code:" + e.getErrorCode())
+                        .append("Request ID:" + e.getErrorRequestId())
+                        .append("Host ID:" + e.getErrorHostId());
+                return "";
             } catch (Exception e) {
-                sbf.append("\n\n");
                 sbf.append(e.getMessage());
-                return sbf.toString();
+                return "";
             } finally {
                 if (obsClient != null) {
                     try {
-                        //Close obs client
                         obsClient.close();
                     } catch (IOException e) {
                     }
@@ -401,9 +400,13 @@ public class GroupDetail_Edit extends BaseInitActivity {
             super.onPostExecute(pic);
 //            groupHead_Sim.setEnabled(false);
 //            pictures = pic;
-            String changType = "1";
-            String keyStr = "groupHeadImg";
-            CreateGroupMethod(GroupDetail_Edit.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, pic, "", "");
+            if (TextUtils.isEmpty(pic)) {
+                Toast.makeText(mContext, "上传图片失败", Toast.LENGTH_SHORT).show();
+            } else {
+                String changType = "1";
+                String keyStr = "groupHeadImg";
+                CreateGroupMethod(GroupDetail_Edit.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, pic, "", "");
+            }
         }
     }
 
