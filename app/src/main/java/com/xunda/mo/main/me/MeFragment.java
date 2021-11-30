@@ -170,8 +170,24 @@ public class MeFragment extends BaseInitFragment {
             @Override
             public void success(String result) {
                 baseDataModel model = new Gson().fromJson(result, baseDataModel.class);
+
+                ServiceTalkData(getActivity(), saveFile.Receptionist_IntoRoom,model.getData());
+            }
+
+            @Override
+            public void failed(String... args) {
+            }
+        });
+    }
+
+    public void ServiceTalkData(final Context context, String baseUrl,String conversationId) {
+        Map<String, Object> map = new HashMap<>();
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                baseDataModel model = new Gson().fromJson(result, baseDataModel.class);
                 //跳转到群组聊天页面
-                ChatActivity.actionStart(mContext, model.getData(), DemoConstant.CHATTYPE_GROUP);
+                ChatActivity.actionStart(mContext, conversationId, DemoConstant.CHATTYPE_GROUP);
             }
 
             @Override

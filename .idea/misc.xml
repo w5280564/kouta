@@ -68,6 +68,9 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/mainlogin_forgetpsw_questionlist.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/popup_code.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/popupwindows/layout/popup_more_convers.xml" value="0.3536458333333333" />
+        <entry key="..\:/kouta/app/src/main/res/drawable/group_label_stroke.xml" value="0.35333333333333333" />
+        <entry key="..\:/kouta/app/src/main/res/layouts/fragments/layout/mefragment.xml" value="0.25" />
+        <entry key="..\:/kouta/app/src/main/res/layouts/popupwindows/layout/group_label.xml" value="0.34270833333333334" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/32246fbe39018eda991bd63abf46f795/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_layout_chat.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/32246fbe39018eda991bd63abf46f795/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_layout_chat_extend_menu.xml" value="0.31157407407407406" />
         <entry key="..\:/waylen/JDK/jre/wrapper/wrapper/wrapper/dists/gradle-7.0-bin/caches/transforms-3/32246fbe39018eda991bd63abf46f795/transformed/jetified-ease-im-kit-3.8.4/res/layout/ease_layout_item_menu_popupwindow.xml" value="0.31157407407407406" />
@@ -385,7 +388,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15_PREVIEW" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

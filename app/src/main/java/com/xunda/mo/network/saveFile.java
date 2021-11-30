@@ -110,6 +110,7 @@ public class saveFile {
     public static String Group_myGroupNicknameByHx = "group/myGroupNicknameByHxIdOrGroupId";
     public static String versionUpdate = "public/isForceUpdate";
     public static String SensitiveWord = "public/sensitiveWord";
+    public static String Receptionist_IntoRoom = "receptionist/intoRoom";
 
 
 
