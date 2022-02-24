@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -86,7 +87,7 @@ public class Discover_QRCode extends BaseInitActivity implements QRCodeView.Dele
             Toast.makeText(mContext, "无法识别", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        Log.e("result","result>>>"+result);
         if (!TextUtils.isEmpty(result)) {
             String strName = result.substring(0, result.indexOf("-"));
             String strUserNum = result.substring(strName.length() + 1, result.length());

@@ -33,6 +33,7 @@ import com.xunda.mo.R;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
+import com.xunda.mo.utils.GsonUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -154,7 +155,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
             } else {
                 if (item.getAllMsgCount() != 0) {
                     HeadName = item.getLastMessage().getStringAttribute(MyConstant.SEND_NAME, "");
-//                    HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.SEND_HEAD, "");
+                    HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.SEND_HEAD, "");
                 }
             }
             Glide.with(context).load(HeadAvatar).placeholder(defaultAvatar).into(holder.avatar);
@@ -205,7 +206,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
 
         if (item.getAllMsgCount() != 0) {
             EMMessage lastMessage = item.getLastMessage();
-            Log.e("EaseConversationDelegate", "拓展消息" + lastMessage.ext().toString());
+            Log.e("EaseConversationDelegate", "拓展消息" + GsonUtil.getInstance().toJson(lastMessage.ext()));
             holder.message.setText(EaseSmileUtils.getSmiledText(context, EaseCommonUtils.getMessageDigest(lastMessage, context)));
 
             setContent(holder.mentioned, holder.message, item);
