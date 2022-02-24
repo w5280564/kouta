@@ -91,7 +91,6 @@ import me.leolin.shortcutbadger.ShortcutBadger;
 
 public class MainActivity extends BaseInitActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private BottomNavigationView navView;
-    //    private EaseTitleBar mTitleBar;
     private EaseBaseFragment mConversationListFragment, mFriendsFragment, mDiscoverFragment, mAboutMeFragment;
     private EaseBaseFragment mCurrentFragment;
     private TextView mTvMainHomeMsg, mTvMainFriendsMsg, mTvMainDiscoverMsg, mTvMainAboutMeMsg;

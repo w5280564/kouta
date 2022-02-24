@@ -15,13 +15,12 @@ import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.login.viewmodels.SplashViewModel;
 import com.xunda.mo.main.MainActivity;
+import com.xunda.mo.main.info.MyInfo;
 
 import org.xutils.x;
 
 public class Main_Launch extends BaseInitActivity {
     private SplashViewModel model;
-
-    private String FIRSTINIT = "firstinit";
     private SharedPreferences preferences = null;
 
     @Override
@@ -56,11 +55,7 @@ public class Main_Launch extends BaseInitActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (getFirstInit()) {
-                    saveFirstInit(false);
-//                    Intent i = new Intent(Main_Launch.this, WelcomeNew.class);
-//                    startActivity(i);
-//                    finish();
+                if (!isLogin()) {
                     Intent intent = new Intent(Main_Launch.this, MainLogin_Register.class);
                     startActivity(intent);
                     finish();
@@ -72,15 +67,16 @@ public class Main_Launch extends BaseInitActivity {
         }, 3000);
     }
 
-    public void saveFirstInit(boolean is) {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(FIRSTINIT, is);
-        editor.commit();
-    }
 
 
-    public boolean getFirstInit() {
-        return preferences.getBoolean(FIRSTINIT, true);
+    public boolean isLogin() {
+        MyInfo myInfo = new MyInfo(this);
+
+        if (myInfo.getUserInfo()== null) {
+            return false;
+        }
+
+        return true;
     }
 
     //屏蔽返回键

@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class xUtils3Http {
     //        public static String BASE_URL = " http://abc.ahxunda.com:8088/";
-    public static final String BASE_URL = "http://139.9.121.19:8088/";
+    public static final String BASE_URL = "https://im.ahxunda.com:9000/im/";
 //    public static String BASE_URL = "https://abc.ahxunda.com/";
 //
 

@@ -205,6 +205,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
 
         if (item.getAllMsgCount() != 0) {
             EMMessage lastMessage = item.getLastMessage();
+            Log.e("EaseConversationDelegate", "拓展消息" + lastMessage.ext().toString());
             holder.message.setText(EaseSmileUtils.getSmiledText(context, EaseCommonUtils.getMessageDigest(lastMessage, context)));
 
             setContent(holder.mentioned, holder.message, item);
@@ -282,22 +283,24 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
             mentioned.setTextColor(mentioned.getContext().getColor(R.color.yellowfive));
             String atID = lastMessage.getStringAttribute(MyConstant.AT_ID, "");
             String at_Name = lastMessage.getStringAttribute(MyConstant.AT_NAME, "");
-            String name = at_Name.replace(",", "@");
-            int atDex = name.lastIndexOf("@");
-            int lastDex = name.length();
-            StringBuilder stringBuilder = new StringBuilder(name);
-            stringBuilder.replace(atDex, lastDex, "");
-            String lastName = "@" + stringBuilder.toString();
+            if (!TextUtils.isEmpty(at_Name)) {
+                String name = at_Name.replace(",", "@");
+                int atDex = name.lastIndexOf("@");
+                int lastDex = name.length();
+                StringBuilder stringBuilder = new StringBuilder(name);
+                stringBuilder.replace(atDex, lastDex, "");
+                String lastName = "@" + stringBuilder.toString();
 
-            if (EaseAtMessageHelper.get().hasAtMeMsg(myInfo.getUserInfo().getHxUserName())) {
+                if (EaseAtMessageHelper.get().hasAtMeMsg(myInfo.getUserInfo().getHxUserName())) {
 
+                }
+                if (atID.contains("All") && lastMessage.isUnread()) {
+                    mentioned.setVisibility(View.VISIBLE);
+                } else if (atID.contains(myInfo.getUserInfo().getHxUserName()) && lastMessage.isUnread()) {
+                    mentioned.setVisibility(View.VISIBLE);
+                }
+                contentView.setText(lastName);
             }
-            if (atID.contains("All") && lastMessage.isUnread()) {
-                mentioned.setVisibility(View.VISIBLE);
-            } else if (atID.contains(myInfo.getUserInfo().getHxUserName()) && lastMessage.isUnread()) {
-                mentioned.setVisibility(View.VISIBLE);
-            }
-            contentView.setText(lastName);
         } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_USERCARD)) {
             messageStr = "[名片]";
             contentView.setText(messageStr);

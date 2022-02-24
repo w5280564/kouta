@@ -42,7 +42,6 @@ import com.xunda.mo.main.MainActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.viewmodels.LoginViewModel;
-import com.xunda.mo.model.Main_Register_Model;
 import com.xunda.mo.model.Olduser_Model;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.CaptchaInputView;
@@ -342,12 +341,14 @@ public class MainLogin_Code extends BaseInitActivity {
         xUtils3Http.post(MainLogin_Code.this, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                Main_Register_Model baseModel = new Gson().fromJson(result, Main_Register_Model.class);
+                Olduser_Model baseModel = new Gson().fromJson(result, Olduser_Model.class);
                 String name = baseModel.getData().getHxUserName();
                 loginViewModels.login(name, name, false);
                 DemoHelper.getInstance().setAutoLogin(true);
 
                 saveFile.saveShareData("phoneNum", baseModel.getData().getPhoneNum(), MainLogin_Code.this);
+                MyInfo myInfo = new MyInfo(mContext);
+                myInfo.setUserInfo(baseModel.getData());
                 Intent intent = new Intent(MainLogin_Code.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

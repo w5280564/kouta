@@ -664,22 +664,9 @@ public class UserDetail_Set extends BaseInitActivity {
                 sbf.append(objectName);
                 return sbf.toString();
             } catch (ObsException e) {
-                sbf.append("Response Code:").append(e.getResponseCode())
-                        .append("Error Message:" + e.getErrorMessage())
-                        .append("Error Code:" + e.getErrorCode())
-                        .append("Request ID:" + e.getErrorRequestId())
-                        .append("Host ID:" + e.getErrorHostId());
                 return "";
             } catch (Exception e) {
-                sbf.append(e.getMessage());
                 return "";
-            } finally {
-                if (obsClient != null) {
-                    try {
-                        obsClient.close();
-                    } catch (IOException ignored) {
-                    }
-                }
             }
         }
 

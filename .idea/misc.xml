@@ -38,6 +38,7 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/base_titlebar.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_about_hx.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_account_security.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_chat.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_chat_group_pick_contacts.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_set_index.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_fragment_group_edit.xml" value="0.3536458333333333" />
@@ -54,6 +55,7 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/fragments/layout/activity_friend_add.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/fragments/layout/base_fragment_dialog.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/fragments/layout/demo_badge_friends.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/fragments/layout/demo_badge_home.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/fragments/layout/demo_fragment_dialog_base.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/fragments/layout/demo_fragment_group_edit_info.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/fragments/layout/demo_fragment_group_topmes.xml" value="0.3536458333333333" />
@@ -388,7 +390,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
