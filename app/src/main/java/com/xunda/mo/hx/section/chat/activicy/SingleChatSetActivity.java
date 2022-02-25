@@ -84,7 +84,6 @@ public class SingleChatSetActivity extends BaseInitActivity implements EaseTitle
         super.initData();
         conversation = EMClient.getInstance().chatManager()
          .getConversation(toChatUsername, EaseCommonUtils.getConversationType(EaseConstant.CHATTYPE_SINGLE), true);
-        itemUserInfo.getAvatar().setShapeType(1);
         itemUserInfo.getTvTitle().setText(toChatUsername);
         itemSwitchTop.getSwitch().setChecked(!TextUtils.isEmpty(conversation.getExtField()));
 

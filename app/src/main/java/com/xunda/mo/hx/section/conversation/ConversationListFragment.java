@@ -74,7 +74,6 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
     private LinearLayout ll_search;
 
     private ConversationListViewModel mViewModel;
-    private EaseRecyclerView rv_conversation_list;
     private TextView tv_title;
 
     @Override
@@ -107,7 +106,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         //设置是否隐藏未读消息数，默认为不隐藏
         conversationListLayout.hideUnreadDot(false);
         //设置未读消息数展示位置，默认为左侧
-        conversationListLayout.showUnreadDotPosition(EaseConversationSetStyle.UnreadDotPosition.RIGHT);
+        conversationListLayout.showUnreadDotPosition(EaseConversationSetStyle.UnreadDotPosition.LEFT);
 
         initViewModel();
     }
@@ -169,36 +168,6 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         super.onResume();
         conversationListLayout.showSystemMessage(false);//是否展示系统消息
         makeAllMsgRead();//系统消息设置为已读
-
-//        EMClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(new EMValueCallBack<List<EMGroup>>() {
-//            @Override
-//            public void onSuccess(List<EMGroup> value) {
-//                String va = value.get(0).getExtension();
-//            }
-//
-//            @Override
-//            public void onError(int error, String errorMsg) {
-//
-//            }
-//        });
-//
-//        Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
-//        conversations.get("162845596647425").getExtField();
-//
-//        EMClient.getInstance().groupManager().asyncGetGroupFromServer("162845596647425", new EMValueCallBack<EMGroup>() {
-//            @Override
-//            public void onSuccess(EMGroup value) {
-//                String va = value.getExtension();
-//            }
-//
-//            @Override
-//            public void onError(int error, String errorMsg) {
-//
-//            }
-//        });
-//        EMClient.getInstance().groupManager().loadAllGroups();
-//        List<EMGroup> groups =   EMClient.getInstance().groupManager().getAllGroups();
-//        groups.get(0).getExtension();
 
 
     }

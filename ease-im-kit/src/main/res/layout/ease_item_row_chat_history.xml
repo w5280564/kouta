@@ -18,7 +18,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:scaleType="centerCrop"
-        app:ease_shape_type="round"/>
+        app:ease_shape_type="rectangle"/>
 
 
     <TextView

@@ -106,7 +106,6 @@ public abstract class EaseDefaultConversationDelegate extends EaseBaseConversati
                     layoutParams.height = (int) avatarSize;
                     layoutParams.width = (int) avatarSize;
                 }
-                avatar.setShapeType(1);
                 float borderWidth = setModel.getBorderWidth();
                 if(borderWidth != 0) {
                     avatar.setBorderWidth((int) borderWidth);
