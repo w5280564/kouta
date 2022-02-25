@@ -1,7 +1,7 @@
 package com.xunda.mo.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
@@ -12,51 +12,58 @@ import lombok.NoArgsConstructor;
 @Data
 @JsonNaming
 public class ChatUserBean implements Serializable {
-    @JsonProperty("msg")
+
+    @SerializedName("msg")
     private String msg;
-    @JsonProperty("code")
-    private Long code;
-    @JsonProperty("data")
-    private Friend_Details_Bean.DataDTO data;
+    @SerializedName("code")
+    private Integer code;
+    @SerializedName("data")
+    private DataDTO data;
 
     @NoArgsConstructor
     @Data
-    public static class DataDTO implements Serializable{
-        @JsonProperty("fireType")
-        private String fireType;
-        @JsonProperty("grade")
-        private Double grade;
-        @JsonProperty("headImg")
-        private String headImg;
-        @JsonProperty("hxUserName")
-        private String hxUserName;
-        @JsonProperty("lightStatus")
-        private Long lightStatus;
-        @JsonProperty("nickname")
-        private String nickname;
-        @JsonProperty("remarkName")
-        private String remarkName;
-        @JsonProperty("signature")
-        private String signature;
-        @JsonProperty("source")
-        private String source;
-        @JsonProperty("tag")
-        private String tag;
-        @JsonProperty("isFriend")
-        private Long isFriend;
-        @JsonProperty("teamNames")
-        private String teamNames;
-        @JsonProperty("userId")
-        private String userId;
-        @JsonProperty("userNum")
-        private Double userNum;
-        @JsonProperty("vipType")
-        private int vipType;
-        @JsonProperty("areaName")
+    public static class DataDTO {
+        @SerializedName("areaName")
         private String areaName;
-        @JsonProperty("friendStatus")
-        private String friendStatus;
-        @JsonProperty("isSilence")
-        private Long isSilence;
+        @SerializedName("deleteStatus")
+        private Integer deleteStatus;
+        @SerializedName("fireType")
+        private Integer fireType;
+        @SerializedName("friendStatus")
+        private Integer friendStatus;
+        @SerializedName("grade")
+        private Integer grade;
+        @SerializedName("headImg")
+        private String headImg;
+        @SerializedName("hxUserName")
+        private String hxUserName;
+        @SerializedName("isFriend")
+        private Integer isFriend;
+        @SerializedName("isOnline")
+        private Integer isOnline;
+        @SerializedName("isSilence")
+        private Integer isSilence;
+        @SerializedName("lightStatus")
+        private Integer lightStatus;
+        @SerializedName("nickname")
+        private String nickname;
+        @SerializedName("onlineStatus")
+        private String onlineStatus;
+        @SerializedName("remarkName")
+        private String remarkName;
+        @SerializedName("signature")
+        private String signature;
+        @SerializedName("source")
+        private String source;
+        @SerializedName("tag")
+        private String tag;
+        @SerializedName("teamNames")
+        private String teamNames;
+        @SerializedName("userId")
+        private String userId;
+        @SerializedName("userNum")
+        private Integer userNum;
+        @SerializedName("vipType")
+        private Integer vipType;
     }
 }

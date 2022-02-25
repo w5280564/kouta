@@ -12,11 +12,12 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
-import com.hyphenate.chat.EMChatRoom;
-import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
-import com.hyphenate.chat.EMGroup;
+import com.hyphenate.chat.EMCustomMessageBody;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.easecallkit.base.EaseCallType;
+import com.hyphenate.easecallkit.utils.EaseMsgUtils;
 import com.hyphenate.easeui.EaseIM;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.manager.EaseAtMessageHelper;
@@ -29,21 +30,28 @@ import com.hyphenate.easeui.provider.EaseUserProfileProvider;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseDateUtils;
 import com.hyphenate.easeui.utils.EaseSmileUtils;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.utils.GsonUtil;
+import com.xunda.mo.utils.StringUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.Map;
 
 public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate {
+    private Context context;
+    private MyInfo myInfo;
 
-    public MyEaseConversationDelegate(EaseConversationSetStyle setModel) {
+    public MyEaseConversationDelegate(EaseConversationSetStyle setModel, Context context) {
         super(setModel);
+        this.context = context;
+        myInfo = new MyInfo(context);
     }
 
     @Override
@@ -58,147 +66,147 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         return item != null && item.getInfo() instanceof EMConversation;
     }
 
+    //是否是客服会话
+    private boolean isMOCustomer(EMMessage conMsg) {
+        if (conMsg == null) {
+            return false;
+        }
+        if (conMsg.getType() == EMMessage.Type.CUSTOM) {
+            EMCustomMessageBody messageBody = (EMCustomMessageBody) conMsg.getBody();
+            String event = messageBody.event();//自定义消息的event
+            if (event.equals("custom") || event.equals("MOCustomer")) {
+                return true;
+            }
+        } else if (conMsg.getType() == EMMessage.Type.TXT) {
+            String txt_message_type = conMsg.getStringAttribute(MyConstant.MESSAGE_TYPE, "");//TXT消息的类型
+            if (txt_message_type.equals("MOCustomer") || txt_message_type.equals("customerMessageType") || txt_message_type.equals("custom")) {
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
+
     @Override
     protected void onBindConViewHolder(ViewHolder holder, int position, EaseConversationInfo bean) {
         EMConversation item = (EMConversation) bean.getInfo();
-        Context context = holder.itemView.getContext();
         String username = item.conversationId();
-        holder.listIteaseLayout.setBackground(!TextUtils.isEmpty(item.getExtField())
-                ? ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg)
-                : null);
+        holder.listIteaseLayout.setBackground(!TextUtils.isEmpty(item.getExtField()) ? ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg) : null);
         holder.mentioned.setVisibility(View.GONE);
-        int defaultAvatar = 0;
-        String showName = "";
+        int defaultAvatar = R.mipmap.img_pic_none;
         String HeadAvatar = "";
         String HeadName = "";
 
-        Log.e("group", item.conversationId());
-//        String mesType = item.getLastMessage().getStringAttribute(MyConstant.MESSAGE_TYPE, "");
         holder.name.setTextColor(ContextCompat.getColor(context, R.color.blacktitle));
+
+
+        Log.e("EaseConversationDelegate", "会话类型》》" + item.getType());
         if (item.getType() == EMConversation.EMConversationType.GroupChat) {
-            if (EaseAtMessageHelper.get().hasAtMeMsg(username)) {
-                holder.mentioned.setText(R.string.were_mentioned);
-                holder.mentioned.setVisibility(View.VISIBLE);
-            }
-
-//            defaultAvatar = R.drawable.ease_group_icon;
-            defaultAvatar = R.drawable.mo_icon;
-            EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
-            showName = group != null ? group.getGroupName() : username;
-
-
-            if (showName.equals(MyConstant.MO_NAME)) {
-                HeadName = showName;
-                defaultAvatar = R.mipmap.adress_head_service;
-                holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
-                Glide.with(context).load(HeadAvatar).placeholder(defaultAvatar).into(holder.avatar);
-            }
-//            else if (mesType.equals(MyConstant.MESSAGE_TYPE_SYSTEM_NOTICE)) {
-//                defaultAvatar = R.mipmap.chat_notice;
-//                holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
-//                HeadName = item.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME, "");
-//                Glide.with(context).load(HeadAvatar).placeholder(defaultAvatar).into(holder.avatar);
-//            }
-            else {
-                if (item.getAllMsgCount() != 0) {
-                    item.getLastMessage().ext();
+            if (item.getAllMsgCount() != 0) {
+                if (isMOCustomer(item.getLastMessage())) {
+                    HeadName = "MO客服";
+                    holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
+                    holder.avatar.setImageResource(R.mipmap.adress_head_service);
+                    holder.name.setText(HeadName);
+                } else {
                     HeadName = item.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME, "");
                     HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.GROUP_HEAD, "");
-                    Glide.with(context).load(HeadAvatar).placeholder(R.drawable.mo_icon).into(holder.avatar);
-                }
 
-
-//                item.getExtField();
-//                String groupHead =  group.getExtension();
-//                Glide.with(context).load(groupHead).placeholder(R.drawable.mo_icon).into(holder.avatar);
-
-//                new Thread(() -> {
-//                    try {
-//                        EMGroup myGroup =   EMClient.getInstance().groupManager().getGroupFromServer(username, true);
-//                        String groupHead = myGroup.getExtension();
-//                        Glide.with(context).load(groupHead).placeholder(R.drawable.mo_icon).into(holder.avatar);
-//                    } catch (HyphenateException e) {
-//                        e.printStackTrace();
-//                    }
-//                }).start();
-
-
-                //根据群组ID从服务器获取群组基本信息
-//                EMClient.getInstance().groupManager().asyncGetGroupFromServer(username, new EMValueCallBack<EMGroup>() {
-//                    @Override
-//                    public void onSuccess(EMGroup value) {
-//                        String groupHead = value.getExtension();
-//                        Glide.with(context).load(groupHead).placeholder(R.drawable.mo_icon).into(holder.avatar);
-//                    }
-//
-//                    @Override
-//                    public void onError(int error, String errorMsg) {
-//                    }
-//                });
-
-
-            }
-
-        } else if (item.getType() == EMConversation.EMConversationType.ChatRoom) {
-            defaultAvatar = R.drawable.ease_chat_room_icon;
-            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().getChatRoom(username);
-            showName = chatRoom != null && !TextUtils.isEmpty(chatRoom.getName()) ? chatRoom.getName() : username;
-            Glide.with(context).load(HeadAvatar).placeholder(defaultAvatar).into(holder.avatar);
-
-        } else if (item.getType() == EMConversation.EMConversationType.Chat) {
-            defaultAvatar = R.drawable.mo_icon;
-            showName = username;
-            if (username.equals(MyConstant.ADMIN)) {
-                HeadName = "群通知";
-                defaultAvatar = R.mipmap.group_notification;
-                holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
-            } else {
-                if (item.getAllMsgCount() != 0) {
-                    HeadName = item.getLastMessage().getStringAttribute(MyConstant.SEND_NAME, "");
-                    HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.SEND_HEAD, "");
-                }
-            }
-            Glide.with(context).load(HeadAvatar).placeholder(defaultAvatar).into(holder.avatar);
-        }
-//        holder.avatar.setImageResource(defaultAvatar);
-//        holder.name.setText(showName);
-//        Glide.with(context).load(HeadAvatar).placeholder(defaultAvatar).into(holder.avatar);
-        holder.name.setText(HeadName);
-
-        EaseConversationInfoProvider infoProvider = EaseIM.getInstance().getConversationInfoProvider();
-        if (infoProvider != null) {
-            Drawable avatarResource = infoProvider.getDefaultTypeAvatar(item.getType().name());
-            if (avatarResource != null) {
-                Glide.with(holder.mContext).load(avatarResource).placeholder(defaultAvatar).into(holder.avatar);
-            }
-        }
-
-        //单个会话再加载一次头像名字
-        if (item.getType() == EMConversation.EMConversationType.Chat) {
-            EaseUserProfileProvider userProvider = EaseIM.getInstance().getUserProvider();
-            if (userProvider != null) {
-                EaseUser user = userProvider.getUser(username);
-                if (user != null) {
-                    try {
-                        String selectInfoExt = user.getExt();
-                        if (!TextUtils.isEmpty(selectInfoExt)) {
-                            JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
-                            String name = TextUtils.isEmpty(JsonObject.getString(MyConstant.REMARK_NAME)) ? user.getNickname() : JsonObject.getString(MyConstant.REMARK_NAME);
-                            if (!TextUtils.isEmpty(name)) {
-                                holder.name.setText(name);
+                    if (StringUtil.isBlank(HeadAvatar) || StringUtil.isBlank(HeadName)) {
+                        String extMessage = item.getExtField();
+                        if (!TextUtils.isEmpty(extMessage)) {
+                            JSONObject JsonObject = null;
+                            try {
+                                JsonObject = new JSONObject(extMessage);
+                                boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
+                                if (isInsertGroupOrFriendInfo) {
+                                    HeadAvatar = JsonObject.getString("showImg");
+                                    HeadName = JsonObject.getString("showName");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                         }
-                    } catch (
-                            JSONException e) {
-                        e.printStackTrace();
                     }
-                    if (!TextUtils.isEmpty(user.getAvatar())) {
-                        Drawable drawable = holder.avatar.getDrawable();
-                        Glide.with(holder.mContext).load(user.getAvatar()).into(holder.avatar);
+
+                    holder.name.setText(HeadName);
+                    Glide.with(context).load(HeadAvatar).placeholder(defaultAvatar).error(defaultAvatar).into(holder.avatar);
+                }
+
+            }
+        } else if (item.getType() == EMConversation.EMConversationType.Chat) {
+            if (item.getAllMsgCount() != 0) {
+                EMMessage lastMessage = item.getLastMessage();
+                String txt_message_type = lastMessage.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
+                if (TextUtils.equals(txt_message_type, MyConstant.ADMIN)) {
+                    HeadName = "群通知";
+                    holder.avatar.setImageResource(R.mipmap.group_notification);
+                    holder.name.setTextColor(ContextCompat.getColor(context, R.color.app_main_color));
+                    holder.name.setText(HeadName);
+                } else {
+                    boolean isSender = myInfo.getUserInfo().getHxUserName().equals(lastMessage.getFrom());
+                    EaseUserProfileProvider userProvider = EaseIM.getInstance().getUserProvider();
+                    if (isSender) {
+                        String header_url_message = lastMessage.getStringAttribute(MyConstant.TO_HEAD, "");
+                        EaseUserUtils.setUserAvatarAndSendHeaderUrl(context, lastMessage.getTo(), header_url_message, holder.avatar);
+                        HeadName = lastMessage.getStringAttribute(MyConstant.TO_NAME, "");
+                        if (userProvider != null) {
+                            EaseUser user = userProvider.getUser(username);
+                            if (user != null) {
+                                try {
+                                    String selectInfoExt = user.getExt();
+                                    if (!TextUtils.isEmpty(selectInfoExt)) {
+                                        JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                                        HeadName = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    } else {//接收方
+                        String header_url_message = lastMessage.getStringAttribute(MyConstant.SEND_HEAD, "");
+                        EaseUserUtils.setUserAvatarAndSendHeaderUrl(context, lastMessage.getFrom(), header_url_message, holder.avatar);
+                        HeadName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
+                        if (userProvider != null) {
+                            EaseUser user = userProvider.getUser(username);
+                            if (user != null) {
+                                try {
+                                    String selectInfoExt = user.getExt();
+                                    if (!TextUtils.isEmpty(selectInfoExt)) {
+                                        JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                                        HeadName = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
+                                    }
+                                } catch (
+                                        JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        if (StringUtil.isBlank(HeadName)) {
+                            String extMessage = item.getExtField();
+                            if (!TextUtils.isEmpty(extMessage)) {
+                                JSONObject JsonObject = null;
+                                try {
+                                    JsonObject = new JSONObject(extMessage);
+                                    boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
+                                    if (isInsertGroupOrFriendInfo) {
+                                        HeadName = JsonObject.getString("showName");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
                     }
+                    holder.name.setText(StringUtil.getStringValue(HeadName));
                 }
             }
         }
+
 
         if (!setModel.isHideUnreadDot()) {
             showUnreadNum(holder, item.getUnreadMsgCount());
@@ -206,10 +214,205 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
 
         if (item.getAllMsgCount() != 0) {
             EMMessage lastMessage = item.getLastMessage();
+            boolean isSender = myInfo.getUserInfo().getHxUserName().equals(lastMessage.getFrom());
             Log.e("EaseConversationDelegate", "拓展消息" + GsonUtil.getInstance().toJson(lastMessage.ext()));
-            holder.message.setText(EaseSmileUtils.getSmiledText(context, EaseCommonUtils.getMessageDigest(lastMessage, context)));
+            Log.e("EaseConversationDelegate", "lastMessage的messageType是" + lastMessage.getType());
+            if (lastMessage.getType() == EMMessage.Type.CUSTOM) {//自定义消息
+                EMCustomMessageBody messageBody = (EMCustomMessageBody) lastMessage.getBody();
+                String event = messageBody.event();//自定义消息的event
+                Log.e("EaseConversationDelegate", "自定义消息的event是" + event);
+                if (event.equals(MyConstant.MESSAGE_TYPE_USERCARD)) {
+                    holder.message.setText("[名片]");
+                } else if (event.equals(MyConstant.MO_CUSTOMER)) {
+                    String content = item.getLastMessage().getStringAttribute("content", "");
+                    holder.message.setText(content);
+                } else if (event.equals("custom")) {
+                    String content = item.getLastMessage().getStringAttribute("content", "");
+                    holder.message.setText(content);
+                } else {
+                    String content = item.getLastMessage().getStringAttribute("content", "");
+                    holder.message.setText(content);
+                }
+            } else if (lastMessage.getType() == EMMessage.Type.TXT) {//TXT消息
+                String txt_message_type = lastMessage.getStringAttribute(MyConstant.MESSAGE_TYPE, "");//TXT消息的类型
+                String send_name = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
+                if (!StringUtil.isBlank(txt_message_type)) {
+                    String txt_content = "";
+                    if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_CREATE_GROUP)) {
+                        String invitationStr = lastMessage.getStringAttribute(MyConstant.USER_NAME, "");
+                        if (!isSender) {
+                            txt_content = String.format("'%1$s'创建了群，并邀请 '%2$s'加入群", send_name, invitationStr);
+                        } else {
+                            txt_content = String.format("我创建了群，并邀请 '%s'加入群", invitationStr);
+                        }
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_APPLY)) {
+                        String toName = lastMessage.getStringAttribute(MyConstant.TO_NAME, "");
+                        if (isSender) {
+                            txt_content = String.format("您已同意了%s的好友申请，现在可以开始聊天了", toName);
+                        } else {
+                            txt_content = String.format("%s已同意了您的好友申请，现在可以开始聊天了", send_name);
+                        }
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.UPDATE_GROUP_NAME)) {
+                        if (isSender) {
+                            txt_content = "您修改了群名称";
+                        } else {
+                            txt_content = "群主修改了群名称";
+                        }
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_DELETUSER)) {
+                        String invitationStr = lastMessage.getStringAttribute(MyConstant.USER_NAME, "");
+                        txt_content = String.format("'%1$s'将 '%2$s'移出群", send_name, invitationStr);
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_ADDUSER)) {
+                        String invitationStr = lastMessage.getStringAttribute(MyConstant.USER_NAME, "");
+                        txt_content = String.format("'%1$s'邀请 '%2$s'加入群", send_name, invitationStr);
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_ADDADMIN)) {
+                        String invitationStr = lastMessage.getStringAttribute(MyConstant.USER_NAME, "");
+                        txt_content = String.format("'%1$s'被添加为管理员", invitationStr);
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_DELETADMIN)) {
+                        String invitationStr = lastMessage.getStringAttribute(MyConstant.USER_NAME, "");
+                        txt_content = String.format("'%1$s'被取消了管理员", invitationStr);
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
+                        txt_content = "群开启了匿名聊天";
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TXT_TYPE_GROUP_DESTROY)) {
+                        if (isSender) {
+                            txt_content = "您解散了群";
+                        } else {
+                            txt_content = "该群已解散";
+                        }
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
+                        txt_content = "群关闭了匿名聊天";
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_MUTE_ON)) {
+                        txt_content = "群开启了群成员禁言";
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_MUTE_OFF)) {
+                        txt_content = "群关闭了群成员禁言";
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_PROTECT_ON)) {
+                        txt_content = "群开启了群成员保护";
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_PROTECT_OFF)) {
+                        txt_content = "群关闭了群成员保护";
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_UPDATE_MASTER)) {
+                        String to_userName = lastMessage.getStringAttribute(MyConstant.USER_NAME, "");
+                        if (isSender) {
+                            txt_content = String.format("您将群主转让给了'%1$s'", to_userName);
+                        } else {
+                            txt_content = String.format("'%1$s'将群主转让给了'%2$s'", send_name, to_userName);
+                        }
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_PUSH_ON)) {
+                        txt_content = String.format("'%1$s'开启了成员加群/退群通知", send_name);
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_PUSH_OFF)) {
+                        txt_content = String.format("'%1$s'关闭了成员加群/退群通知", send_name);
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_GROUP_LEAVE)) {
+                        txt_content = String.format("'%1$s'离开了群", send_name);
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.GROUP_UPDATE_GROUPDES)) {
+                        if (isSender) {
+                            txt_content = "您修改了群简介";
+                        } else {
+                            txt_content = "群主修改了群简介";
+                        }
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MO_CUSTOMER)) {
+                        EMTextMessageBody messageBody = (EMTextMessageBody) lastMessage.getBody();
+                        txt_content = messageBody.getMessage();
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.Message_Recall)) {
+                        if (lastMessage.direct() == EMMessage.Direct.SEND) {
+                            txt_content = String.format(context.getString(R.string.msg_recall_by_self));
+                        } else {
+                            if (item.getType() == EMConversation.EMConversationType.GroupChat) {
+                                txt_content = String.format("'%s'撤回了一条消息", send_name);
+                            } else if (item.getType() == EMConversation.EMConversationType.Chat) {
+                                txt_content = String.format("%s撤回了一条消息", "对方");
+                            }
+                        }
+                    }else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_SCREENSHORTS) || TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS)) {
+                        if (lastMessage.getChatType() == EMMessage.ChatType.Chat) {
+                            if (lastMessage.direct() == EMMessage.Direct.RECEIVE) {
+                                txt_content = "对方进行了截屏";
+                            }
+                        } else if (lastMessage.getChatType() == EMMessage.ChatType.GroupChat) {
+                            if (lastMessage.direct() == EMMessage.Direct.RECEIVE) {
+                                txt_content = String.format("'%1$s'进行了截屏", send_name);
+                            }
+                        }
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
+                        if (lastMessage.direct() == EMMessage.Direct.SEND) {
+                            txt_content = "您撤回了所有消息";
+                        } else {
+                            txt_content = "对方撤回了所有消息";
+                        }
+                    } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
+                        if (lastMessage.direct() == EMMessage.Direct.SEND) {
+                            txt_content = "您撤回了所有消息";
+                        } else {
+                            txt_content = String.format("'%1$s'撤回了所有消息", send_name);
+                        }
+                    }else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TXT_TYPE_AT_GROUP)) {
+                        if (StringUtil.isBlank(send_name)) {
+                            EaseUser user = EaseUserUtils.getUserInfo(lastMessage.getFrom());
+                            if (user != null && user.getNickname() != null) {
+                                send_name = user.getNickname();
+                            } else {
+                                send_name = lastMessage.getFrom();
+                            }
+                        }
+                        String at_ids = lastMessage.getStringAttribute(MyConstant.AT_ID, "");
+                        EMTextMessageBody messageBody = (EMTextMessageBody) lastMessage.getBody();
+                        if ((at_ids.contains(myInfo.getUserInfo().getHxUserName()) || at_ids.contains("all")) && lastMessage.isUnread()) {
+                            holder.mentioned.setText(R.string.were_mentioned);
+                            holder.mentioned.setVisibility(View.VISIBLE);
+                        }
+                        txt_content = send_name + "：" + messageBody.getMessage();
+                    } else if (TextUtils.equals(txt_message_type, "group")) {
+                        EMTextMessageBody messageBody = (EMTextMessageBody) lastMessage.getBody();
+                        if (isSender) {
+                            txt_content = messageBody.getMessage();
+                        } else {
+                            if (StringUtil.isBlank(send_name)) {
+                                EaseUser user = EaseUserUtils.getUserInfo(lastMessage.getFrom());
+                                if (user != null && user.getNickname() != null) {
+                                    send_name = user.getNickname();
+                                } else {
+                                    send_name = lastMessage.getFrom();
+                                }
+                            }
+                            txt_content = send_name + "：" + messageBody.getMessage();
+                        }
+                    } else {
+                        txt_content = lastMessage.getStringAttribute("content", "");
+                        if (StringUtil.isBlank(txt_content)) {
+                            EMTextMessageBody messageBody = (EMTextMessageBody) lastMessage.getBody();
+                            if (messageBody != null) {
+                                txt_content = messageBody.getMessage();
+                            }
 
-            setContent(holder.mentioned, holder.message, item);
+                        }
+                    }
+                    CharSequence final_CharSequence = txt_content;
+                    holder.message.setText(EaseSmileUtils.getSmiledText(context, final_CharSequence));
+                } else {//音视频通话
+                    boolean isRtcCall = lastMessage.getStringAttribute(EaseMsgUtils.CALL_MSG_TYPE, "").equals(EaseMsgUtils.CALL_MSG_INFO) ? true : false;
+                    if (isRtcCall) {
+                        boolean isVideoCall = lastMessage.getIntAttribute(EaseMsgUtils.CALL_TYPE, 0) == EaseCallType.SINGLE_VIDEO_CALL.code ? true : false;
+                        holder.message.setText(isVideoCall ? "[视频通话]" : "[语音通话]");
+                    } else {
+                        setDefaultMessage(holder, context, lastMessage);
+                    }
+                }
+            } else if (lastMessage.getType() == EMMessage.Type.IMAGE) {
+                setOtherType(holder, item, lastMessage, isSender, "[图片]");
+            } else if (lastMessage.getType() == EMMessage.Type.VIDEO) {
+                setOtherType(holder, item, lastMessage, isSender, "[视频]");
+            } else if (lastMessage.getType() == EMMessage.Type.LOCATION) {
+                setOtherType(holder, item, lastMessage, isSender, "[位置]");
+            } else if (lastMessage.getType() == EMMessage.Type.VOICE) {
+                setOtherType(holder, item, lastMessage, isSender, "[语音]");
+            } else if (lastMessage.getType() == EMMessage.Type.FILE) {
+                setOtherType(holder, item, lastMessage, isSender, "[文件]");
+            }
+
+            boolean lastFireType = lastMessage.getBooleanAttribute(MyConstant.FIRE_TYPE, false);
+            String messageStr = "";
+            if (lastFireType) {
+                messageStr = "[Mo 语]";
+                holder.message.setText(messageStr);
+            }
+
 
             holder.time.setText(EaseDateUtils.getTimestampString(context, new Date(lastMessage.getMsgTime())));
             if (lastMessage.direct() == EMMessage.Direct.SEND && lastMessage.status() == EMMessage.Status.FAIL) {
@@ -218,6 +421,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                 holder.mMsgState.setVisibility(View.GONE);
             }
         }
+
 
         if (holder.mentioned.getVisibility() != View.VISIBLE) {
             String unSendMsg = EasePreferenceManager.getInstance().getUnSendMsgInfo(username);
@@ -229,182 +433,64 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         }
     }
 
-    //会话列表最后一条消息内容
 
-    private void setContent(TextView mentioned, TextView contentView, EMConversation item) {
-        MyInfo myInfo = new MyInfo(contentView.getContext());
-        EMMessage lastMessage = item.getLastMessage();
-        if (TextUtils.equals(lastMessage.getFrom(), MyConstant.ADMIN)) {
-            String content = lastMessage.getStringAttribute("content", "");
-            contentView.setText(content);
+
+
+    private void setDefaultMessage(ViewHolder holder, Context context, EMMessage lastMessage) {
+        String txt_content_default = lastMessage.getStringAttribute("content", "");
+        if (StringUtil.isBlank(txt_content_default)) {
+            EMTextMessageBody messageBody = (EMTextMessageBody) lastMessage.getBody();
+            txt_content_default = messageBody.getMessage();
         }
-//        if (lastMessage.getBooleanAttribute(DemoConstant.MESSAGE_TYPE_RECALL, false)) {
-        String lastMessType = lastMessage.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-        String lastFireType = lastMessage.getStringAttribute(MyConstant.FIRE_TYPE, "");
-        boolean isRecall = lastMessType.equals(MyConstant.Message_Recall);
-        boolean isHxRecall = lastMessType.equals(DemoConstant.MESSAGE_TYPE_RECALL);
-        String sendName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
-        String messageStr = "";
-        if (TextUtils.equals(lastMessType,MyConstant.MESSAGE_TYPE_CREATE_GROUP)){
-            messageStr = String.format("'%1$s'创建了群聊",sendName);
-            contentView.setText(messageStr);
-        }else if (isRecall || isHxRecall) {
-            if (lastMessage.getChatType() == EMMessage.ChatType.Chat) {
-                if (lastMessage.direct() == EMMessage.Direct.SEND) {
-                    messageStr = "您撤回一条消息";
-                } else {
-                    messageStr = "对方撤回一条消息";
-                }
-            } else if (lastMessage.getChatType() == EMMessage.ChatType.GroupChat) {
-                if (lastMessage.direct() == EMMessage.Direct.SEND) {
-                    messageStr = "您撤回一条消息";
-                } else {
-                    messageStr = String.format(contentView.getContext().getString(R.string.msg_recall_by_user), sendName);
-                }
-            }
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastFireType, "1")) {
-            messageStr = "[Mo 语]";
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_SCREENSHORTS) || TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_GROUP_SCREENSHORTS)) {
-            if (lastMessage.getChatType() == EMMessage.ChatType.Chat) {
-                if (lastMessage.direct() == EMMessage.Direct.RECEIVE) {
-                    messageStr = "对方进行了截屏";
-                }
-            } else if (lastMessage.getChatType() == EMMessage.ChatType.GroupChat) {
-                if (lastMessage.direct() == EMMessage.Direct.RECEIVE) {
-                    messageStr = String.format("'%1$s'进行了截屏", sendName);
-                }
-            }
-            contentView.setText(messageStr);
-        } else if (item.getLastMessage().getType() == EMMessage.Type.LOCATION) {
-            messageStr = "[位置]";
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TXT_TYPE_AT_GROUP)) {
-            mentioned.setTextColor(mentioned.getContext().getColor(R.color.yellowfive));
-            String atID = lastMessage.getStringAttribute(MyConstant.AT_ID, "");
-            String at_Name = lastMessage.getStringAttribute(MyConstant.AT_NAME, "");
-            if (!TextUtils.isEmpty(at_Name)) {
-                String name = at_Name.replace(",", "@");
-                int atDex = name.lastIndexOf("@");
-                int lastDex = name.length();
-                StringBuilder stringBuilder = new StringBuilder(name);
-                stringBuilder.replace(atDex, lastDex, "");
-                String lastName = "@" + stringBuilder.toString();
-
-                if (EaseAtMessageHelper.get().hasAtMeMsg(myInfo.getUserInfo().getHxUserName())) {
-
-                }
-                if (atID.contains("All") && lastMessage.isUnread()) {
-                    mentioned.setVisibility(View.VISIBLE);
-                } else if (atID.contains(myInfo.getUserInfo().getHxUserName()) && lastMessage.isUnread()) {
-                    mentioned.setVisibility(View.VISIBLE);
-                }
-                contentView.setText(lastName);
-            }
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_USERCARD)) {
-            messageStr = "[名片]";
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.UPDATE_GROUP_NAME)) {
-            if (lastMessage.direct() == EMMessage.Direct.SEND) {
-                messageStr = "您修改了群聊名称";
-            } else {
-                messageStr = "群主修改了群聊名称";
-            }
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_DELETUSER)) {
-            String name = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
-            String invitationStr = lastMessage.getStringAttribute(MyConstant.USER_NAME, "");
-            messageStr = String.format("'%1$s'将 '%2$s'移出群聊", name, invitationStr);
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_ADDUSER)) {
-            String name = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
-            String invitationStr = lastMessage.getStringAttribute(MyConstant.USER_NAME, "");
-            messageStr = String.format("'%1$s'邀请 '%2$s'加入群聊", name, invitationStr);
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_ADDADMIN)) {
-            String invitationStr = lastMessage.getStringAttribute(MyConstant.USER_NAME, "");
-            messageStr = String.format("'%1$s'被添加为管理员", invitationStr);
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_DELETADMIN)) {
-            String invitationStr = lastMessage.getStringAttribute(MyConstant.USER_NAME, "");
-            messageStr = String.format("'%1$s'被取消了管理员", invitationStr);
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
-            messageStr = "群主开启了匿名聊天";
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
-            messageStr = "群主关闭了匿名聊天";
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_MUTE_ON)) {
-            messageStr = "群主开启了群员禁言";
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_MUTE_OFF)) {
-            messageStr = "群主关闭了群员禁言";
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_PROTECT_ON)) {
-            messageStr = "群主开启了群员保护";
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_PROTECT_OFF)) {
-            messageStr = "群主关闭了群员保护";
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_UPDATE_MASTER)) {
-            String userName = lastMessage.getStringAttribute(MyConstant.USER_NAME, "");
-            if (lastMessage.direct() == EMMessage.Direct.SEND) {
-                messageStr = String.format("您将群主转让给'%1$s'", userName);
-            } else {
-                messageStr = String.format("群主将群主转让给'%1$s'", userName);
-            }
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_PUSH_ON)) {
-            String invitationStr = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
-            messageStr = String.format("'%1$s'开启了成员加群/退群通知", invitationStr);
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_PUSH_OFF)) {
-            String invitationStr = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
-            messageStr = String.format("'%1$s'关闭了成员加群/退群通知", invitationStr);
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_GROUP_LEAVE)) {
-            String invitationStr = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
-            messageStr = String.format("'%1$s'离开了群组", invitationStr);
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.GROUP_UPDATE_GROUPDES)) {
-            if (lastMessage.direct() == EMMessage.Direct.SEND) {
-                messageStr = "您修改了群简介";
-            } else {
-                messageStr = "群主修改了群简介";
-            }
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
-            if (lastMessage.direct() == EMMessage.Direct.SEND) {
-                messageStr = "您撤回了所有消息";
-            } else {
-                messageStr = "对方撤回了所有消息";
-            }
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
-            if (lastMessage.direct() == EMMessage.Direct.SEND) {
-                messageStr = "您撤回了所有消息";
-            } else {
-                messageStr = String.format("'%1$s'撤回了所有消息", sendName);
-            }
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TYPE_APPLY)) {
-            String toName = lastMessage.getStringAttribute(MyConstant.TO_NAME, "");
-            if (lastMessage.direct() == EMMessage.Direct.SEND) {
-                messageStr = String.format("您已同意添加'%1$s'，现在可以开始聊天了", toName);
-            } else {
-                messageStr = String.format("'%1$s'已同意添加好友，现在可以开始聊天了", sendName);
-            }
-            contentView.setText(messageStr);
-        } else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_GROUP_Message)) {
-            messageStr = lastMessage.getStringAttribute(MyConstant.CONTENT, "");
-            contentView.setText(messageStr);
-        }
-
-
+        CharSequence final_CharSequence = txt_content_default;
+        holder.message.setText(EaseSmileUtils.getSmiledText(context, final_CharSequence));
     }
 
 
+    private void setOtherType(ViewHolder holder, EMConversation item, EMMessage lastMessage, boolean isSender, String s) {
+        if (item.getType() == EMConversation.EMConversationType.GroupChat) {
+            if (isSender) {
+                holder.message.setText(s);
+            } else {
+                String send_name = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
+                if (StringUtil.isBlank(send_name)) {
+                    EaseUser user = EaseUserUtils.getUserInfo(lastMessage.getFrom());
+                    if (user != null && user.getNickname() != null) {
+                        send_name = user.getNickname();
+                    } else {
+                        send_name = lastMessage.getFrom();
+                    }
+                }
+                holder.message.setText(send_name + "：" + s);
+            }
+        } else {
+            holder.message.setText(s);
+        }
+    }
 }
 
+
+//
+// else if (TextUtils.equals(lastMessType, MyConstant.MESSAGE_TXT_TYPE_AT_GROUP)) {
+//         mentioned.setTextColor(mentioned.getContext().getColor(R.color.yellowfive));
+//         String atID = lastMessage.getStringAttribute(MyConstant.AT_ID, "");
+//         String at_Name = lastMessage.getStringAttribute(MyConstant.AT_NAME, "");
+//         if (!TextUtils.isEmpty(at_Name)) {
+//         String name = at_Name.replace(",", "@");
+//         int atDex = name.lastIndexOf("@");
+//         int lastDex = name.length();
+//         StringBuilder stringBuilder = new StringBuilder(name);
+//         stringBuilder.replace(atDex, lastDex, "");
+//         String lastName = "@" + stringBuilder.toString();
+//
+//         if (EaseAtMessageHelper.get().hasAtMeMsg(myInfo.getUserInfo().getHxUserName())) {
+//
+//         }
+//         if (atID.contains("All") && lastMessage.isUnread()) {
+//         mentioned.setVisibility(View.VISIBLE);
+//         } else if (atID.contains(myInfo.getUserInfo().getHxUserName()) && lastMessage.isUnread()) {
+//         mentioned.setVisibility(View.VISIBLE);
+//         }
+//         contentView.setText(lastName);
+//         }
+//         }

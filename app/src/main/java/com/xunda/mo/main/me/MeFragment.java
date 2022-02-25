@@ -171,7 +171,7 @@ public class MeFragment extends BaseInitFragment {
             public void success(String result) {
                 baseDataModel model = new Gson().fromJson(result, baseDataModel.class);
                 //跳转到群组聊天页面
-                ChatActivity.actionStart(mContext, model.getData(), DemoConstant.CHATTYPE_GROUP);
+                ChatActivity.actionStart(mContext, model.getData(), DemoConstant.CHATTYPE_GROUP,true);
             }
 
             @Override

@@ -1,2 +1,3 @@
 rootProject.name = "kouta"
 include ':app'
+include ':ease-im-kit'

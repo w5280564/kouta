@@ -29,7 +29,6 @@ import com.xunda.mo.hx.section.chat.fragment.ChatFragment;
 import com.xunda.mo.hx.section.chat.viewmodel.ChatViewModel;
 import com.xunda.mo.hx.section.chat.viewmodel.MessageViewModel;
 import com.xunda.mo.hx.section.group.GroupHelper;
-import com.xunda.mo.hx.section.group.activity.ChatRoomDetailActivity;
 import com.xunda.mo.main.chat.activity.ChatDetailSet;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.group.activity.GroupDetailSet;
@@ -46,6 +45,7 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
     private ChatFragment fragment;
     private String historyMsgId;
     private ChatViewModel viewModel;
+    private boolean isMoCustomer;
 
     public static void actionStart(Context context, String conversationId, int chatType) {
         Intent intent = new Intent(context, ChatActivity.class);
@@ -53,6 +53,17 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
         intent.putExtra(EaseConstant.EXTRA_CHAT_TYPE, chatType);
         context.startActivity(intent);
     }
+
+    public static void actionStart(Context context, String conversationId, int chatType,boolean isMoCustomer) {
+        Intent intent = new Intent(context, ChatActivity.class);
+        intent.putExtra(EaseConstant.EXTRA_CONVERSATION_ID, conversationId);
+        intent.putExtra(EaseConstant.EXTRA_CHAT_TYPE, chatType);
+        intent.putExtra("isMoCustomer", isMoCustomer);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+
 
     @Override
     protected int getLayoutId() {
@@ -66,6 +77,7 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
         conversationId = intent.getStringExtra(EaseConstant.EXTRA_CONVERSATION_ID);
         chatType = intent.getIntExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
         historyMsgId = intent.getStringExtra(DemoConstant.HISTORY_MSG_ID);
+        isMoCustomer = intent.getBooleanExtra("isMoCustomer",false);
     }
 
     @Override
@@ -83,12 +95,13 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
         bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType);
         bundle.putString(DemoConstant.HISTORY_MSG_ID, historyMsgId);
         bundle.putBoolean(EaseConstant.EXTRA_IS_ROAM, DemoHelper.getInstance().getModel().isMsgRoaming());
+        bundle.putBoolean("isMoCustomer", isMoCustomer);
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment, fragment, "chat").commit();
     }
 
     private void setTitleBarRight() {
-        if (isMOCustomer()){
+        if (isMoCustomer){
             return;
         }
         titleBarMessage.setRightImageResource(R.drawable.chat_user_info);
@@ -142,14 +155,6 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
                 finish();
             }
         });
-        messageViewModel.getMessageChange().with(DemoConstant.CHAT_ROOM_CHANGE, EaseEvent.class).observe(this, event -> {
-            if (event == null) {
-                return;
-            }
-            if (event.isChatRoomLeave() && TextUtils.equals(conversationId, event.message)) {
-                finish();
-            }
-        });
         messageViewModel.getMessageChange().with(DemoConstant.MESSAGE_FORWARD, EaseEvent.class).observe(this, event -> {
             if (event == null) {
                 return;
@@ -176,53 +181,11 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
     }
 
     private void setDefaultTitle() {
-        String title = "";
         if (chatType == DemoConstant.CHATTYPE_GROUP) {
-            title = GroupHelper.getGroupName(conversationId);
-            EMConversation emConversation = DemoHelper.getInstance().getChatManager().getConversation(conversationId);
-            if (emConversation != null && emConversation.getAllMsgCount() != 0) {
-                title = emConversation.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME, "");
-            }
-            if (isMOCustomer()){
-                title = "MO 客服";
-            }
-
-        } else if (chatType == DemoConstant.CHATTYPE_CHATROOM) {
-            EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(conversationId);
-            if (room == null) {
-                viewModel.getChatRoom(conversationId);
-                return;
-            }
-            title = TextUtils.isEmpty(room.getName()) ? conversationId : room.getName();
-        } else if (chatType == DemoConstant.CHATTYPE_SINGLE) {
-            EaseUserProfileProvider userProvider = EaseIM.getInstance().getUserProvider();
-            if (userProvider != null) {
-                try {
-                    EaseUser user = userProvider.getUser(conversationId);
-                    if (user == null){
-                        return;
-                    }
-                    String selectInfoExt = user.getExt();
-                    if (!TextUtils.isEmpty(selectInfoExt)) {
-                        JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
-                        String name = TextUtils.isEmpty(JsonObject.getString(MyConstant.REMARK_NAME)) ? user.getNickname() : JsonObject.getString(MyConstant.REMARK_NAME);
-                        if (user != null) {
-                            title = name;
-                        } else {
-                            title = conversationId;
-                        }
-                    }
-
-                } catch (
-                        JSONException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                title = conversationId;
+            if (isMoCustomer) {
+                titleBarMessage.setTitle("MO客服");
             }
         }
-        titleBarMessage.setTitle(title);
-
     }
 
     @Override
@@ -243,8 +206,6 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
                 GroupDetailSet.actionStart(mContext, conversationId);
 
 
-            } else if (chatType == DemoConstant.CHATTYPE_CHATROOM) {
-                ChatRoomDetailActivity.actionStart(mContext, conversationId);
             }
         }
     }
@@ -271,24 +232,5 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
         }
     }
 
-    //是否是客服会话
-    private boolean isMOCustomer(){
-        EMConversation emConversation = DemoHelper.getInstance().getChatManager().getConversation(conversationId);
-        if (emConversation == null) {
-            return false;
-        }
-        EMMessage conMsg = emConversation.getLastMessage();
-        if (conMsg == null) {
-            return false;
-        }
-        Map<String, Object> mapExt = conMsg.ext();
-        if (mapExt != null && !mapExt.isEmpty()) {
-            String messType = (String) mapExt.get(MyConstant.MESSAGE_TYPE);
-            if (!TextUtils.isEmpty(messType) && messType.equals(MyConstant.MO_CUSTOMER)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 }

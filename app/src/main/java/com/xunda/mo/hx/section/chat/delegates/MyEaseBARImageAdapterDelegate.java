@@ -29,8 +29,8 @@ public class MyEaseBARImageAdapterDelegate extends EaseMessageAdapterDelegate<EM
     @Override
     public boolean isForViewType(EMMessage item, int position) {
         if (item.getType() == EMMessage.Type.IMAGE) {
-            String fireType = item.getStringAttribute(MyConstant.FIRE_TYPE, "");
-            if (TextUtils.equals(fireType,"1")) {
+            boolean fireType = item.getBooleanAttribute(MyConstant.FIRE_TYPE, false);
+            if (fireType) {
                 return true;
             }
         }

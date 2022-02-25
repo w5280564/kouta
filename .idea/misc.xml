@@ -19,6 +19,7 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_chat_complaint.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_chatdetailset.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_chatfriend_detail.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_discover_qrcode.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_friend_newfriends.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_group_detailset.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_groupdetail_edit.xml" value="0.5" />
@@ -39,7 +40,10 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_about_hx.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_account_security.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_chat.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_chat_chat_room_detail.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_chat_group_pick_contacts.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_friends_chat_room_contact_manage.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_new_chat_room.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_activity_set_index.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/demo_fragment_group_edit.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/fragment_contacts.xml" value="0.3536458333333333" />

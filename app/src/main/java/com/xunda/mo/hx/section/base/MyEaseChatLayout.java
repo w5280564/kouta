@@ -49,7 +49,6 @@ import com.hyphenate.easeui.modules.chat.interfaces.OnChatRecordTouchListener;
 import com.hyphenate.easeui.modules.chat.interfaces.OnMenuChangeListener;
 import com.hyphenate.easeui.modules.chat.interfaces.OnRecallMessageResultListener;
 import com.hyphenate.easeui.modules.chat.presenter.EaseHandleMessagePresenter;
-import com.hyphenate.easeui.modules.chat.presenter.EaseHandleMessagePresenterImpl;
 import com.hyphenate.easeui.modules.chat.presenter.IHandleMessageView;
 import com.hyphenate.easeui.modules.interfaces.IPopupWindow;
 import com.hyphenate.easeui.modules.menu.EasePopupWindow;
@@ -61,6 +60,7 @@ import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.hyphenate.easeui.widget.EaseVoiceRecorderView;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
+import com.xunda.mo.hx.section.chat.views.MyEaseHandleMessagePresenterImpl;
 
 import java.util.List;
 
@@ -149,7 +149,7 @@ public class MyEaseChatLayout extends RelativeLayout implements IChatLayout, IHa
 
     public MyEaseChatLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        presenter = new EaseHandleMessagePresenterImpl();
+        presenter = new MyEaseHandleMessagePresenterImpl();
         if(context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).getLifecycle().addObserver(presenter);
         }

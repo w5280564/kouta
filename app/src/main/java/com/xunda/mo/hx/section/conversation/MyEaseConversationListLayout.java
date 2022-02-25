@@ -76,6 +76,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
     private boolean showDefaultMenu = true;
     private OnConversationChangeListener conversationChangeListener;
     private OnConversationLoadListener loadListener;
+    private Context context;
 
     public MyEaseConversationListLayout(Context context) {
         this(context, null);
@@ -87,6 +88,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
 
     public MyEaseConversationListLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.context = context;
         setModel = new EaseConversationSetStyle();
         LayoutInflater.from(context).inflate(R.layout.ease_conversation_list, this);
         presenter = new EaseConversationPresenterImpl();
@@ -236,7 +238,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
 
     public void init() {
         listAdapter.addDelegate(new EaseSystemMsgDelegate(setModel));
-        listAdapter.addDelegate(new MyEaseConversationDelegate(setModel));
+        listAdapter.addDelegate(new MyEaseConversationDelegate(setModel,context));
         rvConversationList.setAdapter(adapter);
     }
 

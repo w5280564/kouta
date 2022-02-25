@@ -92,7 +92,7 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_marginStart="7dp"
-            android:src="@mipmap/mo_icon"
+            android:src="@mipmap/img_pic_none"
             app:ease_radius="9dp"
             app:ease_shape_type="round"
             app:layout_constraintBottom_toBottomOf="parent"

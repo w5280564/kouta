@@ -29,8 +29,8 @@ public class BurnAfterReadingAdapterDelegate extends EaseMessageAdapterDelegate<
     @Override
     public boolean isForViewType(EMMessage item, int position) {
         if (item.getType() == EMMessage.Type.TXT) {
-            String fireType = item.getStringAttribute(MyConstant.FIRE_TYPE, "");
-            if (TextUtils.equals(fireType,"1")) {
+            boolean fireType = item.getBooleanAttribute(MyConstant.FIRE_TYPE, false);
+            if (fireType) {
                 return true;
             }
         }

@@ -89,8 +89,6 @@ public class ChatPresenter extends EaseChatPresenter {
         DemoHelper.getInstance().getGroupManager().addGroupChangeListener(new ChatGroupListener());
         //添加联系人监听
         DemoHelper.getInstance().getContactManager().setContactListener(new ChatContactListener());
-        //添加聊天室监听
-        DemoHelper.getInstance().getChatroomManager().addChatRoomChangeListener(new ChatRoomListener());
         //添加对会话的监听（监听已读回执）
         DemoHelper.getInstance().getChatManager().addConversationListener(new ChatConversationListener());
     }
@@ -300,30 +298,32 @@ public class ChatPresenter extends EaseChatPresenter {
             if (msg.getChatType() == EMMessage.ChatType.GroupChat && EaseAtMessageHelper.get().isAtMeMsg(msg)) {
                 EaseAtMessageHelper.get().removeAtMeGroup(msg.getTo());
             }
+            if(msg.getChatType() == EMMessage.ChatType.GroupChat && EaseAtMessageHelper.get().isAtMeMsg(msg)){
+                EaseAtMessageHelper.get().removeAtMeGroup(msg.getTo());
+            }
             EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-            EMTextMessageBody txtBody = new EMTextMessageBody(String.format(context.getString(R.string.msg_recall_by_user), msg.getFrom()));
+            EMTextMessageBody txtBody = new EMTextMessageBody("");
             msgNotification.addBody(txtBody);
-            msgNotification.setFrom(msg.conversationId());
-            msgNotification.setTo(msg.conversationId());
+            msgNotification.setFrom(msg.getFrom());
+            msgNotification.setTo(msg.getTo());
             msgNotification.setUnread(false);
             msgNotification.setMsgTime(msg.getMsgTime());
             msgNotification.setLocalTime(msg.getMsgTime());
             msgNotification.setChatType(msg.getChatType());
-//            msgNotification.setAttribute(DemoConstant.MESSAGE_TYPE_RECALL, true);
+            msgNotification.setStatus(EMMessage.Status.SUCCESS);
             msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.Message_Recall);
-            if (msg.getChatType() == EMMessage.ChatType.GroupChat) {
-                msgNotification.setAttribute(MyConstant.SEND_NAME, msg.getStringAttribute(MyConstant.SEND_NAME, ""));
+            msgNotification.setAttribute(MyConstant.SEND_NAME, msg.getStringAttribute(MyConstant.SEND_NAME,""));
+            msgNotification.setAttribute(MyConstant.SEND_HEAD, msg.getStringAttribute(MyConstant.SEND_HEAD,""));
+            if(msg.getChatType() == EMMessage.ChatType.GroupChat){
                 msgNotification.setAttribute(MyConstant.GROUP_NAME, msg.getStringAttribute(MyConstant.GROUP_NAME, ""));
                 msgNotification.setAttribute(MyConstant.GROUP_HEAD, msg.getStringAttribute(MyConstant.GROUP_HEAD, ""));
+            }else if(msg.getChatType() == EMMessage.ChatType.Chat){
+                msgNotification.setAttribute(MyConstant.TO_NAME, msg.getStringAttribute(MyConstant.TO_NAME, ""));
+                msgNotification.setAttribute(MyConstant.TO_HEAD, msg.getStringAttribute(MyConstant.TO_HEAD, ""));
             }
-            msgNotification.setStatus(EMMessage.Status.SUCCESS);
             EMClient.getInstance().chatManager().saveMessage(msgNotification);
-//            EMConversation conv = EMClient.getInstance().chatManager().getConversation(msg.conversationId());
-//            conv.insertMessage(msgNotification);
+            LiveDataBus.get().with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE).postValue(EaseEvent.create(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.TYPE.MESSAGE, msg.getTo()));
         }
-
-//        EaseEvent event = EaseEvent.create(DemoConstant.MESSAGE_CHANGE_RECALL, EaseEvent.TYPE.MESSAGE);
-//        messageChangeLiveData.with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(event);
     }
 
 
@@ -1174,119 +1174,6 @@ public class ChatPresenter extends EaseChatPresenter {
         notifyNewInviteMessage(message);
     }
 
-    private class ChatRoomListener implements EMChatRoomChangeListener {
-
-        @Override
-        public void onChatRoomDestroyed(String roomId, String roomName) {
-            setChatRoomEvent(roomId, EaseEvent.TYPE.CHAT_ROOM_LEAVE);
-            showToast(context.getString(R.string.demo_chat_room_listener_onChatRoomDestroyed, roomName));
-            EMLog.i(TAG, context.getString(R.string.demo_chat_room_listener_onChatRoomDestroyed, roomName));
-        }
-
-        @Override
-        public void onMemberJoined(String roomId, String participant) {
-            setChatRoomEvent(roomId, EaseEvent.TYPE.CHAT_ROOM);
-//            showToast(context.getString(R.string.demo_chat_room_listener_onMemberJoined, participant));
-            EMLog.i(TAG, context.getString(R.string.demo_chat_room_listener_onMemberJoined, participant));
-        }
-
-        @Override
-        public void onMemberExited(String roomId, String roomName, String participant) {
-            setChatRoomEvent(roomId, EaseEvent.TYPE.CHAT_ROOM);
-//            showToast(context.getString(R.string.demo_chat_room_listener_onMemberExited, participant));
-            EMLog.i(TAG, context.getString(R.string.demo_chat_room_listener_onMemberExited, participant));
-        }
-
-        @Override
-        public void onRemovedFromChatRoom(int reason, String roomId, String roomName, String participant) {
-            if (TextUtils.equals(DemoHelper.getInstance().getCurrentUser(), participant)) {
-                setChatRoomEvent(roomId, EaseEvent.TYPE.CHAT_ROOM);
-                if (reason == EMAChatRoomManagerListener.BE_KICKED) {
-                    showToast(R.string.quiting_the_chat_room);
-                } else {
-//                    showToast(context.getString(R.string.demo_chat_room_listener_onRemovedFromChatRoom, participant));
-                    EMLog.i(TAG, context.getString(R.string.demo_chat_room_listener_onRemovedFromChatRoom, participant));
-                }
-
-            }
-        }
-
-        @Override
-        public void onMuteListAdded(String chatRoomId, List<String> mutes, long expireTime) {
-            setChatRoomEvent(chatRoomId, EaseEvent.TYPE.CHAT_ROOM);
-
-            String content = getContentFromList(mutes);
-//            showToast(context.getString(R.string.demo_chat_room_listener_onMuteListAdded, content));
-            EMLog.i(TAG, context.getString(R.string.demo_chat_room_listener_onMuteListAdded, content));
-        }
-
-        @Override
-        public void onMuteListRemoved(String chatRoomId, List<String> mutes) {
-            setChatRoomEvent(chatRoomId, EaseEvent.TYPE.CHAT_ROOM);
-            String content = getContentFromList(mutes);
-//            showToast(context.getString(R.string.demo_chat_room_listener_onMuteListRemoved, content));
-            EMLog.i(TAG, context.getString(R.string.demo_chat_room_listener_onMuteListRemoved, content));
-        }
-
-        @Override
-        public void onWhiteListAdded(String chatRoomId, List<String> whitelist) {
-            String content = getContentFromList(whitelist);
-//            showToast(context.getString(R.string.demo_chat_room_listener_onWhiteListAdded, content));
-            EMLog.i(TAG, context.getString(R.string.demo_chat_room_listener_onWhiteListAdded, content));
-        }
-
-        @Override
-        public void onWhiteListRemoved(String chatRoomId, List<String> whitelist) {
-            String content = getContentFromList(whitelist);
-//            showToast(context.getString(R.string.demo_chat_room_listener_onWhiteListRemoved, content));
-            EMLog.i(TAG, context.getString(R.string.demo_chat_room_listener_onWhiteListRemoved, content));
-        }
-
-        @Override
-        public void onAllMemberMuteStateChanged(String chatRoomId, boolean isMuted) {
-            showToast(context.getString(isMuted ? R.string.demo_chat_room_listener_onAllMemberMuteStateChanged_mute
-                    : R.string.demo_chat_room_listener_onAllMemberMuteStateChanged_note_mute));
-            EMLog.i(TAG, context.getString(isMuted ? R.string.demo_chat_room_listener_onAllMemberMuteStateChanged_mute
-                    : R.string.demo_chat_room_listener_onAllMemberMuteStateChanged_note_mute));
-        }
-
-        @Override
-        public void onAdminAdded(String chatRoomId, String admin) {
-            setChatRoomEvent(chatRoomId, EaseEvent.TYPE.CHAT_ROOM);
-
-//            showToast(context.getString(R.string.demo_chat_room_listener_onAdminAdded, admin));
-            EMLog.i(TAG, context.getString(R.string.demo_chat_room_listener_onAdminAdded, admin));
-        }
-
-        @Override
-        public void onAdminRemoved(String chatRoomId, String admin) {
-            setChatRoomEvent(chatRoomId, EaseEvent.TYPE.CHAT_ROOM);
-
-//            showToast(context.getString(R.string.demo_chat_room_listener_onAdminRemoved, admin));
-            EMLog.i(TAG, context.getString(R.string.demo_chat_room_listener_onAdminRemoved, admin));
-        }
-
-        @Override
-        public void onOwnerChanged(String chatRoomId, String newOwner, String oldOwner) {
-            setChatRoomEvent(chatRoomId, EaseEvent.TYPE.CHAT_ROOM);
-
-//            showToast(context.getString(R.string.demo_chat_room_listener_onOwnerChanged, oldOwner, newOwner));
-            EMLog.i(TAG, context.getString(R.string.demo_chat_room_listener_onOwnerChanged, oldOwner, newOwner));
-        }
-
-        @Override
-        public void onAnnouncementChanged(String chatRoomId, String announcement) {
-            setChatRoomEvent(chatRoomId, EaseEvent.TYPE.CHAT_ROOM);
-            showToast(context.getString(R.string.demo_chat_room_listener_onAnnouncementChanged));
-            EMLog.i(TAG, context.getString(R.string.demo_chat_room_listener_onAnnouncementChanged));
-        }
-    }
-
-    private void setChatRoomEvent(String roomId, EaseEvent.TYPE type) {
-        EaseEvent easeEvent = new EaseEvent(DemoConstant.CHAT_ROOM_CHANGE, type);
-        easeEvent.message = roomId;
-        messageChangeLiveData.with(DemoConstant.CHAT_ROOM_CHANGE).postValue(easeEvent);
-    }
 
     private String getContentFromList(List<String> members) {
         StringBuilder sb = new StringBuilder();

@@ -38,7 +38,7 @@
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:src="@mipmap/mo_icon"
+            android:src="@mipmap/img_pic_none"
             app:ease_radius="9dp"
             app:ease_shape_type="rectangle"
             app:layout_constraintBottom_toBottomOf="parent"

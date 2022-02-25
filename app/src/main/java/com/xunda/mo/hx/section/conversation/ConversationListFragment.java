@@ -255,7 +255,6 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         messageChange.with(DemoConstant.CONTACT_ADD, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.CONTACT_UPDATE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.CONTACT_DELETE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
-        messageChange.with(DemoConstant.MESSAGE_CALL_SAVE, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
         messageChange.with(DemoConstant.MESSAGE_NOT_SEND, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
     }
 
@@ -273,9 +272,9 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
             return;
         }
         if (change.isMessageChange() || change.isNotifyChange()
-                || change.isGroupLeave() || change.isChatRoomLeave()
+                || change.isGroupLeave()
                 || change.isContactChange()
-                || change.type == EaseEvent.TYPE.CHAT_ROOM || change.isGroupChange()) {
+                ||  change.isGroupChange()) {
 
             conversationListLayout.loadDefaultData();
         }
@@ -315,37 +314,32 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
     @Override
     public void onItemClick(View view, int position) {
         super.onItemClick(view, position);
-        if (conversationListLayout.getItem(position) == null) {
+        EaseConversationInfo info = conversationListLayout.getItem(position);
+        if (info==null) {
             return;
         }
-        Object item = conversationListLayout.getItem(position).getInfo();
+        Object item = info.getInfo();
+        if (item==null) {
+            return;
+        }
         if (item instanceof EMConversation) {
-            if (TextUtils.equals(((EMConversation) item).getLastMessage().getFrom(), MyConstant.ADMIN)) {
-//                ToastUtils.showToast("群组消息");
-                Group_Notices.actionStart(mContext, ((EMConversation) item).conversationId());
-            } else if (EaseSystemMsgManager.getInstance().isSystemConversation((EMConversation) item)) {
+            EMConversation currentConversation = (EMConversation) item;
+
+            if (TextUtils.equals((currentConversation).getLastMessage().getFrom(), MyConstant.ADMIN)) {
+                Group_Notices.actionStart(mContext, (currentConversation).conversationId());
+            } else if (EaseSystemMsgManager.getInstance().isSystemConversation(currentConversation)) {
                 SystemMsgsActivity.actionStart(mContext);
             } else {
-//                int type = EaseCommonUtils.getChatType((EMConversation) item);
-//                String mess_Type = (String) ((EMConversation) item).getLastMessage().ext().get(MyConstant.MESSAGE_TYPE);
-//                if (mess_Type == null){
-//                    return;
-//                }
-//                if (mess_Type.equals(MyConstant.MO_CUSTOMER)) {
-//                    type = MyConstant.CHATTYPE_MO;
-//                }
-                if (EaseCommonUtils.getChatType((EMConversation) item) == EaseConstant.CHATTYPE_GROUP) {
-                    if (isMOCustomer((EMConversation) item)) {
-                        ChatActivity.actionStart(mContext, ((EMConversation) item).conversationId(), EaseCommonUtils.getChatType((EMConversation) item));
+                if (EaseCommonUtils.getChatType(currentConversation) == EaseConstant.CHATTYPE_GROUP) {
+                    if (isMOCustomer(currentConversation)) {
+                        ChatActivity.actionStart(mContext, currentConversation.conversationId(), DemoConstant.CHATTYPE_GROUP,true);//客服
                     } else {
-                        GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url, (EMConversation) item);
+                        GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url, currentConversation);
                     }
-                } else if (EaseCommonUtils.getChatType((EMConversation) item) == EaseConstant.CHATTYPE_SINGLE) {
-                    AddFriendMethod(getActivity(), saveFile.Friend_info_Url, (EMConversation) item);
+                } else if (EaseCommonUtils.getChatType(currentConversation) == EaseConstant.CHATTYPE_SINGLE) {
+                    AddFriendMethod(position,currentConversation,info);
                 }
             }
-//            EMConversation conversation = EMClient.getInstance().chatManager().getConversation(((EMConversation) item).conversationId(), EMConversation.EMConversationType.Chat, true);
-//            conversation.setExtField();
         }
     }
 
@@ -443,7 +437,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
             @Override
             public void success(String result) {
                 GruopInfo_Bean groupModel = new Gson().fromJson(result, GruopInfo_Bean.class);
-                ChatActivity.actionStart(mContext, ((EMConversation) item).conversationId(), EaseCommonUtils.getChatType((EMConversation) item));
+                ChatActivity.actionStart(mContext, item.conversationId(), EaseCommonUtils.getChatType(item));
             }
 
             @Override
@@ -454,18 +448,52 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
     }
 
 
-    public void AddFriendMethod(Context context, String baseUrl, EMConversation item) {
+    public void AddFriendMethod(int position,EMConversation currentConversation,EaseConversationInfo info) {
         Map<String, Object> map = new HashMap<>();
-        map.put("friendHxName", item.conversationId());
-        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        map.put("friendHxName", currentConversation.conversationId());
+        xUtils3Http.post(mContext, saveFile.Friend_info_Url, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 ChatUserBean model = new Gson().fromJson(result, ChatUserBean.class);
-                if (model.getData().getIsFriend() == 1) {
-                    ChatActivity.actionStart(mContext, ((EMConversation) item).conversationId(), EaseCommonUtils.getChatType((EMConversation) item));
-                }else {
-                    Toast.makeText(mContext,"你们已不是好友",Toast.LENGTH_SHORT).show();
+                if (model==null) {
+                    return;
                 }
+                ChatUserBean.DataDTO data = model.getData();
+
+                if (data==null) {
+                    return;
+                }
+
+                int deleteStatus = data.getDeleteStatus();//0正常1已销号2封禁
+
+                if (deleteStatus==1) {
+                    deleteConversation(position, info, "对方已注销账号");
+                    return;
+                }
+
+                if (deleteStatus==2) {
+                    deleteConversation(position, info, "对方账号已被封禁");
+                    return;
+                }
+
+                int isFriend = data.getIsFriend();//0不是好友1是好友
+
+                if (isFriend==0) {
+                    deleteConversation(position, info, "你还不是他的好友");
+                    return;
+                }
+
+                int friendStatus = data.getFriendStatus();//1正常2已删除3黑名单
+
+                if (friendStatus==2) {
+                    deleteConversation(position, info, "你还不是他的好友");
+                    return;
+                }
+
+                String showImg = data.getHeadImg();
+                String showName = data.getRemarkName();
+                refreshFriendMessage(currentConversation.getLastMessage(),showImg,showName);
+                ChatActivity.actionStart(mContext, currentConversation.conversationId(), EaseCommonUtils.getChatType(currentConversation));
             }
 
             @Override
@@ -475,5 +503,18 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         });
     }
 
+    //刷新这好友消息
+    private void refreshFriendMessage(EMMessage lastMessage,String friendHeadImg,String friendName) {
+        lastMessage.setAttribute(MyConstant.TO_NAME, friendName);
+        lastMessage.setAttribute(MyConstant.TO_HEAD, friendHeadImg);
+        EMClient.getInstance().chatManager().updateMessage(lastMessage);
+        LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
+    }
+
+    private void deleteConversation(int position, EaseConversationInfo info, String text) {
+        Toast.makeText(mContext,text,Toast.LENGTH_SHORT).show();
+        conversationListLayout.deleteConversation(position, info);
+        conversationListLayout.loadDefaultData();
+    }
 
 }

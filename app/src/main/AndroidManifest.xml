@@ -87,7 +87,7 @@
     <application
         android:name=".main.baseView.MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/mo_icon"
+        android:icon="@mipmap/img_pic_none"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -391,9 +391,7 @@
         <activity
             android:name=".hx.section.contact.activity.GroupContactManageActivity"
             android:screenOrientation="portrait" /> <!-- 聊天室列表 -->
-        <activity
-            android:name=".hx.section.contact.activity.ChatRoomContactManageActivity"
-            android:screenOrientation="portrait" /> <!-- 展示大图 -->
+        <!-- 展示大图 -->
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
             android:screenOrientation="portrait" /> <!-- 地图 -->
@@ -435,9 +433,7 @@
         <activity
             android:name=".hx.section.group.activity.GroupDetailActivity"
             android:screenOrientation="portrait" /> <!-- 聊天室详情 -->
-        <activity
-            android:name=".hx.section.group.activity.ChatRoomDetailActivity"
-            android:screenOrientation="portrait" /> <!-- 群分享文件 -->
+        <!-- 群分享文件 -->
         <activity
             android:name=".hx.section.group.activity.GroupSharedFilesActivity"
             android:screenOrientation="portrait" /> <!-- 邀请群成员 -->
@@ -453,18 +449,14 @@
         <activity
             android:name=".hx.section.group.activity.GroupAdminAuthorityActivity"
             android:screenOrientation="portrait" /> <!-- 聊天室成员权限管理 -->
-        <activity
-            android:name=".hx.section.group.activity.ChatRoomMemberAuthorityActivity"
-            android:screenOrientation="portrait" /> <!-- 聊天室管理员管理 -->
+        <!-- 聊天室管理员管理 -->
         <activity
             android:name=".hx.section.group.activity.ChatRoomAdminAuthorityActivity"
             android:screenOrientation="portrait" /> <!-- 新建群组 -->
         <activity
             android:name=".hx.section.group.activity.NewGroupActivity"
             android:screenOrientation="portrait" /> <!-- 新建聊天室 -->
-        <activity
-            android:name=".hx.section.group.activity.NewChatRoomActivity"
-            android:screenOrientation="portrait" /> <!-- 系统通知 -->
+        <!-- 系统通知 -->
         <activity
             android:name=".hx.section.message.SystemMsgsActivity"
             android:screenOrientation="portrait" /> <!-- 安全与隐私首页 -->
@@ -522,9 +514,7 @@
         <activity
             android:name=".hx.section.chat.activicy.SingleChatSetActivity"
             android:screenOrientation="portrait" /> <!-- 搜索聊天室 -->
-        <activity
-            android:name=".hx.section.search.SearchChatRoomActivity"
-            android:screenOrientation="portrait" /> <!-- 搜索群组 -->
+        <!-- 搜索群组 -->
         <activity
             android:name=".hx.section.search.SearchGroupActivity"
             android:screenOrientation="portrait" /> <!-- 搜索会话 -->

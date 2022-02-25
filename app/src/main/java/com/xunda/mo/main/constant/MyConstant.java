@@ -111,4 +111,8 @@ public interface MyConstant extends DemoConstant {
     String BRAND_VIVO = "vivo";
     String APP_PKG = "com.xunda.mo";
     String WEB_SITE_URL = "https://www.ahxunda.com/";
+
+    String MESSAGE_TXT_TYPE_GROUP_DESTROY = "groupDestroy";
+
+    String MESSAGE_CHANGE_SAVE_MESSAGE = "message_save";
 }

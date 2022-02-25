@@ -53,7 +53,6 @@ import com.xunda.mo.hx.common.utils.ToastUtils;
 import com.xunda.mo.hx.section.base.BaseActivity;
 import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.hx.section.contact.activity.AddContactActivity;
-import com.xunda.mo.hx.section.contact.activity.ChatRoomContactManageActivity;
 import com.xunda.mo.hx.section.contact.activity.ContactDetailActivity;
 import com.xunda.mo.hx.section.contact.activity.GroupContactManageActivity;
 import com.xunda.mo.hx.section.contact.adapter.MyContactHead_ListAdapter;
@@ -282,9 +281,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
                     case R.id.contact_header_item_group_list:
                         GroupContactManageActivity.actionStart(mContext);
                         break;
-                    case R.id.contact_header_item_chat_room_list:
-                        ChatRoomContactManageActivity.actionStart(mContext);
-                        break;
                 }
             }
         });
@@ -488,7 +484,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
             public void success(String result) {
                 baseDataModel model = new Gson().fromJson(result, baseDataModel.class);
                 //跳转到群组聊天页面
-                ChatActivity.actionStart(mContext, model.getData(), DemoConstant.CHATTYPE_GROUP);
+                ChatActivity.actionStart(mContext, model.getData(), DemoConstant.CHATTYPE_GROUP,true);
             }
 
             @Override
