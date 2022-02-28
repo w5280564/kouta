@@ -10,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hyphenate.easeui.utils.StringUtil;
 import com.xunda.mo.R;
-import com.xunda.mo.staticdata.StaticData;
-import com.xunda.mo.utils.StringUtil;
 
 /**
  * 版本升级弹出框

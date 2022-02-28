@@ -23,37 +23,21 @@
         android:id="@+id/bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timestamp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/chat_rowmes_bg">
+        app:layout_constraintTop_toBottomOf="@+id/timestamp">
 
-<!--        <TextView-->
-<!--            android:id="@+id/tv_chatcontent"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:gravity="center"-->
-<!--            android:layout_marginLeft="8dip"-->
-<!--            android:layout_marginRight="8dip"-->
-<!--            android:minHeight="40dp"-->
-<!--            android:padding="8dp"-->
-<!--            tools:text="你们已经成为好友，开始聊天吧"-->
-<!--            android:textColor="#ff999999"-->
-<!--            android:textSize="14sp"-->
-<!--            style="@style/chat_text_date_style"-->
-<!--            android:visibility="gone"/>-->
-
-
-
-<!--            android:background="@drawable/chat_rowmes_bg"-->
         <TextView
             android:id="@+id/content_Txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/chat_rowmes_bg"
             android:gravity="center"
-            android:padding="2dp"
+            android:paddingLeft="@dimen/dp_8"
+            android:paddingTop="@dimen/dp_4"
+            android:paddingRight="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_4"
             android:textColor="@color/blacktitlettwo"
             android:textSize="10sp"
             tools:text="你们已经成为好友，开始聊天吧" />

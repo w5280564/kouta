@@ -1,4 +1,4 @@
-package com.xunda.mo.utils;
+package com.hyphenate.easeui.utils;
 
 import java.util.List;
 

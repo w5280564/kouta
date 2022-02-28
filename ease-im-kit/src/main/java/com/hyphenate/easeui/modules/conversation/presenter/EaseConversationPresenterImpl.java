@@ -1,14 +1,15 @@
 package com.hyphenate.easeui.modules.conversation.presenter;
 
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.alibaba.fastjson.JSON;
+import androidx.annotation.NonNull;
+
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.modules.conversation.model.EaseConversationInfo;
-import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.MyEaseCommonUtils;
+import com.hyphenate.easeui.utils.StringUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +52,7 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
                     info.setInfo(conversation);
                     String extField = conversation.getExtField();
                     long lastMsgTime=conversation.getLastMessage().getMsgTime();
-                    if(!TextUtils.isEmpty(extField) && EaseCommonUtils.isTimestamp(extField)) {
+                    if(!TextUtils.isEmpty(extField) && MyEaseCommonUtils.isTimestamp(extField)) {
                         info.setTop(true);
                         long makeTopTime = 0L;
                         JSONObject JsonObject = null;
@@ -151,25 +152,58 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
 
     @Override
     public void makeConversationTop(int position, EaseConversationInfo info) {
-        if(info.getInfo() instanceof EMConversation) {
-            long timestamp = System.currentTimeMillis();
-            ((EMConversation) info.getInfo()).setExtField(timestamp +"");
+        if (info.getInfo() instanceof EMConversation) {
+            insertConversionExdInfo(true, info);
             info.setTop(true);
-            info.setTimestamp(timestamp);
+            info.setTimestamp(System.currentTimeMillis());
         }
-        if(!isDestroy()) {
+        if (!isDestroy()) {
             mView.refreshList();
         }
     }
 
+    //往好友会话列表添加扩展字段
+    private void insertConversionExdInfo(boolean isInsertMessageTop, EaseConversationInfo conversation) {
+        String extField = ((EMConversation) conversation.getInfo()).getExtField();
+        JSONObject jsonObject = null;
+        if (!StringUtil.isBlank(extField)) {
+            try {
+                jsonObject = new JSONObject(extField);
+                jsonObject.put("isInsertMessageTop", isInsertMessageTop);
+                jsonObject.put("topTimeMillis", isInsertMessageTop ? System.currentTimeMillis() : 0);
+            } catch (JSONException e) {
+                jsonObject = getJsonObjectTop(isInsertMessageTop);
+            }
+        } else {
+            jsonObject = getJsonObjectTop(isInsertMessageTop);
+        }
+
+
+        ((EMConversation) conversation.getInfo()).setExtField(jsonObject.toString());
+    }
+
+    @NonNull
+    private JSONObject getJsonObjectTop(boolean isInsertMessageTop) {
+        JSONObject jsonObject;
+        jsonObject = new JSONObject();
+        try {
+            jsonObject.put("isInsertMessageTop", isInsertMessageTop);
+            jsonObject.put("topTimeMillis", isInsertMessageTop ? System.currentTimeMillis() : 0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+
     @Override
     public void cancelConversationTop(int position, EaseConversationInfo info) {
-        if(info.getInfo() instanceof EMConversation) {
-            ((EMConversation) info.getInfo()).setExtField("");
+        if (info.getInfo() instanceof EMConversation) {
+            insertConversionExdInfo(false, info);
             info.setTop(false);
             info.setTimestamp(((EMConversation) info.getInfo()).getLastMessage().getMsgTime());
         }
-        if(!isDestroy()) {
+        if (!isDestroy()) {
             mView.refreshList();
         }
     }

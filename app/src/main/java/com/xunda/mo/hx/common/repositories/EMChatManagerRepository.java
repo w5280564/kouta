@@ -16,7 +16,7 @@ import com.hyphenate.chat.EMConversation;
 //import com.hyphenate.easeim.common.net.ErrorCode;
 //import com.hyphenate.easeim.common.net.Resource;
 import com.hyphenate.easeui.modules.conversation.model.EaseConversationInfo;
-import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.MyEaseCommonUtils;
 import com.hyphenate.exceptions.HyphenateException;
 import com.xunda.mo.hx.common.db.entity.InviteMessage;
 import com.xunda.mo.hx.common.db.entity.MsgTypeManageEntity;
@@ -69,7 +69,7 @@ public class EMChatManagerRepository extends BaseEMRepository{
             for (EMConversation conversation : conversations.values()) {
                 if (conversation.getAllMessages().size() != 0) {
                     String extField = conversation.getExtField();
-                    if(!TextUtils.isEmpty(extField) && EaseCommonUtils.isTimestamp(extField)) {
+                    if(!TextUtils.isEmpty(extField) && MyEaseCommonUtils.isTimestamp(extField)) {
                         topSortList.add(new Pair<>(Long.valueOf(extField), conversation));
                     }else {
                         sortList.add(new Pair<Long, Object>(conversation.getLastMessage().getMsgTime(), conversation));
@@ -85,7 +85,7 @@ public class EMChatManagerRepository extends BaseEMRepository{
             synchronized (EMChatManagerRepository.class) {
                 for (MsgTypeManageEntity manage : manageEntities) {
                     String extField = manage.getExtField();
-                    if(!TextUtils.isEmpty(extField) && EaseCommonUtils.isTimestamp(extField)) {
+                    if(!TextUtils.isEmpty(extField) && MyEaseCommonUtils.isTimestamp(extField)) {
                         topSortList.add(new Pair<>(Long.valueOf(extField), manage));
                     }else {
                         Object lastMsg = manage.getLastMsg();

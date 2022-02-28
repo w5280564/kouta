@@ -33,9 +33,9 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.model.EaseEvent;
-import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseCompat;
 import com.hyphenate.easeui.utils.EaseFileUtils;
+import com.hyphenate.easeui.utils.MyEaseCommonUtils;
 import com.xunda.mo.R;
 import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.DemoHelper;
@@ -180,7 +180,7 @@ public class GroupDetailSet extends BaseInitActivity {
     private void initGroupView() {
         conversation = DemoHelper.getInstance().getConversation(HXgroupId, EMConversation.EMConversationType.GroupChat, true);
         String extField = conversation.getExtField();
-        group_chatTop_Switch.getSwitch().setChecked(!TextUtils.isEmpty(extField) && EaseCommonUtils.isTimestamp(extField));
+        group_chatTop_Switch.getSwitch().setChecked(!TextUtils.isEmpty(extField) && MyEaseCommonUtils.isTimestamp(extField));
 
         List<String> disabledIds = DemoHelper.getInstance().getPushManager().getNoPushGroups();
         disturb_Switch.getSwitch().setChecked(disabledIds != null && disabledIds.contains(HXgroupId));

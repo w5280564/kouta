@@ -5,9 +5,9 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.hyphenate.easeui.utils.StringUtil;
 import com.xunda.mo.R;
 import com.xunda.mo.model.AppMarketBean;
-import com.xunda.mo.utils.StringUtil;
 
 import java.util.List;
 

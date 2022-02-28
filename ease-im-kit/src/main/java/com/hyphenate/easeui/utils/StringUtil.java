@@ -1,4 +1,4 @@
-package com.xunda.mo.utils;
+package com.hyphenate.easeui.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,8 +13,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

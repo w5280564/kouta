@@ -64,7 +64,7 @@ public class Main_Launch extends BaseInitActivity {
                 }
             }
 
-        }, 3000);
+        }, 1000);
     }
 
 

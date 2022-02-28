@@ -29,8 +29,6 @@ public class ChatRowAddMes extends EaseChatRow {
 
     @Override
     protected void onSetUpView() {
-//        EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-//        contentView.setText(txtBody.getMessage());
 
         String name = message.getStringAttribute(MyConstant.SEND_NAME, "");
         String invitationStr = message.getStringAttribute(MyConstant.USER_NAME, "");
@@ -40,8 +38,6 @@ public class ChatRowAddMes extends EaseChatRow {
         int startLength = content.length() - invitationStr.length() - groupStr.length();
         int endLength = content.length() - groupStr.length();
         setName(content, name.length(), startLength, endLength, content_Txt);
-//        content_Txt.setText(content);
-
     }
 
     /**

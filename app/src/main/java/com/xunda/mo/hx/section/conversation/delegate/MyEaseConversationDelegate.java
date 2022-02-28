@@ -1,13 +1,11 @@
 package com.xunda.mo.hx.section.conversation.delegate;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
@@ -20,29 +18,25 @@ import com.hyphenate.easecallkit.base.EaseCallType;
 import com.hyphenate.easecallkit.utils.EaseMsgUtils;
 import com.hyphenate.easeui.EaseIM;
 import com.hyphenate.easeui.domain.EaseUser;
-import com.hyphenate.easeui.manager.EaseAtMessageHelper;
 import com.hyphenate.easeui.manager.EasePreferenceManager;
 import com.hyphenate.easeui.modules.conversation.delegate.EaseDefaultConversationDelegate;
 import com.hyphenate.easeui.modules.conversation.model.EaseConversationInfo;
 import com.hyphenate.easeui.modules.conversation.model.EaseConversationSetStyle;
-import com.hyphenate.easeui.provider.EaseConversationInfoProvider;
 import com.hyphenate.easeui.provider.EaseUserProfileProvider;
-import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseDateUtils;
 import com.hyphenate.easeui.utils.EaseSmileUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
+import com.hyphenate.easeui.utils.GsonUtil;
+import com.hyphenate.easeui.utils.MyEaseCommonUtils;
+import com.hyphenate.easeui.utils.StringUtil;
 import com.xunda.mo.R;
-import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
-import com.xunda.mo.utils.GsonUtil;
-import com.xunda.mo.utils.StringUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.Map;
 
 public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate {
     private Context context;
@@ -93,7 +87,8 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
     protected void onBindConViewHolder(ViewHolder holder, int position, EaseConversationInfo bean) {
         EMConversation item = (EMConversation) bean.getInfo();
         String username = item.conversationId();
-        holder.listIteaseLayout.setBackground(!TextUtils.isEmpty(item.getExtField()) ? ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg) : null);
+        Log.e("EaseConversationDelegate", "会话拓展》》" + item.getExtField());
+        holder.listIteaseLayout.setBackground(MyEaseCommonUtils.isTimestamp(item.getExtField()) ? ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg) : null);
         holder.mentioned.setVisibility(View.GONE);
         int defaultAvatar = R.mipmap.img_pic_none;
         String HeadAvatar = "";

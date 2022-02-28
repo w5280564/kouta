@@ -25,6 +25,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.hyphenate.easeui.utils.StringUtil;
 import com.mcxtzhang.captchalib.SwipeCaptchaView;
 import com.xunda.mo.R;
 import com.xunda.mo.main.baseView.BasePopupWindow;
@@ -33,7 +34,6 @@ import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
-import com.xunda.mo.utils.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;

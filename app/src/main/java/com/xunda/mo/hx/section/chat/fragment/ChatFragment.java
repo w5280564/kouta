@@ -45,14 +45,12 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.Gson;
 import com.hyphenate.EMMessageListener;
-import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.chat.EMUserInfo;
 import com.hyphenate.easecallkit.EaseCallKit;
 import com.hyphenate.easecallkit.base.EaseCallType;
 import com.hyphenate.easeui.constants.EaseConstant;
@@ -67,6 +65,8 @@ import com.hyphenate.easeui.modules.chat.interfaces.OnRecallMessageResultListene
 import com.hyphenate.easeui.modules.menu.EasePopupWindowHelper;
 import com.hyphenate.easeui.modules.menu.MenuItemBean;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.ListUtils;
+import com.hyphenate.easeui.utils.StringUtil;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.UriUtils;
@@ -97,7 +97,6 @@ import com.xunda.mo.main.me.activity.Me_VIP;
 import com.xunda.mo.main.me.activity.UserDetail_Set;
 import com.xunda.mo.model.ChatUserBean;
 import com.xunda.mo.model.Chat_SensitiveWordBean;
-import com.xunda.mo.model.GroupMemberAdd_Bean;
 import com.xunda.mo.model.Group_Details_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.model.baseDataModel;
@@ -105,8 +104,6 @@ import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.kotlin.ScreenShotViewModel;
 import com.xunda.mo.staticdata.xUtils3Http;
-import com.xunda.mo.utils.ListUtils;
-import com.xunda.mo.utils.StringUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -116,7 +113,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import lombok.SneakyThrows;
 
@@ -1102,23 +1098,27 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 jsonObject.put("showImg", friendHeader);
                 jsonObject.put("showName", friendName);
             } catch (JSONException e) {
-                e.printStackTrace();
+                jsonObject = getJsonObjectFriend();
             }
-
         }else{
-            jsonObject  = new JSONObject();
-            try {
-                jsonObject.put("isInsertGroupOrFriendInfo", true);
-                jsonObject.put("showImg", friendHeader);
-                jsonObject.put("showName", friendName);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            jsonObject = getJsonObjectFriend();
         }
-        if (jsonObject==null) {
-            return;
-        }
+
         currentConversation.setExtField(jsonObject.toString());
+    }
+
+    @NonNull
+    private JSONObject getJsonObjectFriend() {
+        JSONObject jsonObject;
+        jsonObject  = new JSONObject();
+        try {
+            jsonObject.put("isInsertGroupOrFriendInfo", true);
+            jsonObject.put("showImg", friendHeader);
+            jsonObject.put("showName", friendName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
 
@@ -1202,25 +1202,29 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 jsonObject.put("showName", showGroupName);
                 jsonObject.put("groupMemberList", jsonMemberList);
             } catch (JSONException e) {
-                e.printStackTrace();
+                jsonObject = getJsonObjectGroup(jsonMemberList);
             }
 
         }else{
-            jsonObject  = new JSONObject();
-            try {
-                jsonObject.put("isInsertGroupOrFriendInfo", true);
-                jsonObject.put("showImg", showGroupImg);
-                jsonObject.put("showName", showGroupName);
-                jsonObject.put("groupMemberList", jsonMemberList);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            jsonObject = getJsonObjectGroup(jsonMemberList);
         }
 
-        if (jsonObject==null) {
-            return;
-        }
         currentConversation.setExtField(jsonObject.toString());
+    }
+
+    @NonNull
+    private JSONObject getJsonObjectGroup(String jsonMemberList) {
+        JSONObject jsonObject;
+        jsonObject  = new JSONObject();
+        try {
+            jsonObject.put("isInsertGroupOrFriendInfo", true);
+            jsonObject.put("showImg", showGroupImg);
+            jsonObject.put("showName", showGroupName);
+            jsonObject.put("groupMemberList", jsonMemberList);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     //是否有置顶消息

@@ -36,6 +36,7 @@ import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseCompat;
 import com.hyphenate.easeui.utils.EaseFileUtils;
+import com.hyphenate.easeui.utils.MyEaseCommonUtils;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
@@ -208,7 +209,7 @@ public class ChatDetailSet extends BaseInitActivity {
         });
 
         conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername, EaseCommonUtils.getConversationType(EaseConstant.CHATTYPE_SINGLE), true);
-        top_Switch.getSwitch().setChecked(!TextUtils.isEmpty(conversation.getExtField()));
+        top_Switch.getSwitch().setChecked(MyEaseCommonUtils.isTimestamp(conversation.getExtField()));
 
         AddFriendMethod(ChatDetailSet.this, saveFile.Friend_info_Url);
     }
