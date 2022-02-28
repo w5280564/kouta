@@ -447,69 +447,69 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
         });
 
-        LiveDataBus.get().with(MyConstant.Chat_BG, String.class).observe(this, filePath ->
+        LiveDataBus.get().with(MyConstant.Chat_BG, String.class).observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String filePath) {
                 Glide.with(requireActivity()).asBitmap().load(filePath).into(new SimpleTarget<Bitmap>() {
                     public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
                         Drawable drawable = new BitmapDrawable(resource);
                         messageListLayout.setBackground(drawable);
                     }
-                }));
+                });
+            }
+        });
 
-        LiveDataBus.get().with(MyConstant.GROUP_CHAT_ANONYMOUS, Boolean.class).observe(this, aBoolean -> {
-            if (aBoolean) {
-                mGroupModel.setIsAnonymous(1);
-                sendAnonymousName(1);
-            } else {
-                mGroupModel.setIsAnonymous(0);
-                sendAnonymousName(0);
+        LiveDataBus.get().with(MyConstant.GROUP_CHAT_ANONYMOUS, Boolean.class).observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    mGroupModel.setIsAnonymous(1);
+                    sendAnonymousName(1);
+                } else {
+                    mGroupModel.setIsAnonymous(0);
+                    sendAnonymousName(0);
+                }
             }
         });
 
 
 
-        LiveDataBus.get().with(DemoConstant.CONVERSATION_DELETE, EaseEvent.class).observe(this, event -> {
-            if (event == null) {
-                return;
+
+        LiveDataBus.get().with(DemoConstant.CONVERSATION_READ, EaseEvent.class).observe(this, new Observer<EaseEvent>() {
+            @Override
+            public void onChanged(EaseEvent event) {
+                if (event == null) {
+                    return;
+                }
+                if (event.isMessageChange()) {
+                    chatLayout.getChatMessageListLayout().refreshToLatest();
+                }
             }
-            if (event.isMessageChange()) {
+        });
+
+
+        LiveDataBus.get().with(DemoConstant.CONTACT_UPDATE, EaseEvent.class).observe(this, new Observer<EaseEvent>() {
+            @Override
+            public void onChanged(EaseEvent event) {
+                if (event == null) {
+                    return;
+                }
                 chatLayout.getChatMessageListLayout().refreshMessages();
             }
         });
 
 
-        LiveDataBus.get().with(DemoConstant.CONVERSATION_READ, EaseEvent.class).observe(this, event -> {
-            if (event == null) {
-                return;
-            }
-            if (event.isMessageChange()) {
-                chatLayout.getChatMessageListLayout().refreshToLatest();
-            }
-        });
-
-        //更新用户属性刷新列表
-        LiveDataBus.get().with(DemoConstant.CONTACT_ADD, EaseEvent.class).observe(this, event -> {
-            if (event == null) {
-                return;
-            }
-            chatLayout.getChatMessageListLayout().refreshMessages();
-        });
-
-        LiveDataBus.get().with(DemoConstant.CONTACT_UPDATE, EaseEvent.class).observe(this, event -> {
-            if (event == null) {
-                return;
-            }
-            chatLayout.getChatMessageListLayout().refreshMessages();
-        });
-
-
-        LiveDataBus.get().with(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL, EaseEvent.class).observe(this, event -> {
-            if (event == null) {
-                return;
-            }
-            EMMessage conMsg = chatLayout.getChatMessageListLayout().getCurrentConversation().getLastMessage();
-            String isDouble_Recall = conMsg.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-            if (TextUtils.equals(isDouble_Recall, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
-                recallTo();
+        LiveDataBus.get().with(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL, EaseEvent.class).observe(this, new Observer<EaseEvent>() {
+            @Override
+            public void onChanged(EaseEvent event) {
+                if (event == null) {
+                    return;
+                }
+                EMMessage conMsg = chatLayout.getChatMessageListLayout().getCurrentConversation().getLastMessage();
+                String isDouble_Recall = conMsg.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
+                if (TextUtils.equals(isDouble_Recall, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
+                    recallTo();
+                }
             }
         });
 

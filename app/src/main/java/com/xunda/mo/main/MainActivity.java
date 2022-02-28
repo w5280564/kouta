@@ -193,18 +193,24 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
 
     private void initViewModel() {
         viewModel = new ViewModelProvider(mContext).get(MainViewModel.class);
-        viewModel.getSwitchObservable().observe(this, response -> {
-            if (response == null || response == 0) {
-                return;
+        viewModel.getSwitchObservable().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer response) {
+                if (response == null || response == 0) {
+                    return;
+                }
             }
         });
 
-        viewModel.homeUnReadObservable().observe(this, readCount -> {
-            if (!TextUtils.isEmpty(readCount)) {
-                mTvMainHomeMsg.setVisibility(View.VISIBLE);
-                mTvMainHomeMsg.setText(readCount);
-            } else {
-                mTvMainHomeMsg.setVisibility(View.GONE);
+        viewModel.homeUnReadObservable().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String readCount) {
+                if (!TextUtils.isEmpty(readCount)) {
+                    mTvMainHomeMsg.setVisibility(View.VISIBLE);
+                    mTvMainHomeMsg.setText(readCount);
+                } else {
+                    mTvMainHomeMsg.setVisibility(View.GONE);
+                }
             }
         });
 

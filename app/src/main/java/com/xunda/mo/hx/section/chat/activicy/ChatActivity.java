@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -24,6 +25,7 @@ import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
+import com.xunda.mo.hx.common.net.Resource;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.chat.fragment.ChatFragment;
 import com.xunda.mo.hx.section.chat.viewmodel.ChatViewModel;
@@ -131,45 +133,62 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId);
         MessageViewModel messageViewModel = new ViewModelProvider(this).get(MessageViewModel.class);
         viewModel = new ViewModelProvider(this).get(ChatViewModel.class);
-        viewModel.getDeleteObservable().observe(this, response -> parseResource(response, new OnResourceParseCallback<Boolean>() {
+        viewModel.getDeleteObservable().observe(this, new Observer<Resource<Boolean>>() {
             @Override
-            public void onSuccess(Boolean data) {
-                finish();
-                EaseEvent event = EaseEvent.create(DemoConstant.CONVERSATION_DELETE, EaseEvent.TYPE.MESSAGE);
-                messageViewModel.setMessageChange(event);
+            public void onChanged(Resource<Boolean> booleanResource) {
+                parseResource(booleanResource, new OnResourceParseCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean data) {
+                        finish();
+                        EaseEvent event = EaseEvent.create(DemoConstant.CONVERSATION_DELETE, EaseEvent.TYPE.MESSAGE);
+                        messageViewModel.setMessageChange(event);
+                    }
+                });
             }
-        }));
-        viewModel.getChatRoomObservable().observe(this, response -> {
-            parseResource(response, new OnResourceParseCallback<EMChatRoom>() {
-                @Override
-                public void onSuccess(@Nullable EMChatRoom data) {
-                    setDefaultTitle();
+        });
+        viewModel.getChatRoomObservable().observe(this, new Observer<Resource<EMChatRoom>>() {
+            @Override
+            public void onChanged(Resource<EMChatRoom> emChatRoomResource) {
+                parseResource(emChatRoomResource, new OnResourceParseCallback<EMChatRoom>() {
+                    @Override
+                    public void onSuccess(@Nullable EMChatRoom data) {
+                        setDefaultTitle();
+                    }
+                });
+            }
+        });
+        messageViewModel.getMessageChange().with(DemoConstant.GROUP_CHANGE, EaseEvent.class).observe(this, new Observer<EaseEvent>() {
+            @Override
+            public void onChanged(EaseEvent event) {
+                if (event == null) {
+                    return;
                 }
-            });
-        });
-        messageViewModel.getMessageChange().with(DemoConstant.GROUP_CHANGE, EaseEvent.class).observe(this, event -> {
-            if (event == null) {
-                return;
-            }
-            if (event.isGroupLeave() && TextUtils.equals(conversationId, event.message)) {
-                finish();
+                if (event.isGroupLeave() && TextUtils.equals(conversationId, event.message)) {
+                    finish();
+                }
             }
         });
-        messageViewModel.getMessageChange().with(DemoConstant.MESSAGE_FORWARD, EaseEvent.class).observe(this, event -> {
-            if (event == null) {
-                return;
-            }
-            if (event.isMessageChange()) {
-                showSnackBar(event.event);
+        messageViewModel.getMessageChange().with(DemoConstant.MESSAGE_FORWARD, EaseEvent.class).observe(this, new Observer<EaseEvent>() {
+            @Override
+            public void onChanged(EaseEvent event) {
+                if (event == null) {
+                    return;
+                }
+                if (event.isMessageChange()) {
+                    showSnackBar(event.event);
+                }
             }
         });
 
-        messageViewModel.getMessageChange().with(DemoConstant.CONTACT_CHANGE, EaseEvent.class).observe(this, event -> {
-            if (event == null) {
-                return;
-            }
-            if (conversation == null) {
-                finish();
+        messageViewModel.getMessageChange().with(DemoConstant.CONTACT_CHANGE, EaseEvent.class).observe(this, new Observer<EaseEvent>() {
+            @Override
+            public void onChanged(EaseEvent event) {
+                if (event == null) {
+                    return;
+                }
+                if (conversation == null) {
+                    finish();
+                }
             }
         });
 

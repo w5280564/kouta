@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.gson.Gson;
@@ -176,33 +177,42 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
     private void initViewModel() {
         mViewModel = new ViewModelProvider(this).get(ConversationListViewModel.class);
 
-        mViewModel.getDeleteObservable().observe(getViewLifecycleOwner(), response -> {
-            parseResource(response, new OnResourceParseCallback<Boolean>() {
-                @Override
-                public void onSuccess(Boolean data) {
-                    LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
-                    conversationListLayout.loadDefaultData();
-                }
-            });
+        mViewModel.getDeleteObservable().observe(getViewLifecycleOwner(), new Observer<Resource<Boolean>>() {
+            @Override
+            public void onChanged(Resource<Boolean> booleanResource) {
+                parseResource(booleanResource, new OnResourceParseCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean data) {
+                        LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
+                        conversationListLayout.loadDefaultData();
+                    }
+                });
+            }
         });
 
-        mViewModel.getReadObservable().observe(getViewLifecycleOwner(), response -> {
-            parseResource(response, new OnResourceParseCallback<Boolean>() {
-                @Override
-                public void onSuccess(Boolean data) {
-                    LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
-                    conversationListLayout.loadDefaultData();
-                }
-            });
+        mViewModel.getReadObservable().observe(getViewLifecycleOwner(), new Observer<Resource<Boolean>>() {
+            @Override
+            public void onChanged(Resource<Boolean> booleanResource) {
+                parseResource(booleanResource, new OnResourceParseCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean data) {
+                        LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
+                        conversationListLayout.loadDefaultData();
+                    }
+                });
+            }
         });
 
-        mViewModel.getConversationInfoObservable().observe(getViewLifecycleOwner(), response -> {
-            parseResource(response, new OnResourceParseCallback<List<EaseConversationInfo>>(true) {
-                @Override
-                public void onSuccess(@Nullable List<EaseConversationInfo> data) {
-                    conversationListLayout.setData(data);
-                }
-            });
+        mViewModel.getConversationInfoObservable().observe(getViewLifecycleOwner(), new Observer<Resource<List<EaseConversationInfo>>>() {
+            @Override
+            public void onChanged(Resource<List<EaseConversationInfo>> listResource) {
+                parseResource(listResource, new OnResourceParseCallback<List<EaseConversationInfo>>(true) {
+                    @Override
+                    public void onSuccess(@Nullable List<EaseConversationInfo> data) {
+                        conversationListLayout.setData(data);
+                    }
+                });
+            }
         });
 
 
