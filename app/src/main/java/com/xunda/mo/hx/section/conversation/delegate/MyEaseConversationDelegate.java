@@ -135,7 +135,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
             if (item.getAllMsgCount() != 0) {
                 EMMessage lastMessage = item.getLastMessage();
                 String txt_message_type = lastMessage.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-                if (TextUtils.equals(txt_message_type, MyConstant.ADMIN)) {
+                if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TXT_TYPE_GROUP_NOTIFY)) {
                     HeadName = "群通知";
                     holder.avatar.setImageResource(R.mipmap.group_notification);
                     holder.name.setTextColor(ContextCompat.getColor(context, R.color.app_main_color));
@@ -210,7 +210,6 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         if (item.getAllMsgCount() != 0) {
             EMMessage lastMessage = item.getLastMessage();
             boolean isSender = myInfo.getUserInfo().getHxUserName().equals(lastMessage.getFrom());
-            Log.e("EaseConversationDelegate", "From>>>" + lastMessage.getFrom());
             Log.e("EaseConversationDelegate", "拓展消息" + GsonUtil.getInstance().toJson(lastMessage.ext()));
             Log.e("EaseConversationDelegate", "lastMessage的messageType是" + lastMessage.getType());
             if (lastMessage.getType() == EMMessage.Type.CUSTOM) {//自定义消息
