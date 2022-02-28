@@ -272,16 +272,6 @@ public class ChatPresenter extends EaseChatPresenter {
             EaseEvent event = EaseEvent.create(DemoConstant.MESSAGE_CHANGE_RECALL, EaseEvent.TYPE.MESSAGE);
             messageChangeLiveData.with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(event);
         }
-//        for (EMMessage msg : messages) {
-//            if (msg.getBooleanAttribute(MyConstant.FIRE_TYPE, false)) {
-//                messageChangeLiveData.with(MyConstant.SendFireRecall).postValue(msg);
-//                // 消息所属会话
-//                EMConversation conversation = EMClient.getInstance().chatManager().getConversation(msg.getFrom(), EMConversation.EMConversationType.Chat, true);
-//                // 删除消息
-//                conversation.removeMessage(msg.getMsgId());
-////                messageChangeLiveData.with(MyConstant.FIRE_REFRESH).postValue(true);
-//            }
-//        }
     }
 
 
@@ -298,14 +288,12 @@ public class ChatPresenter extends EaseChatPresenter {
             if (msg.getChatType() == EMMessage.ChatType.GroupChat && EaseAtMessageHelper.get().isAtMeMsg(msg)) {
                 EaseAtMessageHelper.get().removeAtMeGroup(msg.getTo());
             }
-            if(msg.getChatType() == EMMessage.ChatType.GroupChat && EaseAtMessageHelper.get().isAtMeMsg(msg)){
-                EaseAtMessageHelper.get().removeAtMeGroup(msg.getTo());
-            }
+
             EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
             EMTextMessageBody txtBody = new EMTextMessageBody("");
             msgNotification.addBody(txtBody);
             msgNotification.setFrom(msg.getFrom());
-            msgNotification.setTo(msg.getTo());
+            msgNotification.setTo(msg.conversationId());
             msgNotification.setUnread(false);
             msgNotification.setMsgTime(msg.getMsgTime());
             msgNotification.setLocalTime(msg.getMsgTime());

@@ -14,15 +14,12 @@ public interface MyConstant extends DemoConstant {
     String TO_LH = "toLH";
     String TO_VIP = "toVIP";
     String FIRE_TYPE = "fireType"; //Mo消息
-    String APPLY = "apply";
 
     String MESSAGE_TYPE_GROUP = "group";
     String GROUP_NAME = "groupName";
     String GROUP_HEAD = "groupHead";
     String IDENTITY = "identity";
-    String EXT = "ext";
     String MO_CUSTOMER = "MOCustomer"; //客服标志
-    String MO_NAME = "MO客服";
     String QUESTIONS = "questions";
     String CONTENT = "content";
     String MSG = "msg";
@@ -66,7 +63,6 @@ public interface MyConstant extends DemoConstant {
     String CMD_MESSAGE_TYPE_GROUPISSCREENSHORTS = "GroupisScreenShots";
     String MESSAGE_TYPE_SCREENSHORTS = "ScreenShots";
     String MESSAGE_TYPE_GROUP_SCREENSHORTS = "groupScreenShots";
-    String MESSAGE_TYPE_SYSTEM_NOTICE = "systemNotice";
 
     String GROUP_CHAT_ANONYMOUS = "anonymousChat";
     String GROUP_UPDATE_GROUPDES = "updateGroupDes";
@@ -85,11 +81,9 @@ public interface MyConstant extends DemoConstant {
 
     String FIRE_REFRESH = "fireRefresh";
 
-    int CHATTYPE_MO = 4;
     String MESSAGE_TYPE_APPLY = "apply";
 
     String ConstantCount = "ConstantCount";
-    String SendFireRecall = "SendFireRecall";
     String SendFireRecall_Mess_ID = "messageId";
     String Dele_Type = "deletType";
     String MESS_TYPE_GROUP_HORN = "GroupHorn";
@@ -100,7 +94,6 @@ public interface MyConstant extends DemoConstant {
     String AT_NAME = "atName";
     String AT_ID = "atID";
 
-    String Black_Friend = "blackFriend";
     String Dele_Friend = "deletFriend";
     String USER_UUID = "uuid";
 
