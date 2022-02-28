@@ -30,7 +30,7 @@ public class MyEaseChatRowText extends BaseChatRowWithNameAndHeader {
 
     @Override
     protected void onFindViewById() {
-        contentView = (TextView) findViewById(R.id.tv_chatcontent);
+        contentView = findViewById(R.id.tv_chatcontent);
         tv_user_role = findViewById(R.id.tv_user_role);
     }
 

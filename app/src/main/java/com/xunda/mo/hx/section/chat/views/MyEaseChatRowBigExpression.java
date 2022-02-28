@@ -20,7 +20,7 @@ import com.xunda.mo.network.saveFile;
  * big emoji icons
  *
  */
-public class MyEaseChatRowBigExpression extends EaseChatRowText {
+public class MyEaseChatRowBigExpression extends BaseChatRowWithNameAndHeader {
     private ImageView imageView;
 
     public MyEaseChatRowBigExpression(Context context, boolean isSender) {
@@ -39,8 +39,9 @@ public class MyEaseChatRowBigExpression extends EaseChatRowText {
 
     @Override
     protected void onFindViewById() {
-        percentageView = (TextView) findViewById(R.id.percentage);
-        imageView = (ImageView) findViewById(R.id.image);
+        percentageView = findViewById(R.id.percentage);
+        imageView = findViewById(R.id.image);
+        tv_user_role = findViewById(com.xunda.mo.R.id.tv_user_role);
     }
 
     @Override
@@ -65,22 +66,6 @@ public class MyEaseChatRowBigExpression extends EaseChatRowText {
         }
 
 
-        if (message.getChatType() == EMMessage.ChatType.Chat) {
-            if (isSender()){
-                String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
-                Glide.with(getContext()).load(headUrl).into(userAvatarView);
-            }
-            //添加群聊其他用户的名字与头像
-        } if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-                usernickView.setText(message.getStringAttribute(MyConstant.SEND_NAME,""));
-                String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD,"");
-                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.em_login_logo).into(userAvatarView);
-
-                //匿名聊天
-                if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
-                    Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(R.drawable.em_login_logo).into(userAvatarView);
-                }
-            }
 
     }
 

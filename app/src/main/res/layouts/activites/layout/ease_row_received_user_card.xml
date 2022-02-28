@@ -29,7 +29,7 @@
             android:layout_height="87dp"
             android:layout_below="@+id/tv_userid"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="4dp"
             android:layout_toEndOf="@id/iv_userhead"
             android:background="@drawable/ease_chat_bubble_send_bg"
             tools:ignore="MissingConstraints">
@@ -102,6 +102,21 @@
             android:textSize="@dimen/chat_nick_text_size"
             android:layout_toEndOf="@id/iv_userhead"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_user_role"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:layout_toRightOf="@id/tv_userid"
+            android:layout_alignTop="@id/tv_userid"
+            android:layout_alignBottom="@id/tv_userid"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:visibility="gone"/>
     </RelativeLayout>
 
 </LinearLayout>

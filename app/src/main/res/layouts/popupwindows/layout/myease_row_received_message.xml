@@ -28,10 +28,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_userid"
             android:minWidth="30dp"
+            android:layout_marginTop="4dp"
             android:layout_marginLeft="@dimen/margin_chat_activity"
             android:layout_toRightOf="@id/iv_userhead"
             android:padding="8dp"
-            android:layout_marginTop="2dp"
             android:background="@drawable/ease_chat_bubble_receive_bg">
 
             <TextView

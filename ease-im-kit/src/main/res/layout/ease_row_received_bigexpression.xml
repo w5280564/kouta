@@ -57,16 +57,16 @@
             android:id="@+id/tv_user_role"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/tv_userid"
-            android:layout_alignBottom="@id/tv_userid"
             android:layout_marginLeft="6dp"
-            android:layout_toRightOf="@id/tv_userid"
-            android:gravity="center"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
+            android:layout_toRightOf="@id/tv_userid"
+            android:layout_alignTop="@id/tv_userid"
+            android:layout_alignBottom="@id/tv_userid"
+            android:gravity="center"
             android:textColor="@color/white"
             android:textSize="10sp"
-            android:visibility="gone" />
+            android:visibility="gone"/>
     </RelativeLayout>
 
 </LinearLayout>

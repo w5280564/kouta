@@ -544,7 +544,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
 
 
     private ChooseAppMarketDialog mChooseAppMarketDialog;
-
+    private String website;
 
     /**
      * 检查新版本
@@ -568,6 +568,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
                 int isForceUpdate = apkObj.getIsForceUpdate();//0推荐更新1强制2当前版本最新无需更新
                 String remark = apkObj.getRemark();
                 String version = apkObj.getVersion();
+                website = apkObj.getWebsite();
                 if(isForceUpdate!=2){
                     showVersionDialog(remark,version,isForceUpdate,apkObj.getPlatform());
                 }
@@ -678,7 +679,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     }
 
     private void jumpToWebsite() {
-        Uri uri = Uri.parse(MyConstant.WEB_SITE_URL);
+        Uri uri = Uri.parse(website);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }

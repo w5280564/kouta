@@ -8,14 +8,14 @@ import java.io.Serializable;
 public class ApkBean implements Serializable {
 
 
-	private String downloadAddress;
+	private String website;
 	private Integer isForceUpdate;
 	private String remark;
 	private String version;
 	private String platform;
 
-	public String getDownloadAddress() {
-		return downloadAddress;
+	public String getWebsite() {
+		return website;
 	}
 
 	public Integer getIsForceUpdate() {
