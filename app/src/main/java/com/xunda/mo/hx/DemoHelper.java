@@ -221,12 +221,11 @@ public class DemoHelper {
                 .addMessageType(MyGroupAddMesAdapterDelegate.class)     //创建群消息
                 .addMessageType(HornAdapterDelegate.class)        //群喇叭
                 .addMessageType(BurnAfterReadingAdapterDelegate.class)        //Mo消息
-//                .addMessageType(EaseCustomAdapterDelegate.class)           //自定义消息
-                .addMessageType(MyEaseCustomAdapterDelegate.class)           //自定义客服消息
-                .addMessageType(ChatUserCardAdapterDelegate.class)         //名片消息
                 .addMessageType(ChatNotificationAdapterDelegate.class)     //入群等通知消息
                 .addMessageType(ChatRecallAdapterDelegate.class)           //消息撤回
-//                .addMessageType(TypeChatAdapterDelegate.class)           //chat
+
+                .addMessageType(MyEaseCustomAdapterDelegate.class)           //自定义客服消息
+                .addMessageType(ChatUserCardAdapterDelegate.class)         //名片消息
                 .addMessageType(MyEaseLocationAdapterDelegate.class)         //定位
                 .addMessageType(MyEaseExpressionAdapterDelegate.class)       //自定义表情
                 .addMessageType(MyEaseFileAdapterDelegate.class)             //文件

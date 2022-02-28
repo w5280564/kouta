@@ -431,7 +431,23 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         chatLayout.turnOnTypingMonitor(DemoHelper.getInstance().getModel().isShowMsgTyping());//正在输入监控
         LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
 
-        LiveDataBus.get().with(MyConstant.Chat_BG, String.class).observe(requireActivity(), filePath ->
+        LiveDataBus.get().with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.class).observe(this, new Observer<EaseEvent>() {
+            @Override
+            public void onChanged(EaseEvent event) {
+                if (event == null) {
+                    return;
+                }
+                if (event.isMessageChange()) {
+                    if (!StringUtil.isBlank(event.message)) {
+                        if (event.message.equals(conversationId)) {
+                            chatLayout.getChatMessageListLayout().refreshToLatest();
+                        }
+                    }
+                }
+            }
+        });
+
+        LiveDataBus.get().with(MyConstant.Chat_BG, String.class).observe(this, filePath ->
                 Glide.with(requireActivity()).asBitmap().load(filePath).into(new SimpleTarget<Bitmap>() {
                     public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
                         Drawable drawable = new BitmapDrawable(resource);
@@ -439,7 +455,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                     }
                 }));
 
-        LiveDataBus.get().with(MyConstant.GROUP_CHAT_ANONYMOUS, Boolean.class).observe(requireActivity(), aBoolean -> {
+        LiveDataBus.get().with(MyConstant.GROUP_CHAT_ANONYMOUS, Boolean.class).observe(this, aBoolean -> {
             if (aBoolean) {
                 mGroupModel.setIsAnonymous(1);
                 sendAnonymousName(1);
@@ -460,15 +476,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             }
         });
 
-        LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.class).observe(this, event -> {
-            if (event == null) {
-                return;
-            }
-            if (event.isMessageChange()) {
-                chatLayout.getChatMessageListLayout().refreshToLatest();
-            }
 
-        });
         LiveDataBus.get().with(DemoConstant.CONVERSATION_READ, EaseEvent.class).observe(this, event -> {
             if (event == null) {
                 return;

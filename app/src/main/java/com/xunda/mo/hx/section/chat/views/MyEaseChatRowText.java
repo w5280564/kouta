@@ -6,9 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
-
 import androidx.core.content.ContextCompat;
-
 import com.bumptech.glide.Glide;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -46,8 +44,6 @@ public class MyEaseChatRowText extends EaseChatRow {
 
     @Override
     public void onSetUpView() {
-//            String ext = message.getStringAttribute(MyConstant.EXT);
-//            JSONObject jsonObject = new JSONObject(ext);
         if (message.getChatType() == EMMessage.ChatType.Chat) {
             if (isSender()){
                 String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
@@ -68,7 +64,7 @@ public class MyEaseChatRowText extends EaseChatRow {
 
             //匿名聊天
             if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
-                Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);
+                Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(defaultAvatar).error(defaultAvatar).into(userAvatarView);
             }
         }
 

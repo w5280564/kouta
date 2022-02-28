@@ -281,6 +281,12 @@
                 android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@id/bg_lineTwo" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/greyfive"
+                app:layout_constraintTop_toBottomOf="@id/remove_Txt" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

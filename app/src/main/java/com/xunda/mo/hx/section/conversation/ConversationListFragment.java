@@ -155,12 +155,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
 
     @Override
     public void initData() {
-        //需要两个条件，判断是否触发从服务器拉取会话列表的时机，一是第一次安装，二则本地数据库没有会话列表数据
-//        if (DemoHelper.getInstance().isFirstInstall() && EMClient.getInstance().chatManager().getAllConversations().isEmpty()) {
-//            mViewModel.fetchConversationsFromServer();
-//        } else {
-//            super.initData();
-//        }
+        super.initData();
     }
 
     @Override
@@ -186,7 +181,6 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
                 @Override
                 public void onSuccess(Boolean data) {
                     LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
-                    //mViewModel.loadConversationList();
                     conversationListLayout.loadDefaultData();
                 }
             });
@@ -224,6 +218,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         messageChange.with(DemoConstant.CONTACT_ADD, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.CONTACT_UPDATE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.CONTACT_DELETE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
+        messageChange.with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.MESSAGE_NOT_SEND, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
     }
 
@@ -406,7 +401,18 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
             @Override
             public void success(String result) {
                 GruopInfo_Bean groupModel = new Gson().fromJson(result, GruopInfo_Bean.class);
-                ChatActivity.actionStart(mContext, item.conversationId(), EaseCommonUtils.getChatType(item));
+                if (groupModel==null) {
+                    return;
+                }
+
+                GruopInfo_Bean.DataDTO dataDTO = groupModel.getData();
+
+                if (dataDTO!=null) {
+                    String showImg = dataDTO.getGroupHeadImg();
+                    String showName = dataDTO.getGroupName();
+                    refreshGroupMessage(item.getLastMessage(),showImg,showName);
+                    ChatActivity.actionStart(mContext, item.conversationId(), EaseCommonUtils.getChatType(item));
+                }
             }
 
             @Override
@@ -414,6 +420,14 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
 
             }
         });
+    }
+
+    //刷新这条群消息
+    private void refreshGroupMessage(EMMessage getLastMessage,String groupHeadImg,String getGroupName) {
+        getLastMessage.setAttribute(MyConstant.GROUP_HEAD, groupHeadImg);
+        getLastMessage.setAttribute(MyConstant.GROUP_NAME, getGroupName);
+        EMClient.getInstance().chatManager().updateMessage(getLastMessage);
+        LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
     }
 
 
