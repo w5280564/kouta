@@ -93,7 +93,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     private BottomNavigationView navView;
     private EaseBaseFragment mConversationListFragment, mFriendsFragment, mDiscoverFragment, mAboutMeFragment;
     private EaseBaseFragment mCurrentFragment;
-    private TextView mTvMainHomeMsg, mTvMainFriendsMsg, mTvMainDiscoverMsg, mTvMainAboutMeMsg;
+    private TextView mTvMainHomeMsg, mTvMainFriendsMsg;
     private int[] badgeIds = {R.layout.demo_badge_home, R.layout.demo_badge_friends, R.layout.demo_badge_discover, R.layout.demo_badge_about_me};
     private int[] msgIds = {R.id.tv_main_home_msg, R.id.tv_main_friends_msg, R.id.tv_main_discover_msg, R.id.tv_main_about_me_msg};
     private MainViewModel viewModel;
@@ -275,7 +275,6 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     private void addTabBadge() {
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) navView.getChildAt(0);
         int childCount = menuView.getChildCount();
-        Log.e("TAG", "bottom child count = " + childCount);
         BottomNavigationItemView itemTab;
         for (int i = 0; i < childCount; i++) {
             itemTab = (BottomNavigationItemView) menuView.getChildAt(i);
@@ -287,12 +286,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
                 case 1:
                     mTvMainFriendsMsg = badge.findViewById(msgIds[1]);
                     break;
-                case 2:
-                    mTvMainDiscoverMsg = badge.findViewById(msgIds[2]);
-                    break;
-                case 3:
-                    mTvMainAboutMeMsg = badge.findViewById(msgIds[3]);
-                    break;
+
             }
             itemTab.addView(badge);
         }
