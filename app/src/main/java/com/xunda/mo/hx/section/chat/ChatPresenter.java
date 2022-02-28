@@ -1196,7 +1196,7 @@ public class ChatPresenter extends EaseChatPresenter {
         EMTextMessageBody txtBody = new EMTextMessageBody(String.format(context.getString(R.string.msg_recall_by_user), msg.getFrom()));
         msgNotification.addBody(txtBody);
         msgNotification.setFrom(msg.getFrom());
-        msgNotification.setTo(msg.getTo());
+        msgNotification.setTo(msg.conversationId());
         msgNotification.setUnread(false);
         msgNotification.setMsgTime(msg.getMsgTime());
         msgNotification.setLocalTime(msg.getMsgTime());

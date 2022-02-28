@@ -210,6 +210,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         if (item.getAllMsgCount() != 0) {
             EMMessage lastMessage = item.getLastMessage();
             boolean isSender = myInfo.getUserInfo().getHxUserName().equals(lastMessage.getFrom());
+            Log.e("EaseConversationDelegate", "From>>>" + lastMessage.getFrom());
             Log.e("EaseConversationDelegate", "拓展消息" + GsonUtil.getInstance().toJson(lastMessage.ext()));
             Log.e("EaseConversationDelegate", "lastMessage的messageType是" + lastMessage.getType());
             if (lastMessage.getType() == EMMessage.Type.CUSTOM) {//自定义消息
