@@ -18,9 +18,8 @@ import com.xunda.mo.R;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.network.saveFile;
 
-public class MyEaseAt_ChatRowText extends EaseChatRow {
+public class MyEaseAt_ChatRowText extends BaseChatRowWithNameAndHeader {
     private TextView contentView;
-    private EaseImageView iv_userhead;
 
     public MyEaseAt_ChatRowText(Context context, boolean isSender) {
         super(context, isSender);
@@ -38,38 +37,12 @@ public class MyEaseAt_ChatRowText extends EaseChatRow {
 
     @Override
     protected void onFindViewById() {
-        contentView = (TextView) findViewById(R.id.tv_chatcontent);
-        iv_userhead = (EaseImageView) findViewById(R.id.iv_userhead);
+        contentView = findViewById(R.id.tv_chatcontent);
+        tv_user_role = findViewById(com.xunda.mo.R.id.tv_user_role);
     }
 
     @Override
     public void onSetUpView() {
-//            String ext = message.getStringAttribute(MyConstant.EXT);
-//            JSONObject jsonObject = new JSONObject(ext);
-        if (message.getChatType() == EMMessage.ChatType.Chat) {
-            if (isSender()){
-                String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
-                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).into(userAvatarView);
-            }
-            //添加群聊其他用户的名字与头像
-        } else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-            String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
-            usernickView.setText(sendName);
-            String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
-            Glide.with(getContext()).load(headUrl).into(userAvatarView);
-            int  defaultAvatar = R.drawable.mo_icon;
-            //没有名字是客服
-            if (TextUtils.isEmpty(sendName)) {
-                defaultAvatar = R.mipmap.adress_head_service;
-                Glide.with(getContext()).load(defaultAvatar).into(userAvatarView);
-            }
-
-            //匿名聊天
-            if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
-                Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(R.drawable.em_login_logo).error(R.drawable.em_login_logo).into(userAvatarView);
-            }
-        }
-
         EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
         if (txtBody != null) {
             contentView.setTextColor(getContext().getColor(R.color.yellowfive));
