@@ -32,6 +32,9 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.easecallkit.base.EaseCallUserInfo;
+import com.hyphenate.easecallkit.livedatas.EaseLiveDataBus;
+import com.hyphenate.easecallkit.utils.EaseCallKitUtils;
 import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseEvent;
@@ -41,6 +44,7 @@ import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.db.DemoDbHelper;
+import com.xunda.mo.hx.common.db.entity.EmUserEntity;
 import com.xunda.mo.hx.common.interfaceOrImplement.OnResourceParseCallback;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
@@ -55,6 +59,7 @@ import com.xunda.mo.main.group.activity.GroupDetail_Report;
 import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.model.baseModel;
 import com.xunda.mo.network.saveFile;
+import com.xunda.mo.pinyin.PinyinUtils;
 import com.xunda.mo.staticdata.MyLevel;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
@@ -391,7 +396,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 isFriendSetView(dataDTO.getIsFriend(), dataDTO.getFriendStatus());
                 toChatUsername = dataDTO.getHxUserName();
                 tagList(label_Lin, context, dataDTO.getTag());
-
+                updateDBdTata(dataDTO);
                 MyLevel.setGrade(grade_Lin, dataDTO.getGrade().intValue(), context);
             }
 
@@ -400,6 +405,52 @@ public class ChatFriend_Detail extends BaseInitActivity {
 
             }
         });
+    }
+
+
+    private void updateDBdTata(Friend_Details_Bean.DataDTO mUserModel) {
+        EmUserEntity entity = new EmUserEntity();
+        entity.setUsername(toChatUsername);
+        // 正则表达式，判断首字母是否是英文字母
+        String nickName = TextUtils.isEmpty(mUserModel.getRemarkName()) ? mUserModel.getNickname() : mUserModel.getRemarkName();
+        entity.setNickname(nickName);
+        String pinyin = PinyinUtils.getPingYin(nickName);
+        String sortString = pinyin.substring(0, 1).toUpperCase();
+        if (sortString.matches("[A-Z]")) {
+            entity.setInitialLetter(sortString);
+        } else {
+            entity.setInitialLetter("#");
+        }
+        entity.setAvatar(mUserModel.getHeadImg());
+        entity.setBirth("");
+        entity.setContact(0);//朋友属性 4是没有预设置
+        entity.setEmail("");
+        entity.setGender(0);
+        entity.setBirth("");
+        entity.setSign("");
+        entity.setPhone("");
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put(MyConstant.LIGHT_STATUS, mUserModel.getLightStatus());
+            obj.put(MyConstant.VIP_TYPE, mUserModel.getVipType());
+            obj.put(MyConstant.USER_NUM, mUserModel.getUserNum());
+            obj.put(MyConstant.USER_ID, mUserModel.getUserId());
+            obj.put(MyConstant.REMARK_NAME, mUserModel.getRemarkName());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        entity.setExt(obj.toString());
+
+
+        //通知callKit更新头像昵称
+        EaseCallUserInfo info = new EaseCallUserInfo(mUserModel.getNickname(), mUserModel.getHeadImg());
+        info.setUserId(info.getUserId());
+        EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
+
+        //更新本地数据库信息
+        DemoHelper.getInstance().getModel().insert(entity);
+        //更新本地联系人列表
+        DemoHelper.getInstance().updateContactList();
     }
 
     public void tagList(LinearLayout label_Lin, Context mContext, String tag) {

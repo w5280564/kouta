@@ -27,6 +27,9 @@ import com.hyphenate.chat.EMMucSharedFile;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMUserInfo;
 import com.hyphenate.chat.adapter.EMAChatRoomManagerListener;
+import com.hyphenate.easecallkit.base.EaseCallUserInfo;
+import com.hyphenate.easecallkit.livedatas.EaseLiveDataBus;
+import com.hyphenate.easecallkit.utils.EaseCallKitUtils;
 import com.hyphenate.easeui.interfaces.EaseGroupListener;
 import com.hyphenate.easeui.manager.EaseAtMessageHelper;
 import com.hyphenate.easeui.manager.EaseChatPresenter;
@@ -699,7 +702,7 @@ public class ChatPresenter extends EaseChatPresenter {
 
         @Override
         public void onContactAdded(String username) {
-            EMLog.i("ChatContactListener", "onContactAdded");
+            Log.e("onContactAdded", "onContactAdded");
             String[] userId = new String[1];
             userId[0] = username;
             EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(userId, new EMValueCallBack<Map<String, EMUserInfo>>() {
@@ -708,7 +711,7 @@ public class ChatPresenter extends EaseChatPresenter {
                     EMUserInfo userInfo = value.get(username);
                     EmUserEntity entity = new EmUserEntity();
                     entity.setUsername(username);
-                    if (userInfo != null) {
+                    if(userInfo != null){
                         entity.setNickname(userInfo.getNickName());
                         entity.setEmail(userInfo.getEmail());
                         entity.setAvatar(userInfo.getAvatarUrl());
@@ -720,17 +723,23 @@ public class ChatPresenter extends EaseChatPresenter {
                     }
                     DemoHelper.getInstance().getModel().insert(entity);
                     DemoHelper.getInstance().updateContactList();
+
+                    //通知callKit更新头像昵称
+                    EaseCallUserInfo info = new EaseCallUserInfo(userInfo.getNickName(), userInfo.getAvatarUrl());
+                    info.setUserId(info.getUserId());
+                    EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
+
                     EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_ADD, EaseEvent.TYPE.CONTACT);
                     event.message = username;
                     messageChangeLiveData.with(DemoConstant.CONTACT_ADD).postValue(event);
 
-//                    showToast(context.getString(R.string.demo_contact_listener_onContactAdded, username));
+                    showToast(context.getString(R.string.demo_contact_listener_onContactAdded, username));
                     EMLog.i(TAG, context.getString(R.string.demo_contact_listener_onContactAdded, username));
                 }
 
                 @Override
                 public void onError(int error, String errorMsg) {
-                    EMLog.i(TAG, context.getString(R.string.demo_contact_get_userInfo_failed) + username + "error:" + error + " errorMsg:" + errorMsg);
+                    EMLog.i(TAG, context.getString(R.string.demo_contact_get_userInfo_failed) +  username + "error:" + error + " errorMsg:" +errorMsg);
                 }
             });
         }
@@ -757,35 +766,64 @@ public class ChatPresenter extends EaseChatPresenter {
 
         @Override
         public void onContactInvited(String username, String reason) {
-            EMLog.i("ChatContactListener", "onContactInvited");
+            Log.e("ChatContactListener", "onContactInvited");
             List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
-            int friendCount = 0;
-            friendCount = allMessages.size();
             if (allMessages != null && !allMessages.isEmpty()) {
                 for (EMMessage message : allMessages) {
                     Map<String, Object> ext = message.ext();
-//                    if (ext != null && ext.get(DemoConstant.SYSTEM_MESSAGE_STATUS).equals(InviteMessageStatus.BEINVITEED.name())) {//"BEINVITEED"
-//                        friendCount += 1;
-//                    }
                     if (ext != null && !ext.containsKey(DemoConstant.SYSTEM_MESSAGE_GROUP_ID)
                             && (ext.containsKey(DemoConstant.SYSTEM_MESSAGE_FROM) && TextUtils.equals(username, (String) ext.get(DemoConstant.SYSTEM_MESSAGE_FROM)))) {
                         EaseSystemMsgManager.getInstance().removeMessage(message);
                     }
                 }
             }
-            Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
-            ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, username);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_REASON, reason);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.BEINVITEED.name());
-            EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
-            notifyNewInviteMessage(message);
-            messageChangeLiveData.with(MyConstant.ConstantCount).postValue(friendCount);
 
-//            EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
-//            messageChangeLiveData.with(DemoConstant.CONTACT_CHANGE).postValue(event);
+            String[] userId = new String[1];
+            userId[0] = username;
+            EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(userId, new EMValueCallBack<Map<String, EMUserInfo>>() {
+                @Override
+                public void onSuccess(Map<String, EMUserInfo> value) {
+                    EMUserInfo userInfo = value.get(username);
+                    if (userInfo == null) {
+                        return;
+                    }
 
-//            showToast(context.getString(InviteMessageStatus.BEINVITEED.getMsgContent(), username));
-            EMLog.i(TAG, context.getString(InviteMessageStatus.BEINVITEED.getMsgContent(), username));
+                    EmUserEntity entity = new EmUserEntity();
+                    entity.setUsername(username);
+                    entity.setNickname(userInfo.getNickName());
+                    entity.setEmail(userInfo.getEmail());
+                    entity.setAvatar(userInfo.getAvatarUrl());
+                    entity.setBirth(userInfo.getBirth());
+                    entity.setGender(userInfo.getGender());
+                    entity.setExt(userInfo.getExt());
+                    entity.setContact(0);
+                    entity.setSign(userInfo.getSignature());
+                    DemoHelper.getInstance().getModel().insert(entity);
+                    DemoHelper.getInstance().updateContactList();
+
+                    //通知callKit更新头像昵称
+                    EaseCallUserInfo info = new EaseCallUserInfo(userInfo.getNickName(), userInfo.getAvatarUrl());
+                    info.setUserId(info.getUserId());
+                    EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
+
+
+                    Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
+                    ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, userInfo.getNickName());
+                    ext.put(DemoConstant.SYSTEM_MESSAGE_REASON, reason);
+                    ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.BEINVITEED.name());
+                    EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
+
+                    notifyNewInviteMessage(message);
+                    EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT, "invited");
+                    messageChangeLiveData.with(DemoConstant.CONTACT_CHANGE).postValue(event);
+                }
+
+                @Override
+                public void onError(int error, String errorMsg) {
+                    EMLog.i(TAG, context.getString(R.string.demo_contact_get_userInfo_failed) + username + "error:" + error + " errorMsg:" + errorMsg);
+                }
+            });
+
         }
 
         @Override

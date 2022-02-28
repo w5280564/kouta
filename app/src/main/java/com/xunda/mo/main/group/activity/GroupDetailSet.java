@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
@@ -29,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -36,6 +38,7 @@ import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.utils.EaseCompat;
 import com.hyphenate.easeui.utils.EaseFileUtils;
 import com.hyphenate.easeui.utils.MyEaseCommonUtils;
+import com.hyphenate.easeui.utils.StringUtil;
 import com.xunda.mo.R;
 import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.DemoHelper;
@@ -683,6 +686,7 @@ public class GroupDetailSet extends BaseInitActivity {
                 group_member_ArrowItemView.getTvContent().setText(memberCount);
                 imgFlow(group_Flow, groupListModel.getData(), Identity);
                 addMembers(groupListModel.getData());
+                insertConversionExdInfoInGroup(result);
             }
 
             @Override
@@ -690,6 +694,39 @@ public class GroupDetailSet extends BaseInitActivity {
 
             }
         });
+    }
+
+
+    //往群会话列表添加扩展字段
+    private void insertConversionExdInfoInGroup(String jsonMemberList) {
+        String extField = conversation.getExtField();
+        JSONObject jsonObject = null;
+        if (!StringUtil.isBlank(extField)) {
+            try {
+                jsonObject = new JSONObject(extField);
+                jsonObject.put("isInsertGroupOrFriendInfo", true);
+                jsonObject.put("groupMemberList", jsonMemberList);
+            } catch (JSONException e) {
+                jsonObject = getJsonObjectGroup(jsonMemberList);
+            }
+
+        }else{
+            jsonObject = getJsonObjectGroup(jsonMemberList);
+        }
+
+        conversation.setExtField(jsonObject.toString());
+    }
+
+    @NonNull
+    private JSONObject getJsonObjectGroup(String jsonMemberList) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("isInsertGroupOrFriendInfo", true);
+            jsonObject.put("groupMemberList", jsonMemberList);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
 

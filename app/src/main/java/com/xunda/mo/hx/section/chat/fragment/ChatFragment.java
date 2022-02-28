@@ -53,6 +53,9 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easecallkit.EaseCallKit;
 import com.hyphenate.easecallkit.base.EaseCallType;
+import com.hyphenate.easecallkit.base.EaseCallUserInfo;
+import com.hyphenate.easecallkit.livedatas.EaseLiveDataBus;
+import com.hyphenate.easecallkit.utils.EaseCallKitUtils;
 import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseEvent;
@@ -73,6 +76,7 @@ import com.hyphenate.util.UriUtils;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
+import com.xunda.mo.hx.common.db.entity.EmUserEntity;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.common.model.EmojiconExampleGroupData;
 import com.xunda.mo.hx.section.base.BaseActivity;
@@ -101,6 +105,7 @@ import com.xunda.mo.model.Group_Details_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
+import com.xunda.mo.pinyin.PinyinUtils;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.kotlin.ScreenShotViewModel;
 import com.xunda.mo.staticdata.kotlin.ScreentShotInfo;
@@ -1085,6 +1090,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
                 insertConversionExdInfoInFriend();
                 initData();
+                updateDBdTata();
             }
 
             @Override
@@ -1092,6 +1098,53 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
             }
         });
+    }
+
+
+
+    private void updateDBdTata() {
+        EmUserEntity entity = new EmUserEntity();
+        entity.setUsername(conversationId);
+        // 正则表达式，判断首字母是否是英文字母
+        String nickName = TextUtils.isEmpty(mFriendModel.getRemarkName()) ? mFriendModel.getNickname() : mFriendModel.getRemarkName();
+        entity.setNickname(nickName);
+        String pinyin = PinyinUtils.getPingYin(nickName);
+        String sortString = pinyin.substring(0, 1).toUpperCase();
+        if (sortString.matches("[A-Z]")) {
+            entity.setInitialLetter(sortString);
+        } else {
+            entity.setInitialLetter("#");
+        }
+        entity.setAvatar(mFriendModel.getHeadImg());
+        entity.setBirth("");
+        entity.setContact(0);//朋友属性 4是没有预设置
+        entity.setEmail("");
+        entity.setGender(0);
+        entity.setBirth("");
+        entity.setSign("");
+        entity.setPhone("");
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put(MyConstant.LIGHT_STATUS, mFriendModel.getLightStatus());
+            obj.put(MyConstant.VIP_TYPE, mFriendModel.getVipType());
+            obj.put(MyConstant.USER_NUM, mFriendModel.getUserNum());
+            obj.put(MyConstant.USER_ID, mFriendModel.getUserId());
+            obj.put(MyConstant.REMARK_NAME, mFriendModel.getRemarkName());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        entity.setExt(obj.toString());
+
+
+        //通知callKit更新头像昵称
+        EaseCallUserInfo info = new EaseCallUserInfo(mFriendModel.getNickname(), mFriendModel.getHeadImg());
+        info.setUserId(info.getUserId());
+        EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
+
+        //更新本地数据库信息
+        DemoHelper.getInstance().getModel().insert(entity);
+        //更新本地联系人列表
+        DemoHelper.getInstance().updateContactList();
     }
 
 

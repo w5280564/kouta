@@ -2,108 +2,108 @@ package com.xunda.mo.hx.section.conversation.delegate;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseIM;
-import com.hyphenate.easeui.adapter.EaseBaseDelegate;
-import com.hyphenate.easeui.adapter.EaseBaseRecyclerViewAdapter;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.modules.conversation.delegate.EaseSystemMsgDelegate;
+import com.hyphenate.easeui.modules.conversation.model.EaseConversationInfo;
+import com.hyphenate.easeui.modules.conversation.model.EaseConversationSetStyle;
+import com.hyphenate.easeui.provider.EaseUserProfileProvider;
 import com.hyphenate.easeui.utils.EaseDateUtils;
-import com.hyphenate.easeui.widget.EaseImageView;
+import com.hyphenate.easeui.utils.MyEaseCommonUtils;
+import com.hyphenate.easeui.utils.StringUtil;
+import com.hyphenate.exceptions.HyphenateException;
 import com.xunda.mo.R;
-import com.xunda.mo.hx.common.db.entity.InviteMessage;
+import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
-import com.xunda.mo.hx.common.db.entity.MsgTypeManageEntity;
-import com.xunda.mo.hx.common.manager.PushAndMessageHelper;
+import com.xunda.mo.main.constant.MyConstant;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 
-public class SystemMessageDelegate extends EaseBaseDelegate<MsgTypeManageEntity, SystemMessageDelegate.ViewHolder> {
-    @Override
-    public boolean isForViewType(MsgTypeManageEntity item, int position) {
-        return item != null;
+public class SystemMessageDelegate extends EaseSystemMsgDelegate{
+
+    public SystemMessageDelegate(EaseConversationSetStyle setModel) {
+        super(setModel);
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.ease_item_row_chat_history;
+    public boolean isForViewType(EaseConversationInfo item, int position) {
+        return super.isForViewType(item, position);
     }
 
     @Override
-    protected ViewHolder createViewHolder(View view) {
-        return new ViewHolder(view);
-    }
-
-    public class ViewHolder extends EaseBaseRecyclerViewAdapter.ViewHolder<MsgTypeManageEntity> {
-        private ConstraintLayout listIteaseLayout;
-        private EaseImageView avatar;
-        private TextView mUnreadMsgNumber;
-        private TextView name;
-        private TextView time;
-        private ImageView mMsgState;
-        private TextView mentioned;
-        private TextView message;
-        private Context mContext;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+    protected void onBindConViewHolder(ViewHolder holder, int position, EaseConversationInfo bean) {
+        EMConversation item = (EMConversation) bean.getInfo();
+        Context context = holder.itemView.getContext();
+        if (!setModel.isHideUnreadDot()) {
+            showUnreadNum(holder, item.getUnreadMsgCount());
         }
+        holder.mentioned.setVisibility(View.GONE);
+        Log.e("ouyang","SystemMessageDelegate的会话类型是" + item.getType());
+        if (item.getType() == EMConversation.EMConversationType.Chat) {
+            if (TextUtils.equals(item.getLastMessage().getFrom(), MyConstant.DEFAULT_SYSTEM_MESSAGE_ID)) {
+                holder.listIteaseLayout.setBackground(MyEaseCommonUtils.isTimestamp(item.getExtField())?ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg):null);
+                holder.avatar.setImageResource(com.hyphenate.easeui.R.drawable.em_system_nofinication);
+                holder.name.setTextColor(ContextCompat.getColor(context, R.color.app_main_color));
+                String message = "";
+                String name = "系统消息";
+                if (item.getAllMsgCount() != 0) {
+                    EMMessage lastMessage = item.getLastMessage();
+                    if (lastMessage!=null) {
+                        try {
+                            String statusParams = lastMessage.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_STATUS);
+                            InviteMessageStatus status = InviteMessageStatus.valueOf(statusParams);
+                            if (status == InviteMessageStatus.BEINVITEED||status == InviteMessageStatus.BEREFUSED||status == InviteMessageStatus.BEAGREED) {
+                                EaseUserProfileProvider userProvider = EaseIM.getInstance().getUserProvider();
+                                String friend_name = lastMessage.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_FROM);
+                                if (userProvider != null) {
+                                    EaseUser friend_user = userProvider.getUser(friend_name);
+                                    if (friend_user != null) {
+                                        try {
+                                            String selectInfoExt = friend_user.getExt();
+                                            if (!TextUtils.isEmpty(selectInfoExt)) {
+                                                JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                                                friend_name = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? friend_user.getNickname() : JsonObject.getString("remarkName");
+                                            } else {
+                                                friend_name = StringUtil.getStringValue(friend_user.getNickname());
+                                            }
+                                        } catch (
+                                                JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                                name = "好友申请";
+                                message = context.getString(status.getMsgContent(), friend_name);
+                                holder.avatar.setImageResource(R.drawable.em_system_nofinication);
+                            } else if (status == InviteMessageStatus.BEAPPLYED) { //application to join group
+                                name = "群通知";
+                                holder.avatar.setImageResource(R.mipmap.group_notification);
+                                message = context.getString(InviteMessageStatus.BEAPPLYED.getMsgContent()
+                                        , lastMessage.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_FROM), lastMessage.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_NAME));
+                            } else if (status == InviteMessageStatus.GROUPINVITATION) {
+                                name = "群通知";
+                                holder.avatar.setImageResource(R.mipmap.group_notification);
+                                message = context.getString(InviteMessageStatus.GROUPINVITATION.getMsgContent()
+                                        , lastMessage.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_INVITER), lastMessage.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_NAME));
+                            }
+                            holder.name.setText(name);
+                            holder.message.setText(message);
+                            holder.time.setText(EaseDateUtils.getTimestampString(context, new Date(lastMessage.getMsgTime())));
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                        }
 
-        @Override
-        public void initView(View itemView) {
-            mContext = itemView.getContext();
-            listIteaseLayout = findViewById(com.hyphenate.easeui.R.id.list_itease_layout);
-            avatar = findViewById(com.hyphenate.easeui.R.id.avatar);
-            mUnreadMsgNumber = findViewById(com.hyphenate.easeui.R.id.unread_msg_number);
-            name = findViewById(com.hyphenate.easeui.R.id.name);
-            time = findViewById(com.hyphenate.easeui.R.id.time);
-            mMsgState = findViewById(com.hyphenate.easeui.R.id.msg_state);
-            mentioned = findViewById(com.hyphenate.easeui.R.id.mentioned);
-            message = findViewById(com.hyphenate.easeui.R.id.message);
-            avatar.setShapeType(EaseIM.getInstance().getAvatarOptions().getAvatarShape());
-        }
+                    }
+                }
 
-        @Override
-        public void setData(MsgTypeManageEntity object, int position) {
-            String type = ((MsgTypeManageEntity) object).getType();
-            Object lastMsg = ((MsgTypeManageEntity) object).getLastMsg();
-            if(lastMsg == null || TextUtils.isEmpty(type)) {
-                return;
-            }
-            listIteaseLayout.setBackground(!TextUtils.isEmpty(((MsgTypeManageEntity) object).getExtField())
-                    ? ContextCompat.getDrawable(mContext, R.drawable.ease_conversation_top_bg)
-                    : null);
-            if(TextUtils.equals(type, MsgTypeManageEntity.msgType.NOTIFICATION.name())) {
-                avatar.setImageResource(R.drawable.em_system_nofinication);
-                name.setText(mContext.getString(R.string.em_conversation_system_notification));
-            }
-            int unReadCount = ((MsgTypeManageEntity) object).getUnReadCount();
-            if(unReadCount > 0) {
-                mUnreadMsgNumber.setText(String.valueOf(unReadCount));
-                mUnreadMsgNumber.setVisibility(View.VISIBLE);
-            }else {
-                mUnreadMsgNumber.setVisibility(View.GONE);
-            }
-            if(lastMsg instanceof InviteMessage) {
-                time.setText(EaseDateUtils.getTimestampString(mContext, new Date(((InviteMessage) lastMsg).getTime())));
-                InviteMessageStatus status = ((InviteMessage) lastMsg).getStatusEnum();
-                if(status == null) {
-                    return;
-                }
-                String reason = ((InviteMessage) lastMsg).getReason();
-                if(status == InviteMessageStatus.BEINVITEED ||
-                        status == InviteMessageStatus.BEAPPLYED ||
-                        status == InviteMessageStatus.GROUPINVITATION ||
-                        status == InviteMessageStatus.AGREED) {
-                    message.setText(TextUtils.isEmpty(reason) ? PushAndMessageHelper.getSystemMessage((InviteMessage) lastMsg) : reason);
-                }else {
-                    message.setText(PushAndMessageHelper.getSystemMessage((InviteMessage) lastMsg));
-                }
             }
         }
     }

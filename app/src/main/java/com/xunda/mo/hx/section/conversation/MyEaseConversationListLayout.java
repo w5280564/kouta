@@ -48,6 +48,7 @@ import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.easeui.widget.EaseRecyclerView;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.section.conversation.delegate.MyEaseConversationDelegate;
+import com.xunda.mo.hx.section.conversation.delegate.SystemMessageDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -237,7 +238,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
     }
 
     public void init() {
-        listAdapter.addDelegate(new EaseSystemMsgDelegate(setModel));
+        listAdapter.addDelegate(new SystemMessageDelegate(setModel));
         listAdapter.addDelegate(new MyEaseConversationDelegate(setModel,context));
         rvConversationList.setAdapter(adapter);
     }

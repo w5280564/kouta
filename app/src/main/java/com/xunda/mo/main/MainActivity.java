@@ -679,6 +679,9 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     }
 
     private void jumpToWebsite() {
+        if (StringUtil.isBlank(website)) {
+            return;
+        }
         Uri uri = Uri.parse(website);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
