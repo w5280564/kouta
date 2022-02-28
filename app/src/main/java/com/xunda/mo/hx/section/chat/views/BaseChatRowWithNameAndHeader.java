@@ -19,6 +19,8 @@ import com.xunda.mo.R;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.GroupMember_Bean;
+import com.xunda.mo.network.saveFile;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -83,7 +85,7 @@ public abstract class BaseChatRowWithNameAndHeader extends EaseChatRow{
                             if (tv_user_role!=null) {
                                 if (memberObj.getIdentity() == 1) {
                                     tv_user_role.setVisibility(View.VISIBLE);
-                                    tv_user_role.setText("区主");
+                                    tv_user_role.setText("群主");
                                     tv_user_role.setBackgroundResource(R.drawable.shape_bg_all_member_qunzhu);
                                 } else if (memberObj.getIdentity() == 2) {
                                     tv_user_role.setVisibility(View.VISIBLE);
@@ -103,11 +105,15 @@ public abstract class BaseChatRowWithNameAndHeader extends EaseChatRow{
                 }else{
                     usernickView.setText(name);
                 }
-
-                if (StringUtil.isBlank(headUrl)) {
-                    EaseUserUtils.setUserAvatar(context, message.getFrom(), userAvatarView);
+                //匿名聊天
+                if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
+                    userAvatarView.setImageResource(R.drawable.anonymous_chat_icon);
                 }else{
-                    Glide.with(getContext()).load(headUrl).placeholder(R.mipmap.img_pic_none).error(R.mipmap.img_pic_none).into(userAvatarView);
+                    if (StringUtil.isBlank(headUrl)) {
+                        EaseUserUtils.setUserAvatar(context, message.getFrom(), userAvatarView);
+                    }else{
+                        Glide.with(getContext()).load(headUrl).placeholder(R.mipmap.img_pic_none).error(R.mipmap.img_pic_none).into(userAvatarView);
+                    }
                 }
             }else{
                 String header_url_message = message.getStringAttribute(MyConstant.SEND_HEAD, "");

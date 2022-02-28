@@ -2,25 +2,17 @@ package com.xunda.mo.hx.section.chat.views;
 
 import android.content.Context;
 import android.text.Spannable;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
-import androidx.core.content.ContextCompat;
-import com.bumptech.glide.Glide;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.manager.EaseDingMessageHelper;
 import com.hyphenate.easeui.utils.EaseSmileUtils;
-import com.hyphenate.easeui.widget.EaseImageView;
-import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 import com.xunda.mo.R;
-import com.xunda.mo.main.constant.MyConstant;
-import com.xunda.mo.network.saveFile;
 
-public class MyEaseChatRowText extends EaseChatRow {
+public class MyEaseChatRowText extends BaseChatRowWithNameAndHeader {
     private TextView contentView;
-    private EaseImageView iv_userhead;
 
     public MyEaseChatRowText(Context context, boolean isSender) {
         super(context, isSender);
@@ -39,41 +31,16 @@ public class MyEaseChatRowText extends EaseChatRow {
     @Override
     protected void onFindViewById() {
         contentView = (TextView) findViewById(R.id.tv_chatcontent);
-        iv_userhead = (EaseImageView) findViewById(R.id.iv_userhead);
+        tv_user_role = findViewById(R.id.tv_user_role);
     }
 
     @Override
     public void onSetUpView() {
-        if (message.getChatType() == EMMessage.ChatType.Chat) {
-            if (isSender()){
-                String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
-                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).into(userAvatarView);
-            }
-            //添加群聊其他用户的名字与头像
-        } else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-            String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
-            usernickView.setText(sendName);
-            String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
-            Glide.with(getContext()).load(headUrl).into(userAvatarView);
-            int  defaultAvatar = R.drawable.mo_icon;
-            //没有名字是客服
-            if (TextUtils.isEmpty(sendName)) {
-                defaultAvatar = R.mipmap.adress_head_service;
-                Glide.with(getContext()).load(defaultAvatar).into(userAvatarView);
-            }
-
-            //匿名聊天
-            if (!saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + message.conversationId(), context).equals("false")) {
-                Glide.with(getContext()).load(R.drawable.anonymous_chat_icon).placeholder(defaultAvatar).error(defaultAvatar).into(userAvatarView);
-            }
-        }
-
         EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
         if (txtBody != null) {
             Spannable span = EaseSmileUtils.getSmiledText(context, txtBody.getMessage());
             // 设置内容
             contentView.setText(span, BufferType.SPANNABLE);
-            contentView.setTextColor(ContextCompat.getColor(context,R.color.blacktitle));
         }
     }
 
