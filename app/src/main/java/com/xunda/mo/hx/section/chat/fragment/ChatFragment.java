@@ -103,6 +103,7 @@ import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.kotlin.ScreenShotViewModel;
+import com.xunda.mo.staticdata.kotlin.ScreentShotInfo;
 import com.xunda.mo.staticdata.xUtils3Http;
 
 import org.json.JSONException;
@@ -1471,20 +1472,27 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     private void screenShot() {
         ScreenShotViewModel screenShotViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(MyApplication.getInstance())).get(ScreenShotViewModel.class);
         screenShotViewModel.registerContentObserver();
-        screenShotViewModel.getDataChanged().observe(this, aBoolean -> {
-            if (aBoolean) {
-                screenShotViewModel.onCleared();//收到观察消息就注销 不然会收到多条通知
-                if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-                    sendScreenShot();
-                }
-                if (chatType == EaseConstant.CHATTYPE_GROUP) {
-                    sendScreenShot();
+        screenShotViewModel.getDataChanged().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    screenShotViewModel.onCleared();//收到观察消息就注销 不然会收到多条通知
+                    if (chatType == EaseConstant.CHATTYPE_SINGLE) {
+                        sendScreenShot();
+                    }
+                    if (chatType == EaseConstant.CHATTYPE_GROUP) {
+                        sendScreenShot();
+                    }
                 }
             }
         });
 
         //接收到截屏通知后 主动获取截屏照片
-        screenShotViewModel.getScreentShotInfoData().observe(this, screentShotInfo -> {
+        screenShotViewModel.getScreentShotInfoData().observe(this, new Observer<ScreentShotInfo>() {
+            @Override
+            public void onChanged(ScreentShotInfo screentShotInfo) {
+
+            }
         });
     }
 
