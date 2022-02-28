@@ -209,16 +209,6 @@ public class ChatDetailSet extends BaseInitActivity {
 
         conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername, EaseCommonUtils.getConversationType(EaseConstant.CHATTYPE_SINGLE), true);
         top_Switch.getSwitch().setChecked(!TextUtils.isEmpty(conversation.getExtField()));
-//        if (saveFile.getShareData("topSwitchCheck", ChatDetailSet.this).equals("false")) {
-//            top_Switch.getSwitch().setChecked(false);
-//        } else {
-//            top_Switch.getSwitch().setChecked(true);
-//        }
-//        if (saveFile.getShareData("disturbSwitchCheck", ChatDetailSet.this).equals("false")) {
-//            disturb_Switch.getSwitch().setChecked(false);
-//        } else {
-//            disturb_Switch.getSwitch().setChecked(true);
-//        }
 
         AddFriendMethod(ChatDetailSet.this, saveFile.Friend_info_Url);
     }
@@ -281,18 +271,39 @@ public class ChatDetailSet extends BaseInitActivity {
     private class top_SwitchOnCheckLister implements MySwitchItemView.OnCheckedChangeListener {
         @Override
         public void onCheckedChanged(MySwitchItemView buttonView, boolean isChecked) {
-            conversation.setExtField(isChecked ? (System.currentTimeMillis() + "") : "");
-//            saveFile.saveShareData("topSwitchCheck", isChecked + "", ChatDetailSet.this);
+            insertConversionExdInfo(isChecked);
             LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
         }
     }
 
-//    private class disturb_SwitchOnCheckLister implements MySwitchItemView.OnCheckedChangeListener {
-//        @Override
-//        public void onCheckedChanged(MySwitchItemView buttonView, boolean isChecked) {
-//            saveFile.saveShareData("disturbSwitchCheck", isChecked + "", ChatDetailSet.this);
-//        }
-//    }
+    //往好友会话列表添加扩展字段
+    private void insertConversionExdInfo(boolean isInsertMessageTop) {
+        String extField = conversation.getExtField();
+        JSONObject jsonObject = null;
+        if (!TextUtils.isEmpty(extField)) {
+            try {
+                jsonObject = new JSONObject(extField);
+                jsonObject.put("isInsertMessageTop", isInsertMessageTop);
+                jsonObject.put("topTimeMillis", isInsertMessageTop?System.currentTimeMillis():0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            jsonObject  = new JSONObject();
+            try {
+                jsonObject.put("isInsertMessageTop", isInsertMessageTop);
+                jsonObject.put("topTimeMillis", isInsertMessageTop?System.currentTimeMillis():0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (jsonObject==null) {
+            return;
+        }
+        conversation.setExtField(jsonObject.toString());
+    }
 
     private class disturb_SwitchClick implements View.OnClickListener {
         @Override

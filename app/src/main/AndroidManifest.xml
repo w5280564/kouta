@@ -430,9 +430,7 @@
         <activity
             android:name=".hx.section.chat.activicy.ForwardMessageActivity"
             android:screenOrientation="portrait" /> <!-- 群组详情 -->
-        <activity
-            android:name=".hx.section.group.activity.GroupDetailActivity"
-            android:screenOrientation="portrait" /> <!-- 聊天室详情 -->
+        <!-- 聊天室详情 -->
         <!-- 群分享文件 -->
         <activity
             android:name=".hx.section.group.activity.GroupSharedFilesActivity"
@@ -511,9 +509,7 @@
         <activity
             android:name=".hx.section.me.activity.CallOptionActivity"
             android:screenOrientation="portrait" /> <!-- 聊天信息 -->
-        <activity
-            android:name=".hx.section.chat.activicy.SingleChatSetActivity"
-            android:screenOrientation="portrait" /> <!-- 搜索聊天室 -->
+        <!-- 搜索聊天室 -->
         <!-- 搜索群组 -->
         <activity
             android:name=".hx.section.search.SearchGroupActivity"

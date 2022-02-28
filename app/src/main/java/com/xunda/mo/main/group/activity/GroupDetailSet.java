@@ -64,6 +64,8 @@ import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -330,14 +332,40 @@ public class GroupDetailSet extends BaseInitActivity {
     private class group_chatTop_SwitchClick implements MySwitchItemView.OnCheckedChangeListener {
         @Override
         public void onCheckedChanged(MySwitchItemView buttonView, boolean isChecked) {
-            if (isChecked) {
-                conversation.setExtField(System.currentTimeMillis() + "");
-            } else {
-                conversation.setExtField("");
-            }
+            insertConversionExdInfo(isChecked);
             LiveDataBus.get().with(DemoConstant.GROUP_CHANGE).postValue(EaseEvent.create(DemoConstant.GROUP_CHANGE, EaseEvent.TYPE.GROUP));
         }
     }
+
+    //往好友会话列表添加扩展字段
+    private void insertConversionExdInfo(boolean isInsertMessageTop) {
+        String extField = conversation.getExtField();
+        JSONObject jsonObject = null;
+        if (!TextUtils.isEmpty(extField)) {
+            try {
+                jsonObject = new JSONObject(extField);
+                jsonObject.put("isInsertMessageTop", isInsertMessageTop);
+                jsonObject.put("topTimeMillis", isInsertMessageTop?System.currentTimeMillis():0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            jsonObject  = new JSONObject();
+            try {
+                jsonObject.put("isInsertMessageTop", isInsertMessageTop);
+                jsonObject.put("topTimeMillis", isInsertMessageTop?System.currentTimeMillis():0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (jsonObject==null) {
+            return;
+        }
+        conversation.setExtField(jsonObject.toString());
+    }
+
 
     //置顶消息弹窗
     private void showTopDialog() {
