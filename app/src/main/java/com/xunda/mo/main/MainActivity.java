@@ -529,7 +529,6 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         DemoHelper.getInstance().updateUserList(data);
         //更新本地联系人列表
         DemoHelper.getInstance().updateContactList();
-//        addToHone();
     }
 
 

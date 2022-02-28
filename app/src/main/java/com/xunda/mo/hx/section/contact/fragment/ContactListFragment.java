@@ -389,9 +389,16 @@ public class ContactListFragment extends EaseContactListFragment implements View
     @Override
     public void onResume() {
         super.onResume();
-        addressData(getActivity(), saveFile.User_Friendlist_Url, "0");
+        addressData(getActivity(), saveFile.User_Friendlist_Url);
         addMyHead();
     }
+
+    //刷新
+    @Override
+    public void onRefresh() {
+        addressData(getActivity(), saveFile.User_Friendlist_Url);
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -431,14 +438,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
         }
     }
 
-    /**
-     * toast by string
-     *
-     * @param message
-     */
-    private void showToast(String message) {
-        ToastUtils.showToast(message);
-    }
 
     /**
      * toast by string res
@@ -449,21 +448,14 @@ public class ContactListFragment extends EaseContactListFragment implements View
         ToastUtils.showToast(messageId);
     }
 
-    //刷新
-    @Override
-    public void onRefresh() {
-//        mViewModel.loadContactList(true);
-        initData();
-    }
 
 
     //联系人列表
-    public void addressData(final Context context, String baseUrl, String projectId) {
+    public void addressData(final Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-//                contactLayout.canUseRefresh(true);//取消刷新
                 contactLayout.onRefresh();
                 adress_Model model = new Gson().fromJson(result, adress_Model.class);
                 addContactList(model);
@@ -594,16 +586,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
         DemoHelper.getInstance().updateUserList(data);
         //更新本地联系人列表
         DemoHelper.getInstance().updateContactList();
-
-        //通知UI刷新列表
-//        EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_ADD, EaseEvent.TYPE.CONTACT);
-//        event.message = "";
-//        for (EaseUser user : data) {
-//            event.message += user.getUsername() + ",";
-//        }
-        //发送联系人更新事件
-//        LiveDataBus.get().with(DemoConstant.CONTACT_ADD).postValue(event);
-
     }
 
 
