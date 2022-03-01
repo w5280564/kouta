@@ -186,7 +186,7 @@ public class ChatPresenter extends EaseChatPresenter {
         MyInfo myInfo = new MyInfo(context);
         DemoHelper.getInstance().getConversation(conversationId, EMConversation.EMConversationType.Chat, false);
         EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        EMTextMessageBody txtBody = new EMTextMessageBody("对方撤回了所有消息");
+        EMTextMessageBody txtBody = new EMTextMessageBody("对方撤回了所ffff有消息");
         msgNotification.addBody(txtBody);
         msgNotification.setFrom(conversationId);
         msgNotification.setTo(conversationId);
@@ -221,22 +221,20 @@ public class ChatPresenter extends EaseChatPresenter {
         messageChangeLiveData.with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(event);
         for (EMMessage message : messages) {
             String messType = message.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-            if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-                if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
-                    messageChangeLiveData.with(MyConstant.GROUP_CHAT_ANONYMOUS).postValue(true);
-                } else if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
-                    messageChangeLiveData.with(MyConstant.GROUP_CHAT_ANONYMOUS).postValue(false);
-                } else if (TextUtils.equals(messType, MyConstant.MESS_TYPE_GROUP_HORN)) {
-                    messageChangeLiveData.with(MyConstant.MESS_TYPE_GROUP_HORN).postValue(message);
-                }else if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
-                    removeMes(message.conversationId());
-                    saveDoubleRecallMesSingleChat(message.conversationId());
-                    messageChangeLiveData.with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE).postValue(EaseEvent.create(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.TYPE.MESSAGE));
-                    messageChangeLiveData.with(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL).postValue(message.conversationId());
-                }else if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
-                    removeMes(message.conversationId());
-                    saveDoubleRecallMesGroupChat(message.conversationId());
-                }
+            if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
+                messageChangeLiveData.with(MyConstant.GROUP_CHAT_ANONYMOUS).postValue(true);
+            } else if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
+                messageChangeLiveData.with(MyConstant.GROUP_CHAT_ANONYMOUS).postValue(false);
+            } else if (TextUtils.equals(messType, MyConstant.MESS_TYPE_GROUP_HORN)) {
+                messageChangeLiveData.with(MyConstant.MESS_TYPE_GROUP_HORN).postValue(message);
+            }else if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
+                removeMes(message.conversationId());
+                saveDoubleRecallMesSingleChat(message.conversationId());
+                messageChangeLiveData.with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE).postValue(EaseEvent.create(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.TYPE.MESSAGE));
+                messageChangeLiveData.with(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL).postValue(message.conversationId());
+            }else if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
+                removeMes(message.conversationId());
+                saveDoubleRecallMesGroupChat(message.conversationId());
             }
 
 
