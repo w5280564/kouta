@@ -17,7 +17,7 @@ import com.xunda.mo.hx.common.livedatas.SingleSourceLiveData;
 public class MainViewModel extends AndroidViewModel {
     private InviteMessageDao inviteMessageDao;
     private SingleSourceLiveData<Integer> switchObservable;
-    private MutableLiveData<String> homeUnReadObservable;
+    private MutableLiveData<Integer> homeUnReadObservable;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -38,7 +38,7 @@ public class MainViewModel extends AndroidViewModel {
         switchObservable.setValue(title);
     }
 
-    public LiveData<String> homeUnReadObservable() {
+    public LiveData<Integer> homeUnReadObservable() {
         return homeUnReadObservable;
     }
 
@@ -52,23 +52,8 @@ public class MainViewModel extends AndroidViewModel {
             unreadCount = inviteMessageDao.queryUnreadCount();
         }
         int unreadMessageCount = DemoHelper.getInstance().getChatManager().getUnreadMessageCount();
-        String count = getUnreadCount(unreadCount + unreadMessageCount);
-        homeUnReadObservable.postValue(count);
+        homeUnReadObservable.postValue(unreadCount + unreadMessageCount);
     }
 
-    /**
-     * 获取未读消息数目
-     * @param count
-     * @return
-     */
-    private String getUnreadCount(int count) {
-        if(count <= 0) {
-            return null;
-        }
-        if(count > 99) {
-            return "99+";
-        }
-        return String.valueOf(count);
-    }
 
 }

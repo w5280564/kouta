@@ -173,6 +173,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         super.initData();
         checkUpdate();
         initViewModel();
+        checkUnreadMsg();
         ChatPresenter.getInstance().init();
         // 获取华为 HMS 推送 token
         HMSPushHelper.getInstance().getHMSToken(this);
@@ -191,6 +192,20 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         }
     }
 
+
+    public void handleUnReadMessageNumber(int unreadMsgCount) {
+        if(unreadMsgCount <= 99) {
+            mTvMainHomeMsg.setText(String.valueOf(unreadMsgCount));
+        }else {
+            mTvMainHomeMsg.setText("99+");
+        }
+    }
+
+
+    private void checkUnreadMsg() {
+        viewModel.checkUnreadMsg();
+    }
+
     private void initViewModel() {
         viewModel = new ViewModelProvider(mContext).get(MainViewModel.class);
         viewModel.getSwitchObservable().observe(this, new Observer<Integer>() {
@@ -202,13 +217,16 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
             }
         });
 
-        viewModel.homeUnReadObservable().observe(this, new Observer<String>() {
+        viewModel.homeUnReadObservable().observe(this, new Observer<Integer>() {
             @Override
-            public void onChanged(String readCount) {
-                if (!TextUtils.isEmpty(readCount)) {
+            public void onChanged(Integer readCount) {
+                Log.e("readCount","readCount>>>"+readCount);
+                if (readCount>0) {
+                    ShortcutBadger.applyCount(MainActivity.this, readCount);//设置角标
                     mTvMainHomeMsg.setVisibility(View.VISIBLE);
-                    mTvMainHomeMsg.setText(readCount);
+                    handleUnReadMessageNumber(readCount);//item.getUnreadMsgCount()
                 } else {
+                    ShortcutBadger.applyCount(MainActivity.this, 0);//设置角标
                     mTvMainHomeMsg.setVisibility(View.GONE);
                 }
             }
@@ -248,7 +266,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         viewModel.messageChangeObservable().with(DemoConstant.CONTACT_DELETE, EaseEvent.class).observe(this, this::checkUnReadMsg);
         viewModel.messageChangeObservable().with(DemoConstant.CONTACT_CHANGE, EaseEvent.class).observe(this, this::checkUnReadMsg);
         viewModel.messageChangeObservable().with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.class).observe(this, this::checkUnReadMsg);
-        addressData(MainActivity.this, saveFile.User_Friendlist_Url, "0");
+        addressData(MainActivity.this, saveFile.User_Friendlist_Url);
     }
 
     //添加好友通知
@@ -431,21 +449,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         return showNavigation;
     }
 
-    private void checkUnreadMsg() {
-        viewModel.checkUnreadMsg();
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkUnreadMsg();
-        DemoHelper.getInstance().showNotificationPermissionDialog();
-        if (mIsSupportedBade) {
-            int unReadMessCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
-            ShortcutBadger.applyCount(mContext, unReadMessCount); //for 1.1.4+
-//            setBadgeNum(unReadMessCount);
-        }
-    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -472,7 +476,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     }
 
     //联系人列表
-    public void addressData(final Context context, String baseUrl, String projectId) {
+    public void addressData(final Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override

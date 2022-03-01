@@ -713,16 +713,6 @@ public class DemoHelper {
         return userProManager;
     }
 
-    /**
-     * 展示通知设置页面
-     */
-    public void showNotificationPermissionDialog() {
-        EMPushType pushType = EMPushHelper.getInstance().getPushType();
-        // oppo
-//        if(pushType == EMPushType.OPPOPUSH && HeytapPushManager.isSupportPush()) {
-//            HeytapPushManager.requestNotificationPermission();
-//        }
-    }
 
     /**
      * 删除联系人
