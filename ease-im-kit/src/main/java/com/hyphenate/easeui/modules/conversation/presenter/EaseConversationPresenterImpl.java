@@ -214,7 +214,7 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
             //如果是系统通知，则不删除系统消息
             boolean isDelete = EMClient.getInstance().chatManager()
                                 .deleteConversation(((EMConversation) info.getInfo()).conversationId()
-                                        , !TextUtils.equals(((EMConversation) info.getInfo()).conversationId(), EaseConstant.DEFAULT_SYSTEM_MESSAGE_ID));
+                                        , true);
             if(!isDestroy()) {
                 if(isDelete) {
                     mView.deleteItem(position);

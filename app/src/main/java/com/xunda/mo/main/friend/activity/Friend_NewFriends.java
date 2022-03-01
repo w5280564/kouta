@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.manager.EaseSystemMsgManager;
 import com.xunda.mo.R;
 import com.xunda.mo.dialog.TwoButtonDialogWithTitle;
@@ -27,6 +28,7 @@ import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
 import com.xunda.mo.hx.common.interfaceOrImplement.DemoEmCallBack;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
+import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.constant.MyConstant;
@@ -297,20 +299,9 @@ public class Friend_NewFriends extends BaseInitActivity {
             @Override
             public void success(String result) {
                 if (TextUtils.equals(agreeType, "1")) {
-                    DemoHelper.getInstance().getContactManager().asyncAcceptInvitation(hXUserName, new DemoEmCallBack() {
-                        @Override
-                        public void onSuccess() {
-                            singleSendMes(hXUserName, baseModel, position);
-                            Toast.makeText(mContext, "已通过", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    singleSendMes(hXUserName, baseModel, position);
+                    Toast.makeText(mContext, "已通过", Toast.LENGTH_SHORT).show();
                 } else {
-                    EMClient.getInstance().contactManager().asyncDeclineInvitation(hXUserName, new DemoEmCallBack() {
-                        @Override
-                        public void onSuccess() {
-
-                        }
-                    });
                     Toast.makeText(mContext, "已拒绝", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -365,6 +356,7 @@ public class Friend_NewFriends extends BaseInitActivity {
         message.setAttribute(MyConstant.TO_LH, oneData.getLightStatus());
         message.setAttribute(MyConstant.TO_VIP, oneData.getVipType());
         DemoHelper.getInstance().getChatManager().sendMessage(message);
+        ChatActivity.actionStart(mContext, hxUserName, EaseConstant.CHATTYPE_SINGLE);
     }
 
     //查看过新朋友 把好友添加系统消息删除。 添加信息就会是空

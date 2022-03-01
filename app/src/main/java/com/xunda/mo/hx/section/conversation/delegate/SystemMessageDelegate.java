@@ -47,19 +47,22 @@ public class SystemMessageDelegate extends EaseSystemMsgDelegate{
         }
         holder.mentioned.setVisibility(View.GONE);
         Log.e("ouyang","SystemMessageDelegate的会话类型是" + item.getType());
-        if (item.getType() == EMConversation.EMConversationType.Chat) {
-            if (TextUtils.equals(item.getLastMessage().getFrom(), MyConstant.DEFAULT_SYSTEM_MESSAGE_ID)) {
-                holder.listIteaseLayout.setBackground(MyEaseCommonUtils.isTimestamp(item.getExtField())?ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg):null);
-                holder.avatar.setImageResource(com.hyphenate.easeui.R.drawable.em_system_nofinication);
-                holder.name.setTextColor(ContextCompat.getColor(context, R.color.app_main_color));
-                String message = "";
-                String name = "系统消息";
-                if (item.getAllMsgCount() != 0) {
-                    EMMessage lastMessage = item.getLastMessage();
+        if (item.getAllMsgCount() != 0) {
+            EMMessage lastMessage = item.getLastMessage();
+            Log.e("ouyang", "lastMessage的messageType是" + item.getLastMessage().getType());
+            Log.e("ouyang", "lastMessage的messageFrom是" + item.getLastMessage().getFrom());
+            if (item.getType() == EMConversation.EMConversationType.Chat) {
+                if (TextUtils.equals(item.getLastMessage().getFrom(), MyConstant.DEFAULT_SYSTEM_MESSAGE_ID)) {
+                    holder.listIteaseLayout.setBackground(MyEaseCommonUtils.isTimestamp(item.getExtField())?ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg):null);
+                    holder.avatar.setImageResource(com.hyphenate.easeui.R.drawable.em_system_nofinication);
+                    holder.name.setTextColor(ContextCompat.getColor(context, R.color.app_main_color));
+                    String message = "";
+                    String name = "系统消息";
                     if (lastMessage!=null) {
                         try {
                             String statusParams = lastMessage.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_STATUS);
                             InviteMessageStatus status = InviteMessageStatus.valueOf(statusParams);
+                            Log.e("ouyang", "lastMessage的status是" + status.toString());
                             if (status == InviteMessageStatus.BEINVITEED||status == InviteMessageStatus.BEREFUSED||status == InviteMessageStatus.BEAGREED) {
                                 EaseUserProfileProvider userProvider = EaseIM.getInstance().getUserProvider();
                                 String friend_name = lastMessage.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_FROM);
@@ -104,7 +107,11 @@ public class SystemMessageDelegate extends EaseSystemMsgDelegate{
                     }
                 }
 
+                }
             }
-        }
+
+
+
+
     }
 }

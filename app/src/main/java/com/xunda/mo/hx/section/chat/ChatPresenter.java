@@ -829,23 +829,23 @@ public class ChatPresenter extends EaseChatPresenter {
         @Override
         public void onFriendRequestAccepted(String username) {
             EMLog.i("ChatContactListener", "onFriendRequestAccepted");
-            saveFriendFriendRequestAcceptedMessage(username);
+//            saveFriendFriendRequestAcceptedMessage(username);
         }
 
         @Override
         public void onFriendRequestDeclined(String username) {
             EMLog.i("ChatContactListener", "onFriendRequestDeclined");
-            Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
-            ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, username);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.BEREFUSED.name());
-            EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
-
-            notifyNewInviteMessage(message);
-
-//            EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
-//            messageChangeLiveData.with(DemoConstant.CONTACT_CHANGE).postValue(event);
-//            showToast(context.getString(InviteMessageStatus.BEREFUSED.getMsgContent(), username));
-            EMLog.i(TAG, context.getString(InviteMessageStatus.BEREFUSED.getMsgContent(), username));
+//            Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, username);
+//            ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.BEREFUSED.name());
+//            EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
+//
+//            notifyNewInviteMessage(message);
+//
+////            EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
+////            messageChangeLiveData.with(DemoConstant.CONTACT_CHANGE).postValue(event);
+////            showToast(context.getString(InviteMessageStatus.BEREFUSED.getMsgContent(), username));
+//            EMLog.i(TAG, context.getString(InviteMessageStatus.BEREFUSED.getMsgContent(), username));
         }
     }
 
