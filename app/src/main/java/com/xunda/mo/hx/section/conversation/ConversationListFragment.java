@@ -507,7 +507,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
     private void deleteConversation(int position, EaseConversationInfo info, String text) {
         Toast.makeText(mContext,text,Toast.LENGTH_SHORT).show();
         conversationListLayout.deleteConversation(position, info);
-        conversationListLayout.loadDefaultData();
+        LiveDataBus.get().with(DemoConstant.CONVERSATION_DELETE).postValue(new EaseEvent(DemoConstant.CONVERSATION_DELETE, EaseEvent.TYPE.MESSAGE));
     }
 
 }
