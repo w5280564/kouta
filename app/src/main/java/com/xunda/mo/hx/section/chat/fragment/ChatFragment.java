@@ -158,7 +158,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 //        messageListLayout.setBackground(new ColorDrawable(Color.parseColor("#ffefefef")));
         messageListLayout.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.greyfive));
         //设置默认头像
-//        messageListLayout.setAvatarDefaultSrc(ContextCompat.getDrawable(mContext, R.drawable.ease_default_avatar));
+//        messageListLayout.setAvatarDefaultSrc(ContextCompat.getDrawable(mContext, R.drawable.img_pic_none));
         //设置头像形状：0为默认，1为圆形，2为方形
         messageListLayout.setAvatarShapeType(2);
         //设置文本字体大小

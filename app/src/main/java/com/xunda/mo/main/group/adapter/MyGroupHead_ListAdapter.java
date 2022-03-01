@@ -145,7 +145,7 @@ public class MyGroupHead_ListAdapter extends EaseBaseRecyclerViewAdapter<MyEaseU
             Glide.with(mContext)
                     .load(item.getAvatar())
                     .error(contactSetModel.getAvatarDefaultSrc() != null ? contactSetModel.getAvatarDefaultSrc()
-                            : ContextCompat.getDrawable(mContext, R.drawable.ease_default_avatar))
+                            : ContextCompat.getDrawable(mContext, R.drawable.img_pic_none))
                     .into(mAvatar);
 
         }

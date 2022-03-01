@@ -15,7 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginLeft="@dimen/em_margin_20"
         android:layout_marginStart="@dimen/em_margin_20"
-        tools:src="@drawable/ease_default_avatar"
+        tools:src="@drawable/img_pic_none"
         android:visibility="gone"/>
 
     <TextView

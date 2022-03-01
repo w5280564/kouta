@@ -45,7 +45,7 @@ public class EaseContactLayout extends RelativeLayout implements IContactLayout,
 
     private void initViews() {
         srlContactRefresh = findViewById(R.id.srl_contact_refresh);
-        srlContactRefresh.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.app_main_color));
+//        srlContactRefresh.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.app_main_color));
         contactList = findViewById(R.id.contact_list);
         sideBarContact = findViewById(R.id.side_bar_contact);
         floatingHeader = findViewById(R.id.floating_header);

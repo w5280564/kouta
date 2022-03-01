@@ -104,7 +104,7 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
                     name.setText(chatRoom != null && !TextUtils.isEmpty(chatRoom.getName()) ? chatRoom.getName() : username);
                 } else {
 
-                    avatar.setImageResource(R.drawable.ease_default_avatar);
+                    avatar.setImageResource(R.drawable.img_pic_none);
                     name.setText(username);
 
                     try {

@@ -114,7 +114,7 @@ public class GroupAt_Head_Adapter extends EaseBaseRecyclerViewAdapter<MyEaseUser
 
             String avatarString = item.getAvatar();
             Glide.with(mContext).load(avatarString).into(avatar);
-//            avatar.setImageResource(R.drawable.ease_default_avatar);
+//            avatar.setImageResource(R.drawable.img_pic_none);
             String header = item.getInitialLetter();
 
 //            if (position == 0 || header != null && !header.equals(getItem(position - 1).getInitialLetter())) {

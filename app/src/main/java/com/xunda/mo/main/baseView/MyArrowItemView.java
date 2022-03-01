@@ -17,7 +17,7 @@ import com.hyphenate.easeui.widget.EaseImageView;
 import com.xunda.mo.R;
 
 public class MyArrowItemView extends ConstraintLayout {
-    private EaseImageView avatar;
+    private ImageView avatar;
     private TextView tvTitle;
     private TextView tv_tip;
     private TextView tvContent;
@@ -46,7 +46,7 @@ public class MyArrowItemView extends ConstraintLayout {
     }
 
     public void init(Context context, AttributeSet attrs) {
-       View root = LayoutInflater.from(context).inflate(R.layout.my_arrowitemview, this);
+        View root = LayoutInflater.from(context).inflate(R.layout.my_arrowitemview, this);
         avatar = findViewById(R.id.avatar);
         tvTitle = findViewById(R.id.tv_title);
         tv_tip = findViewById(R.id.tv_tip);
@@ -181,7 +181,7 @@ public class MyArrowItemView extends ConstraintLayout {
         return tip_copy_Img;
     }
 
-    public EaseImageView getAvatar() {
+    public ImageView getAvatar() {
         return avatar;
     }
     public ImageView getIMG() { return tv_img; }

@@ -34,7 +34,7 @@
             android:scaleType="fitXY"
             app:ease_radius="5dp"
             app:ease_shape_type="rectangle"
-            android:src="@drawable/ease_default_avatar"
+            android:src="@drawable/img_pic_none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
