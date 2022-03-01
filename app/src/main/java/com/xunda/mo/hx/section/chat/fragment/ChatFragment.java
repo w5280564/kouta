@@ -505,7 +505,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                     return;
                 }
                 if (event.equals(conversationId)) {
-                    recallTo();
+                    messageListLayout.refreshToLatest();
                 }
             }
         });
@@ -518,7 +518,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                     return;
                 }
                 if (event.equals(conversationId)) {
-                    recallGroupTo();
+                    messageListLayout.refreshToLatest();
                 }
             }
         });
@@ -1329,12 +1329,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         messageListLayout.refreshToLatest();
     }
 
-    //收到单聊撤回消息
-    public void recallTo() {
-        removeMes();
-        saveMes(conversationId);
-        messageListLayout.refreshToLatest();
-    }
 
     //发送群里撤回消息
     private void doubleGroupRecall() {
@@ -1344,12 +1338,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         messageListLayout.refreshToLatest();
     }
 
-    //收到群撤回消息
-    public void recallGroupTo() {
-        removeMes();
-        saveGroupMes(conversationId);
-        messageListLayout.refreshToLatest();
-    }
 
 
     private void removeMes() {
@@ -1384,19 +1372,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
 
-    private void saveMes(String conversationId) {
-        DemoHelper.getInstance().getConversation(conversationId, EMConversation.EMConversationType.Chat, false);
-        EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        EMTextMessageBody txtBody = new EMTextMessageBody("对方撤回了所有消息");
-        msgNotification.addBody(txtBody);
-        msgNotification.setFrom(conversationId);
-        msgNotification.setTo(conversationId);
-        msgNotification.setUnread(false);
-        msgNotification.setChatType(EMMessage.ChatType.Chat);
-        msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL);
-        msgNotification.setStatus(EMMessage.Status.SUCCESS);
-        EMClient.getInstance().chatManager().saveMessage(msgNotification);
-    }
+
 
     //发送群撤回消息
     private void sendGroupMes( String mes_Type) {
@@ -1420,25 +1396,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         EMClient.getInstance().chatManager().sendMessage(message);
     }
 
-    private void saveGroupMes(String conversationId) {
-        MyInfo myInfo = new MyInfo(mContext);
-        EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        EMTextMessageBody txtBody = new EMTextMessageBody("撤回了所有消息");
-        msgNotification.addBody(txtBody);
-        msgNotification.setFrom(conversationId);
-        msgNotification.setTo(conversationId);
-        msgNotification.setUnread(false);
-        msgNotification.setChatType(EMMessage.ChatType.GroupChat);
-        msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL);
-//        msgNotification.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
-        msgNotification.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
-        msgNotification.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
-        msgNotification.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
-        msgNotification.setAttribute(MyConstant.GROUP_NAME, mGroupModel.getGroupName());
-        msgNotification.setAttribute(MyConstant.GROUP_HEAD, mGroupModel.getGroupHeadImg());
-        msgNotification.setStatus(EMMessage.Status.SUCCESS);
-        EMClient.getInstance().chatManager().saveMessage(msgNotification);
-    }
 
     public void startAudio() {
         //监听授权

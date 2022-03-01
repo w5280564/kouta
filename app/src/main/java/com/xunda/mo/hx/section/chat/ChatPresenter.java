@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.StringRes;
 
-import com.hyphenate.EMChatRoomChangeListener;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMContactListener;
 import com.hyphenate.EMConversationListener;
@@ -26,7 +25,6 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMucSharedFile;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMUserInfo;
-import com.hyphenate.chat.adapter.EMAChatRoomManagerListener;
 import com.hyphenate.easecallkit.base.EaseCallUserInfo;
 import com.hyphenate.easecallkit.livedatas.EaseLiveDataBus;
 import com.hyphenate.easecallkit.utils.EaseCallKitUtils;
@@ -54,6 +52,7 @@ import com.xunda.mo.hx.section.group.GroupHelper;
 import com.xunda.mo.main.MainActivity;
 import com.xunda.mo.main.baseView.MyApplication;
 import com.xunda.mo.main.constant.MyConstant;
+import com.xunda.mo.main.info.MyInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -150,6 +149,58 @@ public class ChatPresenter extends EaseChatPresenter {
     }
 
 
+    private void saveDoubleRecallMesGroupChat(String conversationId) {
+        DemoHelper.getInstance().getGroupManager().asyncGetGroupFromServer(conversationId, new EMValueCallBack<EMGroup>() {
+            @Override
+            public void onSuccess(EMGroup value) {
+                MyInfo myInfo = new MyInfo(context);
+                EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                EMTextMessageBody txtBody = new EMTextMessageBody("撤回了所有消息");
+                msgNotification.addBody(txtBody);
+                msgNotification.setFrom(conversationId);
+                msgNotification.setTo(conversationId);
+                msgNotification.setUnread(false);
+                msgNotification.setChatType(EMMessage.ChatType.GroupChat);
+                msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL);
+                msgNotification.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
+                msgNotification.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
+                msgNotification.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
+                msgNotification.setAttribute(MyConstant.GROUP_NAME, value.getGroupName());
+                msgNotification.setAttribute(MyConstant.GROUP_HEAD, value.getExtension());
+                msgNotification.setStatus(EMMessage.Status.SUCCESS);
+                EMClient.getInstance().chatManager().saveMessage(msgNotification);
+                messageChangeLiveData.with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE).postValue(EaseEvent.create(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.TYPE.MESSAGE));
+                messageChangeLiveData.with(MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL).postValue(conversationId);
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+
+            }
+        });
+    }
+
+
+    private void saveDoubleRecallMesSingleChat(String conversationId) {
+        DemoHelper.getInstance().getConversation(conversationId, EMConversation.EMConversationType.Chat, false);
+        EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        EMTextMessageBody txtBody = new EMTextMessageBody("对方撤回了所有消息");
+        msgNotification.addBody(txtBody);
+        msgNotification.setFrom(conversationId);
+        msgNotification.setTo(conversationId);
+        msgNotification.setUnread(false);
+        msgNotification.setChatType(EMMessage.ChatType.Chat);
+        msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL);
+        msgNotification.setStatus(EMMessage.Status.SUCCESS);
+        EMClient.getInstance().chatManager().saveMessage(msgNotification);
+    }
+
+    private void removeMes(String conversationId) {
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId);
+        conversation.clearAllMessages();
+    }
+
+
     /**
      * \~chinese
      * 接收消息
@@ -174,9 +225,13 @@ public class ChatPresenter extends EaseChatPresenter {
                 } else if (TextUtils.equals(messType, MyConstant.MESS_TYPE_GROUP_HORN)) {
                     messageChangeLiveData.with(MyConstant.MESS_TYPE_GROUP_HORN).postValue(message);
                 }else if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
+                    removeMes(message.conversationId());
+                    saveDoubleRecallMesSingleChat(message.conversationId());
+                    messageChangeLiveData.with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE).postValue(EaseEvent.create(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.TYPE.MESSAGE));
                     messageChangeLiveData.with(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL).postValue(message.conversationId());
                 }else if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
-                    messageChangeLiveData.with(MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL).postValue(message.conversationId());
+                    removeMes(message.conversationId());
+                    saveDoubleRecallMesGroupChat(message.conversationId());
                 }
             }
 
