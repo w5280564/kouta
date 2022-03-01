@@ -108,7 +108,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         conversationListLayout.hideUnreadDot(false);
         //设置未读消息数展示位置，默认为左侧
         conversationListLayout.showUnreadDotPosition(EaseConversationSetStyle.UnreadDotPosition.LEFT);
-
+        conversationListLayout.showSystemMessage(true);//是否展示系统消息
         initViewModel();
     }
 
@@ -159,14 +159,6 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         super.initData();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        conversationListLayout.showSystemMessage(false);//是否展示系统消息
-        makeAllMsgRead();//系统消息设置为已读
-
-
-    }
 
 
     @Override
