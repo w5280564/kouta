@@ -165,8 +165,22 @@ public class ChatPresenter extends EaseChatPresenter {
         EaseEvent event = EaseEvent.create(DemoConstant.MESSAGE_CHANGE_RECEIVE, EaseEvent.TYPE.MESSAGE);
         messageChangeLiveData.with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(event);
         for (EMMessage message : messages) {
-            EMLog.d(TAG, "onMessageReceived id : " + message.getMsgId());
-            EMLog.d(TAG, "onMessageReceived: " + message.getType());
+            String messType = message.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
+            if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+                if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
+                    messageChangeLiveData.with(MyConstant.GROUP_CHAT_ANONYMOUS).postValue(true);
+                } else if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
+                    messageChangeLiveData.with(MyConstant.GROUP_CHAT_ANONYMOUS).postValue(false);
+                } else if (TextUtils.equals(messType, MyConstant.MESS_TYPE_GROUP_HORN)) {
+                    messageChangeLiveData.with(MyConstant.MESS_TYPE_GROUP_HORN).postValue(message);
+                }else if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
+                    messageChangeLiveData.with(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL).postValue(message.conversationId());
+                }else if (TextUtils.equals(messType, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
+                    messageChangeLiveData.with(MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL).postValue(message.conversationId());
+                }
+            }
+
+
             // 如果设置群组离线消息免打扰，则不进行消息通知
             List<String> disabledIds = DemoHelper.getInstance().getPushManager().getNoPushGroups();
             if (disabledIds != null && disabledIds.contains(message.conversationId())) {
@@ -183,21 +197,6 @@ public class ChatPresenter extends EaseChatPresenter {
             }
             //notify new message
             getNotifier().vibrateAndPlayTone(message);
-
-            String messType = message.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-            if (TextUtils.equals(messType, MyConstant.MESS_TYPE_GROUP_HORN)) {
-                messageChangeLiveData.with(MyConstant.MESS_TYPE_GROUP_HORN).postValue(message);
-            }
-
-            if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-                String isAnonymousOn = message.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-                if (TextUtils.equals(isAnonymousOn, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
-                    LiveDataBus.get().with(MyConstant.GROUP_CHAT_ANONYMOUS).postValue(true);
-                } else if (TextUtils.equals(isAnonymousOn, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
-                    LiveDataBus.get().with(MyConstant.GROUP_CHAT_ANONYMOUS).postValue(false);
-                }
-            }
-
         }
     }
 

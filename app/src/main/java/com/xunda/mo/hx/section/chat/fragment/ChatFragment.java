@@ -245,9 +245,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
         });
 
-        //收到的消息
-        msgListener = new EMMessageMethod();
-        EMClient.getInstance().chatManager().addMessageListener(msgListener);
         initChatData();
     }
 
@@ -374,8 +371,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
 
-    public EMMessageListener msgListener;
-
     @Override
     public void onResume() {
         super.onResume();
@@ -384,8 +379,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //记得在不需要的时候移除listener，如在activity的onDestroy()时
-        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 
     private void addItemMenuAction() {
@@ -505,19 +498,31 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         });
 
 
-        LiveDataBus.get().with(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL, EaseEvent.class).observe(this, new Observer<EaseEvent>() {
+        LiveDataBus.get().with(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL, String.class).observe(this, new Observer<String>() {
             @Override
-            public void onChanged(EaseEvent event) {
+            public void onChanged(String event) {
                 if (event == null) {
                     return;
                 }
-                EMMessage conMsg = chatLayout.getChatMessageListLayout().getCurrentConversation().getLastMessage();
-                String isDouble_Recall = conMsg.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-                if (TextUtils.equals(isDouble_Recall, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
+                if (event.equals(conversationId)) {
                     recallTo();
                 }
             }
         });
+
+
+        LiveDataBus.get().with(MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL, String.class).observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String event) {
+                if (event == null) {
+                    return;
+                }
+                if (event.equals(conversationId)) {
+                    recallGroupTo();
+                }
+            }
+        });
+
 
         LiveDataBus.get().with(MyConstant.BURN_AFTER_READING_SET, Boolean.class).observe(this, new Observer<Boolean>() {
             @Override
@@ -1314,77 +1319,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     }
 
 
-    public class EMMessageMethod implements EMMessageListener {
-        @SneakyThrows
-        @Override
-        public void onMessageReceived(List<EMMessage> messages) {
-            Log.i("message", messages.toString());
-            //接收消息的时候获取到扩展属性
-            //获取自定义的属性，第2个参数为没有此定义的属性时返回的默认值
-            for (EMMessage msg : messages) {
-                if (chatType == EaseConstant.CHATTYPE_SINGLE) {
-                    // 消息所属会话
-                    EMConversation conversation = EMClient.getInstance().chatManager().getConversation(msg.getUserName(), EMConversation.EMConversationType.Chat, true);
-                    String isDouble_Recall = msg.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-                    if (TextUtils.equals(isDouble_Recall, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL)) {
-//                            EaseEvent event = EaseEvent.create(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL, EaseEvent.TYPE.MESSAGE);
-//                            LiveDataBus.get().with(MyConstant.MESSAGE_TYPE_DOUBLE_RECALL).postValue(event);
-                        // 删除消息
-                        conversation.clearAllMessages();
-                        saveMes(conversation.conversationId());
-                    }
-                } else if (chatType == EaseConstant.CHATTYPE_GROUP) {
-                    String isAnonymousOn = msg.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-                    if (TextUtils.equals(isAnonymousOn, MyConstant.MESSAGE_TYPE_ANONYMOUS_ON)) {
-                        mGroupModel.setIsAnonymous(1);
-                        sendAnonymousName(1);
-                    } else if (TextUtils.equals(isAnonymousOn, MyConstant.MESSAGE_TYPE_ANONYMOUS_OFF)) {
-                        mGroupModel.setIsAnonymous(0);
-                        sendAnonymousName(0);
-                    }
-
-                    EMConversation conversation = EMClient.getInstance().chatManager().getConversation(msg.getUserName(), EMConversation.EMConversationType.Chat, true);
-                    String isDouble_Recall = msg.getStringAttribute(MyConstant.MESSAGE_TYPE, "");
-                    if (TextUtils.equals(isDouble_Recall, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL)) {
-                        // 删除消息
-                        recallGroupTo();
-                    }
-
-                }
-            }
-
-        }
-
-        @Override
-        public void onCmdMessageReceived(List<EMMessage> messages) {
-            //收到透传消息
-            Log.i("message", "透传");
-        }
-
-        @Override
-        public void onMessageRead(List<EMMessage> messages) {
-            //收到已读回执
-            Log.i("message", messages.toString());
-        }
-
-        @Override
-        public void onMessageDelivered(List<EMMessage> message) {
-            //收到已送达回执
-            Log.i("message", "送达");
-        }
-
-        @Override
-        public void onMessageRecalled(List<EMMessage> messages) {
-            //消息被撤回
-            Log.i("message", "撤回");
-        }
-
-        @Override
-        public void onMessageChanged(EMMessage message, Object change) {
-            //消息状态变动
-            Log.i("message", "消息变动");
-        }
-    }
 
 
     //发送单聊撤回消息
