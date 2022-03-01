@@ -58,6 +58,7 @@ import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.conversation.Group_Notices;
 import com.xunda.mo.main.discover.activity.Discover_QRCode;
 import com.xunda.mo.main.friend.activity.Friend_Add;
+import com.xunda.mo.main.friend.activity.Friend_NewFriends;
 import com.xunda.mo.model.ChatUserBean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
@@ -294,7 +295,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
             if (TextUtils.equals((currentConversation).getLastMessage().getFrom(), MyConstant.ADMIN)) {
                 Group_Notices.actionStart(mContext, (currentConversation).conversationId());
             } else if (EaseSystemMsgManager.getInstance().isSystemConversation(currentConversation)) {
-                SystemMsgsActivity.actionStart(mContext);
+                Friend_NewFriends.actionStart(mContext);
             } else {
                 if (EaseCommonUtils.getChatType(currentConversation) == EaseConstant.CHATTYPE_GROUP) {
                     if (isMOCustomer(currentConversation)) {

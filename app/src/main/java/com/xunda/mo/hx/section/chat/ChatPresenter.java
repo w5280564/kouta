@@ -140,13 +140,13 @@ public class ChatPresenter extends EaseChatPresenter {
     }
 
     void showToast(final String message) {
-        Log.d(TAG, "receive invitation to join the group：" + message);
-        if (handler != null) {
-            Message msg = Message.obtain(handler, HANDLER_SHOW_TOAST, message);
-            handler.sendMessage(msg);
-        } else {
-            msgQueue.add(message);
-        }
+//        Log.d(TAG, "receive invitation to join the group：" + message);
+//        if (handler != null) {
+//            Message msg = Message.obtain(handler, HANDLER_SHOW_TOAST, message);
+//            handler.sendMessage(msg);
+//        } else {
+//            msgQueue.add(message);
+//        }
     }
 
 
@@ -829,29 +829,7 @@ public class ChatPresenter extends EaseChatPresenter {
         @Override
         public void onFriendRequestAccepted(String username) {
             EMLog.i("ChatContactListener", "onFriendRequestAccepted");
-            List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
-            if (allMessages != null && !allMessages.isEmpty()) {
-                for (EMMessage message : allMessages) {
-                    Map<String, Object> ext = message.ext();
-                    if (ext != null && (ext.containsKey(DemoConstant.SYSTEM_MESSAGE_FROM)
-                            && TextUtils.equals(username, (String) ext.get(DemoConstant.SYSTEM_MESSAGE_FROM)))) {
-                        updateMessage(message);
-                        return;
-                    }
-                }
-            }
-            Map<String, Object> ext = EaseSystemMsgManager.getInstance().createMsgExt();
-            ext.put(DemoConstant.SYSTEM_MESSAGE_FROM, username);
-            ext.put(DemoConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.BEAGREED.name());
-            EMMessage message = EaseSystemMsgManager.getInstance().createMessage(PushAndMessageHelper.getSystemMessage(ext), ext);
-
-//            notifyNewInviteMessage(message);
-
-//            EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
-//            messageChangeLiveData.with(DemoConstant.CONTACT_CHANGE).postValue(event);
-
-//            showToast(context.getString(InviteMessageStatus.BEAGREED.getMsgContent()));
-            EMLog.i(TAG, context.getString(InviteMessageStatus.BEAGREED.getMsgContent()));
+            saveFriendFriendRequestAcceptedMessage(username);
         }
 
         @Override
@@ -869,6 +847,42 @@ public class ChatPresenter extends EaseChatPresenter {
 //            showToast(context.getString(InviteMessageStatus.BEREFUSED.getMsgContent(), username));
             EMLog.i(TAG, context.getString(InviteMessageStatus.BEREFUSED.getMsgContent(), username));
         }
+    }
+
+
+    private void saveFriendFriendRequestAcceptedMessage(String userName) {
+        String[] userId = new String[1];
+        userId[0] = userName;
+        EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(userId, new EMValueCallBack<Map<String, EMUserInfo>>() {
+            @Override
+            public void onSuccess(Map<String, EMUserInfo> value) {
+                EMUserInfo userInfo = value.get(userName);
+                if (userInfo==null) {
+                    return;
+                }
+
+                EMMessage emMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                emMessage.setFrom(userName);
+                emMessage.setMsgId(UUID.randomUUID().toString());
+                emMessage.setStatus(EMMessage.Status.SUCCESS);
+                emMessage.setUnread(true);
+                emMessage.setChatType(EMMessage.ChatType.Chat);
+                emMessage.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_APPLY);
+                emMessage.setAttribute(MyConstant.CONTENT, String.format("%s已同意添加好友，现在可以开始聊天了",userInfo.getNickName()));
+                emMessage.setAttribute(MyConstant.SEND_NAME, userInfo.getNickName());
+                emMessage.setAttribute(MyConstant.SEND_HEAD, userInfo.getAvatarUrl());
+                EMClient.getInstance().chatManager().saveMessage(emMessage);
+                LiveDataBus.get().with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE).postValue(EaseEvent.create(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.TYPE.MESSAGE));
+
+                EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_CHANGE, EaseEvent.TYPE.CONTACT);
+                messageChangeLiveData.with(DemoConstant.CONTACT_CHANGE).postValue(event);
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+
+            }
+        });
     }
 
 
