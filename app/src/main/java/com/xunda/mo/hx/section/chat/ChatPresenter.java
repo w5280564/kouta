@@ -163,6 +163,7 @@ public class ChatPresenter extends EaseChatPresenter {
                 msgNotification.setChatType(EMMessage.ChatType.GroupChat);
                 msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_GROUP_DOUBLE_RECALL);
                 msgNotification.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
+                msgNotification.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
                 msgNotification.setAttribute(MyConstant.SEND_LH, myInfo.getUserInfo().getLightStatus().toString());
                 msgNotification.setAttribute(MyConstant.SEND_VIP, myInfo.getUserInfo().getVipType());
                 msgNotification.setAttribute(MyConstant.GROUP_NAME, value.getGroupName());
@@ -182,6 +183,7 @@ public class ChatPresenter extends EaseChatPresenter {
 
 
     private void saveDoubleRecallMesSingleChat(String conversationId) {
+        MyInfo myInfo = new MyInfo(context);
         DemoHelper.getInstance().getConversation(conversationId, EMConversation.EMConversationType.Chat, false);
         EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody txtBody = new EMTextMessageBody("对方撤回了所有消息");
@@ -190,6 +192,8 @@ public class ChatPresenter extends EaseChatPresenter {
         msgNotification.setTo(conversationId);
         msgNotification.setUnread(false);
         msgNotification.setChatType(EMMessage.ChatType.Chat);
+        msgNotification.setAttribute(MyConstant.SEND_HEAD, myInfo.getUserInfo().getHeadImg());
+        msgNotification.setAttribute(MyConstant.SEND_NAME, myInfo.getUserInfo().getNickname());
         msgNotification.setAttribute(MyConstant.MESSAGE_TYPE, MyConstant.MESSAGE_TYPE_DOUBLE_RECALL);
         msgNotification.setStatus(EMMessage.Status.SUCCESS);
         EMClient.getInstance().chatManager().saveMessage(msgNotification);
