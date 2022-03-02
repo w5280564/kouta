@@ -68,8 +68,7 @@ public class MyEaseChatRowCustom extends BaseChatRowWithNameAndHeader {
             CharSequence final_CharSequence = txtBody.getMessage();
             contentView.setText(EaseSmileUtils.getSmiledText(context, final_CharSequence));
             String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
-            int defaultAvatar = R.mipmap.img_pic_none;
-            Glide.with(getContext()).load(headUrl).placeholder(defaultAvatar).error(defaultAvatar).into(userAvatarView);
+            Glide.with(getContext()).load(headUrl).placeholder(R.mipmap.img_pic_none).error(R.mipmap.img_pic_none).into(userAvatarView);
         } else {
 
             Map<String, Object> mapExt = message.ext();
@@ -94,15 +93,17 @@ public class MyEaseChatRowCustom extends BaseChatRowWithNameAndHeader {
                         contentView.setText(content);
                     }
                 }
-
+                usernickView.setText("Mo客服");
+                userAvatarView.setImageResource(R.mipmap.adress_head_service);
             } else {
                 EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
                 CharSequence final_CharSequence = txtBody.getMessage();
                 contentView.setText(EaseSmileUtils.getSmiledText(context, final_CharSequence));
+                usernickView.setText(sendName);
+                Glide.with(getContext()).load(headUrl).placeholder(R.mipmap.img_pic_none).error(R.mipmap.img_pic_none).into(userAvatarView);
             }
 
-            usernickView.setText("Mo客服");
-            userAvatarView.setImageResource(R.mipmap.adress_head_service);
+
         }
     }
 
