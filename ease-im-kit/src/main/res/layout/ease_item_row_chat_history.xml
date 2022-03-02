@@ -18,7 +18,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:scaleType="centerCrop"
-        app:ease_shape_type="rectangle"/>
+        app:ease_shape_type="rectangle"
+        app:ease_radius="4dp"/>
 
 
     <TextView
@@ -31,13 +32,28 @@
         app:layout_constraintHorizontal_bias="0"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="11dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:maxLines="1"
         android:ellipsize="end"
         android:textStyle="bold"
-        android:textSize="16sp"
+        android:textSize="15sp"
         android:textColor="#444444"
         tools:text="聊天室"/>
+
+    <TextView
+        android:id="@+id/tv_official"
+        android:layout_width="30dp"
+        android:layout_height="15dp"
+        android:background="@drawable/shape_official_bag"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="@id/name"
+        app:layout_constraintStart_toEndOf="@id/name"
+        app:layout_constraintBottom_toBottomOf="@id/name"
+        android:layout_marginStart="5dp"
+        android:textSize="10sp"
+        android:textColor="@color/app_main_color_blue"
+        android:text="官方"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/unread_msg_number"
@@ -100,10 +116,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/name"
+        app:layout_constraintBottom_toBottomOf="@id/avatar"
         app:layout_constraintLeft_toRightOf="@id/mentioned"
         app:layout_constraintRight_toLeftOf="@id/rl_unread_right"
         app:layout_constraintHorizontal_bias="0"
-        android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
         android:layout_marginEnd="20dp"
         android:layout_marginLeft="2dp"

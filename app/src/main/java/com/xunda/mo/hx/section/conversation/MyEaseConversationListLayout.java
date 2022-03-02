@@ -96,7 +96,7 @@ public class MyEaseConversationListLayout extends EaseBaseLayout implements ICon
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).getLifecycle().addObserver(presenter);
         }
-        initAttrs(context, attrs);
+//        initAttrs(context, attrs);
         initViews();
     }
 

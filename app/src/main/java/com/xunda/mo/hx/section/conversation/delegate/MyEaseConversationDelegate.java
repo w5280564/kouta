@@ -138,7 +138,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                 if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TXT_TYPE_GROUP_NOTIFY)) {
                     HeadName = "群通知";
                     holder.avatar.setImageResource(R.mipmap.group_notification);
-                    holder.name.setTextColor(ContextCompat.getColor(context, R.color.app_main_color));
+                    holder.name.setTextColor(ContextCompat.getColor(context, R.color.app_main_color_blue));
                     holder.name.setText(HeadName);
                 } else {
                     boolean isSender = myInfo.getUserInfo().getHxUserName().equals(lastMessage.getFrom());

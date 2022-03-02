@@ -55,7 +55,7 @@ public class SystemMessageDelegate extends EaseSystemMsgDelegate{
                 if (TextUtils.equals(item.getLastMessage().getFrom(), MyConstant.DEFAULT_SYSTEM_MESSAGE_ID)) {
                     holder.listIteaseLayout.setBackground(MyEaseCommonUtils.isTimestamp(item.getExtField())?ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg):null);
                     holder.avatar.setImageResource(com.hyphenate.easeui.R.drawable.em_system_nofinication);
-                    holder.name.setTextColor(ContextCompat.getColor(context, R.color.app_main_color));
+                    holder.name.setTextColor(ContextCompat.getColor(context, R.color.app_main_color_blue));
                     String message = "";
                     String name = "系统消息";
                     if (lastMessage!=null) {

@@ -40,7 +40,6 @@ public class EaseSystemMsgDelegate extends EaseDefaultConversationDelegate {
     protected void onBindConViewHolder(ViewHolder holder, int position, EaseConversationInfo bean) {
         EMConversation item = (EMConversation) bean.getInfo();
         Context context = holder.itemView.getContext();
-        String username = item.conversationId();
         holder.listIteaseLayout.setBackground(!TextUtils.isEmpty(item.getExtField())
                 ? ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg)
                 : null);
