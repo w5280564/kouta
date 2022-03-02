@@ -17,9 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.easeui.model.EaseEvent;
 import com.xunda.mo.R;
 import com.xunda.mo.dialog.TwoButtonDialogWithTitle;
 import com.xunda.mo.hx.DemoHelper;
+import com.xunda.mo.hx.common.constant.DemoConstant;
+import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.group.adapter.GroupNotice_Adapter;
@@ -330,9 +333,9 @@ public class Group_Notices extends BaseInitActivity {
 
 
     public void makeAllMsgRead() {
-//        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(MyConstant.ADMIN, EMConversation.EMConversationType.Chat, true);
         EMConversation conversation = DemoHelper.getInstance().getChatManager().getConversation(conversationId);
         conversation.markAllMessagesAsRead();
+        LiveDataBus.get().with(DemoConstant.NOTIFY_CHANGE).postValue(EaseEvent.create(DemoConstant.NOTIFY_CHANGE, EaseEvent.TYPE.NOTIFY));
     }
 
 }

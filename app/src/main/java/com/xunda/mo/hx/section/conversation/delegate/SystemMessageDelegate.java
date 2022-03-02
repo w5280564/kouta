@@ -56,6 +56,7 @@ public class SystemMessageDelegate extends EaseSystemMsgDelegate{
                     holder.listIteaseLayout.setBackground(MyEaseCommonUtils.isTimestamp(item.getExtField())?ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg):null);
                     holder.avatar.setImageResource(com.hyphenate.easeui.R.drawable.em_system_nofinication);
                     holder.name.setTextColor(ContextCompat.getColor(context, R.color.app_main_color_blue));
+                    holder.tv_official.setVisibility(View.GONE);
                     String message = "";
                     String name = "系统消息";
                     if (lastMessage!=null) {
@@ -84,6 +85,7 @@ public class SystemMessageDelegate extends EaseSystemMsgDelegate{
                                     }
                                 }
                                 name = "好友申请";
+                                holder.tv_official.setVisibility(View.GONE);
                                 message = context.getString(status.getMsgContent(), friend_name);
                                 holder.avatar.setImageResource(R.drawable.em_system_nofinication);
                             } else if (status == InviteMessageStatus.BEAPPLYED) { //application to join group

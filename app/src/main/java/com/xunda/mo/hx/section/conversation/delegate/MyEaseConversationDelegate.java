@@ -90,6 +90,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         Log.e("EaseConversationDelegate", "会话拓展》》" + item.getExtField());
         holder.listIteaseLayout.setBackground(MyEaseCommonUtils.isTimestamp(item.getExtField()) ? ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg) : null);
         holder.mentioned.setVisibility(View.GONE);
+        holder.tv_official.setVisibility(View.GONE);
         int defaultAvatar = R.mipmap.img_pic_none;
         String HeadAvatar = "";
         String HeadName = "";
@@ -99,6 +100,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
 
         Log.e("EaseConversationDelegate", "会话类型》》" + item.getType());
         if (item.getType() == EMConversation.EMConversationType.GroupChat) {
+            holder.tv_official.setVisibility(View.GONE);
             if (item.getAllMsgCount() != 0) {
                 if (isMOCustomer(item.getLastMessage())) {
                     HeadName = "MO客服";
@@ -142,6 +144,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                     holder.name.setTextColor(ContextCompat.getColor(context, R.color.app_main_color_blue));
                     holder.name.setText(HeadName);
                 } else {
+                    holder.tv_official.setVisibility(View.GONE);
                     boolean isSender = myInfo.getUserInfo().getHxUserName().equals(lastMessage.getFrom());
                     EaseUserProfileProvider userProvider = EaseIM.getInstance().getUserProvider();
                     if (isSender) {
