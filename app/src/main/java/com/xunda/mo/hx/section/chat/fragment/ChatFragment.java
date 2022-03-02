@@ -1164,6 +1164,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 jsonObject.put("isInsertGroupOrFriendInfo", true);
                 jsonObject.put("showImg", friendHeader);
                 jsonObject.put("showName", friendName);
+                jsonObject.put("vipType", mFriendModel.getVipType());
             } catch (JSONException e) {
                 jsonObject = getJsonObjectFriend();
             }
@@ -1182,6 +1183,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             jsonObject.put("isInsertGroupOrFriendInfo", true);
             jsonObject.put("showImg", friendHeader);
             jsonObject.put("showName", friendName);
+            jsonObject.put("vipType", mFriendModel.getVipType());
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -168,6 +168,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                         }
                     } else {//接收方
                         String header_url_message = lastMessage.getStringAttribute(MyConstant.SEND_HEAD, "");
+                        int vipType = lastMessage.getIntAttribute(MyConstant.TO_VIP, 0);
                         EaseUserUtils.setUserAvatarAndSendHeaderUrl(context, lastMessage.getFrom(), header_url_message, holder.avatar);
                         HeadName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
                         if (userProvider != null) {
@@ -195,6 +196,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                                     boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
                                     if (isInsertGroupOrFriendInfo) {
                                         HeadName = JsonObject.getString("showName");
+                                        vipType = JsonObject.getInt("vipType");
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();

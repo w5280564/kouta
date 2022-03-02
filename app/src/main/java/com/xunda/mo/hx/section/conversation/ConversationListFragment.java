@@ -478,7 +478,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
 
                 String showImg = data.getHeadImg();
                 String showName = data.getRemarkName();
-                refreshFriendMessage(currentConversation.getLastMessage(),showImg,showName);
+                refreshFriendMessage(currentConversation.getLastMessage(),showImg,showName,data.getVipType());
                 ChatActivity.actionStart(mContext, currentConversation.conversationId(), EaseCommonUtils.getChatType(currentConversation));
             }
 
@@ -490,9 +490,10 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
     }
 
     //刷新这好友消息
-    private void refreshFriendMessage(EMMessage lastMessage,String friendHeadImg,String friendName) {
+    private void refreshFriendMessage(EMMessage lastMessage,String friendHeadImg,String friendName,int vipType) {
         lastMessage.setAttribute(MyConstant.TO_NAME, friendName);
         lastMessage.setAttribute(MyConstant.TO_HEAD, friendHeadImg);
+        lastMessage.setAttribute(MyConstant.TO_VIP, vipType);
         EMClient.getInstance().chatManager().updateMessage(lastMessage);
         LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
     }
