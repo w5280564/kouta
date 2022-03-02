@@ -109,4 +109,7 @@ public interface MyConstant extends DemoConstant {
     String MESSAGE_CHANGE_SAVE_MESSAGE = "message_save";
 
     String MESSAGE_TXT_TYPE_GROUP_NOTIFY = "groupNotify";//群修改消息
+
+    String CUSTOMER_MESSAGE_TYPE = "customerMessageType";//1已接入人工客服   2 结束 3 时间过长
+
 }

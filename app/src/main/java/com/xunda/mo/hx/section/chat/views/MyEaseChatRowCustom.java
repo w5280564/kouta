@@ -9,14 +9,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.manager.EaseDingMessageHelper;
-import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
+import com.hyphenate.easeui.utils.EaseSmileUtils;
 import com.xunda.mo.R;
 import com.xunda.mo.main.baseView.FlowLayout;
 import com.xunda.mo.main.constant.MyConstant;
@@ -24,12 +23,11 @@ import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.model.baseDataModel;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.xUtils3Http;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyEaseChatRowCustom extends EaseChatRow {
+public class MyEaseChatRowCustom extends BaseChatRowWithNameAndHeader {
 
     private TextView contentView, question_Txt;
     private FlowLayout label_Flow;
@@ -50,67 +48,65 @@ public class MyEaseChatRowCustom extends EaseChatRow {
 
     @Override
     protected void onFindViewById() {
-        contentView = (TextView) findViewById(R.id.tv_chatcontent);
-        question_Txt = (TextView) findViewById(R.id.question_Txt);
-        label_Flow = (FlowLayout) findViewById(R.id.label_Flow);
+        contentView = findViewById(R.id.tv_chatcontent);
+        question_Txt = findViewById(R.id.question_Txt);
+        label_Flow = findViewById(R.id.label_Flow);
     }
 
     @Override
     public void onSetUpView() {
         if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-            if (isSender()) {
-                EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-                contentView.setText(txtBody.getMessage());
-                String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
-                int defaultAvatar =R.drawable.mo_icon;
-//                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).error(defaultAvatar).into(userAvatarView);
-                Glide.with(getContext()).load(headUrl).into(userAvatarView);
-            } else {
-                Map<String, Object> mapExt = message.ext();
-                String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
-                String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
+            setAvatarAndNick();
+        }
+    }
 
-                question_Txt.setVisibility(GONE);
-                label_Flow.setVisibility(GONE);
-                //没有sendName就是人工客服
-                if (TextUtils.isEmpty(sendName)) {
-                    sendName = "MO 客服";
-                    if (mapExt != null) {
-                        String questionStr = (String) mapExt.get(MyConstant.QUESTIONS);
-                        //没有问题列表 显示客服答案
-                        if (!TextUtils.isEmpty(questionStr)) {
-                            String content = (String) mapExt.get(MyConstant.CONTENT);
-                            contentView.setText(content);
-                            question_Txt.setVisibility(VISIBLE);
-                            label_Flow.setVisibility(VISIBLE);
-                            labelFlow(label_Flow, context, questionStr);
-                        } else {
-                            String content = (String) mapExt.get(MyConstant.MSG);
-                            contentView.setText(content);
-                        }
+
+    @Override
+    protected void setAvatarAndNick() {
+        if (isSender()) {
+            EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+            CharSequence final_CharSequence = txtBody.getMessage();
+            contentView.setText(EaseSmileUtils.getSmiledText(context, final_CharSequence));
+            String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
+            int defaultAvatar = R.mipmap.img_pic_none;
+            Glide.with(getContext()).load(headUrl).placeholder(defaultAvatar).error(defaultAvatar).into(userAvatarView);
+        } else {
+
+            Map<String, Object> mapExt = message.ext();
+            String sendName = message.getStringAttribute(MyConstant.SEND_NAME, "");
+            String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
+
+            question_Txt.setVisibility(GONE);
+            label_Flow.setVisibility(GONE);
+            //没有sendName就是机器客服
+            if (TextUtils.isEmpty(sendName)) {
+                if (mapExt != null) {
+                    String questionStr = (String) mapExt.get(MyConstant.QUESTIONS);
+                    //没有问题列表 显示客服答案
+                    if (!TextUtils.isEmpty(questionStr)) {
+                        String content = (String) mapExt.get(MyConstant.CONTENT);
+                        contentView.setText(content);
+                        question_Txt.setVisibility(VISIBLE);
+                        label_Flow.setVisibility(VISIBLE);
+                        labelFlow(label_Flow, context, questionStr);
+                    } else {
+                        String content = (String) mapExt.get(MyConstant.MSG);
+                        contentView.setText(content);
                     }
-
-                    int defaultAvatar = R.mipmap.adress_head_service;
-                    Glide.with(getContext()).load(defaultAvatar).into(userAvatarView);
-                } else {
-                    EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-                    contentView.setText(txtBody.getMessage());
-                    Glide.with(getContext()).load(headUrl).into(userAvatarView);
                 }
 
-                usernickView.setText(sendName);
-//                int defaultAvatar = R.mipmap.adress_head_service;
-////                Glide.with(getContext()).load(headUrl).placeholder(R.drawable.mo_icon).error(defaultAvatar).into(userAvatarView);
-//                Glide.with(getContext()).load(headUrl).placeholder(defaultAvatar).into(userAvatarView);
-
+            } else {
+                EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+                CharSequence final_CharSequence = txtBody.getMessage();
+                contentView.setText(EaseSmileUtils.getSmiledText(context, final_CharSequence));
             }
+
+            usernickView.setText("Mo客服");
+            userAvatarView.setImageResource(R.mipmap.adress_head_service);
         }
-
-
-//        EMCustomMessageBody txtBody = (EMCustomMessageBody) message.getBody();
-//        String msg = context.getString(R.string.custom_message, txtBody.event());
-//        contentView.setText(msg);
     }
+
+
 
     public void onAckUserUpdate(final int count) {
         if (ackedView != null && isSender()) {
