@@ -28,9 +28,6 @@ public class saveFile {
     public static String User_Register_Url = "user/register";
     public static String User_Login_Url = "user/login";
     public static String User_SecurityQuestionList_Url = "public/getSecurityQuestionList";
-    public static String User_ForgetQuestionList_Url = "public/getUserQuestionList";
-    public static String User_addQuestionBack_Url = "public/addQuestionBack";
-    public static String User_PublicQuestionBack_Url = "public/questionBack";
     public static String User_GetPhone_Url = "public/getPhone";
     public static String User_checkPhone_Url = "public/checkPhone";
     public static String User_checkPhoneNoSms_Url = "public/checkPhoneNoSms";
