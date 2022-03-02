@@ -24,6 +24,9 @@ import com.xunda.mo.hx.common.interfaceOrImplement.ResultCallBack;
 import com.xunda.mo.hx.common.net.ErrorCode;
 import com.xunda.mo.hx.common.net.Resource;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -70,7 +73,15 @@ public class EMChatManagerRepository extends BaseEMRepository{
                 if (conversation.getAllMessages().size() != 0) {
                     String extField = conversation.getExtField();
                     if(!TextUtils.isEmpty(extField) && MyEaseCommonUtils.isTimestamp(extField)) {
-                        topSortList.add(new Pair<>(Long.valueOf(extField), conversation));
+                        long timestamp = 0L;
+                        JSONObject JsonObject = null;
+                        try {
+                            JsonObject = new JSONObject(extField);
+                            timestamp = JsonObject.getLong("topTimeMillis");//1 置顶时间戳
+                            topSortList.add(new Pair<>(timestamp, conversation));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }else {
                         sortList.add(new Pair<Long, Object>(conversation.getLastMessage().getMsgTime(), conversation));
                     }
