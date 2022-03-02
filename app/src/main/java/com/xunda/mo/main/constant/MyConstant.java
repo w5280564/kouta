@@ -108,5 +108,5 @@ public interface MyConstant extends DemoConstant {
 
     String MESSAGE_CHANGE_SAVE_MESSAGE = "message_save";
 
-    String MESSAGE_TXT_TYPE_GROUP_NOTIFY = "groupNotify";//社区修改消息
+    String MESSAGE_TXT_TYPE_GROUP_NOTIFY = "groupNotify";//群修改消息
 }

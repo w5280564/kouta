@@ -33,7 +33,7 @@ public class MyEaseCommonUtils {
 
 
     /**
-     * 判断是否保存好友或社区了会话信息
+     * 判断是否保存好友或群了会话信息
      * @param extField
      * @return
      */

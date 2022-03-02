@@ -88,11 +88,13 @@ public class SystemMessageDelegate extends EaseSystemMsgDelegate{
                                 holder.avatar.setImageResource(R.drawable.em_system_nofinication);
                             } else if (status == InviteMessageStatus.BEAPPLYED) { //application to join group
                                 name = "群通知";
+                                holder.tv_official.setVisibility(View.VISIBLE);
                                 holder.avatar.setImageResource(R.mipmap.group_notification);
                                 message = context.getString(InviteMessageStatus.BEAPPLYED.getMsgContent()
                                         , lastMessage.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_FROM), lastMessage.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_NAME));
                             } else if (status == InviteMessageStatus.GROUPINVITATION) {
                                 name = "群通知";
+                                holder.tv_official.setVisibility(View.VISIBLE);
                                 holder.avatar.setImageResource(R.mipmap.group_notification);
                                 message = context.getString(InviteMessageStatus.GROUPINVITATION.getMsgContent()
                                         , lastMessage.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_INVITER), lastMessage.getStringAttribute(DemoConstant.SYSTEM_MESSAGE_NAME));

@@ -48,7 +48,7 @@ public abstract class BaseChatRowWithNameAndHeader extends EaseChatRow{
             MyInfo mMyInfo = new MyInfo(context);
             Glide.with(getContext()).load(mMyInfo.getUserInfo().getHeadImg()).placeholder(R.mipmap.img_pic_none).error(R.mipmap.img_pic_none).into(userAvatarView);
         } else {
-            //添加社区其他用户的名字与头像
+            //添加群其他用户的名字与头像
             if (message.getChatType() == EMMessage.ChatType.GroupChat) {
                 List<GroupMember_Bean.DataDTO> memberList = new ArrayList<>();
                 EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.conversationId());

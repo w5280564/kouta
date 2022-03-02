@@ -136,7 +136,7 @@ public class MyEaseChatRowVoice extends EaseChatRowFile {
                 EaseUserUtils.setUserNick(message.getFrom(), usernickView);
             }
         } else {
-            //添加社区其他用户的名字与头像
+            //添加群其他用户的名字与头像
             if (message.getChatType() == EMMessage.ChatType.GroupChat) {
                 EMConversation conversation = EMClient.getInstance().chatManager().getConversation(message.conversationId());
                 String extMessage = conversation.getExtField();
