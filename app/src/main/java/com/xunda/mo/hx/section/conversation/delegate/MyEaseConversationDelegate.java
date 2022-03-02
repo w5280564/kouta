@@ -100,14 +100,15 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
 
         Log.e("EaseConversationDelegate", "会话类型》》" + item.getType());
         if (item.getType() == EMConversation.EMConversationType.GroupChat) {
-            holder.tv_official.setVisibility(View.GONE);
             if (item.getAllMsgCount() != 0) {
                 if (isMOCustomer(item.getLastMessage())) {
                     HeadName = "MO客服";
+                    holder.tv_official.setVisibility(View.VISIBLE);
                     holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
                     holder.avatar.setImageResource(R.mipmap.adress_head_service);
                     holder.name.setText(HeadName);
                 } else {
+                    holder.tv_official.setVisibility(View.GONE);
                     HeadName = item.getLastMessage().getStringAttribute(MyConstant.GROUP_NAME, "");
                     HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.GROUP_HEAD, "");
 
