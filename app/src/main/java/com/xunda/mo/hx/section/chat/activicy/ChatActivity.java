@@ -245,7 +245,7 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
     @Override
     public void onOtherTyping(String action) {
         if (TextUtils.equals(action, "TypingBegin")) {
-            titleBarMessage.setTitle(getString(com.hyphenate.easeui.R.string.alert_during_typing));
+//            titleBarMessage.setTitle(getString(com.hyphenate.easeui.R.string.alert_during_typing));
         } else if (TextUtils.equals(action, "TypingEnd")) {
             setDefaultTitle();
         }

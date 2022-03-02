@@ -427,7 +427,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         addItemMenuAction();
 
         chatLayout.getChatInputMenu().getPrimaryMenu().getEditText().setText(getUnSendMsg());
-        chatLayout.turnOnTypingMonitor(DemoHelper.getInstance().getModel().isShowMsgTyping());//正在输入监控
+        chatLayout.turnOnTypingMonitor(false);//正在输入监控
         LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
 
         LiveDataBus.get().with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.class).observe(this, new Observer<EaseEvent>() {

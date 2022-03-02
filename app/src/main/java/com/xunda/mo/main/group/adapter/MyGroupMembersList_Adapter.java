@@ -43,6 +43,7 @@ public class MyGroupMembersList_Adapter extends EaseBaseRecyclerViewAdapter<MyEa
         private TextView mHeader;
         private EaseImageView mAvatar;
         private TextView mName;
+        private TextView mSignature;
         private ConstraintLayout clUser;
         private LightningView vipType_txt;
 
@@ -55,8 +56,7 @@ public class MyGroupMembersList_Adapter extends EaseBaseRecyclerViewAdapter<MyEa
             mHeader = findViewById(R.id.header);
             mAvatar = findViewById(R.id.avatar);
             mName = findViewById(R.id.name);
-            TextView mSignature = findViewById(R.id.signature);
-            TextView mUnreadMsgNumber = findViewById(R.id.unread_msg_number);
+            mSignature = findViewById(R.id.signature);
             clUser = findViewById(R.id.cl_user);
             vipType_txt = findViewById(R.id.vipType_txt);
             EaseUserUtils.setUserAvatarStyle(mAvatar);
@@ -116,13 +116,6 @@ public class MyGroupMembersList_Adapter extends EaseBaseRecyclerViewAdapter<MyEa
 
         @Override
         public void setData(MyEaseUser item, int position) {
-//            EaseUserProfileProvider provider = EaseIM.getInstance().getUserProvider();
-//            if (provider != null) {
-//                EaseUser user = provider.getUser(item.getUsername());
-//                if (user != null) {
-//                    item = user;
-//                }
-//            }
             String header = item.getInitialLetter();
             mHeader.setVisibility(View.GONE);
             if (position == 0 || (header != null && !header.equals(getItem(position - 1).getInitialLetter()))) {
@@ -136,10 +129,8 @@ public class MyGroupMembersList_Adapter extends EaseBaseRecyclerViewAdapter<MyEa
             }
 
             String name = item.getNickname();
-            int nameLength = name.length();
-            String nameAndNum = name + " (" + item.getUserNum() + ")";
-//            setName(nameAndNum, nameLength, mName);
-            mName.setText(nameAndNum);
+            mName.setText(name);
+            mSignature.setText("Mo ID：" + item.getUserNum());
             if (item.getVipType() == 0){
                 vipType_txt.setVisibility(View.GONE);
                 mName.setTextColor(ContextCompat.getColor(mContext, R.color.blacktitle));

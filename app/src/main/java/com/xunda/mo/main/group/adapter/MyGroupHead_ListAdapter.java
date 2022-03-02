@@ -38,26 +38,11 @@ public class MyGroupHead_ListAdapter extends EaseBaseRecyclerViewAdapter<MyEaseU
     }
 
 
-    public void addItem(int id, int image, String name) {
-        MyEaseUser bean = new MyEaseUser();
-//        bean.setId(id);
-//        bean.setResourceId(image);
-//        bean.setName(name);
-        this.addData(bean);
-    }
-
-    public void addItem(int id, String image, String name) {
-        MyEaseUser bean = new MyEaseUser();
-//        bean.setId(id);
-//        bean.setImage(image);
-//        bean.setName(name);
-        this.addData(bean);
-    }
-
     private class CustomViewHolder extends ViewHolder<MyEaseUser> {
         private TextView mHeader;
         private EaseImageView mAvatar;
         private TextView mName;
+        private TextView mSignature;
         private ConstraintLayout clUser;
         private LightningView vipType_txt;
 
@@ -70,42 +55,43 @@ public class MyGroupHead_ListAdapter extends EaseBaseRecyclerViewAdapter<MyEaseU
             mHeader = findViewById(R.id.header);
             mAvatar = findViewById(R.id.avatar);
             mName = findViewById(R.id.name);
+            mSignature = findViewById(R.id.signature);
             clUser = findViewById(R.id.cl_user);
-             vipType_txt = findViewById(R.id.vipType_txt);
-            if(contactSetModel != null) {
+            vipType_txt = findViewById(R.id.vipType_txt);
+            if (contactSetModel != null) {
                 float titleTextSize = contactSetModel.getTitleTextSize();
-                if(titleTextSize != 0) {
+                if (titleTextSize != 0) {
                     mName.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleTextSize);
                 }
                 int titleTextColor = contactSetModel.getTitleTextColor();
-                if(titleTextColor != 0) {
+                if (titleTextColor != 0) {
                     mName.setTextColor(titleTextColor);
                 }
                 Drawable avatarDefaultSrc = contactSetModel.getAvatarDefaultSrc();
-                if(avatarDefaultSrc != null) {
+                if (avatarDefaultSrc != null) {
                     mAvatar.setImageDrawable(avatarDefaultSrc);
                 }
                 float avatarRadius = contactSetModel.getAvatarRadius();
-                if(avatarRadius != 0) {
+                if (avatarRadius != 0) {
                     mAvatar.setRadius((int) avatarRadius);
                 }
                 float borderWidth = contactSetModel.getBorderWidth();
-                if(borderWidth != 0) {
+                if (borderWidth != 0) {
                     mAvatar.setBorderWidth((int) borderWidth);
                 }
                 int borderColor = contactSetModel.getBorderColor();
-                if(borderColor != 0) {
+                if (borderColor != 0) {
                     mAvatar.setBorderColor(borderColor);
                 }
                 mAvatar.setShapeType(contactSetModel.getShapeType());
                 float avatarSize = contactSetModel.getAvatarSize();
-                if(avatarSize != 0) {
+                if (avatarSize != 0) {
                     ViewGroup.LayoutParams mAvatarLayoutParams = mAvatar.getLayoutParams();
                     mAvatarLayoutParams.height = (int) avatarSize;
                     mAvatarLayoutParams.width = (int) avatarSize;
                 }
                 float itemHeight = contactSetModel.getItemHeight();
-                if(itemHeight != 0) {
+                if (itemHeight != 0) {
                     ViewGroup.LayoutParams userLayoutParams = clUser.getLayoutParams();
                     userLayoutParams.height = (int) itemHeight;
                 }
@@ -118,26 +104,23 @@ public class MyGroupHead_ListAdapter extends EaseBaseRecyclerViewAdapter<MyEaseU
         public void setData(MyEaseUser item, int position) {
             String header = item.getInitialLetter();
             mHeader.setVisibility(View.GONE);
-//            if (position == 0 || (header != null && !header.equals(getItem(position - 1).getInitialLetter()))) {
             if (position == 0) {
                 if (!TextUtils.isEmpty(header)) {
                     mHeader.setVisibility(View.VISIBLE);
                     if (contactSetModel != null) {
                         mHeader.setVisibility(contactSetModel.isShowItemHeader() ? View.VISIBLE : View.GONE);
                     }
-//                    mHeader.setText(header);
                     mHeader.setText("群主、管理员");
                 }
             }
 
             String name = item.getNickname();
-            int nameLength = name.length();
-            String nameAndNum = name + " (" + item.getUserNum() + ")";
-            mName.setText(nameAndNum);
-            if (item.getVipType() == 0){
+            mName.setText(name);
+            mSignature.setText("Mo ID：" + item.getUserNum());
+            if (item.getVipType() == 0) {
                 vipType_txt.setVisibility(View.GONE);
                 mName.setTextColor(ContextCompat.getColor(mContext, R.color.blacktitle));
-            }else {
+            } else {
                 vipType_txt.setVisibility(View.VISIBLE);
                 mName.setTextColor(ContextCompat.getColor(mContext, R.color.yellowfive));
             }
@@ -159,7 +142,7 @@ public class MyGroupHead_ListAdapter extends EaseBaseRecyclerViewAdapter<MyEaseU
      */
     private void setName(String name, int nameLength, TextView viewName) {
         SpannableString spannableString = new SpannableString(name);
-        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext  .getColor(R.color.yellowfive));
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getColor(R.color.yellowfive));
         RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(1.1f);
         spannableString.setSpan(foregroundColorSpan, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(relativeSizeSpan, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.xunda.mo.R;
+import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.main.discover.adapter.Discover_Welfare_Adapter;
 import com.xunda.mo.model.Discover_WelfareCardList_Bean;
@@ -147,6 +148,7 @@ public class Discover_Welfare extends BaseInitActivity implements View.OnClickLi
     }
 
     Discover_Welfare_Bean baseModel;
+
     @SuppressLint("SetTextI18n")
     public void welfareData(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
@@ -177,14 +179,15 @@ public class Discover_Welfare extends BaseInitActivity implements View.OnClickLi
     }
 
     Discover_WelfareCardList_Bean cardListModel;
+
     @SuppressLint("SetTextI18n")
     public void AllExchangeCardData(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
-       map.put("systemVersion", "2");
+        map.put("systemVersion", "2");
         xUtils3Http.get(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                 cardListModel = new Gson().fromJson(result, Discover_WelfareCardList_Bean.class);
+                cardListModel = new Gson().fromJson(result, Discover_WelfareCardList_Bean.class);
                 int integral = cardListModel.getData().getIntegral();
                 integral_Txt.setText("我的积分:" + integral);
                 initlist(context);
@@ -202,9 +205,9 @@ public class Discover_Welfare extends BaseInitActivity implements View.OnClickLi
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                Discover_Welfare_Bean  doModel = new Gson().fromJson(result, Discover_Welfare_Bean.class);
+                Discover_Welfare_Bean doModel = new Gson().fromJson(result, Discover_Welfare_Bean.class);
                 integral_Txt.setText("我的积分:" + doModel.getData().getIntegral());
-                Toast.makeText(context,doModel.getMsg(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, doModel.getMsg(), Toast.LENGTH_SHORT).show();
                 changeData();
             }
 
@@ -216,6 +219,7 @@ public class Discover_Welfare extends BaseInitActivity implements View.OnClickLi
 
 
     Discover_Welfare_Adapter mAdapter;
+
     public void initlist(final Context context) {
         LinearLayoutManager mMangaer = new LinearLayoutManager(context);
         card_Recycler.setLayoutManager(mMangaer);
@@ -226,23 +230,44 @@ public class Discover_Welfare extends BaseInitActivity implements View.OnClickLi
 
         mAdapter.setOnItemAddRemoveClickLister((view, position) -> {
             String cardId = cardListModel.getData().getExchangeCardVos().get(position).getSystemCardId();
-            exchangeData(context, saveFile.ExchangeLog_ExchangeCard,cardId);
+            showExchangeDialog(cardId);
         });
     }
 
-    private void exchangeData(Context context, String baseUrl, String cardId) {
+    private void exchangeData(String cardId) {
         Map<String, Object> map = new HashMap<>();
-        map.put("systemCardId",cardId);
-        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+        map.put("systemCardId", cardId);
+        xUtils3Http.post(mContext, saveFile.ExchangeLog_ExchangeCard, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                Toast.makeText(context,"已兑换",Toast.LENGTH_SHORT).show();
-               cardData();
+                Toast.makeText(mContext, "已兑换", Toast.LENGTH_SHORT).show();
+                cardData();
             }
+
             @Override
             public void failed(String... args) {
             }
         });
+    }
+
+    /**
+     * 积分兑换提示dialog
+     */
+    private void showExchangeDialog(String cardId) {
+        TwoButtonDialog dialog = new TwoButtonDialog(this, "确定用积分兑换吗？", "取消", "确定",
+                new TwoButtonDialog.ConfirmListener() {
+
+                    @Override
+                    public void onClickRight() {
+                        exchangeData(cardId);
+                    }
+
+                    @Override
+                    public void onClickLeft() {
+
+                    }
+                });
+        dialog.show();
     }
 
 
@@ -306,8 +331,8 @@ public class Discover_Welfare extends BaseInitActivity implements View.OnClickLi
             sundayCount_Txt.setTextColor(ContextCompat.getColor(this, R.color.yellowfive));
         }
         String countStr = "7天";
-        int length = countStr.length() -1;
-        setName(countStr,length,sundayCount_Txt);
+        int length = countStr.length() - 1;
+        setName(countStr, length, sundayCount_Txt);
     }
 
     /**
@@ -321,7 +346,6 @@ public class Discover_Welfare extends BaseInitActivity implements View.OnClickLi
         spannableString.setSpan(relativeSizeSpan, 0, nameLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         viewName.setText(spannableString);
     }
-
 
 
 }
