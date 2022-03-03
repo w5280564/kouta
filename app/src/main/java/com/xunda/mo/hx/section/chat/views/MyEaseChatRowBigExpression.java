@@ -42,6 +42,7 @@ public class MyEaseChatRowBigExpression extends BaseChatRowWithNameAndHeader {
         percentageView = findViewById(R.id.percentage);
         imageView = findViewById(R.id.image);
         tv_user_role = findViewById(com.xunda.mo.R.id.tv_user_role);
+        tv_vip = findViewById(com.xunda.mo.R.id.tv_vip);
     }
 
     @Override

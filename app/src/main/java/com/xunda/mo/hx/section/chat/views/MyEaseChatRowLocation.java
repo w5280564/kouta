@@ -42,6 +42,7 @@ public class MyEaseChatRowLocation extends BaseChatRowWithNameAndHeader {
         locationView = findViewById(R.id.tv_location);
         tvLocationName = findViewById(R.id.tv_location_name);
         tv_user_role = findViewById(R.id.tv_user_role);
+        tv_vip = findViewById(com.xunda.mo.R.id.tv_vip);
     }
 
     @Override

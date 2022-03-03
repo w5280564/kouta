@@ -40,6 +40,7 @@ public class chatRowUserCard extends BaseChatRowWithNameAndHeader {
         userIdView = findViewById(R.id.user_id);
         headImageView = findViewById(R.id.head_Image_view);
         tv_user_role = findViewById(R.id.tv_user_role);
+        tv_vip = findViewById(com.xunda.mo.R.id.tv_vip);
     }
 
     @Override
