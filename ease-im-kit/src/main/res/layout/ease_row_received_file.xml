@@ -30,14 +30,48 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/chat_nick_margin_left"
             android:textSize="@dimen/chat_nick_text_size"
+            android:maxLength="15"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:layout_toRightOf="@id/iv_userhead"
             android:visibility="gone" />
+
+        <com.hyphenate.easeui.widget.LightningView
+            android:id="@+id/tv_vip"
+            android:layout_width="29dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="6dp"
+            android:background="@drawable/shape_vip_bg"
+            android:gravity="center"
+            android:text="VIP"
+            android:textColor="#ff0000"
+            android:textSize="10sp"
+            android:layout_toRightOf="@id/tv_userid"
+            android:layout_alignTop="@id/tv_userid"
+            android:layout_alignBottom="@id/tv_userid"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_user_role"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:layout_toRightOf="@id/tv_vip"
+            android:layout_alignTop="@id/tv_vip"
+            android:layout_alignBottom="@id/tv_vip"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/bubble"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/ease_chat_file_bubble_min_height"
+            android:layout_marginTop="4dp"
             android:layout_marginLeft="@dimen/margin_chat_activity"
             android:layout_toLeftOf="@+id/progress_bar"
             android:layout_toRightOf="@id/iv_userhead"
