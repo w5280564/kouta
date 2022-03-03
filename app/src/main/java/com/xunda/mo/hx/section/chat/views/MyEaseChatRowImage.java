@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class MyEaseChatRowImage extends EaseChatRowFile {
     protected ImageView imageView;
-    private TextView tv_user_role;
+    private TextView tv_user_role,tv_vip;
 
     public MyEaseChatRowImage(Context context, boolean isSender) {
         super(context, isSender);
@@ -63,6 +63,7 @@ public class MyEaseChatRowImage extends EaseChatRowFile {
         percentageView = findViewById(R.id.percentage);
         imageView = findViewById(R.id.image);
         tv_user_role = findViewById(R.id.tv_user_role);
+        tv_vip = findViewById(com.xunda.mo.R.id.tv_vip);
     }
 
     
@@ -111,6 +112,7 @@ public class MyEaseChatRowImage extends EaseChatRowFile {
 
                 String name  = message.getStringAttribute(MyConstant.SEND_NAME, "");
                 String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
+                int vipType = message.getIntAttribute(MyConstant.SEND_VIP, 3);
 
                 if (!ListUtils.isEmpty(memberList)) {
                     for (GroupMember_Bean.DataDTO memberObj:memberList) {
@@ -131,6 +133,22 @@ public class MyEaseChatRowImage extends EaseChatRowFile {
                                     tv_user_role.setTextColor(ContextCompat.getColor(context,R.color.color_2391F3));
                                 }else {
                                     tv_user_role.setVisibility(View.GONE);
+                                }
+                            }
+
+                            if (vipType==3) {
+                                vipType = memberObj.getVipType();
+                            }
+
+                            if (vipType==1){
+                                usernickView.setTextColor(ContextCompat.getColor(context,R.color.yellowfive));
+                                if (tv_vip!=null) {
+                                    tv_vip.setVisibility(VISIBLE);
+                                }
+                            }else{
+                                usernickView.setTextColor(ContextCompat.getColor(context,R.color.greytwo));
+                                if (tv_vip!=null) {
+                                    tv_vip.setVisibility(GONE);
                                 }
                             }
                             break;

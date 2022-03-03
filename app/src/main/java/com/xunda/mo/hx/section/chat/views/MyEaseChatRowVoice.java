@@ -44,7 +44,7 @@ public class MyEaseChatRowVoice extends EaseChatRowFile {
     private ImageView voiceImageView;
     private TextView voiceLengthView;
     private ImageView readStatusView;
-    private TextView tv_user_role;
+    private TextView tv_user_role,tv_vip;
     private AnimationDrawable voiceAnimation;
 
     public MyEaseChatRowVoice(Context context, boolean isSender) {
@@ -67,6 +67,7 @@ public class MyEaseChatRowVoice extends EaseChatRowFile {
         voiceLengthView = findViewById(R.id.tv_length);
         readStatusView = findViewById(R.id.iv_unread_voice);
         tv_user_role = findViewById(R.id.tv_user_role);
+        tv_vip = findViewById(com.xunda.mo.R.id.tv_vip);
     }
 
     @Override
@@ -162,6 +163,7 @@ public class MyEaseChatRowVoice extends EaseChatRowFile {
 
                 String name = message.getStringAttribute(MyConstant.SEND_NAME, "");
                 String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
+                int vipType = message.getIntAttribute(MyConstant.SEND_VIP, 3);
 
                 if (!ListUtils.isEmpty(memberList)) {
                     for (GroupMember_Bean.DataDTO memberObj : memberList) {
@@ -182,6 +184,22 @@ public class MyEaseChatRowVoice extends EaseChatRowFile {
                                     tv_user_role.setTextColor(ContextCompat.getColor(context,R.color.color_2391F3));
                                 } else {
                                     tv_user_role.setVisibility(View.GONE);
+                                }
+                            }
+
+                            if (vipType==3) {
+                                vipType = memberObj.getVipType();
+                            }
+
+                            if (vipType==1){
+                                usernickView.setTextColor(ContextCompat.getColor(context,R.color.yellowfive));
+                                if (tv_vip!=null) {
+                                    tv_vip.setVisibility(VISIBLE);
+                                }
+                            }else{
+                                usernickView.setTextColor(ContextCompat.getColor(context,R.color.greytwo));
+                                if (tv_vip!=null) {
+                                    tv_vip.setVisibility(GONE);
                                 }
                             }
                             break;

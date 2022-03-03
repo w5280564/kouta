@@ -82,6 +82,21 @@
             android:layout_toRightOf="@id/iv_userhead"
             android:visibility="gone" />
 
+        <com.hyphenate.easeui.widget.LightningView
+            android:id="@+id/tv_vip"
+            android:layout_width="29dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="6dp"
+            android:background="@drawable/shape_vip_bg"
+            android:gravity="center"
+            android:text="VIP"
+            android:textColor="#ff0000"
+            android:textSize="10sp"
+            android:layout_toRightOf="@id/tv_userid"
+            android:layout_alignTop="@id/tv_userid"
+            android:layout_alignBottom="@id/tv_userid"
+            android:visibility="gone"/>
+
         <TextView
             android:id="@+id/tv_user_role"
             android:layout_width="wrap_content"
@@ -89,9 +104,9 @@
             android:layout_marginLeft="6dp"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
-            android:layout_toRightOf="@id/tv_userid"
-            android:layout_alignTop="@id/tv_userid"
-            android:layout_alignBottom="@id/tv_userid"
+            android:layout_toRightOf="@id/tv_vip"
+            android:layout_alignTop="@id/tv_vip"
+            android:layout_alignBottom="@id/tv_vip"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="10sp"
