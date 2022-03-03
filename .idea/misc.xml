@@ -20,6 +20,7 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/drawable/shape_bg_all_member_qunzhu.xml" value="0.3641025641025641" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/drawable/shape_update_level_button.xml" value="0.3212962962962963" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/drawable/shape_vip_bg.xml" value="0.33055555555555555" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/drawable/vip_txt_radius.xml" value="0.32592592592592595" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_chat_complaint.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_chatdetailset.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_chatfriend_detail.xml" value="0.3536458333333333" />
@@ -67,6 +68,7 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/demo_item_row_chat_history.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/ease_row_received_custom.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/ease_row_sent_custom.xml" value="0.3536458333333333" />
+        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/friend_blacklist_adapter.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/friend_newfriendlist_adapter.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/item_market_dialog.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/myease_row_received_location.xml" value="0.3536458333333333" />

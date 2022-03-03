@@ -52,6 +52,7 @@ public abstract class EaseDefaultConversationDelegate extends EaseBaseConversati
         public TextView mentioned;
         public TextView message;
         public TextView tv_official;
+        public TextView tv_vip;
         public Context mContext;
         private final Drawable bgDrawable;
 
@@ -68,6 +69,7 @@ public abstract class EaseDefaultConversationDelegate extends EaseBaseConversati
             mentioned = findViewById(R.id.mentioned);
             message = findViewById(R.id.message);
             tv_official = findViewById(R.id.tv_official);
+            tv_vip = findViewById(R.id.tv_vip);
             EaseUserUtils.setUserAvatarStyle(avatar);
             bgDrawable = itemView.getBackground();
         }

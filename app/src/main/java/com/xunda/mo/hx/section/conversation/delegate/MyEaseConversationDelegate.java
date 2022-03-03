@@ -91,6 +91,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         holder.listIteaseLayout.setBackground(MyEaseCommonUtils.isTimestamp(item.getExtField()) ? ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg) : null);
         holder.mentioned.setVisibility(View.GONE);
         holder.tv_official.setVisibility(View.GONE);
+        holder.tv_vip.setVisibility(View.GONE);
         int defaultAvatar = R.mipmap.img_pic_none;
         String HeadAvatar = "";
         String HeadName = "";
@@ -145,6 +146,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                     holder.name.setTextColor(ContextCompat.getColor(context, R.color.app_main_color_blue));
                     holder.name.setText(HeadName);
                 } else {
+                    int vipType;
                     holder.tv_official.setVisibility(View.GONE);
                     boolean isSender = myInfo.getUserInfo().getHxUserName().equals(lastMessage.getFrom());
                     EaseUserProfileProvider userProvider = EaseIM.getInstance().getUserProvider();
@@ -152,40 +154,6 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                         String header_url_message = lastMessage.getStringAttribute(MyConstant.TO_HEAD, "");
                         EaseUserUtils.setUserAvatarAndSendHeaderUrl(context, lastMessage.getTo(), header_url_message, holder.avatar);
                         HeadName = lastMessage.getStringAttribute(MyConstant.TO_NAME, "");
-                        if (userProvider != null) {
-                            EaseUser user = userProvider.getUser(username);
-                            if (user != null) {
-                                try {
-                                    String selectInfoExt = user.getExt();
-                                    if (!TextUtils.isEmpty(selectInfoExt)) {
-                                        JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
-                                        HeadName = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    } else {//接收方
-                        String header_url_message = lastMessage.getStringAttribute(MyConstant.SEND_HEAD, "");
-                        int vipType = lastMessage.getIntAttribute(MyConstant.TO_VIP, 0);
-                        EaseUserUtils.setUserAvatarAndSendHeaderUrl(context, lastMessage.getFrom(), header_url_message, holder.avatar);
-                        HeadName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
-                        if (userProvider != null) {
-                            EaseUser user = userProvider.getUser(username);
-                            if (user != null) {
-                                try {
-                                    String selectInfoExt = user.getExt();
-                                    if (!TextUtils.isEmpty(selectInfoExt)) {
-                                        JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
-                                        HeadName = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
-                                    }
-                                } catch (
-                                        JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
 
                         if (StringUtil.isBlank(HeadName)) {
                             String extMessage = item.getExtField();
@@ -196,6 +164,89 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                                     boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
                                     if (isInsertGroupOrFriendInfo) {
                                         HeadName = JsonObject.getString("showName");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        if (StringUtil.isBlank(HeadName)) {
+                            EaseUser user = userProvider.getUser(username);
+                            if (user != null) {
+                                try {
+                                    String selectInfoExt = user.getExt();
+                                    if (!TextUtils.isEmpty(selectInfoExt)) {
+                                        JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                                        HeadName = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        vipType = lastMessage.getIntAttribute(MyConstant.TO_VIP, 3);;//3表示没有获取到这个扩展字段
+                        if (vipType==3) {//没有扩展字段 再从会话扩展取
+                            String extMessage = item.getExtField();
+                            if (!TextUtils.isEmpty(extMessage)) {
+                                JSONObject JsonObject = null;
+                                try {
+                                    JsonObject = new JSONObject(extMessage);
+                                    boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
+                                    if (isInsertGroupOrFriendInfo) {
+                                        vipType = JsonObject.getInt("vipType");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    } else {//接收方
+                        String header_url_message = lastMessage.getStringAttribute(MyConstant.SEND_HEAD, "");
+                        EaseUserUtils.setUserAvatarAndSendHeaderUrl(context, lastMessage.getFrom(), header_url_message, holder.avatar);
+                        HeadName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
+
+                        if (StringUtil.isBlank(HeadName)) {
+                            String extMessage = item.getExtField();
+                            if (!TextUtils.isEmpty(extMessage)) {
+                                JSONObject JsonObject = null;
+                                try {
+                                    JsonObject = new JSONObject(extMessage);
+                                    boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
+                                    if (isInsertGroupOrFriendInfo) {
+                                        HeadName = JsonObject.getString("showName");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        if (StringUtil.isBlank(HeadName)) {
+                            EaseUser user = userProvider.getUser(username);
+                            if (user != null) {
+                                try {
+                                    String selectInfoExt = user.getExt();
+                                    if (!TextUtils.isEmpty(selectInfoExt)) {
+                                        JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
+                                        HeadName = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        vipType = lastMessage.getIntAttribute(MyConstant.SEND_VIP, 3);//3表示没有获取到这个扩展字段
+                        if (vipType==3) {//没有扩展字段 再从会话扩展取
+                            String extMessage = item.getExtField();
+                            if (!TextUtils.isEmpty(extMessage)) {
+                                JSONObject JsonObject = null;
+                                try {
+                                    JsonObject = new JSONObject(extMessage);
+                                    boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
+                                    if (isInsertGroupOrFriendInfo) {
                                         vipType = JsonObject.getInt("vipType");
                                     }
                                 } catch (JSONException e) {
@@ -205,6 +256,10 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                         }
                     }
                     holder.name.setText(StringUtil.getStringValue(HeadName));
+                    if (vipType==1){
+                        holder.name.setTextColor(ContextCompat.getColor(context,R.color.yellowfive));
+                        holder.tv_vip.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }
