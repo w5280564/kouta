@@ -6,6 +6,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+
 import com.bumptech.glide.Glide;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
@@ -31,6 +34,7 @@ import java.util.List;
  */
 public abstract class BaseChatRowWithNameAndHeader extends EaseChatRow{
     protected TextView tv_user_role;
+    protected TextView tv_vip;
 
     public BaseChatRowWithNameAndHeader(Context context, boolean isSender) {
         super(context, isSender);
@@ -75,6 +79,7 @@ public abstract class BaseChatRowWithNameAndHeader extends EaseChatRow{
 
                 String name  = message.getStringAttribute(MyConstant.SEND_NAME, "");
                 String headUrl = message.getStringAttribute(MyConstant.SEND_HEAD, "");
+                int vipType = message.getIntAttribute(MyConstant.SEND_VIP, 3);
 
                 if (!ListUtils.isEmpty(memberList)) {
                     for (GroupMember_Bean.DataDTO memberObj:memberList) {
@@ -87,12 +92,30 @@ public abstract class BaseChatRowWithNameAndHeader extends EaseChatRow{
                                     tv_user_role.setVisibility(View.VISIBLE);
                                     tv_user_role.setText("群主");
                                     tv_user_role.setBackgroundResource(R.drawable.shape_bg_all_member_qunzhu);
+                                    tv_user_role.setTextColor(ContextCompat.getColor(context,R.color.color_FB8717));
                                 } else if (memberObj.getIdentity() == 2) {
                                     tv_user_role.setVisibility(View.VISIBLE);
                                     tv_user_role.setText("管理员");
                                     tv_user_role.setBackgroundResource(R.drawable.shape_bg_all_member_guanliyuan);
+                                    tv_user_role.setTextColor(ContextCompat.getColor(context,R.color.color_2391F3));
                                 }else {
                                     tv_user_role.setVisibility(View.GONE);
+                                }
+                            }
+
+                            if (vipType==3) {
+                                vipType = memberObj.getVipType();
+                            }
+
+                            if (vipType==1){
+                                usernickView.setTextColor(ContextCompat.getColor(context,R.color.yellowfive));
+                                if (tv_vip!=null) {
+                                    tv_vip.setVisibility(VISIBLE);
+                                }
+                            }else{
+                                usernickView.setTextColor(ContextCompat.getColor(context,R.color.greytwo));
+                                if (tv_vip!=null) {
+                                    tv_vip.setVisibility(GONE);
                                 }
                             }
                             break;

@@ -32,4 +32,8 @@
     <color name="viptop">#534C49</color>
     <color name="launch_black">#181b20</color>
     <color name="app_yellow">#FFEEA4</color>
+
+    <color name="color_2391F3">#2391F3</color>
+    <color name="color_FB8717">#FB8717</color>
+    <color name="color_EDF0F3">#EDF0F3</color>
 </resources>

@@ -32,6 +32,7 @@ public class MyEaseChatRowText extends BaseChatRowWithNameAndHeader {
     protected void onFindViewById() {
         contentView = findViewById(R.id.tv_chatcontent);
         tv_user_role = findViewById(R.id.tv_user_role);
+        tv_vip = findViewById(com.xunda.mo.R.id.tv_vip);
     }
 
     @Override

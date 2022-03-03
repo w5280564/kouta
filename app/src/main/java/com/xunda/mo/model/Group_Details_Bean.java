@@ -56,5 +56,7 @@ public class Group_Details_Bean {
         private String userHead;
         @JsonProperty("userNum")
         private Integer userNum;
+        @JsonProperty("vipType")
+        private int vipType;
     }
 }

@@ -56,6 +56,7 @@ import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.StaticData;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
+import com.xunda.mo.view.LightningView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,7 +77,8 @@ public class GroupFriend_Detail extends BaseInitActivity {
     private GruopInfo_Bean groupModel;
     private String UserName;
     private SimpleDraweeView person_img;
-    private TextView nick_nameTxt, cententTxt, leID_Txt, vip_Txt, signature_Txt, grade_Txt;
+    private TextView nick_nameTxt, cententTxt, leID_Txt,  signature_Txt, grade_Txt;
+    private LightningView vip_Txt;
     private Button right_Btn;
     private TextView send_mess_Txt, remove_Txt, add_Txt;
     private EMConversation conversation;
@@ -409,6 +411,12 @@ public class GroupFriend_Detail extends BaseInitActivity {
                 } else {
                     String dataStr = StaticData.getForbiddenTimeDate(model.getData().getMuteEndTime());
                     forbidden_ArrowItemView.getTvContent().setText("剩余禁言时间：" + dataStr);
+                }
+
+                if (dataDTO.getVipType() == 0) {
+                    vip_Txt.setVisibility(View.GONE);
+                } else {
+                    vip_Txt.setVisibility(View.VISIBLE);
                 }
 
                 tagList(label_Lin, mContext, dataDTO.getTag());

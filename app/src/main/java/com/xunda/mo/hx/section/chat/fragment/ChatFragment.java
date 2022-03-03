@@ -154,25 +154,13 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         clipboard = (ClipboardManager) requireActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         //获取到聊天列表控件
         messageListLayout = chatLayout.getChatMessageListLayout();
-        //设置聊天列表背景
-//        messageListLayout.setBackground(new ColorDrawable(Color.parseColor("#ffefefef")));
-        messageListLayout.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.greyfive));
-        //设置默认头像
-//        messageListLayout.setAvatarDefaultSrc(ContextCompat.getDrawable(mContext, R.drawable.img_pic_none));
+        messageListLayout.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.color_EDF0F3));
         //设置头像形状：0为默认，1为圆形，2为方形
         messageListLayout.setAvatarShapeType(2);
         //设置文本字体大小
         messageListLayout.setItemTextSize((int) EaseCommonUtils.sp2px(mContext, 14));
         //设置文本字体颜色
         messageListLayout.setItemTextColor(ContextCompat.getColor(mContext, R.color.blacktitle));
-        //设置时间线的背景
-//        messageListLayout.setTimeBackground(ContextCompat.getDrawable(mContext, R.color.gray_normal));
-        //设置时间线的文本大小
-        //messageListLayout.setTimeTextSize((int) EaseCommonUtils.sp2px(mContext, 18));
-        //设置时间线的文本颜色
-        //messageListLayout.setTimeTextColor(ContextCompat.getColor(mContext, R.color.black));
-        //设置聊天列表样式：两侧及均位于左侧
-        //messageListLayout.setItemShowType(EaseChatMessageListLayout.ShowType.LEFT);
 
         messageListLayout.setItemSenderBackground(ContextCompat.getDrawable(mContext, R.drawable.chat_send_bg));
         messageListLayout.setItemReceiverBackground(ContextCompat.getDrawable(mContext, R.drawable.chat_receive_white_bg));

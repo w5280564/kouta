@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -172,10 +174,12 @@ public class MyEaseChatRowVoice extends EaseChatRowFile {
                                     tv_user_role.setVisibility(View.VISIBLE);
                                     tv_user_role.setText("群主");
                                     tv_user_role.setBackgroundResource(R.drawable.shape_bg_all_member_qunzhu);
+                                    tv_user_role.setTextColor(ContextCompat.getColor(context,R.color.color_FB8717));
                                 } else if (memberObj.getIdentity() == 2) {
                                     tv_user_role.setVisibility(View.VISIBLE);
                                     tv_user_role.setText("管理员");
                                     tv_user_role.setBackgroundResource(R.drawable.shape_bg_all_member_guanliyuan);
+                                    tv_user_role.setTextColor(ContextCompat.getColor(context,R.color.color_2391F3));
                                 } else {
                                     tv_user_role.setVisibility(View.GONE);
                                 }
