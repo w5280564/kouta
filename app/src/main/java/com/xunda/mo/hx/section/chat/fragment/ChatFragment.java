@@ -1143,6 +1143,10 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
     //往好友会话列表添加扩展字段
     private void insertConversionExdInfoInFriend() {
         EMConversation currentConversation = EMClient.getInstance().chatManager().getConversation(conversationId);
+        if (currentConversation==null) {
+            return;
+        }
+
         String extField = currentConversation.getExtField();
         JSONObject jsonObject = null;
         if (!StringUtil.isBlank(extField)) {
@@ -1250,6 +1254,10 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
         }
 
         EMConversation currentConversation = EMClient.getInstance().chatManager().getConversation(conversationId);
+        if (currentConversation==null) {
+            return;
+        }
+
         String extField = currentConversation.getExtField();
         JSONObject jsonObject = null;
         if (!StringUtil.isBlank(extField)) {
