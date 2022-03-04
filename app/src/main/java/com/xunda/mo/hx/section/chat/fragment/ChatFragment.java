@@ -561,7 +561,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             if (!isMoCustomer) {
                 GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url);
             } else {
-                initData();
 //                isService();//是否在人工服务
             }
         }
@@ -1082,8 +1081,8 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 titleBarMessage.setTitle(friendName);
 
                 insertConversionExdInfoInFriend();
-                initData();
                 updateDBdTata();
+                messageListLayout.getMessageAdapter().notifyDataSetChanged();
             }
 
             @Override
@@ -1160,6 +1159,9 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             jsonObject = getJsonObjectFriend();
         }
 
+        if (jsonObject==null) {
+            return;
+        }
         currentConversation.setExtField(jsonObject.toString());
     }
 
@@ -1231,7 +1233,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             @Override
             public void success(String result) {
                 insertConversionExdInfoInGroup(result);
-                initData();
             }
 
             @Override
@@ -1266,7 +1267,12 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
             jsonObject = getJsonObjectGroup(jsonMemberList);
         }
 
+        if (jsonObject==null) {
+            return;
+        }
+
         currentConversation.setExtField(jsonObject.toString());
+        messageListLayout.getMessageAdapter().notifyDataSetChanged();
     }
 
     @NonNull

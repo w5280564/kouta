@@ -186,7 +186,7 @@ public class ChatPresenter extends EaseChatPresenter {
         MyInfo myInfo = new MyInfo(context);
         DemoHelper.getInstance().getConversation(conversationId, EMConversation.EMConversationType.Chat, false);
         EMMessage msgNotification = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        EMTextMessageBody txtBody = new EMTextMessageBody("对方撤回了所ffff有消息");
+        EMTextMessageBody txtBody = new EMTextMessageBody("对方撤回了所有消息");
         msgNotification.addBody(txtBody);
         msgNotification.setFrom(conversationId);
         msgNotification.setTo(conversationId);
