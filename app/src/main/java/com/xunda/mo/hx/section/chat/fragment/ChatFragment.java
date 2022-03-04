@@ -1081,7 +1081,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 titleBarMessage.setTitle(friendName);
 
                 insertConversionExdInfoInFriend();
-                updateDBdTata();
+                updateDBData();
                 messageListLayout.getMessageAdapter().notifyDataSetChanged();
             }
 
@@ -1094,7 +1094,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
 
 
-    private void updateDBdTata() {
+    private void updateDBData() {
         EmUserEntity entity = new EmUserEntity();
         entity.setUsername(conversationId);
         // 正则表达式，判断首字母是否是英文字母
