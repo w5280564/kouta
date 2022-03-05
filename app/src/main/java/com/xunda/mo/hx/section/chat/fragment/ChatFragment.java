@@ -341,7 +341,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
 
     //匿名聊天随机用户名
     private String sendAnonymousName(int IsAnonymous) {
-        MyInfo myInfo = new MyInfo(requireActivity());
         String nameStr;
         if (IsAnonymous == 1) {
             if (saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + conversationId, requireActivity()).equals("false")) {
@@ -351,7 +350,7 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 nameStr = saveFile.getShareData(MyConstant.GROUP_CHAT_ANONYMOUS + conversationId, requireActivity());
             }
         } else {
-            nameStr = myInfo.getUserInfo().getNickname();
+            nameStr = mGroupModel.getMyNickname();
             saveFile.clearShareData(MyConstant.GROUP_CHAT_ANONYMOUS + conversationId, requireActivity());
 
         }
