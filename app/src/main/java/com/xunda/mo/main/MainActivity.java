@@ -243,15 +243,6 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
             }
         });
 
-        viewModel.messageChangeObservable().with(MyConstant.ConstantCount, int.class).observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer count) {
-                if (count > 0) {
-                    mTvMainFriendsMsg.setVisibility(View.VISIBLE);
-                    mTvMainFriendsMsg.setText(count + "");
-                }
-            }
-        });
 
         setFriendAdd();
         //加载联系人
@@ -265,8 +256,20 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         viewModel.messageChangeObservable().with(DemoConstant.CONVERSATION_DELETE, EaseEvent.class).observe(this, this::checkUnReadMsg);
         viewModel.messageChangeObservable().with(DemoConstant.CONVERSATION_READ, EaseEvent.class).observe(this, this::checkUnReadMsg);
         viewModel.messageChangeObservable().with(DemoConstant.CONTACT_DELETE, EaseEvent.class).observe(this, this::checkUnReadMsg);
-        viewModel.messageChangeObservable().with(DemoConstant.CONTACT_CHANGE, EaseEvent.class).observe(this, this::checkUnReadMsg);
         viewModel.messageChangeObservable().with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.class).observe(this, this::checkUnReadMsg);
+        viewModel.messageChangeObservable().with(DemoConstant.CONTACT_CHANGE, EaseEvent.class).observe(this, new Observer<EaseEvent>() {
+            @Override
+            public void onChanged(EaseEvent easeEvent) {
+                checkUnReadMsg(easeEvent);
+
+                if (StringUtil.isBlank(easeEvent.message)) {
+                    return;
+                }
+                if (easeEvent.message.equals("invited")) {
+                    setFriendAdd();
+                }
+            }
+        });
         addressData(MainActivity.this, saveFile.User_Friendlist_Url);
     }
 

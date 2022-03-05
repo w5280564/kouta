@@ -83,7 +83,6 @@ public interface MyConstant extends DemoConstant {
 
     String MESSAGE_TYPE_APPLY = "apply";
 
-    String ConstantCount = "ConstantCount";
     String SendFireRecall_Mess_ID = "messageId";
     String Dele_Type = "deletType";
     String MESS_TYPE_GROUP_HORN = "GroupHorn";

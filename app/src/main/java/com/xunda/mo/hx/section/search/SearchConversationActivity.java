@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -11,8 +12,10 @@ import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.easeui.adapter.EaseBaseRecyclerViewAdapter;
+import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.manager.EaseThreadManager;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.ListUtils;
 import com.hyphenate.exceptions.HyphenateException;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
@@ -84,18 +87,10 @@ public class SearchConversationActivity extends SearchActivity {
                                 if (item.getAllMsgCount() != 0 && item.getLastMessage().getStringAttribute("groupName").contains(search)) {
                                     result.add(obj);
                                 }
-
-//                            if(group.getGroupName().contains(search)) {
-//                                result.add(obj);
-//                            }
                             } else {
                                 if (item.getAllMsgCount() != 0 && item.getLastMessage().getStringAttribute("sendName").contains(search)) {
-                                        result.add(obj);
+                                    result.add(obj);
                                 }
-
-//                                if (username.contains(search)) {
-//                                    result.add(obj);
-//                                }
                             }
 
                         } catch (HyphenateException e) {
@@ -112,22 +107,35 @@ public class SearchConversationActivity extends SearchActivity {
                                 result.add(obj);
                             }
                         }
+                    } else if (item.getType() == EMConversation.EMConversationType.Chat) {
+                        EaseUser user = DemoHelper.getInstance().getUserInfo(username);
+                        if (user != null) {
+                            if (item.getAllMsgCount() != 0 && user.getNickname().contains(search)) {
+                                result.add(obj);
+                            }
+                        }
                     } else {
-
+                        int count = item.getAllMsgCount();
                         try {
-                            if (item.getAllMsgCount() != 0 && item.getLastMessage().getStringAttribute("sendName").contains(search)) {
+                            if (count != 0 && item.getLastMessage().getStringAttribute("sendName").contains(search)) {
                                 result.add(obj);
                             }
                         } catch (HyphenateException e) {
                             e.printStackTrace();
                         }
-//                        if (username.contains(search)) {
-//                            result.add(obj);
-//                        }
                     }
                 }
             }
-            runOnUiThread(() -> adapter.setData(result));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (ListUtils.isEmpty(result)) {
+                        Toast.makeText(mContext,"未搜到相关信息",Toast.LENGTH_SHORT).show();
+                    }else{
+                        adapter.setData(result);
+                    }
+                }
+            });
         });
     }
 

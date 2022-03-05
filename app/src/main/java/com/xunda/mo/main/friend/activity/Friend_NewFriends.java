@@ -17,16 +17,19 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.gson.Gson;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.manager.EaseSystemMsgManager;
+import com.hyphenate.easeui.model.EaseEvent;
 import com.xunda.mo.R;
 import com.xunda.mo.dialog.TwoButtonDialogWithTitle;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
 import com.xunda.mo.hx.common.interfaceOrImplement.DemoEmCallBack;
+import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
 import com.xunda.mo.main.baseView.BasePopupWindow;
@@ -359,17 +362,10 @@ public class Friend_NewFriends extends BaseInitActivity {
         ChatActivity.actionStart(mContext, hxUserName, EaseConstant.CHATTYPE_SINGLE);
     }
 
-    //查看过新朋友 把好友添加系统消息删除。 添加信息就会是空
     public void makeAllMsgRead() {
-        List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
-        if (allMessages != null && !allMessages.isEmpty()) {
-            for (EMMessage message : allMessages) {
-                Map<String, Object> ext = message.ext();
-                if (ext != null && ext.get(DemoConstant.SYSTEM_MESSAGE_STATUS).equals(InviteMessageStatus.BEINVITEED.name())) {
-                    EaseSystemMsgManager.getInstance().removeMessage(message);
-                }
-            }
-        }
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(DemoConstant.DEFAULT_SYSTEM_MESSAGE_ID, EMConversation.EMConversationType.Chat, true);
+        conversation.markAllMessagesAsRead();
+        LiveDataBus.get().with(DemoConstant.NOTIFY_CHANGE).postValue(EaseEvent.create(DemoConstant.NOTIFY_CHANGE, EaseEvent.TYPE.NOTIFY));
     }
 
 

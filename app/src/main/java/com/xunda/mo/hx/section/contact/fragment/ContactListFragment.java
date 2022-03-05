@@ -40,6 +40,7 @@ import com.hyphenate.easeui.modules.contact.model.EaseContactCustomBean;
 import com.hyphenate.easeui.modules.contact.model.EaseContactSetStyle;
 import com.hyphenate.easeui.modules.menu.EasePopupMenuHelper;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.StringUtil;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
@@ -57,6 +58,7 @@ import com.xunda.mo.hx.section.contact.activity.ContactDetailActivity;
 import com.xunda.mo.hx.section.contact.activity.GroupContactManageActivity;
 import com.xunda.mo.hx.section.contact.adapter.MyContactHead_ListAdapter;
 import com.xunda.mo.hx.section.contact.adapter.MyContactList_Adapter;
+import com.xunda.mo.hx.section.contact.model.MyEaseContactCustomBean;
 import com.xunda.mo.hx.section.contact.viewmodels.ContactsViewModel;
 import com.xunda.mo.hx.section.dialog.SimpleDialogFragment;
 import com.xunda.mo.hx.section.search.SearchFriendsActivity;
@@ -163,7 +165,7 @@ public class ContactListFragment extends EaseContactListFragment implements View
             EaseContactCustomBean item = myContact_Head_listAdapter.getItem(position);
             switch (item.getId()) {
                 case R.id.contact_header_item_new_chat:
-//                    AddContactActivity.startAction(mContext, SearchType.CHAT);
+                    removeAllFriendAddMessage();
                     Friend_NewFriends.actionStart(mContext);
                     break;
                 case R.id.contact_header_item_group_list:
@@ -190,17 +192,31 @@ public class ContactListFragment extends EaseContactListFragment implements View
     public void addMyHead() {
         mTvMainFriendsMsg = getActivity().findViewById(R.id.tv_main_friends_msg);
         mTvMainFriendsMsg.setVisibility(View.GONE);
-        int addCount = setFriendAdd();
-        if (addCount > 0) {
-            mTvMainFriendsMsg.setVisibility(View.VISIBLE);
-            mTvMainFriendsMsg.setText(addCount + "");
-        }
+        setNewFriendMessageCount(getFriendAdd());
         myContact_Head_listAdapter.clearData();
-        myContact_Head_listAdapter.addItem(R.id.contact_header_item_new_chat, R.mipmap.adress_head_friend, "新朋友", addCount);
+        myContact_Head_listAdapter.addItem(R.id.contact_header_item_new_chat, R.mipmap.adress_head_friend, "新朋友", getFriendAdd());
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_group_list, R.mipmap.adress_head_chat, getString(R.string.em_friends_group_chat));
 //        myContact_Head_listAdapter.addItem(R.id.contact_header_item_creat_group, R.mipmap.adress_head_group, "好友分组");
         myContact_Head_listAdapter.addItem(R.id.contact_header_item_head_service, R.mipmap.adress_head_service, "Mo 客服");
     }
+
+    private void setNewFriendMessageCount(int addCount) {
+        if (addCount > 0) {
+            mTvMainFriendsMsg.setVisibility(View.VISIBLE);
+            handleUnReadMessageNumber(addCount);
+        }else{
+            mTvMainFriendsMsg.setVisibility(View.GONE);
+        }
+    }
+
+    public void handleUnReadMessageNumber(int unreadMsgCount) {
+        if(unreadMsgCount <= 99) {
+            mTvMainFriendsMsg.setText(String.valueOf(unreadMsgCount));
+        }else {
+            mTvMainFriendsMsg.setText("99+");
+        }
+    }
+
 
     @Override
     public void onMenuPreShow(EasePopupMenuHelper menuHelper, int position) {
@@ -209,9 +225,26 @@ public class ContactListFragment extends EaseContactListFragment implements View
         menuHelper.addItemMenu(1, R.id.action_friend_delete, 1, getString(R.string.ease_friends_delete_the_contact));
     }
 
+    //清除好友通知
+    private void removeAllFriendAddMessage() {
+        List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
+        if (allMessages != null && !allMessages.isEmpty()) {
+            for (EMMessage message : allMessages) {
+                Map<String, Object> ext = message.ext();
+                if (ext != null && ext.get(DemoConstant.SYSTEM_MESSAGE_STATUS).equals(InviteMessageStatus.BEINVITEED.name())) {//"BEINVITEED"
+                    EaseSystemMsgManager.getInstance().removeMessage(message);
+                }
+            }
+        }
+
+        setNewFriendMessageCount(0);
+        MyEaseContactCustomBean obj = myContact_Head_listAdapter.getItem(0);
+        obj.setCount(0);
+        myContact_Head_listAdapter.notifyDataSetChanged();
+    }
 
     //添加好友通知
-    private int setFriendAdd() {
+    private int getFriendAdd() {
         List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
         int friendCount = 0;
         if (allMessages != null && !allMessages.isEmpty()) {
@@ -334,6 +367,13 @@ public class ContactListFragment extends EaseContactListFragment implements View
             if (event.isContactChange()) {
                 mViewModel.loadContactList(false);
             }
+
+            if (StringUtil.isBlank(event.message)) {
+                return;
+            }
+            if (event.message.equals("invited")) {
+                addMyHead();
+            }
         });
 
         mViewModel.messageChangeObservable().with(DemoConstant.REMOVE_BLACK, EaseEvent.class).observe(this, event -> {
@@ -374,13 +414,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
             }
         });
 
-
-        mViewModel.messageChangeObservable().with(MyConstant.ConstantCount, int.class).observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer count) {
-                addMyHead();//未读消息
-            }
-        });
 
         mViewModel.loadContactList(true);
 
