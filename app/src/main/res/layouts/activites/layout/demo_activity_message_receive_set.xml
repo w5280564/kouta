@@ -13,7 +13,7 @@
         app:titleBarTitle="@string/em_set_message_set"
         android:background="@color/white"
         app:titleBarDisplayHomeAsUpEnabled="true"
-        app:titleBarLeftImage="@mipmap/return_img"/>
+        app:titleBarLeftImage="@mipmap/icon_back"/>
     
     <TextView
         android:layout_width="match_parent"

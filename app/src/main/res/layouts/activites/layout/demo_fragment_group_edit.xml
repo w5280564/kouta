@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/em_common_title_bar_height"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleBarLeftImage="@mipmap/return_img"
+        app:titleBarLeftImage="@mipmap/icon_back"
         app:titleBarRightTitle="@string/em_chat_group_save"
         app:titleBarRightVisible="true" />
 

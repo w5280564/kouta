@@ -14,7 +14,7 @@
         app:titleBarTitle="@string/em_privacy_equipments"
         android:background="@color/white"
         app:titleBarDisplayHomeAsUpEnabled="true"
-        app:titleBarLeftImage="@mipmap/return_img"/>
+        app:titleBarLeftImage="@mipmap/icon_back"/>
 
     <ListView
         android:id="@+id/list"

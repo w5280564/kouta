@@ -13,7 +13,7 @@
         app:titleBarTitle="@string/em_set_common_set"
         android:background="@color/white"
         app:titleBarDisplayHomeAsUpEnabled="true"
-        app:titleBarLeftImage="@mipmap/return_img"/>
+        app:titleBarLeftImage="@mipmap/icon_back"/>
 
     <ScrollView
         android:layout_width="match_parent"

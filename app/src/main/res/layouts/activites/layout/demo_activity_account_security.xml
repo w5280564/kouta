@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:titleBarDisplayHomeAsUpEnabled="true"
         app:titleBarTitle="账号"
-        app:titleBarLeftImage="@mipmap/return_img"/>
+        app:titleBarLeftImage="@mipmap/icon_back"/>
 
     <com.xunda.mo.main.baseView.MyArrowItemView
         android:id="@+id/item_phone"
