@@ -227,16 +227,6 @@ public class ContactListFragment extends EaseContactListFragment implements View
 
     //清除好友通知
     private void removeAllFriendAddMessage() {
-        List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
-        if (allMessages != null && !allMessages.isEmpty()) {
-            for (EMMessage message : allMessages) {
-                Map<String, Object> ext = message.ext();
-                if (ext != null && ext.get(DemoConstant.SYSTEM_MESSAGE_STATUS).equals(InviteMessageStatus.BEINVITEED.name())) {//"BEINVITEED"
-                    EaseSystemMsgManager.getInstance().removeMessage(message);
-                }
-            }
-        }
-
         setNewFriendMessageCount(0);
         MyEaseContactCustomBean obj = myContact_Head_listAdapter.getItem(0);
         obj.setCount(0);

@@ -32,6 +32,7 @@ import com.xunda.mo.hx.common.interfaceOrImplement.DemoEmCallBack;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.chat.activicy.ChatActivity;
+import com.xunda.mo.hx.section.contact.model.MyEaseContactCustomBean;
 import com.xunda.mo.main.baseView.BasePopupWindow;
 import com.xunda.mo.main.chat.activity.ChatFriend_Detail;
 import com.xunda.mo.main.constant.MyConstant;
@@ -71,6 +72,7 @@ public class Friend_NewFriends extends BaseInitActivity {
         list_xrecycler.setLoadingListener(new listLoadingLister());
 
         makeAllMsgRead();//系统消息设置为已读
+        removeAllFriendAddMessage();
     }
 
     private int PageIndex;
@@ -368,5 +370,17 @@ public class Friend_NewFriends extends BaseInitActivity {
         LiveDataBus.get().with(DemoConstant.NOTIFY_CHANGE).postValue(EaseEvent.create(DemoConstant.NOTIFY_CHANGE, EaseEvent.TYPE.NOTIFY));
     }
 
+    //清除好友通知
+    private void removeAllFriendAddMessage() {
+        List<EMMessage> allMessages = EaseSystemMsgManager.getInstance().getAllMessages();
+        if (allMessages != null && !allMessages.isEmpty()) {
+            for (EMMessage message : allMessages) {
+                Map<String, Object> ext = message.ext();
+                if (ext != null && ext.get(DemoConstant.SYSTEM_MESSAGE_STATUS).equals(InviteMessageStatus.BEINVITEED.name())) {//"BEINVITEED"
+                    EaseSystemMsgManager.getInstance().removeMessage(message);
+                }
+            }
+        }
+    }
 
 }
