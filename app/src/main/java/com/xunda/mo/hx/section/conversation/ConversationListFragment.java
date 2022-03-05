@@ -36,6 +36,7 @@ import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.modules.conversation.model.EaseConversationInfo;
 import com.hyphenate.easeui.modules.conversation.model.EaseConversationSetStyle;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.StringUtil;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.easeui.widget.EaseRecyclerView;
 import com.xunda.mo.R;
@@ -223,6 +224,29 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         messageChange.with(DemoConstant.CONTACT_DELETE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.MESSAGE_NOT_SEND, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
+
+        messageChange.with(MyConstant.MESSAGE_CHANGE_UPDATE_GROUP_IMAGE, EaseEvent.class).observe(getViewLifecycleOwner(), new Observer<EaseEvent>() {
+            @Override
+            public void onChanged(EaseEvent event) {
+                if (event == null) {
+                    return;
+                }
+                if (event.isGroupChange()) {
+                    if (!StringUtil.isBlank(event.message)) {
+                        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(event.message);
+                        if (conversation!=null) {
+                            EMMessage lastMessage = conversation.getLastMessage();
+                            if (lastMessage!=null) {
+                                lastMessage.setAttribute(MyConstant.GROUP_HEAD, event.groupHeaderUrl);
+                                EMClient.getInstance().chatManager().updateMessage(lastMessage);
+                                conversationListLayout.loadDefaultData();
+                            }
+
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void refreshList(Boolean event) {
@@ -502,6 +526,14 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         Toast.makeText(mContext,text,Toast.LENGTH_SHORT).show();
         conversationListLayout.deleteConversation(position, info);
         LiveDataBus.get().with(DemoConstant.CONVERSATION_DELETE).postValue(new EaseEvent(DemoConstant.CONVERSATION_DELETE, EaseEvent.TYPE.MESSAGE));
+    }
+
+
+
+    @Override
+    public void onRefresh() {
+        super.onRefresh();
+        conversationListLayout.loadDefaultData();
     }
 
 }

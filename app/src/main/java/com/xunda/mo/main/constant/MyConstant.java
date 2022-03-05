@@ -112,4 +112,6 @@ public interface MyConstant extends DemoConstant {
 
     String CUSTOMER_MESSAGE_TYPE = "customerMessageType";//1已接入人工客服   2 结束 3 时间过长
 
+    String MESSAGE_CHANGE_UPDATE_GROUP_IMAGE = "updateGroupImage";
+
 }

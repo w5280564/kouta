@@ -34,6 +34,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.easeui.model.EaseEvent;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -43,6 +44,7 @@ import com.obs.services.exception.ObsException;
 import com.obs.services.model.AuthTypeEnum;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
+import com.xunda.mo.hx.common.constant.DemoConstant;
 import com.xunda.mo.hx.common.livedatas.LiveDataBus;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
 import com.xunda.mo.hx.section.group.fragment.GroupEditFragmentInfo;
@@ -376,30 +378,15 @@ public class GroupDetail_Edit extends BaseInitActivity {
                 sbf.append(objectName);
                 return sbf.toString();
             } catch (ObsException e) {
-                sbf.append("Response Code:" + e.getResponseCode())
-                        .append("Error Message:" + e.getErrorMessage())
-                        .append("Error Code:" + e.getErrorCode())
-                        .append("Request ID:" + e.getErrorRequestId())
-                        .append("Host ID:" + e.getErrorHostId());
                 return "";
             } catch (Exception e) {
-                sbf.append(e.getMessage());
                 return "";
-            } finally {
-                if (obsClient != null) {
-                    try {
-                        obsClient.close();
-                    } catch (IOException e) {
-                    }
-                }
             }
         }
 
         @Override
         protected void onPostExecute(String pic) {
             super.onPostExecute(pic);
-//            groupHead_Sim.setEnabled(false);
-//            pictures = pic;
             if (TextUtils.isEmpty(pic)) {
                 Toast.makeText(mContext, "上传图片失败", Toast.LENGTH_SHORT).show();
             } else {
@@ -431,6 +418,8 @@ public class GroupDetail_Edit extends BaseInitActivity {
                 if (TextUtils.equals(changType, "1")) {
                     Uri uri = Uri.parse(baseModel.getData());
                     person_img.setImageURI(uri);
+                    LiveDataBus.get().with(MyConstant.MESSAGE_CHANGE_UPDATE_GROUP_IMAGE).postValue(EaseEvent.create(MyConstant.MESSAGE_CHANGE_UPDATE_GROUP_IMAGE,
+                            EaseEvent.TYPE.GROUP,groupModel.getData().getGroupHxId(),baseModel.getData()));
                 } else if (TextUtils.equals(changType, "2")) {
                     String adressStr = valueStr.isEmpty() ? "未设置" : valueStr;
                     adress_ArrowItemView.getTvContent().setText(adressStr);
