@@ -66,6 +66,9 @@ import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.xUtils3Http;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -260,6 +263,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
                             EMMessage lastMessage = conversation.getLastMessage();
                             if (lastMessage!=null) {
                                 lastMessage.setAttribute(MyConstant.TO_NAME, event.message2);
+                                updateConversionExdInfoInFriend(conversation,event.message2);
                                 EMClient.getInstance().chatManager().updateMessage(lastMessage);
                                 conversationListLayout.loadDefaultData();
                             }
@@ -270,6 +274,43 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
             }
         });
     }
+
+    //修改好友会话列表扩展字段
+    private void updateConversionExdInfoInFriend(EMConversation currentConversation,String showName) {
+        String extField = currentConversation.getExtField();
+        JSONObject jsonObject = null;
+        if (!StringUtil.isBlank(extField)) {
+            try {
+                jsonObject = new JSONObject(extField);
+                jsonObject.put("isInsertGroupOrFriendInfo", true);
+                jsonObject.put("showName", showName);
+            } catch (JSONException e) {
+                jsonObject = getJsonObjectFriend(showName);
+            }
+        }else{
+            jsonObject = getJsonObjectFriend(showName);
+        }
+
+        if (jsonObject==null) {
+            return;
+        }
+        currentConversation.setExtField(jsonObject.toString());
+    }
+
+
+    @NonNull
+    private JSONObject getJsonObjectFriend(String showName) {
+        JSONObject jsonObject;
+        jsonObject  = new JSONObject();
+        try {
+            jsonObject.put("isInsertGroupOrFriendInfo", true);
+            jsonObject.put("showName", showName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
 
     private void refreshList(Boolean event) {
         if (event == null) {
