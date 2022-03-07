@@ -21,6 +21,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,7 +89,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
     private LinearLayout label_Lin;
     private TextView tv_tag_no;
     private String group_des;
-    private View label_arrow;
+    private ImageView label_arrow,iv_arrow_image;
 
     public static void actionStart(Context context, int Identity, GruopInfo_Bean groupModel) {
         Intent intent = new Intent(context, GroupDetail_Edit.class);
@@ -121,6 +122,7 @@ public class GroupDetail_Edit extends BaseInitActivity {
         label_Constraint.setOnClickListener(new label_ConstraintClick());
         label_Lin = findViewById(R.id.label_Lin);
         label_arrow = findViewById(R.id.label_arrow);
+        iv_arrow_image = findViewById(R.id.iv_arrow_image);
         tv_tag_no = findViewById(R.id.tv_tag_no);
         adress_ArrowItemView = findViewById(R.id.adress_ArrowItemView);
         adress_ArrowItemView.setOnClickListener(new adress_ArrowItemViewClick());
@@ -190,10 +192,10 @@ public class GroupDetail_Edit extends BaseInitActivity {
                 adress_ArrowItemView.setEnabled(false);
                 brief_ArrowItemView.setEnabled(false);
                 label_Constraint.setEnabled(false);
-                if (tv_tag_no.getVisibility() == View.GONE) {
-
-                    label_arrow.setVisibility(View.GONE);
-                }
+                label_arrow.setVisibility(View.INVISIBLE);
+                iv_arrow_image.setVisibility(View.INVISIBLE);
+                adress_ArrowItemView.getArrow().setVisibility(View.INVISIBLE);
+                brief_ArrowItemView.getArrow().setVisibility(View.INVISIBLE);
             }
 
         }

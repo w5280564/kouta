@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
+import com.hyphenate.easeui.utils.StringUtil;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.section.base.BaseInitActivity;
@@ -76,6 +77,17 @@ public class AccountSecurityActivity extends BaseInitActivity implements EaseTit
     protected void initData() {
         super.initData();
         myInfo = new MyInfo(mContext);
+        String phoneNumber = myInfo.getUserInfo().getPhoneNum();
+        if (!StringUtil.isBlank(phoneNumber)) {
+            if (phoneNumber.length()>10) {
+                StringBuilder mStringBuilder = new StringBuilder(phoneNumber);
+                mStringBuilder.replace(3,9,"******");
+                item_phone.getTvContent().setText(mStringBuilder.toString());
+            }else{
+                item_phone.getTvContent().setText(phoneNumber);
+            }
+        }
+
         int isQuestion = myInfo.getUserInfo().getIsQuestion();
         if (isQuestion == 1) {
             item_question.getTvContent().setText("已设置");

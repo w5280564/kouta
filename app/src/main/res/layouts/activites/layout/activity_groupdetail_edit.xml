@@ -46,6 +46,7 @@
             app:roundedCornerRadius="15dp" />
 
         <ImageView
+            android:id="@+id/iv_arrow_image"
             android:layout_width="7dp"
             android:layout_height="12dp"
             android:src="@mipmap/person_arrow"
