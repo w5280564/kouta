@@ -499,17 +499,6 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                     titleBarMessage.setTitle(event.message2);
                 }
 
-                EMConversation conversation = EMClient.getInstance().chatManager().getConversation(event.message);
-
-                if (conversation==null) {
-                   return;
-                }
-
-                EMMessage lastMessage = conversation.getLastMessage();
-                if (lastMessage!=null) {
-                    lastMessage.setAttribute(MyConstant.TO_NAME, event.message2);
-                    EMClient.getInstance().chatManager().updateMessage(lastMessage);
-                }
             }
         });
 

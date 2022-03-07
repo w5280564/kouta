@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -39,6 +40,7 @@ import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.StringUtil;
 import com.xunda.mo.R;
 import com.xunda.mo.dialog.TwoButtonDialog;
 import com.xunda.mo.hx.DemoHelper;
@@ -347,6 +349,29 @@ public class ChatFriend_Detail extends BaseInitActivity {
                     Toast.makeText(ChatFriend_Detail.this, "聊天记录已清除", Toast.LENGTH_SHORT).show();
                 }
             });
+        });
+
+        LiveDataBus.get().with(MyConstant.CONTACT_UPDATE, EaseEvent.class).observe(this, new Observer<EaseEvent>() {
+            @Override
+            public void onChanged(EaseEvent event) {
+                if (event == null) {
+                    return;
+                }
+                if (event.isContactChange()) {
+                    if (!StringUtil.isBlank(event.message)) {
+                        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(event.message);
+                        if (conversation!=null) {
+                            EMMessage lastMessage = conversation.getLastMessage();
+                            if (lastMessage!=null) {
+                                lastMessage.setAttribute(MyConstant.TO_NAME, event.message2);
+                                updateConversionExdInfoInFriend(conversation,event.message2);
+                                EMClient.getInstance().chatManager().updateMessage(lastMessage);
+                                conversationListLayout.loadDefaultData();
+                            }
+                        }
+                    }
+                }
+            }
         });
 
         conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername, EaseCommonUtils.getConversationType(EaseConstant.CHATTYPE_SINGLE), true);
