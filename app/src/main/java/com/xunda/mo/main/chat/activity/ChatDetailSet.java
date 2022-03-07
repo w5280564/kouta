@@ -421,7 +421,7 @@ public class ChatDetailSet extends BaseInitActivity {
                 Uri uri = Uri.parse(model.getData().getHeadImg());
                 person_img.setImageURI(uri);
                 String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
-                nick_nameTxt.setText("昵称：" + name);
+                nick_nameTxt.setText("昵称：" + dataDTO.getNickname());
                 cententTxt.setText(name);
                 nick_tv_content.setText(name);
                 leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
@@ -710,8 +710,6 @@ public class ChatDetailSet extends BaseInitActivity {
             @Override
             public void success(String result) {
                 Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
-//                        String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickName() : dataDTO.getRemarkName();
-                nick_nameTxt.setText("昵称：" + remarkName);
                 cententTxt.setText(remarkName);
                 nick_tv_content.setText(remarkName);
 

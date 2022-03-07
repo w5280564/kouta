@@ -178,8 +178,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
         recommend_ArrowItemView.setOnClickListener(new recommend_ArrowItemOnClick());
         add_Txt.setOnClickListener(new add_TxtClick());
         black_Switch = findViewById(R.id.black_Switch);
-//        switch_item = black_Switch.findViewById(R.id.switch_item);
-//        black_Switch.setOnCheckedChangeListener(new black_SwitchOnCheck());
         black_Switch.getSwitch().setOnClickListener(new switch_itemClickClick());
     }
 
@@ -205,12 +203,12 @@ public class ChatFriend_Detail extends BaseInitActivity {
         View title_Include = findViewById(R.id.title_Include);
         title_Include.setElevation(2f);//阴影
         title_Include.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
-        Button return_Btn = (Button) title_Include.findViewById(R.id.return_Btn);
+        Button return_Btn = title_Include.findViewById(R.id.return_Btn);
         viewTouchDelegate.expandViewTouchDelegate(return_Btn, 50, 50, 50, 50);
         return_Btn.setVisibility(View.VISIBLE);
-        cententTxt = (TextView) title_Include.findViewById(R.id.cententtxt);
+        cententTxt = title_Include.findViewById(R.id.cententtxt);
         cententTxt.setText("名字");
-        right_Btn = (Button) title_Include.findViewById(R.id.right_Btn);
+        right_Btn = title_Include.findViewById(R.id.right_Btn);
         right_Btn.setVisibility(View.VISIBLE);
         right_Btn.setBackgroundResource(R.mipmap.adress_head_more);
         viewTouchDelegate.expandViewTouchDelegate(right_Btn, 50, 50, 50, 50);
@@ -357,20 +355,26 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 if (event == null) {
                     return;
                 }
-                if (event.isContactChange()) {
-                    if (!StringUtil.isBlank(event.message)) {
-                        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(event.message);
-                        if (conversation!=null) {
-                            EMMessage lastMessage = conversation.getLastMessage();
-                            if (lastMessage!=null) {
-                                lastMessage.setAttribute(MyConstant.TO_NAME, event.message2);
-                                updateConversionExdInfoInFriend(conversation,event.message2);
-                                EMClient.getInstance().chatManager().updateMessage(lastMessage);
-                                conversationListLayout.loadDefaultData();
-                            }
-                        }
-                    }
+
+
+                if (!event.isContactChange()) {
+                    return;
                 }
+
+                if (StringUtil.isBlank(event.message)) {
+                    return;
+                }
+
+
+                if (!event.message.equals(toChatUsername)){
+                    return;
+                }
+
+                if (!StringUtil.isBlank(event.message2)) {
+                    cententTxt.setText(event.message2);
+                    nick_tv_content.setText(event.message2);
+                }
+
             }
         });
 
@@ -402,7 +406,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 person_img.setImageURI(uri);
 
                 nickName = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
-                nick_nameTxt.setText("昵称：" + nickName);
+                nick_nameTxt.setText("昵称：" + dataDTO.getNickname());
                 cententTxt.setText(nickName);
                 nick_tv_content.setText(nickName);
                 leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
@@ -669,7 +673,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 if (TextUtils.isEmpty(remarkName)) {
                     remarkName = nickName;
                 }
-                nick_nameTxt.setText("昵称：" + remarkName);
                 cententTxt.setText(remarkName);
                 nick_tv_content.setText(remarkName);
 
