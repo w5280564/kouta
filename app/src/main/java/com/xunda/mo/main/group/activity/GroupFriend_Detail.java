@@ -23,6 +23,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 
@@ -48,6 +52,9 @@ import com.xunda.mo.main.baseView.MySwitchItemView;
 import com.xunda.mo.main.chat.activity.ChatFriend_AddFriend;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
+import com.xunda.mo.main.me.activity.ChangeGroupUserNickNameActivity;
+import com.xunda.mo.main.me.activity.ChangeMyGroupNickNameActivity;
+import com.xunda.mo.main.me.activity.ChangeMyNickNameActivity;
 import com.xunda.mo.model.Group_Details_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
 import com.xunda.mo.network.saveFile;
@@ -81,9 +88,9 @@ public class GroupFriend_Detail extends BaseInitActivity {
     private LightningView vip_Txt;
     private Button right_Btn;
     private TextView send_mess_Txt, remove_Txt, add_Txt;
-    private EMConversation conversation;
     private MySwitchItemView black_Switch;
     private LinearLayout garde_Lin, label_Lin;
+    private ActivityResultLauncher mActivityResultLauncher;
 
     /**
      * @param context
@@ -147,6 +154,23 @@ public class GroupFriend_Detail extends BaseInitActivity {
         black_Switch.getSwitch().setOnClickListener(new black_SwitchClick());
         garde_Lin = findViewById(R.id.garde_Lin);
         label_Lin = findViewById(R.id.label_Lin);
+
+        mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result!=null) {
+                    int resultCode = result.getResultCode();
+                    if (resultCode==RESULT_OK) {
+                        Intent mIntent = result.getData();
+                        if (mIntent!=null) {
+                            String changeNick = mIntent.getStringExtra("newName");
+                            cententTxt.setText(changeNick);
+                            nick_ArrowItemView.getTvContent().setText(changeNick);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -203,8 +227,6 @@ public class GroupFriend_Detail extends BaseInitActivity {
     @Override
     protected void initData() {
         super.initData();
-        conversation = EMClient.getInstance().chatManager().getConversation(hxUserName, EaseCommonUtils.getConversationType(EaseConstant.CHATTYPE_SINGLE), true);
-
         String userName;
         String userID;
         if (TextUtils.isEmpty(userId)) {
@@ -215,7 +237,6 @@ public class GroupFriend_Detail extends BaseInitActivity {
             userID = userId;
         }
         String url = saveFile.Group_UserInfo_Url;
-//        url = String.format(url, userName);
         groupFriendMethod(GroupFriend_Detail.this, url, userName, userID);
     }
 
@@ -224,22 +245,14 @@ public class GroupFriend_Detail extends BaseInitActivity {
     private class nick_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            changeNick();
+            Intent intent = new Intent(mContext, ChangeGroupUserNickNameActivity.class);
+            intent.putExtra("name",nick_ArrowItemView.getTvContent().getText().toString());
+            intent.putExtra("myGroupId",groupId);
+            intent.putExtra("friendUserId",userId);
+            mActivityResultLauncher.launch(intent);
         }
     }
 
-    //设置备注
-    private void changeNick() {
-        new EditTextDialogFragment.Builder(mContext)
-                .setContent(nick_ArrowItemView.getTvContent().getText().toString())
-                .setConfirmClickListener((view, content) -> {
-                    if (!TextUtils.isEmpty(content)) {
-                        changeGroupNameMethod(GroupFriend_Detail.this, saveFile.Group_UpdateNickName_Url, content);
-                    }
-                })
-                .setTitle("设置群昵称")
-                .show();
-    }
 
     //加入黑名单
     private class black_SwitchClick implements View.OnClickListener {
@@ -548,24 +561,6 @@ public class GroupFriend_Detail extends BaseInitActivity {
         }
     }
 
-    //举报用户头像
-    public void QuestionMethod(Context context, String baseUrl) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("picture", model.getData().getUserHead());
-        map.put("toReportId", model.getData().getUserNum());
-        map.put("type", "1");
-        xUtils3Http.post(GroupFriend_Detail.this, baseUrl, map, new xUtils3Http.GetDataCallback() {
-            @Override
-            public void success(String result) {
-                Toast.makeText(context, "反馈已上传", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-
-            @Override
-            public void failed(String... args) {
-            }
-        });
-    }
 
     /**
      * 加入移除黑名单
@@ -596,28 +591,6 @@ public class GroupFriend_Detail extends BaseInitActivity {
         });
     }
 
-    /**
-     * 修改群昵称
-     */
-    public void changeGroupNameMethod(Context context, String baseUrl, String changeNick) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("groupId", groupId);
-        map.put("nickname", changeNick);
-        map.put("userId", userId);
-        xUtils3Http.post(GroupFriend_Detail.this, baseUrl, map, new xUtils3Http.GetDataCallback() {
-            @Override
-            public void success(String result) {
-                Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
-//                        nick_nameTxt.setText("昵称：" + changeNick);
-                cententTxt.setText(changeNick);
-                nick_ArrowItemView.getTvContent().setText(changeNick);
-            }
-
-            @Override
-            public void failed(String... args) {
-            }
-        });
-    }
 
     @SuppressLint("NewApi")
     public void AddManageMethod(Context context, String baseUrl, boolean isManage, View switchView) {
