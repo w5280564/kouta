@@ -225,6 +225,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         messageChange.with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.MESSAGE_NOT_SEND, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
 
+
         messageChange.with(MyConstant.MESSAGE_CHANGE_UPDATE_GROUP_IMAGE, EaseEvent.class).observe(getViewLifecycleOwner(), new Observer<EaseEvent>() {
             @Override
             public void onChanged(EaseEvent event) {
@@ -232,18 +233,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
                     return;
                 }
                 if (event.isGroupChange()) {
-                    if (!StringUtil.isBlank(event.message)) {
-                        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(event.message);
-                        if (conversation!=null) {
-                            EMMessage lastMessage = conversation.getLastMessage();
-                            if (lastMessage!=null) {
-                                lastMessage.setAttribute(MyConstant.GROUP_HEAD, event.message2);
-                                EMClient.getInstance().chatManager().updateMessage(lastMessage);
-                                conversationListLayout.loadDefaultData();
-                            }
-
-                        }
-                    }
+                    conversationListLayout.loadDefaultData();
                 }
             }
         });

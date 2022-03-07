@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -32,9 +33,12 @@ import androidx.core.content.ContextCompat;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.model.EaseEvent;
+import com.hyphenate.easeui.utils.StringUtil;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -58,6 +62,9 @@ import com.xunda.mo.staticdata.GlideEnGine;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.viewTouchDelegate;
 import com.xunda.mo.staticdata.xUtils3Http;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -418,8 +425,8 @@ public class GroupDetail_Edit extends BaseInitActivity {
                 if (TextUtils.equals(changType, "1")) {
                     Uri uri = Uri.parse(baseModel.getData());
                     person_img.setImageURI(uri);
-                    LiveDataBus.get().with(MyConstant.MESSAGE_CHANGE_UPDATE_GROUP_IMAGE).postValue(EaseEvent.create(MyConstant.MESSAGE_CHANGE_UPDATE_GROUP_IMAGE,
-                            EaseEvent.TYPE.GROUP,groupModel.getData().getGroupHxId(),baseModel.getData()));
+                    updateConversionExdAndLastMessageInfoInGroup(groupModel.getData().getGroupHxId(),baseModel.getData());
+                    LiveDataBus.get().with(MyConstant.MESSAGE_CHANGE_UPDATE_GROUP_IMAGE).postValue(EaseEvent.create(MyConstant.MESSAGE_CHANGE_UPDATE_GROUP_IMAGE,EaseEvent.TYPE.GROUP));
                 } else if (TextUtils.equals(changType, "2")) {
                     String adressStr = valueStr.isEmpty() ? "未设置" : valueStr;
                     adress_ArrowItemView.getTvContent().setText(adressStr);
@@ -433,6 +440,56 @@ public class GroupDetail_Edit extends BaseInitActivity {
             }
         });
     }
+
+
+    //修改群会话列表扩展字段
+    private void updateConversionExdAndLastMessageInfoInGroup(String currentConversationId,String showImg) {
+        EMConversation currentConversation = EMClient.getInstance().chatManager().getConversation(currentConversationId);
+        if (currentConversation!=null) {
+            updateConversionLastMessage(currentConversation,showImg);
+            String extField = currentConversation.getExtField();
+            JSONObject jsonObject = null;
+            if (!StringUtil.isBlank(extField)) {
+                try {
+                    jsonObject = new JSONObject(extField);
+                    jsonObject.put("isInsertGroupOrFriendInfo", true);
+                    jsonObject.put("showImg", showImg);
+                } catch (JSONException e) {
+                    jsonObject = getJsonObjectGroup(showImg);
+                }
+            } else {
+                jsonObject = getJsonObjectGroup(showImg);
+            }
+
+            if (jsonObject == null) {
+                return;
+            }
+            currentConversation.setExtField(jsonObject.toString());
+        }
+    }
+
+    private void updateConversionLastMessage(EMConversation currentConversation,String showName) {
+        EMMessage lastMessage = currentConversation.getLastMessage();
+        if (lastMessage!=null) {
+            lastMessage.setAttribute(MyConstant.GROUP_HEAD, showName);
+            EMClient.getInstance().chatManager().updateMessage(lastMessage);
+        }
+    }
+
+
+    @NonNull
+    private JSONObject getJsonObjectGroup(String showImg) {
+        JSONObject jsonObject;
+        jsonObject  = new JSONObject();
+        try {
+            jsonObject.put("isInsertGroupOrFriendInfo", true);
+            jsonObject.put("showImg", showImg);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
 
     //发送消息
     private void sendMes(GruopInfo_Bean Model) {
