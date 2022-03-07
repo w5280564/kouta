@@ -94,7 +94,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private MyArrowItemView nick_ArrowItemView;
     private LinearLayout grade_Lin, label_Lin;
     private String nickName;
-    String remarkName;
     private ActivityResultLauncher mActivityResultLauncher;
 
     /**
@@ -196,7 +195,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                     if (resultCode==RESULT_OK) {
                         Intent mIntent = result.getData();
                         if (mIntent!=null) {
-                            remarkName = mIntent.getStringExtra("newName");
+                            String remarkName = mIntent.getStringExtra("newName");
 
                             if (TextUtils.isEmpty(remarkName)) {
                                 remarkName = nickName;
@@ -439,10 +438,11 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 Uri uri = Uri.parse(model.getData().getHeadImg());
                 person_img.setImageURI(uri);
 
-                nickName = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
-                nick_nameTxt.setText("昵称：" + dataDTO.getNickname());
-                cententTxt.setText(nickName);
-                nick_tv_content.setText(nickName);
+                nickName = dataDTO.getNickname();
+                nick_nameTxt.setText("昵称：" + nickName);
+                String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? nickName : dataDTO.getRemarkName();
+                cententTxt.setText(name);
+                nick_tv_content.setText(name);
                 leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
                 String signature = dataDTO.getSignature();
                 if (!TextUtils.isEmpty(signature)) {
@@ -475,9 +475,9 @@ public class ChatFriend_Detail extends BaseInitActivity {
         EmUserEntity entity = new EmUserEntity();
         entity.setUsername(toChatUsername);
         // 正则表达式，判断首字母是否是英文字母
-        String nickName = TextUtils.isEmpty(mUserModel.getRemarkName()) ? mUserModel.getNickname() : mUserModel.getRemarkName();
-        entity.setNickname(nickName);
-        String pinyin = PinyinUtils.getPingYin(nickName);
+        String nickName_HX = TextUtils.isEmpty(mUserModel.getRemarkName()) ? nickName : mUserModel.getRemarkName();
+        entity.setNickname(nickName_HX);
+        String pinyin = PinyinUtils.getPingYin(nickName_HX);
         String sortString = pinyin.substring(0, 1).toUpperCase();
         if (sortString.matches("[A-Z]")) {
             entity.setInitialLetter(sortString);
@@ -506,7 +506,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
 
 
         //通知callKit更新头像昵称
-        EaseCallUserInfo info = new EaseCallUserInfo(mUserModel.getNickname(), mUserModel.getHeadImg());
+        EaseCallUserInfo info = new EaseCallUserInfo(nickName_HX, mUserModel.getHeadImg());
         info.setUserId(info.getUserId());
         EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
 
