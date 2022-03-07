@@ -29,6 +29,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -105,6 +109,7 @@ public class UserDetail_Set extends BaseInitActivity {
     private LinearLayout label_Lin;
     private String tagString;
     private View head_arrow;
+    private ActivityResultLauncher mActivityResultLauncher;
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, UserDetail_Set.class);
@@ -155,6 +160,23 @@ public class UserDetail_Set extends BaseInitActivity {
         LiveDataBus.get().with(MyConstant.MY_LABEL, String.class).observe(this, s -> {
             tagString = s;
             tagList(label_Lin, UserDetail_Set.this, s);
+        });
+
+        mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result!=null) {
+                    int resultCode = result.getResultCode();
+                    if (resultCode==RESULT_OK) {
+                        Intent mIntent = result.getData();
+                        if (mIntent!=null) {
+                            friend_ArrowItemView.getTvContent().setText(mIntent.getStringExtra("newName"));
+                            friend_ArrowItemView.setEnabled(false);
+                            friend_ArrowItemView.getArrow().setVisibility(View.GONE);
+                        }
+                    }
+                }
+            }
         });
     }
 
@@ -485,7 +507,9 @@ public class UserDetail_Set extends BaseInitActivity {
                     if (TextUtils.equals(changString, CHANGE_HEAD)) {
                         startCamera();
                     } else if (TextUtils.equals(changString, CHANGE_NICK)) {
-                        changeNick();
+                        Intent intent = new Intent(mContext, ChangeMyNickNameActivity.class);
+                        intent.putExtra("name",friend_ArrowItemView.getTvContent().getText().toString());
+                        mActivityResultLauncher.launch(intent);
                     } else if (TextUtils.equals(changString, CHANGE_SEX)) {
                         setSex();
                     }
@@ -558,20 +582,6 @@ public class UserDetail_Set extends BaseInitActivity {
     }
 
 
-    //设置昵称
-    private void changeNick() {
-        new EditTextDialogFragment.Builder(mContext)
-                .setContent(friend_ArrowItemView.getTvContent().getText().toString())
-                .setConfirmClickListener((view, content) -> {
-                    if (!TextUtils.isEmpty(content)) {
-//                            itemGroupName.getTvContent().setText(content);
-                        String changType = "2";
-                        ChangeUserMethod(UserDetail_Set.this, saveFile.User_Update_Url, changType, "nickname", content, "", "");
-                    }
-                })
-                .setTitle("设置昵称")
-                .show();
-    }
 
 
     private void showSignatureDialog() {

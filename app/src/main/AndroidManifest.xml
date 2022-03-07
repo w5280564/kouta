@@ -223,6 +223,9 @@
             android:name=".main.me.activity.ChangeGroupNameActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".main.me.activity.ChangeMyNickNameActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".main.group.activity.newGroup"
             android:screenOrientation="portrait" />
         <activity
