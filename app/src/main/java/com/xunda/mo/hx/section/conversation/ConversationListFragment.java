@@ -267,7 +267,6 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
                                 EMClient.getInstance().chatManager().updateMessage(lastMessage);
                                 conversationListLayout.loadDefaultData();
                             }
-
                         }
                     }
                 }
