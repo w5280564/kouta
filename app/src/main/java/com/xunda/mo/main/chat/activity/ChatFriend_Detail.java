@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
@@ -684,6 +685,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 }
                 //修改本地其他用户名
                 String hxUserName = model.getData().getHxUserName();
+                updateConversionExdInfoInFriend(hxUserName,remarkName);
                 LiveDataBus.get().with(DemoConstant.CONTACT_UPDATE).postValue(EaseEvent.create(DemoConstant.CONTACT_UPDATE, EaseEvent.TYPE.CONTACT,hxUserName,remarkName));
                 DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
             }
@@ -693,6 +695,46 @@ public class ChatFriend_Detail extends BaseInitActivity {
             }
         });
 
+    }
+
+
+    //修改好友会话列表扩展字段
+    private void updateConversionExdInfoInFriend(String currentConversationId,String showName) {
+        EMConversation currentConversation = EMClient.getInstance().chatManager().getConversation(currentConversationId);
+        if (currentConversation!=null) {
+            String extField = currentConversation.getExtField();
+            JSONObject jsonObject = null;
+            if (!StringUtil.isBlank(extField)) {
+                try {
+                    jsonObject = new JSONObject(extField);
+                    jsonObject.put("isInsertGroupOrFriendInfo", true);
+                    jsonObject.put("showName", showName);
+                } catch (JSONException e) {
+                    jsonObject = getJsonObjectFriend(showName);
+                }
+            } else {
+                jsonObject = getJsonObjectFriend(showName);
+            }
+
+            if (jsonObject == null) {
+                return;
+            }
+            currentConversation.setExtField(jsonObject.toString());
+        }
+    }
+
+
+    @NonNull
+    private JSONObject getJsonObjectFriend(String showName) {
+        JSONObject jsonObject;
+        jsonObject  = new JSONObject();
+        try {
+            jsonObject.put("isInsertGroupOrFriendInfo", true);
+            jsonObject.put("showName", showName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
 

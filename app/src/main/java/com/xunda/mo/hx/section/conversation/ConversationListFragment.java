@@ -66,9 +66,6 @@ import com.xunda.mo.network.saveFile;
 import com.xunda.mo.staticdata.NoDoubleClickListener;
 import com.xunda.mo.staticdata.xUtils3Http;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -223,6 +220,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         messageChange.with(DemoConstant.CONVERSATION_READ, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.CONTACT_CHANGE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.CONTACT_ADD, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
+        messageChange.with(DemoConstant.CONTACT_UPDATE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.CONTACT_DELETE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.MESSAGE_NOT_SEND, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
@@ -249,67 +247,7 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
                 }
             }
         });
-
-        messageChange.with(MyConstant.CONTACT_UPDATE, EaseEvent.class).observe(getViewLifecycleOwner(), new Observer<EaseEvent>() {
-            @Override
-            public void onChanged(EaseEvent event) {
-                if (event == null) {
-                    return;
-                }
-                if (event.isContactChange()) {
-                    if (!StringUtil.isBlank(event.message)) {
-                        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(event.message);
-                        if (conversation!=null) {
-                            EMMessage lastMessage = conversation.getLastMessage();
-                            if (lastMessage!=null) {
-                                lastMessage.setAttribute(MyConstant.TO_NAME, event.message2);
-                                updateConversionExdInfoInFriend(conversation,event.message2);
-                                EMClient.getInstance().chatManager().updateMessage(lastMessage);
-                                conversationListLayout.loadDefaultData();
-                            }
-                        }
-                    }
-                }
-            }
-        });
     }
-
-    //修改好友会话列表扩展字段
-    private void updateConversionExdInfoInFriend(EMConversation currentConversation,String showName) {
-        String extField = currentConversation.getExtField();
-        JSONObject jsonObject = null;
-        if (!StringUtil.isBlank(extField)) {
-            try {
-                jsonObject = new JSONObject(extField);
-                jsonObject.put("isInsertGroupOrFriendInfo", true);
-                jsonObject.put("showName", showName);
-            } catch (JSONException e) {
-                jsonObject = getJsonObjectFriend(showName);
-            }
-        }else{
-            jsonObject = getJsonObjectFriend(showName);
-        }
-
-        if (jsonObject==null) {
-            return;
-        }
-        currentConversation.setExtField(jsonObject.toString());
-    }
-
-
-    @NonNull
-    private JSONObject getJsonObjectFriend(String showName) {
-        JSONObject jsonObject;
-        jsonObject  = new JSONObject();
-        try {
-            jsonObject.put("isInsertGroupOrFriendInfo", true);
-            jsonObject.put("showName", showName);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
 
     private void refreshList(Boolean event) {
         if (event == null) {

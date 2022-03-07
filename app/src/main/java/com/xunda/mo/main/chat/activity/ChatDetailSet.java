@@ -21,8 +21,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -40,6 +42,7 @@ import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseCompat;
 import com.hyphenate.easeui.utils.EaseFileUtils;
 import com.hyphenate.easeui.utils.MyEaseCommonUtils;
+import com.hyphenate.easeui.utils.StringUtil;
 import com.xunda.mo.R;
 import com.xunda.mo.hx.DemoHelper;
 import com.xunda.mo.hx.common.constant.DemoConstant;
@@ -212,6 +215,7 @@ public class ChatDetailSet extends BaseInitActivity {
                 }
             });
         });
+
 
         conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername, EaseCommonUtils.getConversationType(EaseConstant.CHATTYPE_SINGLE), true);
         top_Switch.getSwitch().setChecked(MyEaseCommonUtils.isTimestamp(conversation.getExtField()));
@@ -721,6 +725,7 @@ public class ChatDetailSet extends BaseInitActivity {
                 }
                 //修改本地其他用户名
                 String hxUserName = model.getData().getHxUserName();
+                updateConversionExdInfoInFriend(hxUserName,remarkName);
                 LiveDataBus.get().with(DemoConstant.CONTACT_UPDATE).postValue(EaseEvent.create(DemoConstant.CONTACT_UPDATE, EaseEvent.TYPE.CONTACT,hxUserName,remarkName));
                 DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
             }
@@ -729,6 +734,45 @@ public class ChatDetailSet extends BaseInitActivity {
             public void failed(String... args) {
             }
         });
+    }
+
+    //修改好友会话列表扩展字段
+    private void updateConversionExdInfoInFriend(String currentConversationId,String showName) {
+        EMConversation currentConversation = EMClient.getInstance().chatManager().getConversation(currentConversationId);
+        if (currentConversation!=null) {
+            String extField = currentConversation.getExtField();
+            JSONObject jsonObject = null;
+            if (!StringUtil.isBlank(extField)) {
+                try {
+                    jsonObject = new JSONObject(extField);
+                    jsonObject.put("isInsertGroupOrFriendInfo", true);
+                    jsonObject.put("showName", showName);
+                } catch (JSONException e) {
+                    jsonObject = getJsonObjectFriend(showName);
+                }
+            } else {
+                jsonObject = getJsonObjectFriend(showName);
+            }
+
+            if (jsonObject == null) {
+                return;
+            }
+            currentConversation.setExtField(jsonObject.toString());
+        }
+    }
+
+
+    @NonNull
+    private JSONObject getJsonObjectFriend(String showName) {
+        JSONObject jsonObject;
+        jsonObject  = new JSONObject();
+        try {
+            jsonObject.put("isInsertGroupOrFriendInfo", true);
+            jsonObject.put("showName", showName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     /**
