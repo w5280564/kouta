@@ -22,6 +22,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
@@ -59,6 +63,8 @@ import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.baseView.MySwitchItemView;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.group.activity.GroupDetail_Report;
+import com.xunda.mo.main.me.activity.ChangeMyNickNameActivity;
+import com.xunda.mo.main.me.activity.SetFriendRemarkNameActivity;
 import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.model.baseModel;
 import com.xunda.mo.network.saveFile;
@@ -89,6 +95,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private LinearLayout grade_Lin, label_Lin;
     private String nickName;
     String remarkName;
+    private ActivityResultLauncher mActivityResultLauncher;
 
     /**
      * @param context
@@ -180,6 +187,39 @@ public class ChatFriend_Detail extends BaseInitActivity {
         add_Txt.setOnClickListener(new add_TxtClick());
         black_Switch = findViewById(R.id.black_Switch);
         black_Switch.getSwitch().setOnClickListener(new switch_itemClickClick());
+
+        mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result!=null) {
+                    int resultCode = result.getResultCode();
+                    if (resultCode==RESULT_OK) {
+                        Intent mIntent = result.getData();
+                        if (mIntent!=null) {
+                            remarkName = mIntent.getStringExtra("newName");
+
+                            if (TextUtils.isEmpty(remarkName)) {
+                                remarkName = nickName;
+                            }
+                            cententTxt.setText(remarkName);
+                            nick_tv_content.setText(remarkName);
+
+                            JSONObject obj = new JSONObject();
+                            try {
+                                obj.put("remarkName", remarkName);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            //修改本地其他用户名
+                            String hxUserName = model.getData().getHxUserName();
+                            updateConversionExdInfoInFriend(hxUserName,remarkName);
+                            LiveDataBus.get().with(DemoConstant.CONTACT_UPDATE).postValue(EaseEvent.create(DemoConstant.CONTACT_UPDATE, EaseEvent.TYPE.CONTACT,hxUserName,remarkName));
+                            DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -253,28 +293,21 @@ public class ChatFriend_Detail extends BaseInitActivity {
     private class nick_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            changeNick();
+            if (model==null) {
+                return;
+            }
+
+            if (model.getData()==null) {
+                return;
+            }
+
+            Intent intent = new Intent(mContext, SetFriendRemarkNameActivity.class);
+            intent.putExtra("name",nick_tv_content.getText().toString());
+            intent.putExtra("friendUserId",model.getData().getUserId());
+            mActivityResultLauncher.launch(intent);
         }
     }
 
-    //设置备注
-    private void changeNick() {
-        new EditTextDialogFragment.Builder(mContext)
-                .setContent(nick_ArrowItemView.getTvContent().getText().toString())
-                .setConfirmClickListener(new EditTextDialogFragment.ConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view, String content) {
-//                        if (!TextUtils.isEmpty(content)) {
-//                            itemGroupName.getTvContent().setText(content);
-                        String changType = "2";
-                        remarkName = content;
-                        ChangeUserMethod(ChatFriend_Detail.this, saveFile.Friend_UpdateRemarkName_Url);
-//                        }
-                    }
-                })
-                .setTitle("备注昵称")
-                .show();
-    }
 
     private class send_mess_TxtOnClick extends NoDoubleClickListener {
         @Override
@@ -660,42 +693,6 @@ public class ChatFriend_Detail extends BaseInitActivity {
         });
     }
 
-
-    /**
-     * 修改用户信息
-     */
-    public void ChangeUserMethod(Context context, String baseUrl) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("friendUserId", model.getData().getUserId());
-        map.put("remarkName", remarkName);
-        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
-            @Override
-            public void success(String result) {
-                if (TextUtils.isEmpty(remarkName)) {
-                    remarkName = nickName;
-                }
-                cententTxt.setText(remarkName);
-                nick_tv_content.setText(remarkName);
-
-                JSONObject obj = new JSONObject();
-                try {
-                    obj.put("remarkName", remarkName);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                //修改本地其他用户名
-                String hxUserName = model.getData().getHxUserName();
-                updateConversionExdInfoInFriend(hxUserName,remarkName);
-                LiveDataBus.get().with(DemoConstant.CONTACT_UPDATE).postValue(EaseEvent.create(DemoConstant.CONTACT_UPDATE, EaseEvent.TYPE.CONTACT,hxUserName,remarkName));
-                DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
-            }
-
-            @Override
-            public void failed(String... args) {
-            }
-        });
-
-    }
 
 
     //修改好友会话列表扩展字段
