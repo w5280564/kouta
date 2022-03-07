@@ -21,6 +21,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -65,6 +69,7 @@ import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.group.activity.GroupDetail_Report;
 import com.xunda.mo.main.info.MyInfo;
 import com.xunda.mo.main.me.activity.Me_VIP;
+import com.xunda.mo.main.me.activity.SetFriendRemarkNameActivity;
 import com.xunda.mo.model.Friend_Details_Bean;
 import com.xunda.mo.network.saveFile;
 import com.xunda.mo.pinyin.PinyinUtils;
@@ -88,7 +93,7 @@ import lombok.SneakyThrows;
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 
 public class ChatDetailSet extends BaseInitActivity {
-    private String toChatUsername;
+    private String toChatUsername,nickName;
     private SimpleDraweeView person_img;
     private TextView nick_nameTxt, cententTxt, leID_Txt, signature_Txt, grade_Txt;
     private LightningView vip_Txt;
@@ -99,6 +104,7 @@ public class ChatDetailSet extends BaseInitActivity {
     private ChatViewModel viewModel;
     private MyArrowItemView nick_ArrowItemView, group_ArrowItemView;
     private LinearLayout grade_Lin;
+    private ActivityResultLauncher mActivityResultLauncher;
 
     public static void actionStart(Context context, String toChatUsername) {
         Intent intent = new Intent(context, ChatDetailSet.class);
@@ -152,6 +158,39 @@ public class ChatDetailSet extends BaseInitActivity {
         remove_Txt = findViewById(R.id.remove_Txt);
         remove_Txt.setOnClickListener(new remove_TxtClick());
         grade_Lin = findViewById(R.id.grade_Lin);
+
+         mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result!=null) {
+                    int resultCode = result.getResultCode();
+                    if (resultCode==RESULT_OK) {
+                        Intent mIntent = result.getData();
+                        if (mIntent!=null) {
+                            String remarkName = mIntent.getStringExtra("newName");
+
+                            if (TextUtils.isEmpty(remarkName)) {
+                                remarkName = nickName;
+                            }
+                            cententTxt.setText(remarkName);
+                            nick_tv_content.setText(remarkName);
+
+                            JSONObject obj = new JSONObject();
+                            try {
+                                obj.put("remarkName", remarkName);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            //修改本地其他用户名
+                            String hxUserName = model.getData().getHxUserName();
+                            updateConversionExdInfoInFriend(hxUserName,remarkName);
+                            LiveDataBus.get().with(DemoConstant.CONTACT_UPDATE).postValue(EaseEvent.create(DemoConstant.CONTACT_UPDATE, EaseEvent.TYPE.CONTACT,hxUserName,remarkName));
+                            DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -227,7 +266,18 @@ public class ChatDetailSet extends BaseInitActivity {
     private class nick_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            changeNick();
+            if (model==null) {
+                return;
+            }
+
+            if (model.getData()==null) {
+                return;
+            }
+
+            Intent intent = new Intent(mContext, SetFriendRemarkNameActivity.class);
+            intent.putExtra("name",nick_tv_content.getText().toString());
+            intent.putExtra("friendUserId",model.getData().getUserId());
+            mActivityResultLauncher.launch(intent);
         }
     }
 
@@ -240,23 +290,6 @@ public class ChatDetailSet extends BaseInitActivity {
         }
     }
 
-    //设置备注
-    private void changeNick() {
-        new EditTextDialogFragment.Builder(mContext)
-                .setContent(nick_ArrowItemView.getTvContent().getText().toString())
-                .setConfirmClickListener(new EditTextDialogFragment.ConfirmClickListener() {
-                    @Override
-                    public void onConfirmClick(View view, String content) {
-                        if (!TextUtils.isEmpty(content)) {
-//                            itemGroupName.getTvContent().setText(content);
-                            String changType = "2";
-                            ChangeUserMethod(ChatDetailSet.this, saveFile.Friend_UpdateRemarkName_Url, content);
-                        }
-                    }
-                })
-                .setTitle("备注昵称")
-                .show();
-    }
 
 
     //   背景图
@@ -424,8 +457,9 @@ public class ChatDetailSet extends BaseInitActivity {
                 Friend_Details_Bean.DataDTO dataDTO = model.getData();
                 Uri uri = Uri.parse(model.getData().getHeadImg());
                 person_img.setImageURI(uri);
-                String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? dataDTO.getNickname() : dataDTO.getRemarkName();
-                nick_nameTxt.setText("昵称：" + dataDTO.getNickname());
+                nickName = dataDTO.getNickname();
+                String name = TextUtils.isEmpty(dataDTO.getRemarkName()) ? nickName : dataDTO.getRemarkName();
+                nick_nameTxt.setText("昵称：" + nickName);
                 cententTxt.setText(name);
                 nick_tv_content.setText(name);
                 leID_Txt.setText("Mo ID:" + dataDTO.getUserNum().intValue());
@@ -459,9 +493,9 @@ public class ChatDetailSet extends BaseInitActivity {
         EmUserEntity entity = new EmUserEntity();
         entity.setUsername(toChatUsername);
         // 正则表达式，判断首字母是否是英文字母
-        String nickName = TextUtils.isEmpty(mUserModel.getRemarkName()) ? mUserModel.getNickname() : mUserModel.getRemarkName();
-        entity.setNickname(nickName);
-        String pinyin = PinyinUtils.getPingYin(nickName);
+        String nickName_HX = TextUtils.isEmpty(mUserModel.getRemarkName()) ? nickName : mUserModel.getRemarkName();
+        entity.setNickname(nickName_HX);
+        String pinyin = PinyinUtils.getPingYin(nickName_HX);
         String sortString = pinyin.substring(0, 1).toUpperCase();
         if (sortString.matches("[A-Z]")) {
             entity.setInitialLetter(sortString);
@@ -490,7 +524,7 @@ public class ChatDetailSet extends BaseInitActivity {
 
 
         //通知callKit更新头像昵称
-        EaseCallUserInfo info = new EaseCallUserInfo(mUserModel.getNickname(), mUserModel.getHeadImg());
+        EaseCallUserInfo info = new EaseCallUserInfo(nickName_HX, mUserModel.getHeadImg());
         info.setUserId(info.getUserId());
         EaseLiveDataBus.get().with(EaseCallKitUtils.UPDATE_USERINFO).postValue(info);
 
@@ -703,38 +737,6 @@ public class ChatDetailSet extends BaseInitActivity {
         });
     }
 
-    /**
-     * 修改用户信息
-     */
-    public void ChangeUserMethod(Context context, String baseUrl, String remarkName) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("friendUserId", model.getData().getUserId());
-        map.put("remarkName", remarkName);
-        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
-            @Override
-            public void success(String result) {
-                Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
-                cententTxt.setText(remarkName);
-                nick_tv_content.setText(remarkName);
-
-                JSONObject obj = new JSONObject();
-                try {
-                    obj.put("remarkName", remarkName);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                //修改本地其他用户名
-                String hxUserName = model.getData().getHxUserName();
-                updateConversionExdInfoInFriend(hxUserName,remarkName);
-                LiveDataBus.get().with(DemoConstant.CONTACT_UPDATE).postValue(EaseEvent.create(DemoConstant.CONTACT_UPDATE, EaseEvent.TYPE.CONTACT,hxUserName,remarkName));
-                DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
-            }
-
-            @Override
-            public void failed(String... args) {
-            }
-        });
-    }
 
     //修改好友会话列表扩展字段
     private void updateConversionExdInfoInFriend(String currentConversationId,String showName) {
