@@ -91,8 +91,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="18dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="12dp"
         android:textStyle="bold"
         android:textColor="#a1a1a1"
@@ -136,15 +135,28 @@
         app:layout_constraintRight_toLeftOf="@id/rl_unread_right"
         app:layout_constraintHorizontal_bias="0"
         android:layout_marginRight="10dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginLeft="2dp"
         app:layout_goneMarginLeft="11dp"
-        app:layout_goneMarginRight="20dp"
+        app:layout_goneMarginRight="10dp"
         android:maxLines="1"
         android:ellipsize="end"
         android:textColor="#a1a1a1"
         android:textSize="12sp"/>
 
+
+    <ImageView
+        android:id="@+id/iv_mdr"
+        android:layout_width="10dp"
+        android:layout_height="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/message"
+        app:layout_constraintTop_toTopOf="@id/message"
+        app:layout_constraintLeft_toRightOf="@id/message"
+        android:layout_marginEnd="10dp"
+        android:layout_marginLeft="11dp"
+        android:src="@drawable/icon_mdr"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/rl_unread_right"
