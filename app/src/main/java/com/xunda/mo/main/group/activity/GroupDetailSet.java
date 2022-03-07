@@ -30,7 +30,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
-import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -57,7 +56,8 @@ import com.xunda.mo.main.baseView.MyArrowItemView;
 import com.xunda.mo.main.baseView.MySwitchItemView;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
-import com.xunda.mo.main.me.activity.ChangeNameActivity;
+import com.xunda.mo.main.me.activity.ChangeGroupNameActivity;
+import com.xunda.mo.main.me.activity.ChangeMyGroupNickNameActivity;
 import com.xunda.mo.main.me.activity.MeAndGroup_QRCode;
 import com.xunda.mo.model.GroupMember_Bean;
 import com.xunda.mo.model.GruopInfo_Bean;
@@ -278,25 +278,13 @@ public class GroupDetailSet extends BaseInitActivity {
     private class group_Name_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            changeGroupName();
+            if (groupModel==null) {
+                return;
+            }
+            ChangeGroupNameActivity.actionStart(mContext,group_Name_ArrowItemView.getTvContent().getText().toString(),groupModel);
         }
     }
 
-    //设置群名称
-    private void changeGroupName() {
-        new EditTextDialogFragment.Builder(mContext)
-                .setContent(group_Name_ArrowItemView.getTvContent().getText().toString())
-                .setConfirmClickListener((view, content) -> {
-                    if (!TextUtils.isEmpty(content)) {
-//                            itemGroupName.getTvContent().setText(content);
-                        String changType = "3";
-                        String keyStr = "groupName";
-                        CreateGroupMethod(GroupDetailSet.this, saveFile.Group_UpdateInfo_Url, changType, keyStr, content, "", "");
-                    }
-                })
-                .setTitle("设置群名称")
-                .show();
-    }
 
     //群二维码
     private class group_Code_ArrowItemViewClick extends NoDoubleClickListener {
@@ -310,7 +298,7 @@ public class GroupDetailSet extends BaseInitActivity {
     private class group_Nick_ArrowItemViewClick extends NoDoubleClickListener {
         @Override
         protected void onNoDoubleClick(View v) {
-            ChangeNameActivity.actionStart(mContext,group_Nick_ArrowItemView.getTvContent().getText().toString(),myGroupId);
+            ChangeMyGroupNickNameActivity.actionStart(mContext,group_Nick_ArrowItemView.getTvContent().getText().toString(),myGroupId);
         }
     }
 
