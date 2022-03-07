@@ -256,9 +256,9 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
                             if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_CREATE_GROUP)) {
                                 String invitationStr = lastMessage.getStringAttribute(MyConstant.USER_NAME, "");
                                 if (!isSender) {
-                                    txt_content = String.format("'%1$s'创建了群，并邀请 '%2$s'加入群", send_name, invitationStr);
+                                    txt_content = String.format("'%1$s'创建了群聊，并邀请 '%2$s'加入群聊", send_name, invitationStr);
                                 } else {
-                                    txt_content = String.format("我创建了群，并邀请 '%s'加入群", invitationStr);
+                                    txt_content = String.format("我创建了群聊，并邀请 '%s'加入群聊", invitationStr);
                                 }
                             } else if (TextUtils.equals(txt_message_type, MyConstant.MESSAGE_TYPE_APPLY)) {
                                 String toName = lastMessage.getStringAttribute(MyConstant.TO_NAME, "");

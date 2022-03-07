@@ -33,7 +33,12 @@ public class ChatRowAddMes extends EaseChatRow {
         String name = message.getStringAttribute(MyConstant.SEND_NAME, "");
         String invitationStr = message.getStringAttribute(MyConstant.USER_NAME, "");
 
-        String content = String.format("'%1$s'创建了群聊，并邀请 '%2$s'加入群聊", name, invitationStr);
+        String content;
+        if (!isSender) {
+            content = String.format("'%1$s'创建了群聊，并邀请 '%2$s'加入群聊", name, invitationStr);
+        } else {
+            content = String.format("我创建了群聊，并邀请 '%s'加入群聊", invitationStr);
+        }
         String groupStr = "'加入群聊";
         int startLength = content.length() - invitationStr.length() - groupStr.length();
         int endLength = content.length() - groupStr.length();
