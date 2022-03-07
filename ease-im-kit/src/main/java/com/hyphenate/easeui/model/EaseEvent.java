@@ -14,7 +14,7 @@ public class EaseEvent implements Serializable {
     public String event;
     public TYPE type;
     public String message;
-    public String groupHeaderUrl;
+    public String message2;
 
     public EaseEvent() {}
 
@@ -40,10 +40,10 @@ public class EaseEvent implements Serializable {
         return easeEvent;
     }
 
-    public static EaseEvent create(String event, TYPE type, String message,String groupHeaderUrl) {
+    public static EaseEvent create(String event, TYPE type, String message,String message2) {
         EaseEvent easeEvent = new EaseEvent(event, type);
         easeEvent.message = message;
-        easeEvent.groupHeaderUrl = groupHeaderUrl;
+        easeEvent.message2 = message2;
         return easeEvent;
     }
 

@@ -657,6 +657,7 @@ public class ChatFriend_Detail extends BaseInitActivity {
                 //修改本地其他用户名
                 String hxUserName = model.getData().getHxUserName();
                 DemoHelper.getInstance().getUserInfo(hxUserName).setExt(obj.toString());
+                LiveDataBus.get().with(DemoConstant.CONTACT_UPDATE).postValue(EaseEvent.create(DemoConstant.CONTACT_UPDATE, EaseEvent.TYPE.CONTACT,hxUserName,remarkName));
             }
 
             @Override

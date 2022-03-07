@@ -220,7 +220,6 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         messageChange.with(DemoConstant.CONVERSATION_READ, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.CONTACT_CHANGE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.CONTACT_ADD, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
-        messageChange.with(DemoConstant.CONTACT_UPDATE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.CONTACT_DELETE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(MyConstant.MESSAGE_CHANGE_SAVE_MESSAGE, EaseEvent.class).observe(getViewLifecycleOwner(), this::loadList);
         messageChange.with(DemoConstant.MESSAGE_NOT_SEND, Boolean.class).observe(getViewLifecycleOwner(), this::refreshList);
@@ -237,7 +236,30 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
                         if (conversation!=null) {
                             EMMessage lastMessage = conversation.getLastMessage();
                             if (lastMessage!=null) {
-                                lastMessage.setAttribute(MyConstant.GROUP_HEAD, event.groupHeaderUrl);
+                                lastMessage.setAttribute(MyConstant.GROUP_HEAD, event.message2);
+                                EMClient.getInstance().chatManager().updateMessage(lastMessage);
+                                conversationListLayout.loadDefaultData();
+                            }
+
+                        }
+                    }
+                }
+            }
+        });
+
+        messageChange.with(MyConstant.CONTACT_UPDATE, EaseEvent.class).observe(getViewLifecycleOwner(), new Observer<EaseEvent>() {
+            @Override
+            public void onChanged(EaseEvent event) {
+                if (event == null) {
+                    return;
+                }
+                if (event.isContactChange()) {
+                    if (!StringUtil.isBlank(event.message)) {
+                        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(event.message);
+                        if (conversation!=null) {
+                            EMMessage lastMessage = conversation.getLastMessage();
+                            if (lastMessage!=null) {
+                                lastMessage.setAttribute(MyConstant.TO_NAME, event.message2);
                                 EMClient.getInstance().chatManager().updateMessage(lastMessage);
                                 conversationListLayout.loadDefaultData();
                             }

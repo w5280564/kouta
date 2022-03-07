@@ -319,29 +319,4 @@ public class ContactDetailActivity extends BaseInitActivity implements EaseTitle
         });
     }
 
-    private void warpEMUserInfo(EMUserInfo userInfo){
-        if(userInfo != null && mUser != null){
-            EmUserEntity userEntity = new EmUserEntity();
-            userEntity.setUsername(mUser.getUsername());
-            userEntity.setNickname(userInfo.getNickName());
-            userEntity.setEmail(userInfo.getEmail());
-            userEntity.setAvatar(userInfo.getAvatarUrl());
-            userEntity.setBirth(userInfo.getBirth());
-            userEntity.setGender(userInfo.getGender());
-            userEntity.setExt(userInfo.getExt());
-            userEntity.setSign(userInfo.getSignature());
-            EaseCommonUtils.setUserInitialLetter(userEntity);
-            userEntity.setContact(mUser.getContact());
-
-            //更新本地数据库信息
-            DemoHelper.getInstance().update(userEntity);
-
-            //更新本地联系人列表
-            DemoHelper.getInstance().updateContactList();
-            EaseEvent event = EaseEvent.create(DemoConstant.CONTACT_UPDATE, EaseEvent.TYPE.CONTACT);
-            event.message = mUser.getUsername();
-            //发送联系人更新事件
-            contactChangeLiveData.with(DemoConstant.CONTACT_UPDATE).postValue(event);
-        }
-    }
 }
