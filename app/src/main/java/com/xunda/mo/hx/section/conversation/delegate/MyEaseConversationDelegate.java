@@ -102,7 +102,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         Log.e("EaseConversationDelegate", "会话类型》》" + item.getType());
         if (item.getType() == EMConversation.EMConversationType.GroupChat) {
             if (item.getAllMsgCount() != 0) {
-                boolean isMoCustomer = false;
+                boolean isMoCustomer;
                 String extMessage = item.getExtField();
                 if (!TextUtils.isEmpty(extMessage)) {
                     JSONObject JsonObject = null;
@@ -110,8 +110,10 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                         JsonObject = new JSONObject(extMessage);
                         isMoCustomer = JsonObject.getBoolean("isMoCustomer");
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        isMoCustomer = isMOCustomer(item.getLastMessage());
                     }
+                }else{
+                    isMoCustomer = isMOCustomer(item.getLastMessage());
                 }
 
                 if (isMoCustomer) {

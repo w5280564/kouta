@@ -93,6 +93,29 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
             tv_official = findViewById(R.id.tv_official);
         }
 
+
+        //是否是客服会话
+        private boolean isMOCustomer(EMMessage conMsg) {
+            if (conMsg == null) {
+                return false;
+            }
+            if (conMsg.getType() == EMMessage.Type.CUSTOM) {
+                EMCustomMessageBody messageBody = (EMCustomMessageBody) conMsg.getBody();
+                String event = messageBody.event();//自定义消息的event
+                if (event.equals("custom") || event.equals("MOCustomer")) {
+                    return true;
+                }
+            } else if (conMsg.getType() == EMMessage.Type.TXT) {
+                String txt_message_type = conMsg.getStringAttribute(MyConstant.MESSAGE_TYPE, "");//TXT消息的类型
+                if (txt_message_type.equals("MOCustomer") || txt_message_type.equals("customerMessageType") || txt_message_type.equals("custom")) {
+                    return true;
+                }
+            }
+
+
+            return false;
+        }
+
         @Override
         public void setData(Object object, int position) {
             MyInfo myInfo = new MyInfo(mContext);
@@ -113,7 +136,21 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
                 Log.e("EaseConversationDelegate", "会话类型》》" + item.getType());
                 if (item.getType() == EMConversation.EMConversationType.GroupChat) {
                     if (item.getAllMsgCount() != 0) {
-                        if (isMOCustomer(item.getLastMessage())) {
+                        boolean isMoCustomer;
+                        String extMessage = item.getExtField();
+                        if (!TextUtils.isEmpty(extMessage)) {
+                            JSONObject JsonObject = null;
+                            try {
+                                JsonObject = new JSONObject(extMessage);
+                                isMoCustomer = JsonObject.getBoolean("isMoCustomer");
+                            } catch (JSONException e) {
+                                isMoCustomer = isMOCustomer(item.getLastMessage());
+                            }
+                        }else{
+                            isMoCustomer = isMOCustomer(item.getLastMessage());
+                        }
+
+                        if (isMoCustomer) {
                             HeadName = "MO客服";
                             tv_official.setVisibility(View.VISIBLE);
                             name.setTextColor(ContextCompat.getColor(mContext, R.color.blue));
@@ -125,7 +162,6 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
                             HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.GROUP_HEAD, "");
 
                             if (StringUtil.isBlank(HeadAvatar) || StringUtil.isBlank(HeadName)) {
-                                String extMessage = item.getExtField();
                                 if (!TextUtils.isEmpty(extMessage)) {
                                     JSONObject JsonObject = null;
                                     try {
@@ -451,28 +487,6 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
         }
     }
 
-
-    //是否是客服会话
-    private boolean isMOCustomer(EMMessage conMsg) {
-        if (conMsg == null) {
-            return false;
-        }
-        if (conMsg.getType() == EMMessage.Type.CUSTOM) {
-            EMCustomMessageBody messageBody = (EMCustomMessageBody) conMsg.getBody();
-            String event = messageBody.event();//自定义消息的event
-            if (event.equals("custom") || event.equals("MOCustomer")) {
-                return true;
-            }
-        } else if (conMsg.getType() == EMMessage.Type.TXT) {
-            String txt_message_type = conMsg.getStringAttribute(MyConstant.MESSAGE_TYPE, "");//TXT消息的类型
-            if (txt_message_type.equals("MOCustomer") || txt_message_type.equals("customerMessageType") || txt_message_type.equals("custom")) {
-                return true;
-            }
-        }
-
-
-        return false;
-    }
 
 
     private void setDefaultMessage(TextView message, Context context, EMMessage lastMessage) {
