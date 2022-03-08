@@ -55,6 +55,21 @@
         android:text="官方"
         android:visibility="gone"/>
 
+    <com.hyphenate.easeui.widget.LightningView
+        android:id="@+id/tv_vip"
+        android:layout_width="29dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/shape_vip_bg"
+        android:gravity="center"
+        android:text="VIP"
+        android:textColor="#ff0000"
+        android:textSize="10sp"
+        app:layout_constraintTop_toTopOf="@id/name"
+        app:layout_constraintStart_toEndOf="@id/name"
+        app:layout_constraintBottom_toBottomOf="@id/name"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/unread_msg_number"
         android:layout_width="20dp"

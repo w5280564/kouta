@@ -8,17 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.ContextCompat;
-
 import com.bumptech.glide.Glide;
-import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMCustomMessageBody;
-import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easecallkit.base.EaseCallType;
@@ -26,11 +21,8 @@ import com.hyphenate.easecallkit.utils.EaseMsgUtils;
 import com.hyphenate.easeui.EaseIM;
 import com.hyphenate.easeui.adapter.EaseBaseRecyclerViewAdapter;
 import com.hyphenate.easeui.domain.EaseUser;
-import com.hyphenate.easeui.manager.EaseAtMessageHelper;
 import com.hyphenate.easeui.manager.EasePreferenceManager;
-import com.hyphenate.easeui.modules.conversation.delegate.EaseDefaultConversationDelegate;
 import com.hyphenate.easeui.provider.EaseUserProfileProvider;
-import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseDateUtils;
 import com.hyphenate.easeui.utils.EaseSmileUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
@@ -38,19 +30,11 @@ import com.hyphenate.easeui.utils.GsonUtil;
 import com.hyphenate.easeui.utils.MyEaseCommonUtils;
 import com.hyphenate.easeui.utils.StringUtil;
 import com.hyphenate.easeui.widget.EaseImageView;
-import com.hyphenate.exceptions.HyphenateException;
 import com.xunda.mo.R;
-import com.xunda.mo.hx.DemoHelper;
-import com.xunda.mo.hx.common.db.entity.InviteMessage;
-import com.xunda.mo.hx.common.db.entity.InviteMessageStatus;
-import com.xunda.mo.hx.common.db.entity.MsgTypeManageEntity;
-import com.xunda.mo.hx.common.manager.PushAndMessageHelper;
 import com.xunda.mo.main.constant.MyConstant;
 import com.xunda.mo.main.info.MyInfo;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.Date;
 
 public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
@@ -75,6 +59,7 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
         private TextView mentioned;
         private TextView message;
         private TextView tv_official;
+        private TextView tv_vip;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -91,6 +76,7 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
             mentioned = findViewById(R.id.mentioned);
             message = findViewById(R.id.message);
             tv_official = findViewById(R.id.tv_official);
+            tv_vip = findViewById(R.id.tv_vip);
         }
 
 
@@ -126,6 +112,7 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
                 listIteaseLayout.setBackground(MyEaseCommonUtils.isTimestamp(item.getExtField()) ? ContextCompat.getDrawable(mContext, R.drawable.ease_conversation_top_bg) : null);
                 mentioned.setVisibility(View.GONE);
                 tv_official.setVisibility(View.GONE);
+                tv_vip.setVisibility(View.GONE);
                 int defaultAvatar = R.mipmap.img_pic_none;
                 String HeadAvatar = "";
                 String HeadName = "";
@@ -185,7 +172,6 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
                             name.setText(HeadName);
                             Glide.with(mContext).load(HeadAvatar).placeholder(defaultAvatar).error(defaultAvatar).into(avatar);
                         }
-
                     }
                 } else if (item.getType() == EMConversation.EMConversationType.Chat) {
                     if (item.getAllMsgCount() != 0) {
@@ -198,14 +184,29 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
                             name.setTextColor(ContextCompat.getColor(mContext, R.color.app_main_color_blue));
                             name.setText(HeadName);
                         } else {
+                            int vipType;
                             tv_official.setVisibility(View.GONE);
                             boolean isSender = myInfo.getUserInfo().getHxUserName().equals(lastMessage.getFrom());
                             EaseUserProfileProvider userProvider = EaseIM.getInstance().getUserProvider();
                             if (isSender) {
                                 String header_url_message = lastMessage.getStringAttribute(MyConstant.TO_HEAD, "");
                                 EaseUserUtils.setUserAvatarAndSendHeaderUrl(mContext, lastMessage.getTo(), header_url_message, avatar);
-                                HeadName = lastMessage.getStringAttribute(MyConstant.TO_NAME, "");
-                                if (userProvider != null) {
+
+                                String extMessage = item.getExtField();
+                                if (!TextUtils.isEmpty(extMessage)) {
+                                    JSONObject JsonObject = null;
+                                    try {
+                                        JsonObject = new JSONObject(extMessage);
+                                        boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
+                                        if (isInsertGroupOrFriendInfo) {
+                                            HeadName = JsonObject.getString("showName");
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                if (StringUtil.isBlank(HeadName)) {
                                     EaseUser user = userProvider.getUser(username);
                                     if (user != null) {
                                         try {
@@ -213,6 +214,27 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
                                             if (!TextUtils.isEmpty(selectInfoExt)) {
                                                 JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
                                                 HeadName = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
+                                if (StringUtil.isBlank(HeadName)) {
+                                    HeadName = lastMessage.getStringAttribute(MyConstant.TO_NAME, "");
+                                }
+
+
+                                vipType = lastMessage.getIntAttribute(MyConstant.TO_VIP, 3);;//3表示没有获取到这个扩展字段
+                                if (vipType==3) {//没有扩展字段 再从会话扩展取
+                                    if (!TextUtils.isEmpty(extMessage)) {
+                                        JSONObject JsonObject = null;
+                                        try {
+                                            JsonObject = new JSONObject(extMessage);
+                                            boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
+                                            if (isInsertGroupOrFriendInfo) {
+                                                vipType = JsonObject.getInt("vipType");
                                             }
                                         } catch (JSONException e) {
                                             e.printStackTrace();
@@ -222,8 +244,23 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
                             } else {//接收方
                                 String header_url_message = lastMessage.getStringAttribute(MyConstant.SEND_HEAD, "");
                                 EaseUserUtils.setUserAvatarAndSendHeaderUrl(mContext, lastMessage.getFrom(), header_url_message, avatar);
-                                HeadName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
-                                if (userProvider != null) {
+
+                                String extMessage = item.getExtField();
+                                if (!TextUtils.isEmpty(extMessage)) {
+                                    JSONObject JsonObject = null;
+                                    try {
+                                        JsonObject = new JSONObject(extMessage);
+                                        boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
+                                        if (isInsertGroupOrFriendInfo) {
+                                            HeadName = JsonObject.getString("showName");
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+
+                                if (StringUtil.isBlank(HeadName)) {
                                     EaseUser user = userProvider.getUser(username);
                                     if (user != null) {
                                         try {
@@ -232,22 +269,26 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
                                                 JSONObject JsonObject = new JSONObject(selectInfoExt);//用户资料扩展属性
                                                 HeadName = TextUtils.isEmpty(JsonObject.getString("remarkName")) ? user.getNickname() : JsonObject.getString("remarkName");
                                             }
-                                        } catch (
-                                                JSONException e) {
+                                        } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
                                     }
                                 }
 
                                 if (StringUtil.isBlank(HeadName)) {
-                                    String extMessage = item.getExtField();
+                                    HeadName = lastMessage.getStringAttribute(MyConstant.SEND_NAME, "");
+                                }
+
+
+                                vipType = lastMessage.getIntAttribute(MyConstant.SEND_VIP, 3);//3表示没有获取到这个扩展字段
+                                if (vipType==3) {//没有扩展字段 再从会话扩展取
                                     if (!TextUtils.isEmpty(extMessage)) {
                                         JSONObject JsonObject = null;
                                         try {
                                             JsonObject = new JSONObject(extMessage);
                                             boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
                                             if (isInsertGroupOrFriendInfo) {
-                                                HeadName = JsonObject.getString("showName");
+                                                vipType = JsonObject.getInt("vipType");
                                             }
                                         } catch (JSONException e) {
                                             e.printStackTrace();
@@ -256,6 +297,10 @@ public class HomeAdapter extends EaseBaseRecyclerViewAdapter<Object> {
                                 }
                             }
                             name.setText(StringUtil.getStringValue(HeadName));
+                            if (vipType==1){
+                                name.setTextColor(ContextCompat.getColor(mContext,R.color.yellowfive));
+                                tv_vip.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 }
