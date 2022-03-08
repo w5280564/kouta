@@ -108,7 +108,12 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                     JSONObject JsonObject = null;
                     try {
                         JsonObject = new JSONObject(extMessage);
-                        isMoCustomer = JsonObject.getBoolean("isMoCustomer");
+                        boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
+                        if (isInsertGroupOrFriendInfo) {
+                            isMoCustomer = JsonObject.getBoolean("isMoCustomer");
+                        }else {
+                            isMoCustomer = isMOCustomer(item.getLastMessage());
+                        }
                     } catch (JSONException e) {
                         isMoCustomer = isMOCustomer(item.getLastMessage());
                     }
@@ -132,8 +137,11 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                             JSONObject JsonObject = null;
                             try {
                                 JsonObject = new JSONObject(extMessage);
-                                HeadAvatar = JsonObject.getString("showImg");
-                                HeadName = JsonObject.getString("showName");
+                                boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
+                                if (isInsertGroupOrFriendInfo) {
+                                    HeadAvatar = JsonObject.getString("showImg");
+                                    HeadName = JsonObject.getString("showName");
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
