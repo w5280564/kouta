@@ -102,7 +102,19 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         Log.e("EaseConversationDelegate", "会话类型》》" + item.getType());
         if (item.getType() == EMConversation.EMConversationType.GroupChat) {
             if (item.getAllMsgCount() != 0) {
-                if (isMOCustomer(item.getLastMessage())) {
+                boolean isMoCustomer = false;
+                String extMessage = item.getExtField();
+                if (!TextUtils.isEmpty(extMessage)) {
+                    JSONObject JsonObject = null;
+                    try {
+                        JsonObject = new JSONObject(extMessage);
+                        isMoCustomer = JsonObject.getBoolean("isMoCustomer");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (isMoCustomer) {
                     HeadName = "MO客服";
                     holder.tv_official.setVisibility(View.VISIBLE);
                     holder.name.setTextColor(ContextCompat.getColor(context, R.color.blue));
@@ -114,16 +126,12 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                     HeadAvatar = item.getLastMessage().getStringAttribute(MyConstant.GROUP_HEAD, "");
 
                     if (StringUtil.isBlank(HeadAvatar) || StringUtil.isBlank(HeadName)) {
-                        String extMessage = item.getExtField();
                         if (!TextUtils.isEmpty(extMessage)) {
                             JSONObject JsonObject = null;
                             try {
                                 JsonObject = new JSONObject(extMessage);
-                                boolean isInsertGroupOrFriendInfo = JsonObject.getBoolean("isInsertGroupOrFriendInfo");
-                                if (isInsertGroupOrFriendInfo) {
-                                    HeadAvatar = JsonObject.getString("showImg");
-                                    HeadName = JsonObject.getString("showName");
-                                }
+                                HeadAvatar = JsonObject.getString("showImg");
+                                HeadName = JsonObject.getString("showName");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -133,7 +141,6 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
                     holder.name.setText(HeadName);
                     Glide.with(context).load(HeadAvatar).placeholder(defaultAvatar).error(defaultAvatar).into(holder.avatar);
                 }
-
             }
         } else if (item.getType() == EMConversation.EMConversationType.Chat) {
             if (item.getAllMsgCount() != 0) {

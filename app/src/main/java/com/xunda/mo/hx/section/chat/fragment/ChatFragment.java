@@ -579,10 +579,59 @@ public class ChatFragment extends MyEaseChatFragment implements OnRecallMessageR
                 GroupMethod(getActivity(), saveFile.Group_MyGroupInfo_Url);
             } else {
 //                isService();//是否在人工服务
+                insertConversionExdInfoInCustomer();
             }
         }
         sensitiveWord(getActivity(), saveFile.SensitiveWord);
     }
+
+
+
+    //往客服会话列表添加扩展字段
+    private void insertConversionExdInfoInCustomer() {
+        EMConversation currentConversation = EMClient.getInstance().chatManager().getConversation(conversationId);
+        if (currentConversation==null) {
+            return;
+        }
+
+        String extField = currentConversation.getExtField();
+        JSONObject jsonObject = null;
+        if (!StringUtil.isBlank(extField)) {
+            try {
+                jsonObject = new JSONObject(extField);
+                jsonObject.put("isInsertGroupOrFriendInfo", true);
+                jsonObject.put("isMoCustomer", true);
+            } catch (JSONException e) {
+                jsonObject = getJsonObjectInCustomer();
+            }
+
+        }else{
+            jsonObject = getJsonObjectInCustomer();
+        }
+
+        if (jsonObject==null) {
+            return;
+        }
+
+        currentConversation.setExtField(jsonObject.toString());
+        messageListLayout.getMessageAdapter().notifyDataSetChanged();
+    }
+
+    @NonNull
+    private JSONObject getJsonObjectInCustomer() {
+        JSONObject jsonObject;
+        jsonObject  = new JSONObject();
+        try {
+            jsonObject.put("isInsertGroupOrFriendInfo", true);
+            jsonObject.put("isMoCustomer", true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+
+
 
     private void removeHornMes(List<EMMessage> msgs, ConstraintLayout Con) {
         if (!msgs.isEmpty()) {
