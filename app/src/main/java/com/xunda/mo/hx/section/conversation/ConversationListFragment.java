@@ -444,7 +444,6 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         getLastMessage.setAttribute(MyConstant.GROUP_HEAD, groupHeadImg);
         getLastMessage.setAttribute(MyConstant.GROUP_NAME, getGroupName);
         EMClient.getInstance().chatManager().updateMessage(getLastMessage);
-        LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
     }
 
 
@@ -509,7 +508,6 @@ public class ConversationListFragment extends MyEaseConversationListFragment imp
         lastMessage.setAttribute(MyConstant.TO_HEAD, friendHeadImg);
         lastMessage.setAttribute(MyConstant.TO_VIP, vipType);
         EMClient.getInstance().chatManager().updateMessage(lastMessage);
-        LiveDataBus.get().with(DemoConstant.MESSAGE_CHANGE_CHANGE).postValue(new EaseEvent(DemoConstant.MESSAGE_CHANGE_CHANGE, EaseEvent.TYPE.MESSAGE));
     }
 
     private void deleteConversation(int position, EaseConversationInfo info, String text) {
