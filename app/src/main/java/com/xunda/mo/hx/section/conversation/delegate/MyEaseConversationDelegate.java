@@ -87,7 +87,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
     protected void onBindConViewHolder(ViewHolder holder, int position, EaseConversationInfo bean) {
         EMConversation item = (EMConversation) bean.getInfo();
         String username = item.conversationId();
-        Log.e("EaseConversationDelegate", "会话拓展》》" + item.getExtField());
+//        Log.e("EaseConversationDelegate", "会话拓展》》" + item.getExtField());
         holder.listIteaseLayout.setBackground(MyEaseCommonUtils.isTimestamp(item.getExtField()) ? ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg) : null);
         holder.mentioned.setVisibility(View.GONE);
         holder.tv_official.setVisibility(View.GONE);
@@ -99,7 +99,7 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         holder.name.setTextColor(ContextCompat.getColor(context, R.color.blacktitle));
 
 
-        Log.e("EaseConversationDelegate", "会话类型》》" + item.getType());
+//        Log.e("EaseConversationDelegate", "会话类型》》" + item.getType());
         if (item.getType() == EMConversation.EMConversationType.GroupChat) {
             if (item.getAllMsgCount() != 0) {
                 boolean isMoCustomer;
@@ -292,12 +292,12 @@ public class MyEaseConversationDelegate extends EaseDefaultConversationDelegate 
         if (item.getAllMsgCount() != 0) {
             EMMessage lastMessage = item.getLastMessage();
             boolean isSender = myInfo.getUserInfo().getHxUserName().equals(lastMessage.getFrom());
-            Log.e("EaseConversationDelegate", "拓展消息" + GsonUtil.getInstance().toJson(lastMessage.ext()));
-            Log.e("EaseConversationDelegate", "lastMessage的messageType是" + lastMessage.getType());
+//            Log.e("EaseConversationDelegate", "拓展消息" + GsonUtil.getInstance().toJson(lastMessage.ext()));
+//            Log.e("EaseConversationDelegate", "lastMessage的messageType是" + lastMessage.getType());
             if (lastMessage.getType() == EMMessage.Type.CUSTOM) {//自定义消息
                 EMCustomMessageBody messageBody = (EMCustomMessageBody) lastMessage.getBody();
                 String event = messageBody.event();//自定义消息的event
-                Log.e("EaseConversationDelegate", "自定义消息的event是" + event);
+//                Log.e("EaseConversationDelegate", "自定义消息的event是" + event);
                 if (event.equals(MyConstant.MESSAGE_TYPE_USERCARD)) {
                     holder.message.setText("[名片]");
                 } else if (event.equals(MyConstant.MO_CUSTOMER)) {

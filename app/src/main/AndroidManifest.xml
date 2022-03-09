@@ -280,13 +280,12 @@
         <!-- 适配Android 7.0, 需要将下方的com.hyphenate.easeim替换为你的app包名 -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.xunda.mo.fileprovider"
+            android:authorities="${applicationId}.fileProvider"
             android:exported="false"
-            android:grantUriPermissions="true"
-            >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <!-- 华为 HMS Config -->
