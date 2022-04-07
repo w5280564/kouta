@@ -308,7 +308,6 @@ public class Friend_NewFriends extends BaseInitActivity {
                     DemoHelper.getInstance().getContactManager().asyncAcceptInvitation(hXUserName, new EMCallBack() {
                         @Override
                         public void onSuccess() {
-                            Toast.makeText(mContext, "已通过", Toast.LENGTH_SHORT).show();
                             singleSendMes(hXUserName,baseModel,position);
                         }
 
