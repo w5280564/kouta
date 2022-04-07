@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.gson.Gson;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
@@ -304,8 +305,23 @@ public class Friend_NewFriends extends BaseInitActivity {
             @Override
             public void success(String result) {
                 if (TextUtils.equals(agreeType, "1")) {
-                    singleSendMes(hXUserName, baseModel, position);
-                    Toast.makeText(mContext, "已通过", Toast.LENGTH_SHORT).show();
+                    DemoHelper.getInstance().getContactManager().asyncAcceptInvitation(hXUserName, new EMCallBack() {
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(mContext, "已通过", Toast.LENGTH_SHORT).show();
+                            singleSendMes(hXUserName,baseModel,position);
+                        }
+
+                        @Override
+                        public void onError(int code, String error) {
+
+                        }
+
+                        @Override
+                        public void onProgress(int progress, String status) {
+
+                        }
+                    });
                 } else {
                     Toast.makeText(mContext, "已拒绝", Toast.LENGTH_SHORT).show();
                 }
