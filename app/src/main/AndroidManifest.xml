@@ -238,7 +238,7 @@
             android:name=".main.me.activity.UserDetail_Set"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.friend.activity.Friend_NewFriends"
+            android:name=".main.friend.activity.Friends"
             android:screenOrientation="portrait" />
         <activity
             android:name=".main.chat.activity.ChatFriend_AddFriend"

@@ -20,7 +20,6 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/drawable/shape_bg_all_member_qunzhu.xml" value="0.3641025641025641" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/drawable/shape_update_level_button.xml" value="0.3212962962962963" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/drawable/shape_vip_bg.xml" value="0.33055555555555555" />
-        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/drawable/vip_txt_radius.xml" value="0.32592592592592595" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_chat_complaint.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_chatdetailset.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_chatfriend_detail.xml" value="0.3536458333333333" />
@@ -29,7 +28,6 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_friend_newfriends.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_group_detailset.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_groupdetail_edit.xml" value="0.5" />
-        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_groupfriend_detail.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_main.xml" value="0.17806484295845998" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_main_login.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/activites/layout/activity_main_login_code.xml" value="0.36614583333333334" />
@@ -72,7 +70,6 @@
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/demo_layout_no_data_show_nothing.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/ease_row_received_custom.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/ease_row_sent_custom.xml" value="0.3536458333333333" />
-        <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/friend_blacklist_adapter.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/friend_newfriendlist_adapter.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/item_market_dialog.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/app/src/main/res/layouts/adapter/layout/mycontact_head_item.xml" value="0.3536458333333333" />
@@ -106,12 +103,26 @@
         <entry key="..\:/XundaWorkBase/Kouta/ease-im-kit/src/main/res/layout/ease_fragment_conversations.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/ease-im-kit/src/main/res/layout/ease_item_row_chat_history.xml" value="0.596875" />
         <entry key="..\:/XundaWorkBase/Kouta/ease-im-kit/src/main/res/layout/ease_row_received_bigexpression.xml" value="0.3536458333333333" />
-        <entry key="..\:/XundaWorkBase/Kouta/ease-im-kit/src/main/res/layout/ease_row_received_file.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/ease-im-kit/src/main/res/layout/ease_row_received_message.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/ease-im-kit/src/main/res/layout/ease_row_received_picture.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/ease-im-kit/src/main/res/layout/ease_row_received_voice.xml" value="0.3536458333333333" />
-        <entry key="..\:/XundaWorkBase/Kouta/ease-im-kit/src/main/res/layout/ease_row_sent_message.xml" value="0.3536458333333333" />
         <entry key="..\:/XundaWorkBase/Kouta/ease-im-kit/src/main/res/layout/ease_widget_title_bar.xml" value="0.3536458333333333" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/activites/layout/activity_discover_qrcode.xml" value="0.346875" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/activites/layout/activity_discover_welfare.xml" value="0.346875" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/activites/layout/activity_friend_newfriends.xml" value="0.36614583333333334" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/activites/layout/activity_groupdetail_edit_adress.xml" value="0.36614583333333334" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/activites/layout/activity_me_safety.xml" value="0.36614583333333334" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/activites/layout/activity_me_vip.xml" value="0.36614583333333334" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/activites/layout/activity_meandgroup_qrcode.xml" value="0.36614583333333334" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/activites/layout/activity_userdetail_set.xml" value="0.35052083333333334" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/activites/layout/demo_activity_user_detail.xml" value="0.346875" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/activites/layout/me_coupon_card.xml" value="0.36614583333333334" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/fragments/layout/activity_friend_add.xml" value="0.36614583333333334" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/fragments/layout/fragment_discover.xml" value="0.346875" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/fragments/layout/myease_fragment_chat_list.xml" value="0.35052083333333334" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/popupwindows/layout/at_mes_popup.xml" value="0.36614583333333334" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/popupwindows/layout/share_popup.xml" value="0.36614583333333334" />
+        <entry key="..\:/android/kouta/app/src/main/res/layouts/popupwindows/layout/vip_type_popup.xml" value="0.36614583333333334" />
         <entry key="..\:/kouta/app/src/main/res/drawable/group_label_stroke.xml" value="0.35333333333333333" />
         <entry key="..\:/kouta/app/src/main/res/layouts/fragments/layout/mefragment.xml" value="0.25" />
         <entry key="..\:/kouta/app/src/main/res/layouts/popupwindows/layout/group_label.xml" value="0.34270833333333334" />

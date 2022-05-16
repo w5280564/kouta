@@ -151,7 +151,6 @@ public class GroupDetail_Edit_Address extends EaseBaseActivity implements AMap.O
     private AMapLocation MapLocation;
     public AMapLocationListener mLocationListener = new AMapLocationListener() {
         //声明定位回调监听器
-
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
             if (aMapLocation != null) {

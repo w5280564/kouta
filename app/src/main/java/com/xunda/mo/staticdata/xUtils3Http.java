@@ -63,6 +63,7 @@ public class xUtils3Http {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                // Failed to connect to /139.9.121.19:8088
+                String errorInfo =ex.getMessage();
                 String errorMes = "Failed to connect to /139.9.121.19:8088";
                 if (TextUtils.equals(errorMes,ex.getMessage())){
                     Toast.makeText(mContext, "无法连接到服务器，请检查网络连接", Toast.LENGTH_LONG).show();

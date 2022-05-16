@@ -49,7 +49,7 @@ public class GroupAllMembers_Manage_Apply extends BaseInitActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_friend_newfriends;
+        return R.layout.activity_friends;
     }
 
     @Override
